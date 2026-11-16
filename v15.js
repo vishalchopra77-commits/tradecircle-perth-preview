@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.1 */
+/* TradeCircle Perth — prototype v1.5.2 */
 (function () {
   "use strict";
 
@@ -29,6 +29,9 @@
     star: svg('<path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/>'),
     bell: svg('<path d="M18 8A6 6 0 106 8c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 004 0"/>'),
     queue: svg('<path d="M4 6h16M4 12h16M4 18h10"/>'),
+    mega: svg('<path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/>'),
+    gear: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 009 19.4a1.7 1.7 0 00-1.82.33l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.7 1.7 0 004.68 15a1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.33-1.82l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 009 4.68a1.7 1.7 0 001-1.51V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.51 1.7 1.7 0 001.82-.33l.1-.1a2 2 0 112.8 2.8l-.1.1A1.7 1.7 0 0019.4 9V9c.3.6.9 1 1.6 1.1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>'),
+    user: svg('<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/>'),
     cam: svg('<path d="M4 8h3l2-3h6l2 3h3v11H4V8z"/><circle cx="12" cy="13" r="3.2"/>'),
     image: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-9 9"/>'),
     file: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>'),
@@ -202,6 +205,83 @@
     return S()._queue;
   }
 
+
+  function myQueuePlace() {
+    var q = queue();
+    var mine = 0;
+    q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
+    return { q: q, mine: mine, total: q.length };
+  }
+  function homePromoBlock() {
+    var p = myQueuePlace();
+    var sub = p.mine
+      ? "You’re number " + p.mine + " of " + p.total + " in the Facebook promotion queue"
+      : "Request a free turn in the Facebook promotion queue";
+    var cta = p.mine ? "View queue" : "Request a turn";
+    return '<button type="button" class="home-promo" data-go="promo-queue">' +
+      '<span class="home-promo-ico">' + I.mega + "</span>" +
+      '<span class="home-promo-body"><strong>Your turn to promote</strong><span>' + esc(sub) + "</span></span>" +
+      '<span class="home-promo-cta">' + cta + "</span></button>";
+  }
+  function meToolRows() {
+    var p = myQueuePlace();
+    var qSub = p.mine ? "You’re number " + p.mine + " in the queue" : "Request a free turn";
+    function row(go, ico, color, title, sub) {
+      return '<button class="set-row" type="button" data-go="' + go + '"><span class="ic" style="' + color + '">' + ico + '</span><span class="lab"><span class="a">' + title + '</span><span class="b">' + sub + '</span></span><span class="chev">' + icoWait("chev") + "</span></button>";
+    }
+    function icoWait(n) { return (T().icon ? T().icon(n) : ""); }
+    return '<p class="group-label">Circle tools</p><div class="card group me-tools">' +
+      row("promo-queue", I.mega, "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
+      row("rec-alerts", I.bell, "background:#FFF6E0;color:#8A5A00", "Recommendation alerts", "Help the circle comment on a post") +
+      row("ai-assistant", I.spark, "background:#EEF2F6;color:#0B1F33", "AI assistant", "Voice commands while you drive") +
+      "</div>";
+  }
+  function renderMore() {
+    var m = T().me && T().me();
+    var tiles = [
+      ["For you", [
+        ["me", I.user, "teal", "My profile"],
+        ["promo-queue", I.mega, "navy", "Queue"],
+        ["rec-alerts", I.bell, "amber", "Alerts"],
+        ["ai-assistant", I.spark, "moss", "AI assistant"],
+        ["my-regions", I.queue, "steel", "Your areas"],
+        ["reviews", I.star, "amber", "Reviews"],
+        ["chats", I.chat, "navy", "Chat"],
+        ["members", I.fb.indexOf("<svg") === 0 ? I.user : I.user, "teal", "Facebook"]
+      ]],
+      ["Account", [
+        ["settings", I.gear, "steel", "Settings"],
+        ["notifications", I.bell, "amber", "Notifications"],
+        ["subscription", I.star, "navy", "Subscription"],
+        ["invite", I.send, "teal", "Invite"],
+        ["help", I.spark, "moss", "Help"],
+        ["welcome", I.open, "rose", "Sign out"]
+      ]]
+    ];
+    var q = (S()._moreQuery || "").trim().toLowerCase();
+    function grid(list) {
+      var shown = list.filter(function (it) { return !q || it[3].toLowerCase().indexOf(q) >= 0; });
+      if (!shown.length) return "";
+      return '<div class="apps-grid">' + shown.map(function (it) {
+        return '<button type="button" class="apps-tile" data-go="' + it[0] + '"><span class="apps-ico ' + it[2] + '">' + it[1] + "</span><span>" + it[3] + "</span></button>";
+      }).join("") + "</div>";
+    }
+    var body = tiles.map(function (sec) {
+      var g = grid(sec[1]);
+      if (!g) return "";
+      return '<div class="apps-section"><h3>' + sec[0] + "</h3>" + g + "</div>";
+    }).join("");
+    if (!body) body = '<p class="apps-empty">No matches for that search.</p>';
+    return '<section class="screen has-tabs has-header" data-screen="more">' + topbar("More") +
+      '<div class="scroll"><div class="more-head"><h2>More</h2></div>' +
+      '<div class="search-wrap"><div class="search">' + ico("search") +
+      '<input id="moreSearch" type="search" placeholder="Search the menu" value="' + esa(S()._moreQuery || "") + '" autocomplete="off"></div></div>' +
+      (m ? '<button type="button" class="more-profile" data-go="me">' + av(m, 48) +
+        '<div style="flex:1;min-width:0;text-align:left"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">View your profile</div></div>' +
+        (T().icon ? T().icon("chev") : "") + "</button>" : "") +
+      body + "</div></section>";
+  }
+
   /* ---------- Screens ---------- */
   function renderAI() {
     var connected = S().aiProvider || "grok";
@@ -218,7 +298,7 @@
       ["Who left me a Google review?", "reviews"],
       ["Open Liam’s Facebook profile", "open-liam"],
       ["Read my latest messages", "messages"],
-      ["Where am I in the promotion queue?", "queue"],
+      ["Where am I in the Facebook promotion queue?", "queue"],
       ["Any recommendation alerts?", "alerts"],
       ["Remind me to review Jack tomorrow", "remind"]
     ];
@@ -315,18 +395,18 @@
     var q = queue();
     var mine = 0;
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
-    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Promotion queue") +
-      '<div class="scroll"><div class="auth-hero"><h2>A fair turn to promote your business</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
+    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook promotion queue") +
+      '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
         : '<p class="hint">You’re not in the queue yet.</p>') +
       (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
-        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.queue + "<span>Request a turn</span></button>") +
+        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.mega + "<span>Request a turn</span></button>") +
       "</div>" +
       '<div class="queue-card"><div class="areas-card-h">Jump the queue</div>' +
       '<p class="plan-price"><span class="price-tbc">Price to be set</span></p>' +
       '<p class="hint">No payment is taken in this prototype. In the real app, a paid jump would go through the App Store, Google Play, or Stripe on the web. Until a price is chosen, this stays on the waiting list.</p>' +
-      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.queue + "<span>Coming later</span></button></div>" +
+      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.mega + "<span>Coming later</span></button></div>" +
       '<p class="group-label">Current queue</p>' +
       q.map(function (row, i) {
         var m = member(row.memberId);
@@ -440,7 +520,7 @@
         reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. I can open Sarah’s Google review page so you can tap Review back." }],
         "open-liam": [{ who: "you", text: "Open Liam’s Facebook profile." }, { who: "ai", text: "Opening Liam’s Facebook profile now. Tap Add friend when you’re ready. I won’t send the request for you." }],
         messages: [{ who: "you", text: "Read my latest messages." }, { who: "ai", text: "Sarah said: “Thanks — I will have a look this week.” Jack asked if you could leave a Google review." }],
-        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the free queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
+        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the Facebook promotion queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
         alerts: [{ who: "you", text: "Any recommendation alerts?" }, { who: "ai", text: "Yes. Someone is asking for a pest controller. I can open the alert so you can go to the Facebook post and comment in your own words." }],
         remind: [{ who: "you", text: "Remind me to review Jack tomorrow." }, { who: "ai", text: "Reminder set for tomorrow morning (mock). I’ll nudge you to open Jack’s Google review page — you’ll write and post it yourself." }]
       };
@@ -561,6 +641,7 @@
     if (id === "rec-compose") return renderRecCompose();
     if (id === "rec-alert") return renderRecAlert();
     if (id === "promo-queue") return renderQueue();
+    if (id === "more" || id === "drawer") return renderMore();
     if (id === "reviews" || id === "reviews-back") return renderReviews();
     if (id === "lockscreen") return renderLock();
     return null;
@@ -583,14 +664,32 @@
     TC12.afterGo = function (id) {
       if (prevAfter) prevAfter(id);
       enhanceComposer();
-      /* inject extra drawer items if the drawer exists */
+      if (id === "more" || id === "drawer") {
+        if (window.TC12 && TC12.closeDrawer) TC12.closeDrawer();
+        var ms = document.getElementById("moreSearch");
+        if (ms) {
+          ms.addEventListener("input", function () {
+            S()._moreQuery = ms.value;
+            var html = renderMore();
+            var screens = document.getElementById("screens");
+            if (screens) {
+              screens.innerHTML = html;
+              var sc = screens.querySelector(".screen");
+              if (sc) sc.classList.add("active");
+            }
+            var again = document.getElementById("moreSearch");
+            if (again) { again.focus(); try { again.setSelectionRange(again.value.length, again.value.length); } catch (e) {} }
+          });
+        }
+      }
+      /* inject extra drawer items if the (legacy) drawer exists */
       var nav = document.querySelector(".drawer-nav");
       if (nav && !nav.getAttribute("data-v15")) {
         nav.setAttribute("data-v15", "1");
         var extra = [
-          ["ai-assistant", "AI assistant"],
-          ["rec-alerts", "Recommendation alerts"],
-          ["promo-queue", "Promotion queue"]
+          ["ai-assistant", I.spark, "AI assistant"],
+          ["rec-alerts", I.bell, "Recommendation alerts"],
+          ["promo-queue", I.mega, "Facebook promotion queue"]
         ];
         extra.forEach(function (it) {
           if (nav.querySelector('[data-go="' + it[0] + '"]')) return;
@@ -598,12 +697,30 @@
           b.type = "button";
           b.className = "drawer-item";
           b.setAttribute("data-go", it[0]);
-          b.innerHTML = '<span class="ic">' + I.spark + "</span><span>" + it[1] + "</span>";
+          b.innerHTML = '<span class="ic">' + it[1] + "</span><span>" + it[2] + "</span>";
           var settings = nav.querySelector('[data-go="settings"]');
           nav.insertBefore(b, settings || null);
         });
       }
     };
+    var prevMembers = TC12.renderMembers;
+    TC12.renderMembers = function () {
+      var html = prevMembers ? prevMembers() : "";
+      return html.replace(/(<p class="count-line">[\s\S]*?<\/p>)/, "$1" + homePromoBlock());
+    };
+    var prevMe = TC12.renderMe;
+    TC12.renderMe = function () {
+      var html = prevMe ? prevMe() : "";
+      return html.replace('<div class="info-rows">', meToolRows() + '<div class="info-rows">');
+    };
+    /* Header hamburger opens the More apps screen */
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-action='open-drawer']");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      go("more");
+    }, true);
     /* Patch attach sheet by wrapping later clicks — openAttach is internal.
        We intercept data-action=attach after v12 opens the sheet, then rewrite it. */
     document.addEventListener("click", function (e) {

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.1</title>
+  <title>TradeCircle Perth — UI prototype v1.5.2</title>
   <style>
 /* TradeCircle Perth UI v1 */
 @font-face {
@@ -889,7 +889,35 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .btn.has-ico svg { flex: none; }
 
 /* TradeCircle Perth v1.2 */
-.tabbar { grid-template-columns: repeat(4, 1fr); }
+.tabbar {
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 6px 20px;
+  background: rgba(255,255,255,0.94);
+}
+.tab {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  letter-spacing: -0.03em;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px 2px 4px;
+  border-radius: 16px;
+  color: #5B6B7C;
+}
+.tab svg { width: 22px; height: 22px; }
+.tab-badge { right: 8%; top: 2px; }
+.tab.active { color: #05281C; font-weight: 800; }
+.tab.active svg { color: #05281C; }
+.tab.active::before {
+  content: "";
+  position: absolute;
+  inset: 3px 4px 2px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #24E0A6 0%, #0FBE86 100%);
+  box-shadow: 0 4px 10px rgba(15, 190, 134, 0.28);
+  z-index: -1;
+}
 .tab { position: relative; }
 .tab-badge {
   position: absolute; top: 2px; right: 18%;
@@ -1479,6 +1507,116 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   border-radius: 14px;
 }
 
+/* v1.5.2 — home promo card, More apps grid, brand tab pill already in v12.css */
+.home-promo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-radius: 18px;
+  padding: 13px 12px;
+  margin: 8px 0 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #14314C 0%, #0B1F33 58%, #0A7A58 140%);
+  box-shadow: 0 10px 22px rgba(11, 31, 51, 0.18);
+  cursor: pointer;
+}
+.home-promo-ico {
+  width: 44px; height: 44px; border-radius: 50%; flex: 0 0 auto;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #24E0A6, #0FBE86);
+  color: #05281C;
+  box-shadow: 0 4px 10px rgba(15, 190, 134, 0.35);
+}
+.home-promo-ico svg { width: 22px; height: 22px; }
+.home-promo-body { flex: 1; min-width: 0; }
+.home-promo-body strong { display: block; font-size: 15px; letter-spacing: -0.02em; line-height: 1.2; }
+.home-promo-body span { display: block; margin-top: 3px; font-size: 12px; font-weight: 650; opacity: 0.92; line-height: 1.3; }
+.home-promo-cta {
+  flex: 0 0 auto;
+  background: #fff;
+  color: #0B1F33;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.home-shortcuts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.home-short {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 9px 10px;
+  font-weight: 800; font-size: 12px; color: var(--ink);
+}
+.home-short .ic {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; flex: 0 0 auto;
+}
+.home-short .ic.teal { background: linear-gradient(180deg, #24E0A6, #0FBE86); color: #05281C; }
+.home-short .ic.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
+.home-short svg { width: 15px; height: 15px; }
+
+/* More — apps grid (structure only; TradeCircle colours) */
+.more-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 2px 10px;
+}
+.more-head h2 { margin: 0; font-size: 28px; letter-spacing: -0.04em; }
+.more-profile {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 18px; padding: 12px;
+  margin: 0 0 12px;
+}
+.more-profile .nm { font-weight: 800; font-size: 16px; }
+.more-profile .sub { font-size: 12px; font-weight: 650; color: var(--muted); }
+.apps-section { margin: 16px 0 8px; }
+.apps-section h3 {
+  margin: 0 0 10px;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+}
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 8px;
+}
+.apps-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 100%; border: 0; background: none; cursor: pointer;
+  padding: 0;
+  color: var(--ink);
+  font-size: 11px; font-weight: 750; line-height: 1.25; text-align: center;
+  letter-spacing: -0.01em;
+}
+.apps-tile[hidden] { display: none; }
+.apps-ico {
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(11, 31, 51, 0.12);
+}
+.apps-ico svg { width: 24px; height: 24px; }
+.apps-ico.teal { background: linear-gradient(180deg, #24E0A6, #0FBE86); color: #05281C; }
+.apps-ico.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
+.apps-ico.amber { background: linear-gradient(180deg, #FFD56A, #E08A00); color: #3A2800; }
+.apps-ico.moss { background: linear-gradient(180deg, #6BA368, #2F6B3C); color: #fff; }
+.apps-ico.steel { background: linear-gradient(180deg, #6B8499, #334655); color: #fff; }
+.apps-ico.rose { background: linear-gradient(180deg, #E07A9B, #A34462); color: #fff; }
+.apps-empty { text-align: center; color: var(--muted); font-weight: 650; padding: 20px 8px; }
+
+.me-tools { margin: 12px 0 4px; }
+
   </style>
 </head>
 <body>
@@ -1488,7 +1626,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.1</span>
+        <span class="version-pill">Prototype v1.5.2</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -1499,11 +1637,11 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <nav class="hero-jumps" aria-label="Jump to a screen">
         <a href="#welcome">Welcome</a>
         <a href="#signup">Sign up</a>
-        <a href="#members">Members</a>
+        <a href="#members">Facebook</a>
         <a href="#member">Profile</a>
         <a href="#chats">Chats</a>
         <a href="#reviews">Reviews</a>
-        <a href="#drawer">Menu</a>
+        <a href="#more">More</a>
         <a href="#subscription">Subscription</a>
         <a href="#my-regions">Your areas</a>
         <a href="#ai-assistant">AI assistant</a>
@@ -1513,12 +1651,12 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a free promotion queue with paid jump later (price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a Facebook promotion queue on the bottom menu, home card and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.1 · 16 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.2 · 17 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -1536,21 +1674,25 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
           <div class="screens" id="screens"></div>
 
           <nav class="tabbar" id="tabbar" aria-label="Main">
-            <button class="tab" data-tab="members" id="tab-members">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M20 8v6M17 11h6"/></svg>
-              Members
-            </button>
-            <button class="tab" data-tab="chats" id="tab-chats">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5H8l-4 3v-5.2A8.5 8.5 0 1 1 21 12Z"/></svg>
-              Chats<span class="tab-badge" id="tabChatBadge">3</span>
-            </button>
             <button class="tab" data-tab="reviews" id="tab-reviews">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 6.6H21l-5.4 3.9 2.1 6.5L12 16.6 6.3 20l2.1-6.5L3 9.6h6.8L12 3z"/></svg>
               Reviews
             </button>
-            <button class="tab" data-tab="me" id="tab-me">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5c1.2-3.1 3.7-4.7 7-4.7s5.8 1.6 7 4.7"/></svg>
-              My Profile
+            <button class="tab" data-tab="members" id="tab-members">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Facebook
+            </button>
+            <button class="tab" data-tab="chats" id="tab-chats">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5H8l-4 3v-5.2A8.5 8.5 0 1 1 21 12Z"/></svg>
+              Chat<span class="tab-badge" id="tabChatBadge">3</span>
+            </button>
+            <button class="tab" data-tab="promo-queue" id="tab-queue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 0 1 0 7.6"/><path d="M18.7 5.6a8 8 0 0 1 0 12.8"/></svg>
+              Queue
+            </button>
+            <button class="tab" data-tab="more" id="tab-more">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+              More
             </button>
           </nav>
           <div class="home-indicator"></div>
@@ -1996,7 +2138,8 @@ window.TC_TRADES = [
     { id: "notifications", title: "Notifications centre", sub: "Messages, reviews, new members" },
     { id: "notif-settings", title: "Notification settings", sub: "Toggles and quiet hours" },
     { id: "lockscreen", title: "Lock screen push", sub: "Mock notifications on the lock screen" },
-    { id: "drawer", title: "Menu drawer", sub: "Hamburger slide-out navigation" },
+    { id: "more", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
+    { id: "drawer", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
@@ -2007,11 +2150,11 @@ window.TC_TRADES = [
     { id: "rec-alerts", title: "Recommendation alerts", sub: "Posts the circle can help with" },
     { id: "rec-compose", title: "Send a recommendation alert", sub: "Paste a Facebook post link" },
     { id: "rec-alert", title: "Alert card", sub: "Open post, comment ideas, mark done" },
-    { id: "promo-queue", title: "Promotion queue", sub: "Free turns, or jump the queue later" },
+    { id: "promo-queue", title: "Facebook promotion queue", sub: "Free turns, or jump the queue later" },
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -2640,14 +2783,7 @@ window.TC_TRADES = [
 
     var showTabs = TABBED.has(id);
     tabbar.classList.toggle("show", showTabs);
-    tabbar.querySelectorAll(".tab").forEach(function (t) {
-      var tab = t.dataset.tab;
-      var on = (tab === "members" && (id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "drawer"))
-        || (tab === "me" && (id === "me" || id === "my-regions" || id === "my-regions-all"))
-        || (tab === "reviews" && (id === "reviews" || id === "reviews-back" || id === "review-ideas"))
-        || (tab === "chats" && (id === "chats" || id === "chat-dm" || id === "chat-group"));
-      t.classList.toggle("active", on);
-    });
+    updateTabs(id);
     statusBar.classList.toggle("light", DARK.has(id) || id === "welcome");
     var item = CHOOSER.find(function (c) { return c.id === id; });
     $("#deviceCaption").textContent = item ? item.title : "TradeCircle Perth";
@@ -2658,6 +2794,40 @@ window.TC_TRADES = [
     bindScreen();
     if (id === "fb-consent") openFbSheet("create-profile");
     if (window.TC12 && TC12.afterGo) TC12.afterGo(id);
+  }
+
+  
+  function drawerIsOpen() {
+    var d = document.getElementById("appDrawer");
+    return !!(d && d.classList.contains("open"));
+  }
+  function updateTabs(id) {
+    id = id || (state && state.screen) || "";
+    var drawerOpen = false;
+    var moreScreens = {
+      "more": 1, "me": 1, "settings": 1, "edit-profile": 1, "my-regions": 1, "my-regions-all": 1,
+      "subscription": 1, "invite": 1, "help": 1, "ai-assistant": 1, "ai-voice": 1,
+      "rec-alerts": 1, "rec-compose": 1, "rec-alert": 1, "notifications": 1,
+      "notif-settings": 1, "drawer": 1, "google-consent": 1
+    };
+    tabbar.querySelectorAll(".tab").forEach(function (el) {
+      var tab = el.dataset.tab;
+      var on = false;
+      if (drawerOpen) {
+        on = tab === "more";
+      } else if (tab === "reviews") {
+        on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
+      } else if (tab === "members") {
+        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
+      } else if (tab === "chats") {
+        on = id === "chats" || id === "chat-dm" || id === "chat-group";
+      } else if (tab === "promo-queue") {
+        on = id === "promo-queue";
+      } else if (tab === "more") {
+        on = !!moreScreens[id];
+      }
+      el.classList.toggle("active", on);
+    });
   }
 
   function bindScreen() {
@@ -2854,6 +3024,10 @@ window.TC_TRADES = [
     var tab = e.target.closest(".tab");
     if (tab) {
       var t = tab.dataset.tab;
+      if (t === "more") {
+        go("more");
+        return;
+      }
       go(t === "members" ? "members" : t);
       return;
     }
@@ -3128,11 +3302,11 @@ window.TC_TRADES = [
     closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
     captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
     allRegionIds: allRegionIds, isAllMetro: isAllMetro, selectedAreasCard: selectedAreasCard,
-    buildChooser: buildChooser, paintSearchAc: paintSearchAc
+    buildChooser: buildChooser, paintSearchAc: paintSearchAc, updateTabs: updateTabs
   };
 })();
 
-/* TradeCircle Perth — prototype v1.5.1 */
+/* TradeCircle Perth — prototype v1.5.2 */
 (function () {
   "use strict";
 
@@ -3532,7 +3706,7 @@ window.TC_TRADES = [
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.1 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.2 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -4003,7 +4177,7 @@ window.TC_TRADES = [
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.1</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.2</div>';
     return html;
   }
 
@@ -4429,7 +4603,9 @@ window.TC_TRADES = [
     renderSettings: renderSettings,
     render: render,
     handleClick: handleClick,
-    afterGo: afterGo
+    afterGo: afterGo,
+    openDrawer: openDrawer,
+    closeDrawer: closeDrawer
   };
 
   if (T().go && S().screen) {
@@ -4437,7 +4613,7 @@ window.TC_TRADES = [
   }
 })();
 
-/* TradeCircle Perth — prototype v1.5.1 */
+/* TradeCircle Perth — prototype v1.5.2 */
 (function () {
   "use strict";
 
@@ -4468,6 +4644,9 @@ window.TC_TRADES = [
     star: svg('<path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/>'),
     bell: svg('<path d="M18 8A6 6 0 106 8c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 004 0"/>'),
     queue: svg('<path d="M4 6h16M4 12h16M4 18h10"/>'),
+    mega: svg('<path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/>'),
+    gear: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 009 19.4a1.7 1.7 0 00-1.82.33l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.7 1.7 0 004.68 15a1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.33-1.82l-.1-.1a2 2 0 112.8-2.8l.1.1A1.7 1.7 0 009 4.68a1.7 1.7 0 001-1.51V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.51 1.7 1.7 0 001.82-.33l.1-.1a2 2 0 112.8 2.8l-.1.1A1.7 1.7 0 0019.4 9V9c.3.6.9 1 1.6 1.1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>'),
+    user: svg('<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/>'),
     cam: svg('<path d="M4 8h3l2-3h6l2 3h3v11H4V8z"/><circle cx="12" cy="13" r="3.2"/>'),
     image: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-9 9"/>'),
     file: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>'),
@@ -4641,6 +4820,83 @@ window.TC_TRADES = [
     return S()._queue;
   }
 
+
+  function myQueuePlace() {
+    var q = queue();
+    var mine = 0;
+    q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
+    return { q: q, mine: mine, total: q.length };
+  }
+  function homePromoBlock() {
+    var p = myQueuePlace();
+    var sub = p.mine
+      ? "You’re number " + p.mine + " of " + p.total + " in the Facebook promotion queue"
+      : "Request a free turn in the Facebook promotion queue";
+    var cta = p.mine ? "View queue" : "Request a turn";
+    return '<button type="button" class="home-promo" data-go="promo-queue">' +
+      '<span class="home-promo-ico">' + I.mega + "</span>" +
+      '<span class="home-promo-body"><strong>Your turn to promote</strong><span>' + esc(sub) + "</span></span>" +
+      '<span class="home-promo-cta">' + cta + "</span></button>";
+  }
+  function meToolRows() {
+    var p = myQueuePlace();
+    var qSub = p.mine ? "You’re number " + p.mine + " in the queue" : "Request a free turn";
+    function row(go, ico, color, title, sub) {
+      return '<button class="set-row" type="button" data-go="' + go + '"><span class="ic" style="' + color + '">' + ico + '</span><span class="lab"><span class="a">' + title + '</span><span class="b">' + sub + '</span></span><span class="chev">' + icoWait("chev") + "</span></button>";
+    }
+    function icoWait(n) { return (T().icon ? T().icon(n) : ""); }
+    return '<p class="group-label">Circle tools</p><div class="card group me-tools">' +
+      row("promo-queue", I.mega, "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
+      row("rec-alerts", I.bell, "background:#FFF6E0;color:#8A5A00", "Recommendation alerts", "Help the circle comment on a post") +
+      row("ai-assistant", I.spark, "background:#EEF2F6;color:#0B1F33", "AI assistant", "Voice commands while you drive") +
+      "</div>";
+  }
+  function renderMore() {
+    var m = T().me && T().me();
+    var tiles = [
+      ["For you", [
+        ["me", I.user, "teal", "My profile"],
+        ["promo-queue", I.mega, "navy", "Queue"],
+        ["rec-alerts", I.bell, "amber", "Alerts"],
+        ["ai-assistant", I.spark, "moss", "AI assistant"],
+        ["my-regions", I.queue, "steel", "Your areas"],
+        ["reviews", I.star, "amber", "Reviews"],
+        ["chats", I.chat, "navy", "Chat"],
+        ["members", I.fb.indexOf("<svg") === 0 ? I.user : I.user, "teal", "Facebook"]
+      ]],
+      ["Account", [
+        ["settings", I.gear, "steel", "Settings"],
+        ["notifications", I.bell, "amber", "Notifications"],
+        ["subscription", I.star, "navy", "Subscription"],
+        ["invite", I.send, "teal", "Invite"],
+        ["help", I.spark, "moss", "Help"],
+        ["welcome", I.open, "rose", "Sign out"]
+      ]]
+    ];
+    var q = (S()._moreQuery || "").trim().toLowerCase();
+    function grid(list) {
+      var shown = list.filter(function (it) { return !q || it[3].toLowerCase().indexOf(q) >= 0; });
+      if (!shown.length) return "";
+      return '<div class="apps-grid">' + shown.map(function (it) {
+        return '<button type="button" class="apps-tile" data-go="' + it[0] + '"><span class="apps-ico ' + it[2] + '">' + it[1] + "</span><span>" + it[3] + "</span></button>";
+      }).join("") + "</div>";
+    }
+    var body = tiles.map(function (sec) {
+      var g = grid(sec[1]);
+      if (!g) return "";
+      return '<div class="apps-section"><h3>' + sec[0] + "</h3>" + g + "</div>";
+    }).join("");
+    if (!body) body = '<p class="apps-empty">No matches for that search.</p>';
+    return '<section class="screen has-tabs has-header" data-screen="more">' + topbar("More") +
+      '<div class="scroll"><div class="more-head"><h2>More</h2></div>' +
+      '<div class="search-wrap"><div class="search">' + ico("search") +
+      '<input id="moreSearch" type="search" placeholder="Search the menu" value="' + esa(S()._moreQuery || "") + '" autocomplete="off"></div></div>' +
+      (m ? '<button type="button" class="more-profile" data-go="me">' + av(m, 48) +
+        '<div style="flex:1;min-width:0;text-align:left"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">View your profile</div></div>' +
+        (T().icon ? T().icon("chev") : "") + "</button>" : "") +
+      body + "</div></section>";
+  }
+
   /* ---------- Screens ---------- */
   function renderAI() {
     var connected = S().aiProvider || "grok";
@@ -4657,7 +4913,7 @@ window.TC_TRADES = [
       ["Who left me a Google review?", "reviews"],
       ["Open Liam’s Facebook profile", "open-liam"],
       ["Read my latest messages", "messages"],
-      ["Where am I in the promotion queue?", "queue"],
+      ["Where am I in the Facebook promotion queue?", "queue"],
       ["Any recommendation alerts?", "alerts"],
       ["Remind me to review Jack tomorrow", "remind"]
     ];
@@ -4754,18 +5010,18 @@ window.TC_TRADES = [
     var q = queue();
     var mine = 0;
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
-    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Promotion queue") +
-      '<div class="scroll"><div class="auth-hero"><h2>A fair turn to promote your business</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
+    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook promotion queue") +
+      '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
         : '<p class="hint">You’re not in the queue yet.</p>') +
       (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
-        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.queue + "<span>Request a turn</span></button>") +
+        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.mega + "<span>Request a turn</span></button>") +
       "</div>" +
       '<div class="queue-card"><div class="areas-card-h">Jump the queue</div>' +
       '<p class="plan-price"><span class="price-tbc">Price to be set</span></p>' +
       '<p class="hint">No payment is taken in this prototype. In the real app, a paid jump would go through the App Store, Google Play, or Stripe on the web. Until a price is chosen, this stays on the waiting list.</p>' +
-      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.queue + "<span>Coming later</span></button></div>" +
+      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.mega + "<span>Coming later</span></button></div>" +
       '<p class="group-label">Current queue</p>' +
       q.map(function (row, i) {
         var m = member(row.memberId);
@@ -4879,7 +5135,7 @@ window.TC_TRADES = [
         reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. I can open Sarah’s Google review page so you can tap Review back." }],
         "open-liam": [{ who: "you", text: "Open Liam’s Facebook profile." }, { who: "ai", text: "Opening Liam’s Facebook profile now. Tap Add friend when you’re ready. I won’t send the request for you." }],
         messages: [{ who: "you", text: "Read my latest messages." }, { who: "ai", text: "Sarah said: “Thanks — I will have a look this week.” Jack asked if you could leave a Google review." }],
-        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the free queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
+        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the Facebook promotion queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
         alerts: [{ who: "you", text: "Any recommendation alerts?" }, { who: "ai", text: "Yes. Someone is asking for a pest controller. I can open the alert so you can go to the Facebook post and comment in your own words." }],
         remind: [{ who: "you", text: "Remind me to review Jack tomorrow." }, { who: "ai", text: "Reminder set for tomorrow morning (mock). I’ll nudge you to open Jack’s Google review page — you’ll write and post it yourself." }]
       };
@@ -5000,6 +5256,7 @@ window.TC_TRADES = [
     if (id === "rec-compose") return renderRecCompose();
     if (id === "rec-alert") return renderRecAlert();
     if (id === "promo-queue") return renderQueue();
+    if (id === "more" || id === "drawer") return renderMore();
     if (id === "reviews" || id === "reviews-back") return renderReviews();
     if (id === "lockscreen") return renderLock();
     return null;
@@ -5022,14 +5279,32 @@ window.TC_TRADES = [
     TC12.afterGo = function (id) {
       if (prevAfter) prevAfter(id);
       enhanceComposer();
-      /* inject extra drawer items if the drawer exists */
+      if (id === "more" || id === "drawer") {
+        if (window.TC12 && TC12.closeDrawer) TC12.closeDrawer();
+        var ms = document.getElementById("moreSearch");
+        if (ms) {
+          ms.addEventListener("input", function () {
+            S()._moreQuery = ms.value;
+            var html = renderMore();
+            var screens = document.getElementById("screens");
+            if (screens) {
+              screens.innerHTML = html;
+              var sc = screens.querySelector(".screen");
+              if (sc) sc.classList.add("active");
+            }
+            var again = document.getElementById("moreSearch");
+            if (again) { again.focus(); try { again.setSelectionRange(again.value.length, again.value.length); } catch (e) {} }
+          });
+        }
+      }
+      /* inject extra drawer items if the (legacy) drawer exists */
       var nav = document.querySelector(".drawer-nav");
       if (nav && !nav.getAttribute("data-v15")) {
         nav.setAttribute("data-v15", "1");
         var extra = [
-          ["ai-assistant", "AI assistant"],
-          ["rec-alerts", "Recommendation alerts"],
-          ["promo-queue", "Promotion queue"]
+          ["ai-assistant", I.spark, "AI assistant"],
+          ["rec-alerts", I.bell, "Recommendation alerts"],
+          ["promo-queue", I.mega, "Facebook promotion queue"]
         ];
         extra.forEach(function (it) {
           if (nav.querySelector('[data-go="' + it[0] + '"]')) return;
@@ -5037,12 +5312,30 @@ window.TC_TRADES = [
           b.type = "button";
           b.className = "drawer-item";
           b.setAttribute("data-go", it[0]);
-          b.innerHTML = '<span class="ic">' + I.spark + "</span><span>" + it[1] + "</span>";
+          b.innerHTML = '<span class="ic">' + it[1] + "</span><span>" + it[2] + "</span>";
           var settings = nav.querySelector('[data-go="settings"]');
           nav.insertBefore(b, settings || null);
         });
       }
     };
+    var prevMembers = TC12.renderMembers;
+    TC12.renderMembers = function () {
+      var html = prevMembers ? prevMembers() : "";
+      return html.replace(/(<p class="count-line">[\s\S]*?<\/p>)/, "$1" + homePromoBlock());
+    };
+    var prevMe = TC12.renderMe;
+    TC12.renderMe = function () {
+      var html = prevMe ? prevMe() : "";
+      return html.replace('<div class="info-rows">', meToolRows() + '<div class="info-rows">');
+    };
+    /* Header hamburger opens the More apps screen */
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-action='open-drawer']");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      go("more");
+    }, true);
     /* Patch attach sheet by wrapping later clicks — openAttach is internal.
        We intercept data-action=attach after v12 opens the sheet, then rewrite it. */
     document.addEventListener("click", function (e) {

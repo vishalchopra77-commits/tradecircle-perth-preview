@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 16 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.1.
+**Current design:** clickable prototype v1.5.2.
 
 ---
 

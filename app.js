@@ -183,7 +183,8 @@
     { id: "notifications", title: "Notifications centre", sub: "Messages, reviews, new members" },
     { id: "notif-settings", title: "Notification settings", sub: "Toggles and quiet hours" },
     { id: "lockscreen", title: "Lock screen push", sub: "Mock notifications on the lock screen" },
-    { id: "drawer", title: "Menu drawer", sub: "Hamburger slide-out navigation" },
+    { id: "more", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
+    { id: "drawer", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
@@ -194,11 +195,11 @@
     { id: "rec-alerts", title: "Recommendation alerts", sub: "Posts the circle can help with" },
     { id: "rec-compose", title: "Send a recommendation alert", sub: "Paste a Facebook post link" },
     { id: "rec-alert", title: "Alert card", sub: "Open post, comment ideas, mark done" },
-    { id: "promo-queue", title: "Promotion queue", sub: "Free turns, or jump the queue later" },
+    { id: "promo-queue", title: "Facebook promotion queue", sub: "Free turns, or jump the queue later" },
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -827,14 +828,7 @@
 
     var showTabs = TABBED.has(id);
     tabbar.classList.toggle("show", showTabs);
-    tabbar.querySelectorAll(".tab").forEach(function (t) {
-      var tab = t.dataset.tab;
-      var on = (tab === "members" && (id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "drawer"))
-        || (tab === "me" && (id === "me" || id === "my-regions" || id === "my-regions-all"))
-        || (tab === "reviews" && (id === "reviews" || id === "reviews-back" || id === "review-ideas"))
-        || (tab === "chats" && (id === "chats" || id === "chat-dm" || id === "chat-group"));
-      t.classList.toggle("active", on);
-    });
+    updateTabs(id);
     statusBar.classList.toggle("light", DARK.has(id) || id === "welcome");
     var item = CHOOSER.find(function (c) { return c.id === id; });
     $("#deviceCaption").textContent = item ? item.title : "TradeCircle Perth";
@@ -845,6 +839,40 @@
     bindScreen();
     if (id === "fb-consent") openFbSheet("create-profile");
     if (window.TC12 && TC12.afterGo) TC12.afterGo(id);
+  }
+
+  
+  function drawerIsOpen() {
+    var d = document.getElementById("appDrawer");
+    return !!(d && d.classList.contains("open"));
+  }
+  function updateTabs(id) {
+    id = id || (state && state.screen) || "";
+    var drawerOpen = false;
+    var moreScreens = {
+      "more": 1, "me": 1, "settings": 1, "edit-profile": 1, "my-regions": 1, "my-regions-all": 1,
+      "subscription": 1, "invite": 1, "help": 1, "ai-assistant": 1, "ai-voice": 1,
+      "rec-alerts": 1, "rec-compose": 1, "rec-alert": 1, "notifications": 1,
+      "notif-settings": 1, "drawer": 1, "google-consent": 1
+    };
+    tabbar.querySelectorAll(".tab").forEach(function (el) {
+      var tab = el.dataset.tab;
+      var on = false;
+      if (drawerOpen) {
+        on = tab === "more";
+      } else if (tab === "reviews") {
+        on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
+      } else if (tab === "members") {
+        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
+      } else if (tab === "chats") {
+        on = id === "chats" || id === "chat-dm" || id === "chat-group";
+      } else if (tab === "promo-queue") {
+        on = id === "promo-queue";
+      } else if (tab === "more") {
+        on = !!moreScreens[id];
+      }
+      el.classList.toggle("active", on);
+    });
   }
 
   function bindScreen() {
@@ -1041,6 +1069,10 @@
     var tab = e.target.closest(".tab");
     if (tab) {
       var t = tab.dataset.tab;
+      if (t === "more") {
+        go("more");
+        return;
+      }
       go(t === "members" ? "members" : t);
       return;
     }
@@ -1315,6 +1347,6 @@
     closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
     captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
     allRegionIds: allRegionIds, isAllMetro: isAllMetro, selectedAreasCard: selectedAreasCard,
-    buildChooser: buildChooser, paintSearchAc: paintSearchAc
+    buildChooser: buildChooser, paintSearchAc: paintSearchAc, updateTabs: updateTabs
   };
 })();

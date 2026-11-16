@@ -178,3 +178,113 @@
   gap: 8px;
   border-radius: 14px;
 }
+
+/* v1.5.2 — home promo card, More apps grid, brand tab pill already in v12.css */
+.home-promo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-radius: 18px;
+  padding: 13px 12px;
+  margin: 8px 0 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #14314C 0%, #0B1F33 58%, #0A7A58 140%);
+  box-shadow: 0 10px 22px rgba(11, 31, 51, 0.18);
+  cursor: pointer;
+}
+.home-promo-ico {
+  width: 44px; height: 44px; border-radius: 50%; flex: 0 0 auto;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #24E0A6, #0FBE86);
+  color: #05281C;
+  box-shadow: 0 4px 10px rgba(15, 190, 134, 0.35);
+}
+.home-promo-ico svg { width: 22px; height: 22px; }
+.home-promo-body { flex: 1; min-width: 0; }
+.home-promo-body strong { display: block; font-size: 15px; letter-spacing: -0.02em; line-height: 1.2; }
+.home-promo-body span { display: block; margin-top: 3px; font-size: 12px; font-weight: 650; opacity: 0.92; line-height: 1.3; }
+.home-promo-cta {
+  flex: 0 0 auto;
+  background: #fff;
+  color: #0B1F33;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.home-shortcuts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.home-short {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 9px 10px;
+  font-weight: 800; font-size: 12px; color: var(--ink);
+}
+.home-short .ic {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; flex: 0 0 auto;
+}
+.home-short .ic.teal { background: linear-gradient(180deg, #24E0A6, #0FBE86); color: #05281C; }
+.home-short .ic.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
+.home-short svg { width: 15px; height: 15px; }
+
+/* More — apps grid (structure only; TradeCircle colours) */
+.more-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 2px 10px;
+}
+.more-head h2 { margin: 0; font-size: 28px; letter-spacing: -0.04em; }
+.more-profile {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 18px; padding: 12px;
+  margin: 0 0 12px;
+}
+.more-profile .nm { font-weight: 800; font-size: 16px; }
+.more-profile .sub { font-size: 12px; font-weight: 650; color: var(--muted); }
+.apps-section { margin: 16px 0 8px; }
+.apps-section h3 {
+  margin: 0 0 10px;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+}
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 8px;
+}
+.apps-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 100%; border: 0; background: none; cursor: pointer;
+  padding: 0;
+  color: var(--ink);
+  font-size: 11px; font-weight: 750; line-height: 1.25; text-align: center;
+  letter-spacing: -0.01em;
+}
+.apps-tile[hidden] { display: none; }
+.apps-ico {
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(11, 31, 51, 0.12);
+}
+.apps-ico svg { width: 24px; height: 24px; }
+.apps-ico.teal { background: linear-gradient(180deg, #24E0A6, #0FBE86); color: #05281C; }
+.apps-ico.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
+.apps-ico.amber { background: linear-gradient(180deg, #FFD56A, #E08A00); color: #3A2800; }
+.apps-ico.moss { background: linear-gradient(180deg, #6BA368, #2F6B3C); color: #fff; }
+.apps-ico.steel { background: linear-gradient(180deg, #6B8499, #334655); color: #fff; }
+.apps-ico.rose { background: linear-gradient(180deg, #E07A9B, #A34462); color: #fff; }
+.apps-empty { text-align: center; color: var(--muted); font-weight: 650; padding: 20px 8px; }
+
+.me-tools { margin: 12px 0 4px; }
