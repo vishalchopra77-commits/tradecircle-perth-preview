@@ -21,7 +21,7 @@ When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly sa
 ## 2. How to continue the work
 
 1. Read `START-HERE.md`, this file, and `README.md` in the current version folder.
-2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.3**.
+2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.4**.
 3. Only change what Vishal asked for in the current request. Do not redesign unrelated screens.
 4. Keep all demo data fictional. Do not add real customer names, phone numbers, addresses, passwords, API keys, or other secrets.
 5. Ask Vishal **one question at a time**, in plain non-technical words, when a decision is required. Do not assume an answer.
@@ -85,7 +85,7 @@ Do not decide these for him:
 ## 4. Version numbering
 
 - The first design was **v1**.
-- Small feature additions use a point number: **v1.1**, **v1.2**, then **v1.3**, and so on.
+- Small feature additions use a point number: **v1.1**, **v1.2**, **v1.3**, **v1.4**, and so on.
 - Use a new major number (**v2**) only for a large change, such as a full visual redesign or the start of a real (non-prototype) build, and only after saying so clearly.
 - Put the version in `README.md`, in the in-app settings/drawer version label, and in the delivery note to Vishal.
 - Do not skip numbers. Do not reuse a number for a different set of files.
@@ -107,7 +107,7 @@ Do these steps in order. Do not skip the archive step.
    - If GitHub Pages is enabled, confirm the preview link opens the new version.
    - Do not force-push or rewrite published history unless Vishal clearly asked for that.
 7. **Refresh the Google Drive backup:**
-   - Upload the new current unpacked files into a folder named like `v1.3 (current)`.
+   - Upload the new current unpacked files into a folder named like `v1.4 (current)`.
    - Move the previous “current” folder into **Archive** (or leave it there and clearly mark the new one as current).
    - Also upload a `.zip` (easiest download) and a `.tgz` of the new version.
    - Keep START-HERE and this instructions file at the Drive folder root, and as Google Docs if those copies already exist.

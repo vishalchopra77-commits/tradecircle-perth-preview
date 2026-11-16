@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.3 */
+/* TradeCircle Perth — prototype v1.4 */
 (function () {
   "use strict";
 
@@ -199,7 +199,40 @@
       "</div>";
   }
 
+  function fbMark() {
+    return '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  function starMark() {
+    return '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/></svg>';
+  }
+  function statusIcon(cls, label, inner) {
+    return '<span class="sb ' + cls + '" role="img" aria-label="' + label + '" title="' + label + '">' + inner + "</span>";
+  }
+  function statusIcons(m) {
+    var r = relOf(m);
+    var fb = r === "friends"
+      ? statusIcon("sb-friends", "Facebook friends", fbMark())
+      : r === "pending"
+        ? statusIcon("sb-pending", "Friend request pending", fbMark())
+        : statusIcon("sb-none", "Not connected on Facebook", fbMark());
+    var bits = [fb];
+    if (iReviewed(m)) bits.push(statusIcon("sb-you", "You reviewed them", starMark()));
+    else if (needsMyReview(m)) bits.push(statusIcon("sb-need", "Needs your review", starMark()));
+    if (theyReviewed(m)) bits.push(statusIcon("sb-they", "They reviewed you", starMark()));
+    return '<div class="sb-row">' + bits.join("") + "</div>";
+  }
+  function statusLegend() {
+    return '<div class="icon-legend" aria-label="Icon guide">' +
+      '<span class="il">' + statusIcon("sb-friends", "Facebook friends", fbMark()) + "Friends</span>" +
+      '<span class="il">' + statusIcon("sb-pending", "Friend request pending", fbMark()) + "Pending</span>" +
+      '<span class="il">' + statusIcon("sb-none", "Not connected on Facebook", fbMark()) + "Not connected</span>" +
+      '<span class="il">' + statusIcon("sb-you", "You reviewed them", starMark()) + "You reviewed</span>" +
+      '<span class="il">' + statusIcon("sb-they", "They reviewed you", starMark()) + "They reviewed you</span>" +
+      '<span class="il">' + statusIcon("sb-need", "Needs your review", starMark()) + "Needs your review</span>" +
+      "</div>";
+  }
   function statusPills(m, compact) {
+    if (compact) return statusIcons(m);
     var r = relOf(m);
     var fb = r === "friends"
       ? '<span class="st st-friends">Facebook friends</span>'
@@ -212,11 +245,6 @@
     var theirs = theyReviewed(m)
       ? '<span class="st st-yes">They reviewed you</span>'
       : '<span class="st st-none">They have not reviewed you</span>';
-    if (compact) {
-      mine = iReviewed(m) ? '<span class="st st-yes">You reviewed</span>' : '<span class="st st-need">Need my review</span>';
-      if (!needsMyReview(m) && !iReviewed(m)) mine = '<span class="st st-none">No review yet</span>';
-      theirs = theyReviewed(m) ? '<span class="st st-yes">They reviewed you</span>' : "";
-    }
     return '<div class="st-row">' + fb + mine + theirs + "</div>";
   }
 
@@ -235,9 +263,8 @@
       av(m, 52) +
       '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
       '<div class="biz">' + esc(m.business) + "</div>" +
-      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
-      m.regions.map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
-      "</div>" + statusPills(m, true) +
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div>" +
+      statusIcons(m) +
       "</div></button>" + actions + "</div>";
   }
 
@@ -263,8 +290,17 @@
     var countLabel = st.areaFilter === "mine"
       ? (list.length + " member" + (list.length === 1 ? "" : "s") + " in your areas")
       : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
+    var mineIds = (T().me() && T().me().regions) ? T().me().regions : [];
+    var allMine = T().isAllMetro && T().isAllMetro(mineIds);
+    var areasCard = "";
+    if (st.areaFilter === "mine" && T().selectedAreasCard) {
+      var sub = allMine
+        ? "You’ve joined all Perth metro, so this list includes every member. The All Perth metro filter is still there if you want the city-wide view."
+        : "Members from all of your areas are shown together in one list.";
+      areasCard = T().selectedAreasCard(mineIds, { title: "Your areas", changeTo: "my-regions", changeLabel: "Change", sub: sub });
+    }
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
-      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
+      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" + areasCard +
       '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
@@ -274,6 +310,7 @@
       trades.map(function (t) { return '<button class="chip' + (st.tradeFilter === t ? " active" : "") + '" data-trade="' + esa(t) + '">' + t + "</button>"; }).join("") +
       "</div>" +
       (st.tipDismissed ? '<div style="height:10px"></div>' : '<div class="banner info" style="margin:8px 0 14px" id="tipBanner">Tap Add friend to send a Facebook request, or Message to chat in the app. Weekly meet-ups stay offline. <button class="link" data-action="dismiss-tip" style="margin-left:6px">Got it</button></div>') +
+      statusLegend() +
       '<div id="memberList">' + (list.length ? list.map(memberCard).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the filters and search.</p></div>') +
       "</div></div></section>";
   }
@@ -316,8 +353,8 @@
       '<button class="btn btn-ghost ink" data-action="open-chat" data-id="' + m.id + '">Message</button>' +
       mark + pageBtn + "</div>" +
       '<p class="hint" style="text-align:center;margin-top:10px">Only review businesses you have actually used. Friend requests are sent on Facebook, not inside this app.</p>' +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Areas they work in" }) : "") +
       '<div class="info-rows">' + phoneRow +
-      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook).replace("https://www.", "")) + "</div></div></div>" +
       "</div></div></section>";
   }
@@ -334,8 +371,8 @@
       "</div>" + (S().googleConnected ? gBadge(m) : '<div class="g-badge" style="background:#EEF2F6;color:#5B6B7C">Google profile not connected</div>') +
       "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They can friend you on Facebook, message you here, or leave a Google review after a real job.</div>' +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Your areas", changeTo: "my-regions", changeLabel: "Change" }) : "") +
       '<div class="info-rows">' + phoneRow +
-      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
       pageRow +
       (S().googleConnected ? '<div class="info-row"><div class="ic" style="background:#E8F1FD;color:#1A73E8">G</div><div><div class="k">Google review link</div><div class="v">' + esc(String(googleLink).replace("https://", "")) + "</div></div></div>" : "") +
@@ -361,7 +398,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.3 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.4 \u00b7 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -798,10 +835,10 @@
 
   function renderMyRegions() {
     var m = T().me();
-    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("My regions") +
-      '<div class="scroll"><p class="hint">You can join more than one Perth region. Change this any time.</p>' +
+    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("Your areas") +
+      '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
       T().regionPicker(m.regions || [], "me-regions") +
-      '<button class="btn btn-primary" data-action="save-regions">Save regions</button></div></section>';
+      '<button class="btn btn-primary" data-action="save-regions">Save areas</button></div></section>';
   }
 
   function drawerInner() {
@@ -812,7 +849,7 @@
       ["reviews", I.star, "Reviews", ""],
       ["notifications", I.bell, "Notifications", ""],
       ["me", I.user, "My profile", ""],
-      ["my-regions", I.regions, "My regions", ""],
+      ["my-regions", I.regions, "Your areas", ""],
       ["edit-profile", I.fb, "Facebook connection", "drawer-fb"],
       ["settings", I.google, "Google Business Profile", "drawer-google"],
       ["invite", I.invite, "Invite a tradie", ""],
@@ -832,7 +869,7 @@
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.3</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.4</div>';
     return html;
   }
 
@@ -906,7 +943,7 @@
     if (id === "subscription") return renderSubscription();
     if (id === "invite") return renderInvite();
     if (id === "help") return renderHelp();
-    if (id === "my-regions") return renderMyRegions();
+    if (id === "my-regions" || id === "my-regions-all") return renderMyRegions();
     return null;
   }
 
@@ -1122,7 +1159,7 @@
       return true;
     }
     if (action === "save-regions") {
-      toast("Regions saved.");
+      toast("Your areas were saved.");
       go("me");
       return true;
     }
@@ -1245,16 +1282,6 @@
       inp.addEventListener("change", function () {
         notif[inp.getAttribute("data-quiet")] = inp.value;
         persist();
-      });
-    });
-    document.querySelectorAll('[data-prefix="me-regions"]').forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var me = T().me();
-        var rid = btn.getAttribute("data-region");
-        var ix = me.regions.indexOf(rid);
-        if (ix >= 0) { if (me.regions.length > 1) me.regions.splice(ix, 1); }
-        else me.regions.push(rid);
-        go("my-regions");
       });
     });
   }

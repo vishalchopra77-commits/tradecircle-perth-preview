@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.3</title>
+  <title>TradeCircle Perth — UI prototype v1.4</title>
   <style>
 /* TradeCircle Perth UI v1 */
 @font-face {
@@ -457,6 +457,101 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .region-chip.on .tick { background: var(--accent); border-color: var(--accent); color: #06281C; }
 .selected-count { font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 4px 0 16px; }
 
+.join-all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  margin: 0 0 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.join-all.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.join-all-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.join-all-txt strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.join-all-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.join-all .toggle { flex-shrink: 0; }
+.areas-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 0 0 14px;
+  box-sizing: border-box;
+}
+.areas-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.areas-card-h {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.areas-all-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #066B4C;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.areas-change {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 800;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.areas-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+
 .pending-art {
   width: 96px; height: 96px; border-radius: 28px; margin: 24px auto 18px;
   background: var(--amber-soft); display: grid; place-items: center; color: var(--amber-ink);
@@ -843,7 +938,40 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .drawer-sep { height: 1px; background: var(--line); margin: 6px 16px; }
 .drawer-ver { padding: 4px 16px 16px; font-size: 11px; font-weight: 600; color: var(--faint); }
 
+/* Status icons on member cards */
+.sb-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.sb {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: inline-grid; place-items: center;
+  flex: none;
+}
+.sb svg { display: block; }
+.sb-friends { background: #1877F2; color: #fff; }
+.sb-pending { background: #FFF3CC; color: #8A5A00; box-shadow: inset 0 0 0 1.5px #E8C96A; }
+.sb-none { background: #EEF2F6; color: #8AA0B2; }
+.sb-you { background: #FFF3CC; color: #9A6B00; }
+.sb-they { background: #E8F1FD; color: #0D65D9; }
+.sb-need { background: #FDECEC; color: #9B2C2C; }
+.icon-legend {
+  display: flex; flex-wrap: wrap; gap: 8px 10px;
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+.icon-legend .il {
+  display: inline-flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.icon-legend .sb { width: 18px; height: 18px; }
+.icon-legend .sb svg { width: 10px; height: 10px; }
+
 /* Status pills */
+
 .st-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .st {
   display: inline-flex; align-items: center; gap: 4px;
@@ -1069,7 +1197,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .chat-composer textarea { font-family: inherit; }
 .lock { overflow: hidden; }
 
-/* v1.3 subscription plans */
+/* v1.3+ subscription plans */
 .plan-card {
   background: #fff;
   border: 1px solid var(--line);
@@ -1171,7 +1299,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.3</span>
+        <span class="version-pill">Prototype v1.4</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -1187,16 +1315,17 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
         <a href="#reviews">Reviews</a>
         <a href="#drawer">Menu</a>
         <a href="#subscription">Subscription</a>
+        <a href="#my-regions">Your areas</a>
         <a href="#settings">Settings</a>
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> multi-region profiles, My areas / All Perth metro filter, trade filter, search, Google Business Profile, review ideas (not finished reviews), friend and review status, in-app chat with notifications, a top menu drawer, and a Subscription screen (free now, Pro later with price to be set).</li>
+          <li><strong>Confirmed:</strong> multi-region profiles, all of a tradie’s areas shown together in one list, a Join all Perth metro option, My areas / All Perth metro filter, trade filter, search, Google Business Profile, review ideas (not finished reviews), friend and review status, in-app chat with notifications, a top menu drawer, and a Subscription screen (free now, Pro later with price to be set).</li>
           <li><strong>Open question:</strong> whether new members need approval. A pending screen is included and marked TBC.</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.3 · 16 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.4 · 16 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -1409,7 +1538,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
     { id: "create-profile", title: "Create profile", sub: "Connect Facebook or paste a link" },
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
-    { id: "create-regions", title: "Choose regions", sub: "Multi-select Perth areas" },
+    { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
+    { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
     { id: "pending", title: "Pending approval", sub: "Optional / not decided yet", tbc: true },
     { id: "members", title: "Members — My areas", sub: "Default member list" },
     { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
@@ -1432,10 +1562,11 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
-    { id: "my-regions", title: "My regions", sub: "Areas you have joined" }
+    { id: "my-regions", title: "Your areas", sub: "All of your areas in one list" },
+    { id: "my-regions-all", title: "Your areas — all metro", sub: "Join all Perth metro turned on" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "drawer", "google-consent"]);
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "google-consent"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -1453,7 +1584,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     fbConnected: false,
     fbNext: "create-profile",
     relFilter: "all",
-    googleConnected: true
+    googleConnected: true,
+    regionBackup: {}
   };
 
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -1612,19 +1744,100 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     box.hidden = !box.innerHTML;
   }
 
+  function allRegionIds() {
+    return REGIONS.map(function (r) { return r.id; });
+  }
+  function isAllMetro(ids) {
+    var all = allRegionIds();
+    if (!ids || ids.length !== all.length) return false;
+    var set = {};
+    ids.forEach(function (id) { set[id] = true; });
+    return all.every(function (id) { return set[id]; });
+  }
+  function rememberManual(prefix, ids) {
+    if (!state.regionBackup) state.regionBackup = {};
+    if (ids && ids.length && !isAllMetro(ids)) state.regionBackup[prefix] = ids.slice();
+  }
+  function restoreManual(prefix) {
+    if (!state.regionBackup) state.regionBackup = {};
+    var backup = state.regionBackup[prefix];
+    if (backup && backup.length && !isAllMetro(backup)) return backup.slice();
+    return ["hills", "north"];
+  }
+  function getPickedRegions(prefix) {
+    if (prefix === "create") return (state.stepRegions || []).slice();
+    if (prefix === "me-regions") return (me().regions || []).slice();
+    var d = draftFromMe();
+    return (d.regions || []).slice();
+  }
+  function setPickedRegions(prefix, ids) {
+    ids = (ids || []).slice();
+    if (prefix === "create") {
+      state.stepRegions = ids;
+      return isAllMetro(ids) && state.screen === "create-regions-all" ? "create-regions-all" : "create-regions";
+    }
+    if (prefix === "me-regions") {
+      me().regions = ids;
+      if (state.draft) state.draft.regions = ids.slice();
+      return isAllMetro(ids) && state.screen === "my-regions-all" ? "my-regions-all" : "my-regions";
+    }
+    var d = draftFromMe();
+    d.regions = ids;
+    state.draft = d;
+    return "edit-profile";
+  }
+  function toggleRegionId(prefix, rid, allowEmpty) {
+    var cur = getPickedRegions(prefix);
+    var ix = cur.indexOf(rid);
+    if (ix >= 0) {
+      if (!allowEmpty && cur.length === 1) return cur;
+      cur.splice(ix, 1);
+    } else {
+      cur.push(rid);
+    }
+    rememberManual(prefix, cur);
+    return cur;
+  }
+  function joinAllMetro(prefix) {
+    var cur = getPickedRegions(prefix);
+    if (isAllMetro(cur)) return restoreManual(prefix);
+    rememberManual(prefix, cur);
+    return allRegionIds();
+  }
+  function selectedAreasCard(ids, opts) {
+    opts = opts || {};
+    var title = opts.title || "Your areas";
+    var all = isAllMetro(ids);
+    var chips = (ids || []).map(function (id) {
+      return '<span class="pill r-pill">' + regionName(id) + "</span>";
+    }).join("");
+    var badge = all ? '<span class="areas-all-badge">All Perth metro</span>' : "";
+    var empty = !(ids && ids.length) ? '<p class="hint" style="margin:0">No areas selected yet.</p>' : "";
+    var change = opts.changeTo
+      ? '<button type="button" class="link areas-change" data-go="' + opts.changeTo + '">' + (opts.changeLabel || "Change") + "</button>"
+      : "";
+    var sub = opts.sub ? '<p class="hint" style="margin:8px 0 0">' + opts.sub + "</p>" : "";
+    return '<div class="areas-card">' +
+      '<div class="areas-card-top"><div class="areas-card-h">' + title + "</div>" + badge + change + "</div>" +
+      (empty || '<div class="tags">' + chips + "</div>") +
+      sub + "</div>";
+  }
   function regionPicker(selectedIds, prefix) {
-    function block(list) {
-      return '<div class="region-grid">' + list.map(function (r) {
+    selectedIds = selectedIds || [];
+    var allOn = isAllMetro(selectedIds);
+    var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
+      '<span class="join-all-txt"><strong>Join all Perth metro</strong><span class="join-all-sub">' +
+      (allOn ? "You’re in every Perth area. Turn this off to go back to your own picks." : "Select every Perth region at once.") +
+      "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
+    var card = selectedAreasCard(selectedIds, { title: "Your areas" });
+    var grid = '<div class="region-sec"><h3>Perth metro areas</h3><p>All areas in one list. Tick the ones you work in, or join all of Perth metro above.</p>' +
+      '<div class="region-grid">' + REGIONS.map(function (r) {
         var on = selectedIds.indexOf(r.id) !== -1;
         return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
           "<span><span class=\"n\">" + r.name + "</span>" + (r.suggested ? '<span class="sug">Suggested</span>' : "") + "</span>" +
           '<span class="tick">' + icon("check") + "</span></button>";
-      }).join("") + "</div>";
-    }
-    var core = REGIONS.filter(function (r) { return !r.suggested; });
-    var sug = REGIONS.filter(function (r) { return r.suggested; });
-    return '<div class="region-sec"><h3>Perth regions</h3><p>The four areas already agreed.</p>' + block(core) + "</div>" +
-      '<div class="region-sec"><h3>Suggested regions</h3><p>Extra areas for a fuller Perth metro map. These can be changed later.</p>' + block(sug) + "</div>";
+      }).join("") + "</div></div>";
+    return toggle + card + grid;
   }
 
   function draftFromMe() {
@@ -1765,7 +1978,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     return '<section class="screen has-header" data-screen="create-regions">' +
       '<div class="app-header"><button class="icon-btn" data-go="create-profile" aria-label="Back">' + icon("back") + '</button><div class="ht">Your areas</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span></div>' +
-      '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. You can join more than one region, and change this later.</p></div>' +
+      '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. All of your areas are shown together. Join all of Perth metro at once, or tick only the areas you work in. You can change this later.</p></div>' +
       regionPicker(selected, "create") +
       '<p class="selected-count">' + count + "</p>" +
       '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Finish and see members</button>" +
@@ -1866,7 +2079,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<div class="group-label">Your regions</div>' + regionPicker(d.regions || [], "edit") +
+      '<div class="group-label">Your areas</div>' + regionPicker(d.regions || [], "edit") +
       '<button class="btn btn-primary" type="submit" style="margin-top:8px">Save changes</button></form></div></section>';
   }
 
@@ -1903,7 +2116,9 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
         return renderCreateProfile();
       case "fb-consent":
         return renderWelcome();
-      case "create-regions": return renderCreateRegions();
+      case "create-regions":
+      case "create-regions-all":
+        return renderCreateRegions();
       case "pending": return renderPending();
       case "members":
       case "members-all":
@@ -1940,6 +2155,21 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     if (id === "create-regions" && !state.stepRegions) {
       state.stepRegions = (draftFromMe().regions || []).slice();
     }
+    if (id === "create-regions-all") {
+      if (!state.regionBackup) state.regionBackup = {};
+      if (!state.regionBackup.create || isAllMetro(state.regionBackup.create)) {
+        state.regionBackup.create = ["hills", "north"];
+      }
+      state.stepRegions = allRegionIds();
+    }
+    if (id === "my-regions-all") {
+      if (!state.regionBackup) state.regionBackup = {};
+      if (!state.regionBackup["me-regions"] || isAllMetro(state.regionBackup["me-regions"])) {
+        state.regionBackup["me-regions"] = ["hills", "north"];
+      }
+      me().regions = allRegionIds();
+      if (state.draft) state.draft.regions = allRegionIds();
+    }
 
     state.screen = id;
     screensEl.innerHTML = screenHTML(id);
@@ -1951,7 +2181,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     tabbar.querySelectorAll(".tab").forEach(function (t) {
       var tab = t.dataset.tab;
       var on = (tab === "members" && (id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "drawer"))
-        || (tab === "me" && (id === "me" || id === "my-regions"))
+        || (tab === "me" && (id === "me" || id === "my-regions" || id === "my-regions-all"))
         || (tab === "reviews" && (id === "reviews" || id === "review-ideas"))
         || (tab === "chats" && (id === "chats" || id === "chat-dm" || id === "chat-group"));
       t.classList.toggle("active", on);
@@ -2133,7 +2363,25 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
         state.fbConnected = true;
         me().facebook = me().facebook || demoFbLink();
       }
-      if (id === "create-regions") state.stepRegions = ["hills", "north"];
+      if (id === "create-regions") {
+        state.stepRegions = ["hills", "north"];
+        if (!state.regionBackup) state.regionBackup = {};
+        state.regionBackup.create = ["hills", "north"];
+      }
+      if (id === "create-regions-all") {
+        if (!state.regionBackup) state.regionBackup = {};
+        state.regionBackup.create = ["hills", "north"];
+        state.stepRegions = allRegionIds();
+      }
+      if (id === "my-regions") {
+        if (!state.regionBackup) state.regionBackup = {};
+        if (!me().regions || !me().regions.length) me().regions = ["hills", "north"];
+      }
+      if (id === "my-regions-all") {
+        if (!state.regionBackup) state.regionBackup = {};
+        state.regionBackup["me-regions"] = ["hills", "north"];
+        me().regions = allRegionIds();
+      }
       if (id === "edit-profile" || id === "settings" || id === "me" || id === "google-consent") {
         state.googleConnected = (id !== "google-consent");
       }
@@ -2258,26 +2506,23 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       return;
     }
 
+    var joinAllBtn = e.target.closest("[data-action='join-all-metro']");
+    if (joinAllBtn) {
+      var prefixJ = joinAllBtn.getAttribute("data-prefix") || "edit";
+      var formJ = e.target.closest("form");
+      if (formJ) captureDraft(formJ);
+      go(setPickedRegions(prefixJ, joinAllMetro(prefixJ)));
+      return;
+    }
+
     var region = e.target.closest("[data-region]");
     if (region) {
+      var prefixR = region.dataset.prefix || "edit";
       var rid = region.dataset.region;
-      if (region.dataset.prefix === "create") {
-        var set = {};
-        (state.stepRegions || []).forEach(function (x) { set[x] = true; });
-        if (set[rid]) delete set[rid]; else set[rid] = true;
-        state.stepRegions = Object.keys(set);
-        go("create-regions");
-      } else {
-        var form2 = e.target.closest("form");
-        if (form2) captureDraft(form2);
-        var d2 = draftFromMe();
-        var set2 = {};
-        (d2.regions || []).forEach(function (x) { set2[x] = true; });
-        if (set2[rid]) delete set2[rid]; else set2[rid] = true;
-        d2.regions = Object.keys(set2);
-        state.draft = d2;
-        go("edit-profile");
-      }
+      var form2 = e.target.closest("form");
+      if (form2) captureDraft(form2);
+      var allowEmpty = (prefixR === "create" || prefixR === "edit");
+      go(setPickedRegions(prefixR, toggleRegionId(prefixR, rid, allowEmpty)));
       return;
     }
 
@@ -2394,7 +2639,21 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     me().facebook = me().facebook || demoFbLink();
   }
   if (start === "google-consent") state.googleConnected = false;
-  if (start === "create-regions") state.stepRegions = ["hills", "north"];
+  if (start === "create-regions") {
+    state.stepRegions = ["hills", "north"];
+    state.regionBackup = state.regionBackup || {};
+    state.regionBackup.create = ["hills", "north"];
+  }
+  if (start === "create-regions-all") {
+    state.regionBackup = state.regionBackup || {};
+    state.regionBackup.create = ["hills", "north"];
+    state.stepRegions = allRegionIds();
+  }
+  if (start === "my-regions-all") {
+    state.regionBackup = state.regionBackup || {};
+    state.regionBackup["me-regions"] = ["hills", "north"];
+    me().regions = allRegionIds();
+  }
   go(start);
 
   window.TradeCircle = {
@@ -2404,11 +2663,12 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     fullName: fullName, me: me, regionName: regionName, toast: toast,
     closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
     captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
+    allRegionIds: allRegionIds, isAllMetro: isAllMetro, selectedAreasCard: selectedAreasCard,
     buildChooser: buildChooser, paintSearchAc: paintSearchAc
   };
 })();
 
-/* TradeCircle Perth — prototype v1.3 */
+/* TradeCircle Perth — prototype v1.4 */
 (function () {
   "use strict";
 
@@ -2609,7 +2869,40 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       "</div>";
   }
 
+  function fbMark() {
+    return '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  function starMark() {
+    return '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/></svg>';
+  }
+  function statusIcon(cls, label, inner) {
+    return '<span class="sb ' + cls + '" role="img" aria-label="' + label + '" title="' + label + '">' + inner + "</span>";
+  }
+  function statusIcons(m) {
+    var r = relOf(m);
+    var fb = r === "friends"
+      ? statusIcon("sb-friends", "Facebook friends", fbMark())
+      : r === "pending"
+        ? statusIcon("sb-pending", "Friend request pending", fbMark())
+        : statusIcon("sb-none", "Not connected on Facebook", fbMark());
+    var bits = [fb];
+    if (iReviewed(m)) bits.push(statusIcon("sb-you", "You reviewed them", starMark()));
+    else if (needsMyReview(m)) bits.push(statusIcon("sb-need", "Needs your review", starMark()));
+    if (theyReviewed(m)) bits.push(statusIcon("sb-they", "They reviewed you", starMark()));
+    return '<div class="sb-row">' + bits.join("") + "</div>";
+  }
+  function statusLegend() {
+    return '<div class="icon-legend" aria-label="Icon guide">' +
+      '<span class="il">' + statusIcon("sb-friends", "Facebook friends", fbMark()) + "Friends</span>" +
+      '<span class="il">' + statusIcon("sb-pending", "Friend request pending", fbMark()) + "Pending</span>" +
+      '<span class="il">' + statusIcon("sb-none", "Not connected on Facebook", fbMark()) + "Not connected</span>" +
+      '<span class="il">' + statusIcon("sb-you", "You reviewed them", starMark()) + "You reviewed</span>" +
+      '<span class="il">' + statusIcon("sb-they", "They reviewed you", starMark()) + "They reviewed you</span>" +
+      '<span class="il">' + statusIcon("sb-need", "Needs your review", starMark()) + "Needs your review</span>" +
+      "</div>";
+  }
   function statusPills(m, compact) {
+    if (compact) return statusIcons(m);
     var r = relOf(m);
     var fb = r === "friends"
       ? '<span class="st st-friends">Facebook friends</span>'
@@ -2622,11 +2915,6 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     var theirs = theyReviewed(m)
       ? '<span class="st st-yes">They reviewed you</span>'
       : '<span class="st st-none">They have not reviewed you</span>';
-    if (compact) {
-      mine = iReviewed(m) ? '<span class="st st-yes">You reviewed</span>' : '<span class="st st-need">Need my review</span>';
-      if (!needsMyReview(m) && !iReviewed(m)) mine = '<span class="st st-none">No review yet</span>';
-      theirs = theyReviewed(m) ? '<span class="st st-yes">They reviewed you</span>' : "";
-    }
     return '<div class="st-row">' + fb + mine + theirs + "</div>";
   }
 
@@ -2645,9 +2933,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       av(m, 52) +
       '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
       '<div class="biz">' + esc(m.business) + "</div>" +
-      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
-      m.regions.map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
-      "</div>" + statusPills(m, true) +
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div>" +
+      statusIcons(m) +
       "</div></button>" + actions + "</div>";
   }
 
@@ -2673,8 +2960,17 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     var countLabel = st.areaFilter === "mine"
       ? (list.length + " member" + (list.length === 1 ? "" : "s") + " in your areas")
       : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
+    var mineIds = (T().me() && T().me().regions) ? T().me().regions : [];
+    var allMine = T().isAllMetro && T().isAllMetro(mineIds);
+    var areasCard = "";
+    if (st.areaFilter === "mine" && T().selectedAreasCard) {
+      var sub = allMine
+        ? "You’ve joined all Perth metro, so this list includes every member. The All Perth metro filter is still there if you want the city-wide view."
+        : "Members from all of your areas are shown together in one list.";
+      areasCard = T().selectedAreasCard(mineIds, { title: "Your areas", changeTo: "my-regions", changeLabel: "Change", sub: sub });
+    }
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
-      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
+      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" + areasCard +
       '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
@@ -2684,6 +2980,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       trades.map(function (t) { return '<button class="chip' + (st.tradeFilter === t ? " active" : "") + '" data-trade="' + esa(t) + '">' + t + "</button>"; }).join("") +
       "</div>" +
       (st.tipDismissed ? '<div style="height:10px"></div>' : '<div class="banner info" style="margin:8px 0 14px" id="tipBanner">Tap Add friend to send a Facebook request, or Message to chat in the app. Weekly meet-ups stay offline. <button class="link" data-action="dismiss-tip" style="margin-left:6px">Got it</button></div>') +
+      statusLegend() +
       '<div id="memberList">' + (list.length ? list.map(memberCard).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the filters and search.</p></div>') +
       "</div></div></section>";
   }
@@ -2726,8 +3023,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       '<button class="btn btn-ghost ink" data-action="open-chat" data-id="' + m.id + '">Message</button>' +
       mark + pageBtn + "</div>" +
       '<p class="hint" style="text-align:center;margin-top:10px">Only review businesses you have actually used. Friend requests are sent on Facebook, not inside this app.</p>' +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Areas they work in" }) : "") +
       '<div class="info-rows">' + phoneRow +
-      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook).replace("https://www.", "")) + "</div></div></div>" +
       "</div></div></section>";
   }
@@ -2744,8 +3041,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       "</div>" + (S().googleConnected ? gBadge(m) : '<div class="g-badge" style="background:#EEF2F6;color:#5B6B7C">Google profile not connected</div>') +
       "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They can friend you on Facebook, message you here, or leave a Google review after a real job.</div>' +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Your areas", changeTo: "my-regions", changeLabel: "Change" }) : "") +
       '<div class="info-rows">' + phoneRow +
-      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
       pageRow +
       (S().googleConnected ? '<div class="info-row"><div class="ic" style="background:#E8F1FD;color:#1A73E8">G</div><div><div class="k">Google review link</div><div class="v">' + esc(String(googleLink).replace("https://", "")) + "</div></div></div>" : "") +
@@ -2771,7 +3068,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.3 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.4 \u00b7 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -3208,10 +3505,10 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 
   function renderMyRegions() {
     var m = T().me();
-    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("My regions") +
-      '<div class="scroll"><p class="hint">You can join more than one Perth region. Change this any time.</p>' +
+    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("Your areas") +
+      '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
       T().regionPicker(m.regions || [], "me-regions") +
-      '<button class="btn btn-primary" data-action="save-regions">Save regions</button></div></section>';
+      '<button class="btn btn-primary" data-action="save-regions">Save areas</button></div></section>';
   }
 
   function drawerInner() {
@@ -3222,7 +3519,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       ["reviews", I.star, "Reviews", ""],
       ["notifications", I.bell, "Notifications", ""],
       ["me", I.user, "My profile", ""],
-      ["my-regions", I.regions, "My regions", ""],
+      ["my-regions", I.regions, "Your areas", ""],
       ["edit-profile", I.fb, "Facebook connection", "drawer-fb"],
       ["settings", I.google, "Google Business Profile", "drawer-google"],
       ["invite", I.invite, "Invite a tradie", ""],
@@ -3242,7 +3539,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.3</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.4</div>';
     return html;
   }
 
@@ -3316,7 +3613,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     if (id === "subscription") return renderSubscription();
     if (id === "invite") return renderInvite();
     if (id === "help") return renderHelp();
-    if (id === "my-regions") return renderMyRegions();
+    if (id === "my-regions" || id === "my-regions-all") return renderMyRegions();
     return null;
   }
 
@@ -3532,7 +3829,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       return true;
     }
     if (action === "save-regions") {
-      toast("Regions saved.");
+      toast("Your areas were saved.");
       go("me");
       return true;
     }
@@ -3655,16 +3952,6 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       inp.addEventListener("change", function () {
         notif[inp.getAttribute("data-quiet")] = inp.value;
         persist();
-      });
-    });
-    document.querySelectorAll('[data-prefix="me-regions"]').forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var me = T().me();
-        var rid = btn.getAttribute("data-region");
-        var ix = me.regions.indexOf(rid);
-        if (ix >= 0) { if (me.regions.length > 1) me.regions.splice(ix, 1); }
-        else me.regions.push(rid);
-        go("my-regions");
       });
     });
   }

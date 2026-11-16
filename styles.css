@@ -449,6 +449,101 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .region-chip.on .tick { background: var(--accent); border-color: var(--accent); color: #06281C; }
 .selected-count { font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 4px 0 16px; }
 
+.join-all {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  margin: 0 0 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.join-all.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.join-all-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.join-all-txt strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.join-all-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.join-all .toggle { flex-shrink: 0; }
+.areas-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 0 0 14px;
+  box-sizing: border-box;
+}
+.areas-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.areas-card-h {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.areas-all-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #066B4C;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.areas-change {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 800;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.areas-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+
 .pending-art {
   width: 96px; height: 96px; border-radius: 28px; margin: 24px auto 18px;
   background: var(--amber-soft); display: grid; place-items: center; color: var(--amber-ink);

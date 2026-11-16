@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.3 (16 November 2026, Australia/Perth).  
+**Current prototype version:** v1.4 (16 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -51,12 +51,13 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 
 - Tradies download the app and create a profile with their trade and a Facebook profile link.
 - During profile setup, each tradie picks which **Perth regions** they want to join. They can join **more than one**. Example regions discussed: Hills, Kwinana, North, South (and Perth metro more broadly).
+- All of a tradie’s areas are shown **together in one list** (one card of chips), not in separate per-region sections. There is a **Join all Perth metro** option that selects every region at once. Turning it off returns to their previous manual picks. They can change this later from **Your areas** or Edit profile.
 - Weekly meetups stay offline. Region choice in the app is only about who appears in the member list.
 
 ### Finding members
 
 - Members can browse other members.
-- A filter shows either **members in my areas** or **everyone across Perth metro**.
+- A filter shows either **members in my areas** or **everyone across Perth metro**. “My areas” shows people from **all** of the member’s areas in one combined list, with a Your areas summary at the top.
 - Search by typing, with autocomplete suggestions for trades (and members). Typing “plu” should suggest Plumber. The same type-ahead is used on the trade picker during profile setup.
 
 ### Facebook
@@ -94,7 +95,7 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 - Chat features in the prototype: search, pinned chats, unread badges, online / last-seen, typing, read ticks, replies, emoji reactions, voice notes, photos, files, location, link previews, shared member profile cards, @mentions in region groups, message edit/delete (demo), mute, block or report, and quick actions such as “Send review request” and “Share my profile”.
 - Push notifications for messages, review requests and new members, with on/off switches and quiet hours. The prototype includes a lock-screen mock, an in-app notifications centre, and notification settings.
 
-### Subscription (v1.3)
+### Subscription (v1.3, unchanged in v1.4)
 
 - The app is free for now. A **Subscription** screen shows the Free plan (current, everything included) and a **Pro (coming later)** card with the label **Price to be set**.
 - Details of how a later paid plan would work, including store billing rules, are in [TECH-PLAN.md](TECH-PLAN.md).
@@ -102,7 +103,7 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 ### Navigation
 
 - A **hamburger / burger menu** (three lines) at the top-left opens a slide-out drawer, so many items can fit.
-- Drawer: profile header, then Members, Chats, Reviews, Notifications, My profile, My regions, Facebook connection, Google Business Profile, Invite a tradie, Help, Settings, Sign out.
+- Drawer: profile header, then Members, Chats, Reviews, Notifications, My profile, Your areas, Facebook connection, Google Business Profile, Invite a tradie, Help, Settings, Sign out.
 - Bottom tabs stay for the main areas: Members, Chats, Reviews, My Profile. A bell at the top-right opens notifications.
 
 ---
@@ -116,7 +117,8 @@ All earlier versions were archived, not deleted.
 | **v1** | 16 Nov 2026, about 7:39–7:56 am | First 13 clickable screens: welcome, sign in, sign up, create profile, pick regions, a pending-approval screen (not yet decided — see open questions), members list with “My areas” and “All Perth metro” filters and a trade filter, member profile with “Open Facebook profile”, my profile, edit profile, settings. Placeholder name TradeCircle Perth. All members are made up. |
 | **v1.1** | 16 Nov 2026, about 8:06–8:15 am | “Sign up with Facebook” and “Continue with Facebook”, Connect Facebook (mock consent), paste-your-Facebook-link fallback, Disconnect, **Add friend** on every member card, and typing search with autocomplete for trades and members (also on the trade picker). |
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
-| **v1.3 (current)** | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
+| v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
+| **v1.4 (current)** | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
 
 ---
 

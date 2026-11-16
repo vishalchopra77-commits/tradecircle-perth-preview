@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 16 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.3.
+**Current design:** clickable prototype v1.4.
 
 ---
 
@@ -133,7 +133,7 @@ When a digital subscription is sold **inside** the iPhone or Android app (for ex
 
 A paid membership that only exists as a website payment, and does not unlock anything inside the store apps, is a different case. For features inside the iPhone and Android apps, plan on Apple and Google billing. Their fees are set by Apple and Google; this plan does not invent a fee percentage.
 
-The v1.3 prototype has a simple **Subscription** screen: a Free plan (current) and a Pro (coming later) card with “Price to be set”.
+The prototype has a simple **Subscription** screen (added in v1.3): a Free plan (current) and a Pro (coming later) card with “Price to be set”.
 
 ---
 
