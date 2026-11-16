@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.2 */
+/* TradeCircle Perth — prototype v1.5.3 */
 (function () {
   "use strict";
 
@@ -87,12 +87,17 @@
   function reviewedBack(m) { return !!(S()._reviewedBack || {})[m.id]; }
 
   function topbar(title, right) {
-    if (window.TC12 && TC12.render && false) return "";
+    var n = (window.TC12 && TC12.unreadTotal) ? TC12.unreadTotal() : 0;
+    var bn = (window.TC12 && TC12.notifUnread) ? TC12.notifUnread() : 0;
+    var chatDot = n ? '<span class="bell-dot" id="headerChatBadge">' + n + "</span>" : '<span class="bell-dot" id="headerChatBadge" hidden></span>';
+    var bellDot = bn ? '<span class="bell-dot">' + bn + "</span>" : "";
     return '<div class="app-header">' +
-      '<button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + svg('<path d="M4 7h16M4 12h16M4 17h16"/>', 20) + "</button>" +
+      '<div class="header-left"><button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + svg('<path d="M4 7h16M4 12h16M4 17h16"/>', 20) + "</button></div>" +
       '<div class="ht">' + title + "</div>" +
-      (right || ('<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + "</button>")) +
-      "</div>";
+      '<div class="header-right">' + (right || "") +
+      '<button class="icon-btn bell-btn" data-go="chats" aria-label="Chats">' + I.chat + chatDot + "</button>" +
+      '<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + bellDot + "</button>" +
+      "</div></div>";
   }
 
   function friendButton(m, size) {
@@ -280,6 +285,91 @@
         '<div style="flex:1;min-width:0;text-align:left"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">View your profile</div></div>' +
         (T().icon ? T().icon("chev") : "") + "</button>" : "") +
       body + "</div></section>";
+  }
+
+
+  function greetName() {
+    var h = new Date().getHours();
+    var hi = (h >= 5 && h < 12) ? "Good morning" : (h >= 12 && h < 17) ? "Good afternoon" : (h >= 17 && h < 21) ? "Good evening" : "Hello";
+    var m = T().me && T().me();
+    return { hi: hi, first: m ? (m.first || fn(m).split(" ")[0]) : "Jamie", biz: m ? m.business : "Hale Pest Control", m: m };
+  }
+  function renderHome() {
+    bootRel();
+    var g = greetName();
+    var friends = 0;
+    Object.keys(rel || {}).forEach(function (id) { if (rel[id] === "friends") friends++; });
+    var recd = Object.keys(they || {}).filter(function (id) { return they[id]; }).length;
+    var gave = Object.keys(given || {}).filter(function (id) { return given[id]; }).length;
+    var place = myQueuePlace();
+    function tile(mod, ico, num, lab) {
+      return '<div class="dash-tile ' + mod + '"><div class="dash-tile-ico">' + ico + '</div><div class="n">' + num + '</div><div class="l">' + lab + "</div></div>";
+    }
+    var attn = [];
+    // Incoming friend requests (fictional, matches the prototype seed)
+    [["jack", "Jack Thompson", "sent you a friend request", "Today 7:12 am", "member", "Open"],
+     ["tom", "Tom Reeves", "sent you a friend request", "Yesterday", "member", "Open"]].forEach(function (row) {
+      attn.push(row);
+    });
+    // Review backs outstanding
+    Object.keys(they || {}).forEach(function (id) {
+      if (they[id] && !reviewedBack({ id: id })) {
+        var m = member(id);
+        attn.push([id, fn(m), "left you a Google review", "Review back", "reviews-back", "Review back"]);
+      }
+    });
+    var openAlert = (alerts() || []).find(function (a) { return a.status === "open"; });
+    if (openAlert) {
+      attn.push(["__alert__", "Recommendation alert", "Someone’s asking for " + tradeAsk(openAlert.trade), "Open", "rec-alert", "Open alert", openAlert.id]);
+    }
+    var attnHtml = attn.length ? attn.map(function (row) {
+      var m = member(row[0]);
+      var goTo = row[4];
+      var extra = "";
+      if (goTo === "member") extra = " data-id=\"" + row[0] + "\"";
+      if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
+      var btn = goTo === "rec-alert"
+        ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
+        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '"' + (goTo === "member" ? ' data-id="' + row[0] + '"' : "") + ">" + row[5] + "</button>";
+      var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
+      return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
+    }).join("") : '<p class="hint">You’re all caught up.</p>';
+
+    var actions = [
+      ["rec-compose", I.send, "teal", "Send alert"],
+      ["promo-queue", I.mega, "navy", place.mine ? "View the queue" : "Request a turn"],
+      ["ai-assistant", I.spark, "moss", "AI assistant"],
+      ["invite", I.send, "amber", "Invite"]
+    ];
+    var actHtml = '<div class="dash-actions">' + actions.map(function (a) {
+      return '<button type="button" class="dash-action" data-go="' + a[0] + '"><span class="apps-ico ' + a[2] + '">' + a[1] + "</span><span>" + a[3] + "</span></button>";
+    }).join("") + "</div>";
+
+    var feed = [
+      ["ok", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
+      ["info", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
+      ["warn", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
+      ["ok", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"]
+    ];
+    var feedHtml = feed.map(function (f) {
+      return '<div class="dash-feed-item"><div class="feed-dot ' + f[0] + '"></div><div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
+    }).join("");
+
+    return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
+      '<div class="scroll"><div class="dash-hello">' +
+      (g.m ? av(g.m, 56) : "") +
+      "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
+      '<div class="dash-stats">' +
+      tile("teal", I.user, String(friends), "Friends") +
+      tile("amber", I.star, String(recd), "Reviews received") +
+      tile("navy", I.check, String(gave), "Reviews given") +
+      tile("moss", I.mega, place.mine ? "#" + place.mine : "—", "Queue place") +
+      "</div>" +
+      '<p class="group-label">Needs your attention</p>' +
+      '<div class="dash-attn-list">' + attnHtml + "</div>" +
+      '<p class="group-label">Quick actions</p>' + actHtml +
+      '<p class="group-label">Recent activity</p>' +
+      '<div class="dash-feed">' + feedHtml + "</div></div></section>";
   }
 
   /* ---------- Screens ---------- */
@@ -642,6 +732,7 @@
     if (id === "rec-alert") return renderRecAlert();
     if (id === "promo-queue") return renderQueue();
     if (id === "more" || id === "drawer") return renderMore();
+    if (id === "home") return renderHome();
     if (id === "reviews" || id === "reviews-back") return renderReviews();
     if (id === "lockscreen") return renderLock();
     return null;
@@ -704,10 +795,6 @@
       }
     };
     var prevMembers = TC12.renderMembers;
-    TC12.renderMembers = function () {
-      var html = prevMembers ? prevMembers() : "";
-      return html.replace(/(<p class="count-line">[\s\S]*?<\/p>)/, "$1" + homePromoBlock());
-    };
     var prevMe = TC12.renderMe;
     TC12.renderMe = function () {
       var html = prevMe ? prevMe() : "";

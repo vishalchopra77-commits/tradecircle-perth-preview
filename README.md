@@ -2,13 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.2-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.3-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.2) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.3) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -46,6 +46,10 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - **Super admin** web dashboard, including approval of new members
 
 ---
+
+## What’s new in v1.5.3
+
+The bottom menu is now **Home, Reviews, Facebook, Queue, More**. Chat has moved into the top bar, next to the bell, with an unread badge. Home is a member dashboard: a greeting, stat tiles, a “Needs your attention” list, quick actions and a recent activity feed. After sign-in, or when previewing the app from the approval screen, you land on Home.
 
 ## What’s new in v1.5.2
 
@@ -143,7 +147,8 @@ More stills are in [`screens/`](screens/), including the polished v1.5.1 admin p
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
-| **v1.5.2 (current)** | 17 Nov 2026, about 2:15 am | Facebook promotion queue on the bottom menu, home card and profile. Five-tab bar (Reviews, Facebook, Chat, Queue, More). More menu is an apps grid with search. Brand-coloured active-tab pill. |
+| **v1.5.3 (current)** | 17 Nov 2026, about 2:25 am | Home dashboard as the first tab. Chat icon in the header next to notifications. Bottom menu: Home, Reviews, Facebook, Queue, More. Sign-in lands on Home. |
+| **v1.5.2** | 17 Nov 2026, about 2:15 am | Facebook promotion queue on the bottom menu, home card and profile. Five-tab bar (Reviews, Facebook, Chat, Queue, More). More menu is an apps grid with search. Brand-coloured active-tab pill. |
 | **v1.5.1** | 16 Nov 2026, about 10:50 am | Polished super admin (icons, gradient KPIs, charts, dashboard requests, activity, queue preview, header with search and notifications). Mobile bottom nav. Alert headline grammar and button icons in the app. |
 | **v1.5** | 16 Nov 2026, about 10:40 am | First/last name; awaiting approval; AI assistant (mock); chat attachments and emoji; 241 trades; admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue |
 
@@ -202,4 +207,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.5.2 · 17 November 2026, Australia/Perth*
+*Prototype v1.5.3 · 17 November 2026, Australia/Perth*

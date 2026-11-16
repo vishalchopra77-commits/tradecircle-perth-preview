@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.2</title>
+  <title>TradeCircle Perth — UI prototype v1.5.3</title>
   <style>
 /* TradeCircle Perth UI v1 */
 @font-face {
@@ -1617,6 +1617,130 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 
 .me-tools { margin: 12px 0 4px; }
 
+/* v1.5.3 — header chat next to bell, Home dashboard */
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 88px;
+  flex: 0 0 auto;
+}
+.header-left { justify-content: flex-start; }
+.header-right { justify-content: flex-end; }
+.header-right .header-link { margin-right: 2px; }
+
+.dash-hello {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+.dash-greet {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.dash-biz {
+  margin: 3px 0 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.dash-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 8px;
+}
+.dash-tile {
+  overflow: hidden;
+  min-width: 0;
+  border-radius: 16px;
+  padding: 12px 12px 10px;
+  color: #fff;
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(11, 31, 51, 0.1);
+}
+.dash-tile::after {
+  content: "";
+  position: absolute;
+  width: 80px; height: 80px; border-radius: 50%;
+  right: -24px; top: -28px;
+  background: rgba(255,255,255,0.14);
+}
+.dash-tile-ico {
+  width: 28px; height: 28px; border-radius: 9px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.2);
+  margin-bottom: 8px;
+}
+.dash-tile-ico svg { width: 16px; height: 16px; }
+.dash-tile .n { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+.dash-tile .l { margin-top: 4px; font-size: 11px; font-weight: 750; opacity: 0.92; }
+.dash-tile.teal { background: linear-gradient(135deg, #24E0A6, #0A8F66); color: #05281C; }
+.dash-tile.navy { background: linear-gradient(135deg, #2A5E8A, #0B1F33); }
+.dash-tile.amber { background: linear-gradient(135deg, #FFD56A, #E08A00); color: #3A2800; }
+.dash-tile.moss { background: linear-gradient(135deg, #1C4B73 0%, #0B1F33 60%, #0A7A58 140%); }
+
+.dash-attn-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.dash-attn {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 10px;
+}
+.dash-attn-body { flex: 1; min-width: 0; }
+.dash-attn-body strong { display: block; font-size: 13px; letter-spacing: -0.02em; }
+.dash-attn-body span { display: block; margin-top: 1px; font-size: 12px; font-weight: 650; color: var(--muted); }
+.dash-attn-btn {
+  flex: 0 0 auto;
+  border: 0; cursor: pointer;
+  background: linear-gradient(180deg, #24E0A6, #0FBE86);
+  color: #05281C;
+  font-weight: 800; font-size: 11px;
+  padding: 7px 10px; border-radius: 999px;
+  white-space: nowrap;
+}
+
+.dash-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.dash-action {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left; border: 0; cursor: pointer;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 10px;
+  font-weight: 800; font-size: 12px; color: var(--ink);
+}
+.dash-action .apps-ico { width: 36px; height: 36px; }
+.dash-action .apps-ico svg { width: 18px; height: 18px; }
+
+.dash-feed { display: flex; flex-direction: column; }
+.dash-feed-item {
+  display: flex; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.dash-feed-item:last-child { border-bottom: 0; }
+.feed-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  margin-top: 7px; flex: 0 0 auto;
+  background: var(--accent, #0FBE86);
+}
+.feed-dot.warn { background: #E08A00; }
+.feed-dot.info { background: #1C4B73; }
+.feed-dot.ok { background: #0FBE86; }
+.dash-feed-item p { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.35; }
+.dash-feed-item span { font-size: 11px; font-weight: 650; color: var(--muted); }
+
   </style>
 </head>
 <body>
@@ -1626,7 +1750,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.2</span>
+        <span class="version-pill">Prototype v1.5.3</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -1637,6 +1761,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <nav class="hero-jumps" aria-label="Jump to a screen">
         <a href="#welcome">Welcome</a>
         <a href="#signup">Sign up</a>
+        <a href="#home">Home</a>
         <a href="#members">Facebook</a>
         <a href="#member">Profile</a>
         <a href="#chats">Chats</a>
@@ -1651,12 +1776,12 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a Facebook promotion queue on the bottom menu, home card and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.2 · 17 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.3 · 17 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -1674,6 +1799,10 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
           <div class="screens" id="screens"></div>
 
           <nav class="tabbar" id="tabbar" aria-label="Main">
+            <button class="tab" data-tab="home" id="tab-home">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10.5V20h13V10.5"/></svg>
+              Home
+            </button>
             <button class="tab" data-tab="reviews" id="tab-reviews">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 6.6H21l-5.4 3.9 2.1 6.5L12 16.6 6.3 20l2.1-6.5L3 9.6h6.8L12 3z"/></svg>
               Reviews
@@ -1681,10 +1810,6 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
             <button class="tab" data-tab="members" id="tab-members">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               Facebook
-            </button>
-            <button class="tab" data-tab="chats" id="tab-chats">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5H8l-4 3v-5.2A8.5 8.5 0 1 1 21 12Z"/></svg>
-              Chat<span class="tab-badge" id="tabChatBadge">3</span>
             </button>
             <button class="tab" data-tab="promo-queue" id="tab-queue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 0 1 0 7.6"/><path d="M18.7 5.6a8 8 0 0 1 0 12.8"/></svg>
@@ -2121,6 +2246,7 @@ window.TC_TRADES = [
     { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
     { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
     { id: "pending", title: "Awaiting approval", sub: "New members wait for admin approval" },
+    { id: "home", title: "Home — member dashboard", sub: "Greeting, stats, things that need you, quick actions" },
     { id: "members", title: "Members — My areas", sub: "Default member list" },
     { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
     { id: "members-filter", title: "Members — Trade filter", sub: "Plumbers only, as an example" },
@@ -2154,7 +2280,7 @@ window.TC_TRADES = [
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
+  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -2595,7 +2721,7 @@ window.TC_TRADES = [
       '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
       '<p class="hint" style="margin:0">Name: ' + who + '<br>Trade: ' + escapeText(d.trade || "To be added") + "</p></div>" +
       '<p class="hint" style="text-align:center">This is a prototype. Use the screen list, or the preview below, to look around while you wait.</p>' +
-      '<button class="btn btn-navy has-ico" data-go="members" style="margin-top:8px">' + icon("user") + "<span>Preview the members list</span></button>" +
+      '<button class="btn btn-navy has-ico" data-go="home" style="margin-top:8px">' + icon("user") + "<span>Preview the app</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-go="edit-profile" style="margin-top:10px">' + icon("pencil") + "<span>Edit my profile while I wait</span></button></div></section>";
   }
 
@@ -2815,12 +2941,12 @@ window.TC_TRADES = [
       var on = false;
       if (drawerOpen) {
         on = tab === "more";
+      } else if (tab === "home") {
+        on = id === "home";
       } else if (tab === "reviews") {
         on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
       } else if (tab === "members") {
         on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
-      } else if (tab === "chats") {
-        on = id === "chats" || id === "chat-dm" || id === "chat-group";
       } else if (tab === "promo-queue") {
         on = id === "promo-queue";
       } else if (tab === "more") {
@@ -3199,7 +3325,7 @@ window.TC_TRADES = [
       state.areaFilter = "mine";
       state.tradeFilter = "All";
       state.query = "";
-      go("members");
+      go("home");
       return;
     }
     if (type === "signup") {
@@ -3306,7 +3432,7 @@ window.TC_TRADES = [
   };
 })();
 
-/* TradeCircle Perth — prototype v1.5.2 */
+/* TradeCircle Perth — prototype v1.5.3 */
 (function () {
   "use strict";
 
@@ -3490,21 +3616,28 @@ window.TC_TRADES = [
     var n = notifUnread();
     return n ? '<span class="bell-dot">' + n + "</span>" : "";
   }
+  function chatBadge() {
+    var n = unreadTotal();
+    return n ? '<span class="bell-dot" id="headerChatBadge">' + n + "</span>" : '<span class="bell-dot" id="headerChatBadge" hidden></span>';
+  }
   function updateBadges() {
-    var b = document.getElementById("tabChatBadge");
-    if (b) {
-      var n = unreadTotal();
+    var n = unreadTotal();
+    ["tabChatBadge", "headerChatBadge"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (!b) return;
       b.textContent = n ? String(n) : "";
       b.hidden = !n;
-    }
+    });
   }
 
   function topbar(title, right) {
     return '<div class="app-header">' +
-      '<button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + I.menu + "</button>" +
+      '<div class="header-left"><button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + I.menu + "</button></div>" +
       '<div class="ht">' + title + "</div>" +
-      (right || ('<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + bellBadge() + "</button>")) +
-      "</div>";
+      '<div class="header-right">' + (right || "") +
+      '<button class="icon-btn bell-btn" data-go="chats" aria-label="Chats">' + I.chat + chatBadge() + "</button>" +
+      '<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + bellBadge() + "</button>" +
+      "</div></div>";
   }
 
   function fbMark() {
@@ -3706,7 +3839,7 @@ window.TC_TRADES = [
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.2 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.3 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -4177,7 +4310,7 @@ window.TC_TRADES = [
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.2</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.3</div>';
     return html;
   }
 
@@ -4605,7 +4738,9 @@ window.TC_TRADES = [
     handleClick: handleClick,
     afterGo: afterGo,
     openDrawer: openDrawer,
-    closeDrawer: closeDrawer
+    closeDrawer: closeDrawer,
+    unreadTotal: unreadTotal,
+    notifUnread: notifUnread
   };
 
   if (T().go && S().screen) {
@@ -4613,7 +4748,7 @@ window.TC_TRADES = [
   }
 })();
 
-/* TradeCircle Perth — prototype v1.5.2 */
+/* TradeCircle Perth — prototype v1.5.3 */
 (function () {
   "use strict";
 
@@ -4702,12 +4837,17 @@ window.TC_TRADES = [
   function reviewedBack(m) { return !!(S()._reviewedBack || {})[m.id]; }
 
   function topbar(title, right) {
-    if (window.TC12 && TC12.render && false) return "";
+    var n = (window.TC12 && TC12.unreadTotal) ? TC12.unreadTotal() : 0;
+    var bn = (window.TC12 && TC12.notifUnread) ? TC12.notifUnread() : 0;
+    var chatDot = n ? '<span class="bell-dot" id="headerChatBadge">' + n + "</span>" : '<span class="bell-dot" id="headerChatBadge" hidden></span>';
+    var bellDot = bn ? '<span class="bell-dot">' + bn + "</span>" : "";
     return '<div class="app-header">' +
-      '<button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + svg('<path d="M4 7h16M4 12h16M4 17h16"/>', 20) + "</button>" +
+      '<div class="header-left"><button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + svg('<path d="M4 7h16M4 12h16M4 17h16"/>', 20) + "</button></div>" +
       '<div class="ht">' + title + "</div>" +
-      (right || ('<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + "</button>")) +
-      "</div>";
+      '<div class="header-right">' + (right || "") +
+      '<button class="icon-btn bell-btn" data-go="chats" aria-label="Chats">' + I.chat + chatDot + "</button>" +
+      '<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + bellDot + "</button>" +
+      "</div></div>";
   }
 
   function friendButton(m, size) {
@@ -4895,6 +5035,91 @@ window.TC_TRADES = [
         '<div style="flex:1;min-width:0;text-align:left"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">View your profile</div></div>' +
         (T().icon ? T().icon("chev") : "") + "</button>" : "") +
       body + "</div></section>";
+  }
+
+
+  function greetName() {
+    var h = new Date().getHours();
+    var hi = (h >= 5 && h < 12) ? "Good morning" : (h >= 12 && h < 17) ? "Good afternoon" : (h >= 17 && h < 21) ? "Good evening" : "Hello";
+    var m = T().me && T().me();
+    return { hi: hi, first: m ? (m.first || fn(m).split(" ")[0]) : "Jamie", biz: m ? m.business : "Hale Pest Control", m: m };
+  }
+  function renderHome() {
+    bootRel();
+    var g = greetName();
+    var friends = 0;
+    Object.keys(rel || {}).forEach(function (id) { if (rel[id] === "friends") friends++; });
+    var recd = Object.keys(they || {}).filter(function (id) { return they[id]; }).length;
+    var gave = Object.keys(given || {}).filter(function (id) { return given[id]; }).length;
+    var place = myQueuePlace();
+    function tile(mod, ico, num, lab) {
+      return '<div class="dash-tile ' + mod + '"><div class="dash-tile-ico">' + ico + '</div><div class="n">' + num + '</div><div class="l">' + lab + "</div></div>";
+    }
+    var attn = [];
+    // Incoming friend requests (fictional, matches the prototype seed)
+    [["jack", "Jack Thompson", "sent you a friend request", "Today 7:12 am", "member", "Open"],
+     ["tom", "Tom Reeves", "sent you a friend request", "Yesterday", "member", "Open"]].forEach(function (row) {
+      attn.push(row);
+    });
+    // Review backs outstanding
+    Object.keys(they || {}).forEach(function (id) {
+      if (they[id] && !reviewedBack({ id: id })) {
+        var m = member(id);
+        attn.push([id, fn(m), "left you a Google review", "Review back", "reviews-back", "Review back"]);
+      }
+    });
+    var openAlert = (alerts() || []).find(function (a) { return a.status === "open"; });
+    if (openAlert) {
+      attn.push(["__alert__", "Recommendation alert", "Someone’s asking for " + tradeAsk(openAlert.trade), "Open", "rec-alert", "Open alert", openAlert.id]);
+    }
+    var attnHtml = attn.length ? attn.map(function (row) {
+      var m = member(row[0]);
+      var goTo = row[4];
+      var extra = "";
+      if (goTo === "member") extra = " data-id=\"" + row[0] + "\"";
+      if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
+      var btn = goTo === "rec-alert"
+        ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
+        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '"' + (goTo === "member" ? ' data-id="' + row[0] + '"' : "") + ">" + row[5] + "</button>";
+      var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
+      return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
+    }).join("") : '<p class="hint">You’re all caught up.</p>';
+
+    var actions = [
+      ["rec-compose", I.send, "teal", "Send alert"],
+      ["promo-queue", I.mega, "navy", place.mine ? "View the queue" : "Request a turn"],
+      ["ai-assistant", I.spark, "moss", "AI assistant"],
+      ["invite", I.send, "amber", "Invite"]
+    ];
+    var actHtml = '<div class="dash-actions">' + actions.map(function (a) {
+      return '<button type="button" class="dash-action" data-go="' + a[0] + '"><span class="apps-ico ' + a[2] + '">' + a[1] + "</span><span>" + a[3] + "</span></button>";
+    }).join("") + "</div>";
+
+    var feed = [
+      ["ok", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
+      ["info", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
+      ["warn", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
+      ["ok", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"]
+    ];
+    var feedHtml = feed.map(function (f) {
+      return '<div class="dash-feed-item"><div class="feed-dot ' + f[0] + '"></div><div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
+    }).join("");
+
+    return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
+      '<div class="scroll"><div class="dash-hello">' +
+      (g.m ? av(g.m, 56) : "") +
+      "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
+      '<div class="dash-stats">' +
+      tile("teal", I.user, String(friends), "Friends") +
+      tile("amber", I.star, String(recd), "Reviews received") +
+      tile("navy", I.check, String(gave), "Reviews given") +
+      tile("moss", I.mega, place.mine ? "#" + place.mine : "—", "Queue place") +
+      "</div>" +
+      '<p class="group-label">Needs your attention</p>' +
+      '<div class="dash-attn-list">' + attnHtml + "</div>" +
+      '<p class="group-label">Quick actions</p>' + actHtml +
+      '<p class="group-label">Recent activity</p>' +
+      '<div class="dash-feed">' + feedHtml + "</div></div></section>";
   }
 
   /* ---------- Screens ---------- */
@@ -5257,6 +5482,7 @@ window.TC_TRADES = [
     if (id === "rec-alert") return renderRecAlert();
     if (id === "promo-queue") return renderQueue();
     if (id === "more" || id === "drawer") return renderMore();
+    if (id === "home") return renderHome();
     if (id === "reviews" || id === "reviews-back") return renderReviews();
     if (id === "lockscreen") return renderLock();
     return null;
@@ -5319,10 +5545,6 @@ window.TC_TRADES = [
       }
     };
     var prevMembers = TC12.renderMembers;
-    TC12.renderMembers = function () {
-      var html = prevMembers ? prevMembers() : "";
-      return html.replace(/(<p class="count-line">[\s\S]*?<\/p>)/, "$1" + homePromoBlock());
-    };
     var prevMe = TC12.renderMe;
     TC12.renderMe = function () {
       var html = prevMe ? prevMe() : "";

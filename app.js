@@ -166,6 +166,7 @@
     { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
     { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
     { id: "pending", title: "Awaiting approval", sub: "New members wait for admin approval" },
+    { id: "home", title: "Home — member dashboard", sub: "Greeting, stats, things that need you, quick actions" },
     { id: "members", title: "Members — My areas", sub: "Default member list" },
     { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
     { id: "members-filter", title: "Members — Trade filter", sub: "Plumbers only, as an example" },
@@ -199,7 +200,7 @@
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
+  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -640,7 +641,7 @@
       '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
       '<p class="hint" style="margin:0">Name: ' + who + '<br>Trade: ' + escapeText(d.trade || "To be added") + "</p></div>" +
       '<p class="hint" style="text-align:center">This is a prototype. Use the screen list, or the preview below, to look around while you wait.</p>' +
-      '<button class="btn btn-navy has-ico" data-go="members" style="margin-top:8px">' + icon("user") + "<span>Preview the members list</span></button>" +
+      '<button class="btn btn-navy has-ico" data-go="home" style="margin-top:8px">' + icon("user") + "<span>Preview the app</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-go="edit-profile" style="margin-top:10px">' + icon("pencil") + "<span>Edit my profile while I wait</span></button></div></section>";
   }
 
@@ -860,12 +861,12 @@
       var on = false;
       if (drawerOpen) {
         on = tab === "more";
+      } else if (tab === "home") {
+        on = id === "home";
       } else if (tab === "reviews") {
         on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
       } else if (tab === "members") {
         on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
-      } else if (tab === "chats") {
-        on = id === "chats" || id === "chat-dm" || id === "chat-group";
       } else if (tab === "promo-queue") {
         on = id === "promo-queue";
       } else if (tab === "more") {
@@ -1244,7 +1245,7 @@
       state.areaFilter = "mine";
       state.tradeFilter = "All";
       state.query = "";
-      go("members");
+      go("home");
       return;
     }
     if (type === "signup") {
