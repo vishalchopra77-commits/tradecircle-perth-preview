@@ -1,0 +1,3471 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B1F33" />
+  <title>TradeCircle Perth — UI prototype v1.2</title>
+  <style>
+/* TradeCircle Perth UI v1 */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/PlusJakartaSans-Italic-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --navy: #0B1F33;
+  --navy-2: #14314C;
+  --ink: #122033;
+  --text: #1A2B3C;
+  --muted: #5A6B7C;
+  --faint: #8793A1;
+  --line: #E3E8EE;
+  --line-2: #EEF2F6;
+  --bg: #F3F6F8;
+  --card: #FFFFFF;
+  --accent: #0FBE86;
+  --accent-2: #0AA576;
+  --accent-soft: #E7F8F1;
+  --accent-ink: #066B4C;
+  --amber: #F5B942;
+  --amber-soft: #FFF6E0;
+  --amber-ink: #8A5A00;
+  --fb: #1877F2;
+  --fb-dark: #0D65D9;
+  --danger: #D64545;
+  --shadow: 0 1px 2px rgba(16, 32, 51, 0.05), 0 10px 28px rgba(16, 32, 51, 0.07);
+  --shadow-sm: 0 1px 2px rgba(16, 32, 51, 0.06);
+  --radius: 18px;
+  --phone-w: 390px;
+  --phone-h: 844px;
+  --safe-top: 54px;
+  --tab-h: 84px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  color: var(--text);
+  background: #07131F;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, textarea, select { font-family: inherit; }
+button { cursor: pointer; border: 0; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+.studio {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(420px, 480px) minmax(280px, 1fr);
+  gap: 36px;
+  padding: 36px 44px 48px;
+  align-items: start;
+  background:
+    radial-gradient(900px 520px at 20% -10%, rgba(15, 190, 134, 0.16), transparent 55%),
+    radial-gradient(800px 480px at 90% 110%, rgba(24, 119, 242, 0.10), transparent 50%),
+    linear-gradient(180deg, #0A1A2B 0%, #07131F 100%);
+  color: #E8EEF4;
+}
+.studio-brand { position: sticky; top: 36px; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #8DA3B5; margin-bottom: 18px;
+}
+.eyebrow i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 4px rgba(15, 190, 134, 0.2);
+  display: inline-block;
+}
+.studio-brand h1 {
+  font-size: 34px; line-height: 1.1; letter-spacing: -0.035em;
+  font-weight: 800; color: #fff;
+}
+.name-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin: 12px 0 18px; padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(245, 185, 66, 0.14);
+  color: #F5B942; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+  border: 1px solid rgba(245, 185, 66, 0.28);
+}
+.studio-lead {
+  font-size: 15px; line-height: 1.55; color: #B8C6D3; font-weight: 500;
+  margin-bottom: 22px; max-width: 36ch;
+}
+.studio-notes {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 16px 16px 14px;
+  font-size: 13px; line-height: 1.5; color: #C5D0DA;
+}
+.studio-notes strong { color: #fff; font-weight: 700; }
+.studio-notes li { padding: 5px 0 5px 16px; position: relative; }
+.studio-notes li::before {
+  content: ""; position: absolute; left: 0; top: 12px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+.studio-foot {
+  margin-top: 22px; font-size: 12px; color: #7E90A0; line-height: 1.5;
+}
+
+.device-col { display: flex; flex-direction: column; align-items: center; position: sticky; top: 24px; }
+.device {
+  width: 414px; height: 868px;
+  background: #000;
+  border-radius: 54px;
+  padding: 12px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 20px 60px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  position: relative;
+}
+.device::before {
+  content: "";
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 118px; height: 34px; background: #000; border-radius: 20px; z-index: 40;
+}
+.phone {
+  width: var(--phone-w); height: var(--phone-h);
+  border-radius: 42px; overflow: hidden;
+  background: var(--bg); position: relative;
+  color: var(--text);
+}
+.device-caption {
+  margin-top: 16px; font-size: 12px; color: #8AA0B2; font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.chooser { padding-top: 8px; }
+.chooser h2 {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #8DA3B5; margin-bottom: 14px;
+}
+.chooser-list { display: flex; flex-direction: column; gap: 6px; }
+.chooser-item {
+  display: grid; grid-template-columns: 36px 1fr auto; gap: 12px;
+  align-items: center; text-align: left;
+  padding: 11px 12px; border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #D5DEE6; transition: background 0.15s, border-color 0.15s;
+  width: 100%;
+}
+.chooser-item:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); }
+.chooser-item.active {
+  background: rgba(15, 190, 134, 0.12);
+  border-color: rgba(15, 190, 134, 0.4);
+  color: #fff;
+}
+.chooser-num {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.06);
+  font-size: 12px; font-weight: 800; color: #A9B8C6;
+}
+.chooser-item.active .chooser-num { background: var(--accent); color: #06281C; }
+.chooser-item .t { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; }
+.chooser-item .s { font-size: 11px; color: #8AA0B2; font-weight: 500; margin-top: 1px; }
+.chooser-tag {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; color: #F5B942;
+  background: rgba(245, 185, 66, 0.12); padding: 3px 7px; border-radius: 999px;
+}
+
+body.shot, body.shot .studio { background: #000; padding: 0; display: block; min-height: 0; }
+body.shot .studio-brand, body.shot .chooser, body.shot .device-caption, body.shot .device::before { display: none !important; }
+body.shot .device-col { position: static; }
+body.shot .device {
+  width: 390px; height: 844px; padding: 0; border-radius: 0; box-shadow: none; background: #000;
+}
+body.shot .phone { border-radius: 0; }
+
+@media (max-width: 1100px) {
+  .studio { grid-template-columns: 1fr; padding: 24px 20px 48px; }
+  .studio-brand, .device-col { position: static; }
+  .device-col { order: -1; }
+}
+@media (max-width: 480px) {
+  .studio { display: block; padding: 0; background: #000; }
+  .studio-brand, .chooser, .device-caption, .device::before { display: none !important; }
+  .device { width: 100vw; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
+  .phone { width: 100%; height: 100%; border-radius: 0; }
+}
+
+.status-bar {
+  height: var(--safe-top); flex: none;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 28px 10px 28px;
+  position: absolute; top: 0; left: 0; right: 0; z-index: 30;
+  pointer-events: none; color: var(--ink); font-weight: 700; font-size: 15px;
+  background: var(--bg);
+}
+.status-bar.light { color: #fff; background: transparent; }
+.status-icons { display: flex; align-items: center; gap: 6px; }
+.status-icons svg { display: block; }
+
+.home-indicator {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  width: 128px; height: 5px; border-radius: 99px; background: #121212;
+  z-index: 35; pointer-events: none; opacity: 0.9;
+}
+body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55; }
+
+.screens { width: 100%; height: 100%; position: relative; }
+.screen {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  background: var(--bg); overflow: hidden;
+}
+.screen.active { display: flex; }
+.screen.dark { background: var(--navy); color: #fff; }
+.scroll {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: calc(var(--safe-top) + 8px) 20px 56px;
+  -webkit-overflow-scrolling: touch;
+}
+.screen.has-tabs .scroll { padding-bottom: calc(var(--tab-h) + 16px); }
+.screen.has-header .scroll { padding-top: calc(var(--safe-top) + 52px); }
+
+.app-header {
+  position: absolute; top: var(--safe-top); left: 0; right: 0;
+  height: 52px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 8px; z-index: 20; background: var(--bg);
+}
+.app-header h1, .app-header .ht {
+  font-size: 17px; font-weight: 800; letter-spacing: -0.03em;
+  text-align: center; flex: 1; color: var(--ink);
+}
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: grid; place-items: center; color: var(--ink);
+}
+.icon-btn:hover { background: var(--line-2); }
+.header-link {
+  min-width: 40px; padding: 0 10px; height: 40px;
+  display: grid; place-items: center;
+  font-size: 15px; font-weight: 700; color: var(--accent-2);
+}
+.header-spacer { width: 40px; }
+
+.tabbar {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: var(--tab-h);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  display: none; grid-template-columns: repeat(3, 1fr);
+  padding: 6px 12px 22px; z-index: 25;
+}
+.tabbar.show { display: grid; }
+.tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  color: var(--faint); font-size: 10px; font-weight: 700; letter-spacing: -0.01em;
+}
+.tab svg { width: 24px; height: 24px; }
+.tab.active { color: var(--navy); }
+.tab.active svg { color: var(--accent-2); }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 54px; border-radius: 16px;
+  font-size: 16px; font-weight: 800; letter-spacing: -0.02em;
+  transition: transform 0.12s, filter 0.12s, background 0.12s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--accent); color: #06281C; }
+.btn-primary:hover { background: #12CB8F; }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-fb { background: var(--fb); color: #fff; }
+.btn-fb:hover { background: var(--fb-dark); }
+.btn-ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.28); }
+.btn-ghost.ink { color: var(--ink); border-color: var(--line); background: #fff; }
+.btn-soft { background: var(--accent-soft); color: var(--accent-ink); }
+.btn-lg { height: 62px; border-radius: 18px; flex-direction: column; gap: 1px; line-height: 1.15; }
+.btn-lg small { font-size: 12px; font-weight: 600; opacity: 0.85; }
+.btn[disabled] { pointer-events: none; }
+
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 12px; font-weight: 700; color: var(--muted);
+  margin-bottom: 7px; letter-spacing: 0.01em;
+}
+.field label .opt { font-weight: 600; color: var(--faint); }
+.field input, .field textarea, .picker-btn {
+  width: 100%; background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 0 14px; height: 50px;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field textarea { height: auto; min-height: 88px; padding: 12px 14px; resize: none; line-height: 1.45; }
+.field input:focus, .field textarea:focus, .picker-btn:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 4px rgba(15, 190, 134, 0.15);
+}
+.picker-btn { display: flex; align-items: center; justify-content: space-between; text-align: left; }
+.picker-btn .ph { color: var(--faint); font-weight: 600; }
+.hint { font-size: 12px; color: var(--faint); margin-top: 6px; font-weight: 500; line-height: 1.4; }
+.link { color: var(--accent-2); font-weight: 700; background: none; border: 0; cursor: pointer; font-size: inherit; }
+
+.search {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; height: 46px; padding: 0 12px; color: var(--faint);
+}
+.search input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  font-size: 15px; font-weight: 600; color: var(--ink); height: 100%;
+}
+
+.seg {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+  background: #E7ECF1;
+  border-radius: 12px; padding: 4px;
+}
+.seg button {
+  height: 36px; border-radius: 9px; font-size: 13px; font-weight: 800;
+  color: var(--muted); letter-spacing: -0.02em;
+}
+.seg button.active { background: #fff; color: var(--navy); box-shadow: var(--shadow-sm); }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; margin: 0 -20px; padding: 2px 20px 6px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; height: 34px; padding: 0 12px; border-radius: 999px;
+  background: #fff; border: 1.5px solid var(--line);
+  font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap;
+}
+.chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+.card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid rgba(16,32,51,0.04);
+}
+
+.avatar {
+  flex: none; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 800; letter-spacing: -0.03em; color: #fff;
+  position: relative; overflow: hidden;
+}
+.avatar svg.pattern { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.35; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 22px; padding: 0 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap;
+}
+.r-pill { background: var(--line-2); color: var(--muted); }
+.t-pill { background: var(--accent-soft); color: var(--accent-ink); }
+
+.banner {
+  border-radius: 14px; padding: 12px 14px; font-size: 12px; font-weight: 600;
+  line-height: 1.45; display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap;
+}
+.banner.warn { background: var(--amber-soft); color: var(--amber-ink); }
+.banner.info { background: var(--accent-soft); color: var(--accent-ink); }
+.banner.tbc { background: #EEF2FF; color: #3730A3; }
+
+#screen-welcome { background: var(--navy); }
+.welcome-bg {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(420px 320px at 50% 18%, rgba(15, 190, 134, 0.28), transparent 60%),
+    radial-gradient(280px 200px at 90% 80%, rgba(24, 119, 242, 0.16), transparent 60%),
+    linear-gradient(180deg, #0C243C 0%, #071525 100%);
+}
+.welcome-bg .ring {
+  position: absolute; border: 1.5px solid rgba(255,255,255,0.07); border-radius: 50%;
+  left: 50%; top: 22%; transform: translate(-50%, -50%);
+}
+.welcome-inner {
+  position: relative; z-index: 1; height: 100%;
+  display: flex; flex-direction: column;
+  padding: calc(var(--safe-top) + 28px) 24px 36px;
+}
+.logo-mark {
+  width: 86px; height: 86px; border-radius: 26px;
+  background: linear-gradient(180deg, #163653 0%, #0E2A44 100%);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.08);
+  display: grid; place-items: center; margin-bottom: 22px;
+}
+.welcome-kicker { font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.welcome-inner h2 { font-size: 38px; line-height: 1.05; letter-spacing: -0.04em; font-weight: 800; color: #fff; }
+.welcome-inner h2 span { color: #8BE0C3; }
+.placeholder-note { display: inline-flex; margin-top: 12px; align-self: flex-start; width: auto; }
+.welcome-copy { margin-top: 16px; font-size: 16px; line-height: 1.5; color: #C5D3DE; font-weight: 500; max-width: 32ch; }
+.welcome-points { margin: 28px 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.welcome-points li {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 14px; font-weight: 600; color: #E4ECF2; line-height: 1.4;
+}
+.welcome-points .ic {
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
+  background: rgba(15, 190, 134, 0.16); color: var(--accent);
+  display: grid; place-items: center;
+}
+.welcome-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.welcome-foot { text-align: center; margin-top: 14px; font-size: 12px; color: #8AA0B2; font-weight: 500; line-height: 1.45; }
+
+.auth-hero { padding: 12px 0 8px; }
+.auth-hero h2 { font-size: 30px; letter-spacing: -0.04em; font-weight: 800; line-height: 1.15; }
+.auth-hero p { margin-top: 8px; color: var(--muted); font-size: 15px; font-weight: 500; line-height: 1.45; }
+.auth-bottom { margin-top: 18px; text-align: center; font-size: 14px; font-weight: 600; color: var(--muted); }
+.steps { display: flex; gap: 6px; margin: 6px 0 18px; }
+.steps span { height: 4px; flex: 1; border-radius: 99px; background: var(--line); }
+.steps span.on { background: var(--accent); }
+
+.photo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.photo-btn { width: 80px; height: 80px; border-radius: 50%; position: relative; padding: 0; flex: none; }
+.photo-btn .cam {
+  position: absolute; right: 0; bottom: 0; width: 26px; height: 26px;
+  border-radius: 50%; background: var(--navy); color: #fff;
+  display: grid; place-items: center; border: 2px solid #fff;
+}
+.hidden-file { display: none; }
+
+.region-sec { margin-bottom: 18px; }
+.region-sec h3 { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.region-sec p { font-size: 12px; color: var(--faint); font-weight: 500; margin-bottom: 10px; }
+.region-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.region-chip {
+  text-align: left; background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 12px; min-height: 58px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.region-chip .n { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+.region-chip .sug { display: block; font-size: 10px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.region-chip .tick {
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  border: 1.5px solid var(--line); background: #fff;
+  display: grid; place-items: center; color: transparent;
+}
+.region-chip.on { border-color: var(--accent); background: var(--accent-soft); }
+.region-chip.on .tick { background: var(--accent); border-color: var(--accent); color: #06281C; }
+.selected-count { font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 4px 0 16px; }
+
+.pending-art {
+  width: 96px; height: 96px; border-radius: 28px; margin: 24px auto 18px;
+  background: var(--amber-soft); display: grid; place-items: center; color: var(--amber-ink);
+}
+
+.large-title { font-size: 32px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin: 0 0 4px; color: var(--ink); }
+.count-line { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
+.member-card {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 12px; margin-bottom: 10px; text-align: left;
+}
+.member-card .meta { flex: 1; min-width: 0; }
+.member-card .nm { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.member-card .biz { font-size: 13px; font-weight: 600; color: var(--muted); margin: 1px 0 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.member-card .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.chev { color: var(--faint); flex: none; }
+.empty { text-align: center; padding: 40px 16px; color: var(--muted); }
+.empty h3 { color: var(--ink); font-size: 16px; margin: 8px 0 6px; font-weight: 800; }
+.empty p { font-size: 13px; font-weight: 500; line-height: 1.45; }
+
+.profile-hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0 18px; }
+.profile-hero .nm { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-top: 14px; }
+.profile-hero .biz { font-size: 15px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.profile-hero .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; }
+.bio { font-size: 15px; line-height: 1.5; font-weight: 500; color: var(--text); text-align: center; margin: 0 8px 18px; }
+.action-stack { display: flex; flex-direction: column; gap: 10px; }
+.info-rows { margin-top: 18px; }
+.info-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-top: 1px solid var(--line);
+}
+.info-row .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--line-2); display: grid; place-items: center; color: var(--navy); flex: none; }
+.info-row .k { font-size: 11px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; }
+.info-row .v { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 2px; word-break: break-word; }
+
+.group-label { font-size: 12px; font-weight: 800; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; margin: 12px 4px 6px; }
+.group { overflow: hidden; }
+.set-row {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; text-align: left; border-top: 1px solid var(--line-2);
+  background: #fff;
+}
+.set-row:first-child { border-top: 0; }
+.set-row .ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.set-row .lab { flex: 1; min-width: 0; }
+.set-row .lab .a { display: block; font-size: 15px; font-weight: 700; color: var(--ink); }
+.set-row .lab .b { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+.toggle {
+  width: 48px; height: 30px; border-radius: 99px; background: #D5DCE3; position: relative; flex: none; transition: background 0.2s;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s;
+}
+.toggle.on { background: var(--accent); }
+.toggle.on::after { transform: translateX(18px); }
+.settings-foot { text-align: center; padding: 22px 8px 8px; font-size: 12px; color: var(--faint); font-weight: 500; line-height: 1.5; }
+
+.overlay {
+  position: absolute; inset: 0; background: rgba(8, 16, 28, 0.45);
+  z-index: 50; display: none; align-items: flex-end;
+}
+.overlay.show { display: flex; }
+.sheet {
+  width: 100%; background: #fff; border-radius: 22px 22px 0 0;
+  padding: 10px 20px 28px;
+  max-height: 86%; overflow: auto;
+}
+.sheet-handle { width: 40px; height: 4px; border-radius: 99px; background: #D5DCE3; margin: 4px auto 12px; }
+.sheet h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+.trade-opt {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 4px; border-top: 1px solid var(--line-2);
+  font-size: 15px; font-weight: 700; text-align: left;
+}
+.trade-opt:first-of-type { border-top: 0; }
+.trade-opt .ck { color: var(--accent-2); opacity: 0; }
+.trade-opt.on .ck { opacity: 1; }
+
+.toast {
+  position: absolute; left: 20px; right: 20px; bottom: 110px;
+  background: var(--navy); color: #fff; border-radius: 14px;
+  padding: 12px 14px; font-size: 13px; font-weight: 650; line-height: 1.4;
+  z-index: 60; display: none; box-shadow: var(--shadow);
+}
+.toast.show { display: block; }
+
+.you-badge {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--navy); color: #fff; border-radius: 999px; padding: 2px 6px; margin-left: 6px; vertical-align: middle;
+}
+
+.field input[inputmode="url"] { font-size: 13px; }
+
+.scroll > .group-label:first-child { margin-top: 4px; }
+
+/* v1.1 Facebook connect */
+.or-line {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0 12px;
+  color: var(--faint); font-size: 11px; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.or-line::before, .or-line::after {
+  content: ""; flex: 1; height: 1px; background: var(--line);
+}
+.or-line.light { color: rgba(255,255,255,0.55); }
+.or-line.light::before, .or-line.light::after { background: rgba(255,255,255,0.18); }
+
+.fb-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 12px 12px 12px;
+  border-radius: 16px;
+  border: 1.5px solid #C9DFFB;
+  background: #F3F8FF;
+  margin-bottom: 14px;
+  text-align: left;
+}
+.fb-card-meta { flex: 1; min-width: 0; }
+.fb-card-k { font-size: 11px; font-weight: 800; color: #1877F2; letter-spacing: 0.04em; text-transform: uppercase; }
+.fb-card-n { font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+.fb-card-l { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fb-disconnect {
+  flex: none;
+  font-size: 13px; font-weight: 800; color: var(--danger);
+  padding: 8px 6px; border-radius: 8px;
+}
+
+.consent-banner {
+  background: #EEF2FF; color: #3730A3;
+  border-radius: 12px; padding: 10px 12px;
+  font-size: 12px; font-weight: 700; line-height: 1.4; margin-bottom: 14px;
+}
+.consent-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.consent-f {
+  width: 42px; height: 42px; border-radius: 12px; background: #1877F2;
+  display: grid; place-items: center; color: #fff; flex: none;
+}
+.consent-brand h3 { margin: 0; }
+.consent-brand p { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.consent-list { margin: 8px 0 16px; }
+.consent-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 14px; font-weight: 600; padding: 10px 0;
+  border-top: 1px solid var(--line-2);
+  color: var(--text); line-height: 1.4;
+}
+.consent-list li .ic {
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
+  background: #E8F1FD; color: #1877F2;
+  display: grid; place-items: center;
+}
+.consent-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.consent-note { text-align: center; margin-top: 12px; font-size: 11px; font-weight: 600; color: var(--faint); line-height: 1.4; }
+
+/* Welcome is tighter in v1.1 to fit the Facebook button */
+.welcome-inner { padding: calc(var(--safe-top) + 20px) 24px 28px; }
+.logo-mark { width: 76px; height: 76px; border-radius: 22px; margin-bottom: 16px; }
+.welcome-points { margin: 16px 0 14px; gap: 9px; }
+.welcome-copy { margin-top: 12px; font-size: 15px; }
+
+/* v1.1 member Add friend + autocomplete */
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px 10px 10px;
+  margin-bottom: 10px;
+}
+.member-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+.friend-btn {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 68px;
+  min-height: 52px;
+  padding: 6px 4px;
+  border-radius: 12px;
+  background: #1877F2;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-align: center;
+}
+.friend-btn svg { width: 16px; height: 16px; display: block; }
+.friend-btn:active { transform: scale(0.97); background: var(--fb-dark); }
+
+.ac-drop {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  margin-top: 8px;
+  overflow: hidden;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.ac-drop[hidden] { display: none; }
+.ac-group {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 10px 12px 4px;
+  background: #fff;
+}
+.ac-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px; font-weight: 700;
+  color: var(--ink);
+  background: #fff;
+}
+.ac-item:hover, .ac-item.active { background: var(--line-2); }
+.ac-item .sub { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 1px; }
+.ac-empty { padding: 12px; font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; }
+.ac-kind {
+  flex: none;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 3px 7px;
+}
+.search-wrap { position: relative; }
+
+.welcome-inner { padding-bottom: 34px; }
+.welcome-foot { margin-bottom: 8px; }
+
+/* TradeCircle Perth v1.2 */
+.tabbar { grid-template-columns: repeat(4, 1fr); }
+.tab { position: relative; }
+.tab-badge {
+  position: absolute; top: 2px; right: 18%;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 99px; background: #E24B4A; color: #fff;
+  font-size: 9px; font-weight: 800; line-height: 16px; text-align: center;
+}
+.tab-badge[hidden], .tab-badge:empty { display: none; }
+
+.bell-btn { position: relative; }
+.bell-dot {
+  position: absolute; top: 6px; right: 6px;
+  min-width: 15px; height: 15px; padding: 0 4px;
+  border-radius: 99px; background: #E24B4A; color: #fff;
+  font-size: 9px; font-weight: 800; line-height: 15px; text-align: center;
+}
+
+/* Drawer */
+.drawer-overlay {
+  position: absolute; inset: 0; background: rgba(8,16,28,.46);
+  z-index: 28; display: none;
+}
+.drawer-overlay.show { display: block; }
+.drawer {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 304px; max-width: 82%;
+  background: #fff; z-index: 29;
+  transform: translateX(-105%);
+  transition: transform .22s ease;
+  display: flex; flex-direction: column;
+  box-shadow: 8px 0 28px rgba(16,32,51,.18);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  background: var(--navy); color: #fff;
+  padding: calc(var(--safe-top) + 4px) 16px 12px;
+}
+.drawer-head .nm { font-size: 17px; font-weight: 800; margin-top: 10px; letter-spacing: -.02em; }
+.drawer-head .biz { font-size: 13px; font-weight: 600; color: #B8C6D3; margin-top: 2px; }
+.drawer-head .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.drawer-head .t-pill { background: rgba(15,190,134,.2); color: #8BE0C3; }
+.drawer-head .r-pill { background: rgba(255,255,255,.1); color: #D5DEE6; }
+.drawer-nav { flex: 1; overflow-y: auto; padding: 8px 0 12px; }
+.drawer-item {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px; text-align: left; font-size: 14px; font-weight: 700; color: var(--ink);
+}
+.drawer-item .ic {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: grid; place-items: center; background: var(--line-2); color: var(--navy); flex: none;
+}
+.drawer-item:active { background: var(--line-2); }
+.drawer-item.danger { color: var(--danger); }
+.drawer-sep { height: 1px; background: var(--line); margin: 6px 16px; }
+.drawer-ver { padding: 4px 16px 16px; font-size: 11px; font-weight: 600; color: var(--faint); }
+
+/* Status pills */
+.st-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.st {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 20px; padding: 0 7px; border-radius: 999px;
+  font-size: 10px; font-weight: 800; letter-spacing: -.01em; white-space: nowrap;
+}
+.st-friends { background: #E7F8F1; color: #066B4C; }
+.st-pending { background: #FFF6E0; color: #8A5A00; }
+.st-none { background: var(--line-2); color: var(--muted); }
+.st-yes { background: #E8F1FD; color: #0D65D9; }
+.st-need { background: #FDECEC; color: #9B2C2C; }
+
+.rel-chips { display: flex; gap: 6px; overflow-x: auto; margin: 0 -20px; padding: 8px 20px 2px; }
+.rel-chips::-webkit-scrollbar { display: none; }
+.rel-chip {
+  flex: none; height: 30px; padding: 0 10px; border-radius: 999px;
+  background: #fff; border: 1.5px solid var(--line);
+  font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap;
+}
+.rel-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+.card-actions { display: flex; flex-direction: column; gap: 6px; flex: none; }
+.msg-btn {
+  flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; width: 64px; min-height: 44px; padding: 5px 4px; border-radius: 12px;
+  background: var(--navy); color: #fff; font-size: 10px; font-weight: 800; line-height: 1.15;
+}
+.friend-btn.sm, .msg-btn.sm { width: 62px; min-height: 42px; }
+
+.g-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFF8E6; color: #7A4F00; border-radius: 999px;
+  padding: 5px 10px; font-size: 13px; font-weight: 800; margin-top: 8px;
+}
+.btn-google { background: #fff; color: #1F1F1F; border: 1.5px solid var(--line); }
+.btn-google .gmark {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800; font-size: 12px;
+  background: conic-gradient(#EA4335 0 25%, #FBBC05 0 50%, #34A853 0 75%, #4285F4 0 100%);
+  color: #fff;
+}
+
+.g-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px; border-radius: 16px; border: 1.5px solid #D6E4FF;
+  background: #F5F8FF; margin-bottom: 14px; text-align: left;
+}
+
+/* Reviews */
+.rev-counts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 14px; }
+.rev-count {
+  background: #fff; border-radius: 14px; padding: 12px; box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(16,32,51,.04);
+}
+.rev-count .n { font-size: 22px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); }
+.rev-count .l { font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 2px; }
+.req-card { padding: 12px; margin-bottom: 10px; text-align: left; }
+.req-card .who { font-size: 15px; font-weight: 800; }
+.req-card .meta { font-size: 12px; font-weight: 600; color: var(--muted); margin: 2px 0 8px; }
+
+.idea-card {
+  background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 12px; margin-bottom: 8px; text-align: left; font-size: 14px;
+  font-weight: 600; line-height: 1.45; color: var(--text);
+}
+.idea-card.on { border-color: var(--accent); background: var(--accent-soft); }
+.uniq { font-size: 12px; font-weight: 800; margin: 8px 0; }
+.uniq.ok { color: #066B4C; }
+.uniq.bad { color: #9B2C2C; }
+.notice {
+  background: #EEF2FF; color: #3730A3; border-radius: 12px;
+  padding: 10px 12px; font-size: 12px; font-weight: 700; line-height: 1.4; margin: 8px 0 14px;
+}
+
+/* Chat list */
+.chat-row {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; text-align: left; border-bottom: 1px solid var(--line-2);
+  background: transparent;
+}
+.chat-row .meta { flex: 1; min-width: 0; }
+.chat-row .nm { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.chat-row .prev { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.chat-row .when { font-size: 11px; font-weight: 700; color: var(--faint); text-align: right; flex: none; }
+.chat-row .ub {
+  display: inline-block; min-width: 18px; height: 18px; padding: 0 5px; margin-top: 4px;
+  border-radius: 99px; background: var(--accent); color: #06281C;
+  font-size: 10px; font-weight: 800; line-height: 18px; text-align: center;
+}
+.av-wrap { position: relative; flex: none; }
+.dot-on, .dot-off {
+  position: absolute; right: 1px; bottom: 1px; width: 11px; height: 11px;
+  border-radius: 50%; border: 2px solid #fff;
+}
+.dot-on { background: #16A34A; }
+.dot-off { background: #C5CDD5; }
+.pin-lab { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding: 8px 0 2px; }
+.muted-ico { opacity: .55; }
+
+/* Conversation */
+.chat-screen { background: #EAF0F4; }
+.chat-thread {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: calc(var(--safe-top) + 56px) 12px 8px;
+}
+.bub {
+  max-width: 82%; padding: 8px 11px; border-radius: 16px;
+  font-size: 14px; font-weight: 600; line-height: 1.4; margin: 6px 0;
+  position: relative; word-break: break-word;
+}
+.bub.in { background: #fff; color: var(--ink); border-bottom-left-radius: 5px; margin-right: auto; }
+.bub.out { background: #D8F6EA; color: var(--ink); border-bottom-right-radius: 5px; margin-left: auto; }
+.bub .time { display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+  font-size: 10px; font-weight: 700; color: var(--faint); margin-top: 3px; }
+.quote {
+  border-left: 3px solid var(--accent); background: rgba(15,190,134,.1);
+  padding: 4px 8px; border-radius: 6px; margin-bottom: 6px;
+  font-size: 12px; color: var(--muted);
+}
+.reacts { display: flex; gap: 4px; margin-top: 4px; }
+.reacts span {
+  background: #fff; border: 1px solid var(--line); border-radius: 999px;
+  padding: 1px 6px; font-size: 11px; font-weight: 700;
+}
+.ticks { letter-spacing: -.04em; font-size: 12px; }
+.ticks.read { color: #2B6CFF; }
+.ticks.deliv { color: var(--faint); }
+.voice {
+  display: flex; align-items: center; gap: 8px; min-width: 160px;
+}
+.voice .play {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+  display: grid; place-items: center; flex: none;
+}
+.wave { display: flex; align-items: center; gap: 2px; height: 20px; flex: 1; }
+.wave i { width: 3px; background: var(--navy); border-radius: 2px; display: block; opacity: .7; }
+.file-row, .loc-card, .p-card, .link-card {
+  display: flex; align-items: center; gap: 8px; min-width: 180px;
+}
+.file-ico, .loc-ico {
+  width: 32px; height: 32px; border-radius: 8px; background: #fff; display: grid; place-items: center; flex: none;
+}
+.photo-bub {
+  width: 180px; height: 120px; border-radius: 12px; overflow: hidden;
+  background: linear-gradient(135deg, #1C4B73, #0FBE86);
+}
+.mention { color: #0D65D9; font-weight: 800; }
+.edited { font-size: 10px; color: var(--faint); font-style: italic; }
+.deleted { font-style: italic; color: var(--muted); }
+.typing { display: flex; gap: 4px; padding: 10px 14px; width: 56px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: #9AA8B5; animation: typ 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typ { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+.chat-composer {
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 8px 10px 22px; background: #fff; border-top: 1px solid var(--line);
+}
+.chat-composer .plus, .chat-composer .send {
+  width: 38px; height: 38px; border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+}
+.chat-composer .plus { background: var(--line-2); color: var(--navy); }
+.chat-composer .send { background: var(--accent); color: #06281C; }
+.chat-composer textarea {
+  flex: 1; min-width: 0; border: 1.5px solid var(--line); border-radius: 18px;
+  padding: 8px 12px; font-size: 15px; font-weight: 600; resize: none;
+  max-height: 80px; min-height: 38px; outline: none;
+}
+.quick-row { display: flex; gap: 6px; overflow-x: auto; padding: 0 10px 8px; background: #fff; }
+.quick-row button {
+  flex: none; height: 28px; padding: 0 10px; border-radius: 999px;
+  background: var(--line-2); font-size: 11px; font-weight: 700; color: var(--navy);
+}
+
+.react-bar {
+  display: flex; gap: 6px; background: #fff; border-radius: 999px;
+  padding: 6px 8px; box-shadow: var(--shadow); margin: 4px 0;
+}
+
+/* Notifications */
+.notif-row {
+  width: 100%; display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px; text-align: left; background: #fff;
+  border-bottom: 1px solid var(--line-2);
+}
+.notif-row.unread { background: #F3FBEE; }
+.notif-row .ttl { font-size: 14px; font-weight: 800; }
+.notif-row .bd { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.notif-row .tm { font-size: 11px; font-weight: 700; color: var(--faint); margin-top: 4px; }
+
+/* Lock screen */
+.lock {
+  background: linear-gradient(180deg, #0C243C 0%, #071525 100%);
+  color: #fff; height: 100%;
+  display: flex; flex-direction: column; padding: calc(var(--safe-top) + 36px) 18px 28px;
+}
+.lock .clk { font-size: 64px; font-weight: 700; letter-spacing: -.04em; text-align: center; line-height: 1; }
+.lock .dt { text-align: center; font-size: 18px; font-weight: 600; color: #C5D3DE; margin: 6px 0 28px; }
+.lock-card {
+  background: rgba(255,255,255,.14); backdrop-filter: blur(16px);
+  border-radius: 18px; padding: 12px; margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.12);
+}
+.lock-card .app { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #8BE0C3; }
+.lock-card .tl { font-size: 15px; font-weight: 800; margin-top: 4px; }
+.lock-card .bd { font-size: 13px; font-weight: 600; color: #D5DEE6; margin-top: 2px; }
+
+.time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.overflow-menu button {
+  width: 100%; text-align: left; padding: 12px 4px; font-size: 15px; font-weight: 700;
+  border-top: 1px solid var(--line-2);
+}
+
+.member-card { align-items: flex-start; }
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 48px; border-radius: 14px; font-size: 15px; font-weight: 800;
+}
+.chat-screen .app-header { background: #EAF0F4; }
+.chat-composer textarea { font-family: inherit; }
+.lock { overflow: hidden; }
+
+  </style>
+</head>
+<body>
+  <div class="studio" id="studio">
+    <div class="studio-brand">
+      <div class="eyebrow"><i></i> Facebook Business Marketing</div>
+      <h1>TradeCircle Perth</h1>
+      <div class="name-badge">Placeholder name — not final</div>
+      <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, and send a Facebook friend request. Weekly meet-ups stay offline.</p>
+      <div class="studio-notes">
+        <ul>
+          <li><strong>Confirmed:</strong> multi-region profiles, My areas / All Perth metro filter, trade filter, search, Google Business Profile, review ideas (not finished reviews), friend and review status, in-app chat with notifications, and a top menu drawer.</li>
+          <li><strong>Open question:</strong> whether new members need approval. A pending screen is included and marked TBC.</li>
+          <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
+        </ul>
+      </div>
+      <p class="studio-foot">Click a screen on the right to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.2 · 16 Nov 2026, Perth time.</p>
+    </div>
+
+    <div class="device-col">
+      <div class="device">
+        <div class="phone" id="phone">
+          <div class="status-bar" id="statusBar">
+            <span>9:41</span>
+            <div class="status-icons" aria-hidden="true">
+              <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="5" width="3" height="7" rx="0.6"/><rect x="4.5" y="3" width="3" height="9" rx="0.6"/><rect x="9" y="1.5" width="3" height="10.5" rx="0.6"/><rect x="13.5" y="0" width="3" height="12" rx="0.6" opacity="0.35"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 3.2c1.7 0 3.3.7 4.5 1.8l.9-.9C12 2.7 10.1 1.8 8 1.8S4 2.7 2.6 4.1l.9.9A6.3 6.3 0 0 1 8 3.2Zm0 2.6c1 0 1.9.4 2.6 1.1l.9-.9A5 5 0 0 0 8 4.6a5 5 0 0 0-3.5 1.4l.9.9A3.6 3.6 0 0 1 8 5.8Zm0 2.6a2 2 0 0 1 1.4.6l.9-.9A3.3 3.3 0 0 0 8 7.2a3.3 3.3 0 0 0-2.3.9l.9.9A2 2 0 0 1 8 8.4Zm0 2.2a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.6" y="0.6" width="21" height="10.8" rx="2.4" stroke="currentColor" stroke-width="1.2"/><rect x="2.2" y="2.2" width="16.2" height="7.6" rx="1.2" fill="currentColor"/><path d="M23 4v4c.8-.4 1.2-1 1.2-2S23.8 4.4 23 4Z" fill="currentColor"/></svg>
+            </div>
+          </div>
+
+          <div class="screens" id="screens"></div>
+
+          <nav class="tabbar" id="tabbar" aria-label="Main">
+            <button class="tab" data-tab="members" id="tab-members">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M20 8v6M17 11h6"/></svg>
+              Members
+            </button>
+            <button class="tab" data-tab="chats" id="tab-chats">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5H8l-4 3v-5.2A8.5 8.5 0 1 1 21 12Z"/></svg>
+              Chats<span class="tab-badge" id="tabChatBadge">3</span>
+            </button>
+            <button class="tab" data-tab="reviews" id="tab-reviews">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 6.6H21l-5.4 3.9 2.1 6.5L12 16.6 6.3 20l2.1-6.5L3 9.6h6.8L12 3z"/></svg>
+              Reviews
+            </button>
+            <button class="tab" data-tab="me" id="tab-me">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5c1.2-3.1 3.7-4.7 7-4.7s5.8 1.6 7 4.7"/></svg>
+              My Profile
+            </button>
+          </nav>
+          <div class="home-indicator"></div>
+          <div class="toast" id="toast"></div>
+        </div>
+      </div>
+      <p class="device-caption" id="deviceCaption">Welcome</p>
+    </div>
+
+    <div class="chooser">
+      <h2>Screens</h2>
+      <div class="chooser-list" id="chooserList"></div>
+    </div>
+  </div>
+  <script>
+(function () {
+  const TRADES = [
+    "Pest Control", "Carpenter", "Painter", "Plumber", "Electrician",
+    "Landscaper", "Roofer", "Air Conditioning", "Tiler", "Fencer",
+    "Handyman", "Locksmith", "Plasterer"
+  ];
+
+  const REGIONS = [
+    { id: "hills", name: "Hills", suggested: false },
+    { id: "kwinana", name: "Kwinana", suggested: false },
+    { id: "north", name: "North", suggested: false },
+    { id: "south", name: "South", suggested: false },
+    { id: "east", name: "East", suggested: true },
+    { id: "central", name: "Central / CBD", suggested: true },
+    { id: "fremantle", name: "Fremantle", suggested: true },
+    { id: "rockingham", name: "Rockingham", suggested: true },
+    { id: "joondalup", name: "Joondalup", suggested: true },
+    { id: "armadale", name: "Armadale", suggested: true }
+  ];
+
+  const AVATAR_COLORS = {
+    teal: ["#0FBE86", "#0A7A58"],
+    navy: ["#1C4B73", "#0B1F33"],
+    coral: ["#F07A5A", "#C44B32"],
+    violet: ["#7B6CFF", "#4C3EBE"],
+    amber: ["#F5B942", "#C48412"],
+    moss: ["#6BA368", "#2F6B3C"],
+    rust: ["#D9764F", "#8A3B22"],
+    sky: ["#4C9BE8", "#1D5FA8"],
+    indigo: ["#4F6AD7", "#2A3A8F"],
+    olive: ["#9AA63B", "#5C6418"],
+    rose: ["#E07A9B", "#A34462"],
+    steel: ["#6B8499", "#334655"]
+  };
+
+  const MEMBERS = [
+    {
+      id: "jamie", first: "Jamie", last: "Hale",
+      business: "Hale Pest Control", trade: "Pest Control",
+      regions: ["hills", "north"],
+      bio: "Family-run pest control covering the Hills and northern suburbs. Termites, general pests and pre-purchase inspections.",
+      phone: "0412 000 101",
+      facebook: "https://www.facebook.com/demo.halepestcontrol",
+      page: "https://www.facebook.com/demo.halepestcontrol.biz",
+      color: "teal", isMe: true
+    },
+    {
+      id: "sarah", first: "Sarah", last: "Nguyen",
+      business: "Nguyen Carpentry", trade: "Carpenter",
+      regions: ["north", "joondalup"],
+      bio: "Custom kitchens, decks and home renovations. Happy to share honest recommendations for other trades I have worked with.",
+      phone: "0412 000 102",
+      facebook: "https://www.facebook.com/demo.nguyencarpentry",
+      page: "https://www.facebook.com/demo.nguyencarpentry.biz",
+      color: "coral"
+    },
+    {
+      id: "liam", first: "Liam", last: "O’Connor",
+      business: "O’Connor Plumbing", trade: "Plumber",
+      regions: ["south", "fremantle"],
+      bio: "Blocked drains, hot water and bathroom fit-outs across the southern suburbs and Fremantle.",
+      phone: "0412 000 103",
+      facebook: "https://www.facebook.com/demo.oconnorplumbing",
+      page: "https://www.facebook.com/demo.oconnorplumbing.biz",
+      color: "navy"
+    },
+    {
+      id: "priya", first: "Priya", last: "Sharma",
+      business: "Sharma Painting Co", trade: "Painter",
+      regions: ["east", "central"],
+      bio: "Interior and exterior painting for homes and small commercial jobs. Neat, reliable and on time.",
+      phone: "0412 000 104",
+      facebook: "https://www.facebook.com/demo.sharmapainting",
+      page: "",
+      color: "violet"
+    },
+    {
+      id: "jack", first: "Jack", last: "Thompson",
+      business: "Thompson Electrical", trade: "Electrician",
+      regions: ["kwinana", "rockingham"],
+      bio: "Licensed electrician for homes and light commercial work around Kwinana and Rockingham.",
+      phone: "0412 000 105",
+      facebook: "https://www.facebook.com/demo.thompsonelectrical",
+      page: "https://www.facebook.com/demo.thompsonelectrical.biz",
+      color: "amber"
+    },
+    {
+      id: "mei", first: "Mei", last: "Chen",
+      business: "West Coast Gardens", trade: "Landscaper",
+      regions: ["hills", "east"],
+      bio: "Garden design, paving and retaining walls. Often works alongside carpenters and fence builders on the same jobs.",
+      phone: "0412 000 106",
+      facebook: "https://www.facebook.com/demo.westcoastgardens",
+      page: "https://www.facebook.com/demo.westcoastgardens.biz",
+      color: "moss"
+    },
+    {
+      id: "daniel", first: "Daniel", last: "Walsh",
+      business: "Walsh Roofing", trade: "Roofer",
+      regions: ["armadale", "south"],
+      bio: "Roof repairs, restorations and gutter work. Based in the south-east and happy to point clients to other trusted trades.",
+      phone: "",
+      facebook: "https://www.facebook.com/demo.walshroofing",
+      page: "",
+      color: "rust"
+    },
+    {
+      id: "emma", first: "Emma", last: "Brooks",
+      business: "Brooks Air & Gas", trade: "Air Conditioning",
+      regions: ["north", "central"],
+      bio: "Split-system installs and servicing for homes and offices across the north and inner city.",
+      phone: "0412 000 108",
+      facebook: "https://www.facebook.com/demo.brooksairgas",
+      page: "https://www.facebook.com/demo.brooksairgas.biz",
+      color: "sky"
+    },
+    {
+      id: "marcus", first: "Marcus", last: "Adeyemi",
+      business: "Adeyemi Tiling", trade: "Tiler",
+      regions: ["fremantle", "south"],
+      bio: "Bathroom, kitchen and floor tiling. Works closely with plumbers and painters on renovation jobs.",
+      phone: "0412 000 109",
+      facebook: "https://www.facebook.com/demo.adeyemitiling",
+      page: "",
+      color: "indigo"
+    },
+    {
+      id: "tom", first: "Tom", last: "Reeves",
+      business: "Reeves Fencing", trade: "Fencer",
+      regions: ["hills", "armadale"],
+      bio: "Colorbond, timber and gate work for homes in the Hills and Armadale area.",
+      phone: "0412 000 110",
+      facebook: "https://www.facebook.com/demo.reevesfencing",
+      page: "https://www.facebook.com/demo.reevesfencing.biz",
+      color: "olive"
+    },
+    {
+      id: "hannah", first: "Hannah", last: "Lewis",
+      business: "Lewis Handyman", trade: "Handyman",
+      regions: ["central", "east"],
+      bio: "Small home repairs, flat-packs and maintenance. A good first call when a job needs more than one trade.",
+      phone: "0412 000 111",
+      facebook: "https://www.facebook.com/demo.lewishandyman",
+      page: "",
+      color: "rose"
+    },
+    {
+      id: "chris", first: "Chris", last: "Patel",
+      business: "Patel Locksmiths", trade: "Locksmith",
+      regions: ["joondalup", "north"],
+      bio: "Mobile locksmith for homes and small businesses in the northern corridor. After-hours call-outs available.",
+      phone: "0412 000 112",
+      facebook: "https://www.facebook.com/demo.patellocksmiths",
+      page: "https://www.facebook.com/demo.patellocksmiths.biz",
+      color: "steel"
+    }
+  ];
+
+  const CHOOSER = [
+    { id: "welcome", title: "Welcome", sub: "First open of the app" },
+    { id: "signin", title: "Sign in", sub: "Email and password" },
+    { id: "signup", title: "Sign up", sub: "Sign up with Facebook or email" },
+    { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
+    { id: "create-profile", title: "Create profile", sub: "Connect Facebook or paste a link" },
+    { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
+    { id: "create-regions", title: "Choose regions", sub: "Multi-select Perth areas" },
+    { id: "pending", title: "Pending approval", sub: "Optional / not decided yet", tbc: true },
+    { id: "members", title: "Members — My areas", sub: "Default member list" },
+    { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
+    { id: "members-filter", title: "Members — Trade filter", sub: "Plumbers only, as an example" },
+    { id: "members-search", title: "Search autocomplete", sub: "Type a trade, e.g. plu → Plumber" },
+    { id: "member", title: "Member profile", sub: "Facebook friend request CTA" },
+    { id: "me", title: "My profile", sub: "How other members see you" },
+    { id: "edit-profile", title: "Edit profile", sub: "Connected Facebook, with disconnect" },
+    { id: "settings", title: "Settings", sub: "Connections and notification toggles" },
+    { id: "google-consent", title: "Google Business connect", sub: "Prototype consent sheet" },
+    { id: "reviews", title: "Reviews tab", sub: "Requests received and sent" },
+    { id: "review-ideas", title: "Review ideas helper", sub: "Job details, ideas, write your own" },
+    { id: "chats", title: "Chat list", sub: "Pinned, unread, online status" },
+    { id: "chat-dm", title: "1:1 conversation", sub: "Replies, reactions, voice note, read ticks" },
+    { id: "chat-group", title: "Region group chat", sub: "Hills tradies with @mention" },
+    { id: "notifications", title: "Notifications centre", sub: "Messages, reviews, new members" },
+    { id: "notif-settings", title: "Notification settings", sub: "Toggles and quiet hours" },
+    { id: "lockscreen", title: "Lock screen push", sub: "Mock notifications on the lock screen" },
+    { id: "drawer", title: "Menu drawer", sub: "Hamburger slide-out navigation" },
+    { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
+    { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
+    { id: "my-regions", title: "My regions", sub: "Areas you have joined" }
+  ];
+
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "invite", "help", "my-regions", "drawer", "google-consent"]);
+  const DARK = new Set(["welcome"]);
+
+  const state = {
+    screen: "welcome",
+    areaFilter: "mine",
+    tradeFilter: "All",
+    query: "",
+    selectedMember: "liam",
+    meId: "jamie",
+    draft: null,
+    stepRegions: ["hills", "north"],
+    tipDismissed: false,
+    notify: true,
+    photoData: null,
+    fbConnected: false,
+    fbNext: "create-profile",
+    relFilter: "all",
+    googleConnected: true
+  };
+
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const screensEl = $("#screens");
+  const tabbar = $("#tabbar");
+  const statusBar = $("#statusBar");
+  const chooserList = $("#chooserList");
+  const toastEl = $("#toast");
+
+  function regionName(id) {
+    const r = REGIONS.find(function (x) { return x.id === id; });
+    return r ? r.name : id;
+  }
+  function me() {
+    return MEMBERS.find(function (m) { return m.id === state.meId; });
+  }
+  function fullName(m) { return m.first + " " + m.last; }
+  function initials(m) { return ((m.first || "?").charAt(0) + (m.last || "").charAt(0)).toUpperCase(); }
+
+  function escapeAttr(s) {
+    return String(s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  }
+  function escapeText(s) {
+    return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function avatarHTML(m, size) {
+    const pal = AVATAR_COLORS[m.color] || AVATAR_COLORS.teal;
+    const font = size >= 88 ? 32 : size >= 64 ? 24 : 16;
+    if (m.isMe && state.photoData) {
+      return '<div class="avatar" style="width:' + size + 'px;height:' + size + 'px;background:#ccc"><img src="' + state.photoData + '" alt="" style="width:100%;height:100%;object-fit:cover"></div>';
+    }
+    return '<div class="avatar" style="width:' + size + 'px;height:' + size + 'px;background:linear-gradient(145deg,' + pal[0] + ',' + pal[1] + ');font-size:' + font + 'px">' +
+      '<svg class="pattern" viewBox="0 0 80 80" aria-hidden="true"><circle cx="64" cy="16" r="22" fill="#fff"/><circle cx="12" cy="70" r="18" fill="#fff"/></svg>' +
+      '<span style="position:relative;z-index:1">' + initials(m) + "</span></div>";
+  }
+
+  function icon(name) {
+    const icons = {
+      back: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg>',
+      chev: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+      search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+      cam: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 8h3l2-3h6l2 3h3v11H4V8z"/><circle cx="12" cy="13" r="3.2"/></svg>',
+      check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>',
+      fb: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>',
+      phone: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3c0 .8-.7 1.6-1.5 1.5C10.5 18.2 5.8 13.5 4 6c-.1-.8.7-1.5 1.5-1.5z"/></svg>',
+      pin: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
+      link: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5h5v5M19 5l-8 8"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>',
+      pencil: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg>',
+      bell: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+      addfriend: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>'
+    };
+    if (name === "logo") {
+      var dots = [0, 60, 120, 180, 240, 300].map(function (deg, i) {
+        var a = (deg - 90) * Math.PI / 180;
+        var x = 32 + Math.cos(a) * 22;
+        var y = 32 + Math.sin(a) * 22;
+        var r = i === 0 ? 4.2 : 3.4;
+        return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r + '" fill="' + (i === 0 ? "#0FBE86" : "#E8EEF4") + '"/>';
+      }).join("");
+      return '<svg width="54" height="54" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" stroke="#0FBE86" stroke-width="2.2" opacity="0.9"/><circle cx="32" cy="32" r="3.2" fill="#0FBE86"/>' + dots + "</svg>";
+    }
+    return icons[name] || "";
+  }
+
+  function filteredMembers() {
+    var mine = {};
+    me().regions.forEach(function (r) { mine[r] = true; });
+    return MEMBERS.filter(function (m) {
+      if (m.isMe) return false;
+      if (state.areaFilter === "mine") {
+        if (!m.regions.some(function (r) { return mine[r]; })) return false;
+      }
+      if (state.tradeFilter !== "All" && m.trade !== state.tradeFilter) return false;
+      if (state.query) {
+        var q = state.query.toLowerCase();
+        var blob = [fullName(m), m.business, m.trade, m.regions.map(regionName).join(" ")].join(" ").toLowerCase();
+        if (blob.indexOf(q) === -1) return false;
+      }
+      if (window.TC12 && TC12.passRelFilter && !TC12.passRelFilter(m)) return false;
+      return true;
+    });
+  }
+
+  function memberCard(m) {
+    if (window.TC12 && TC12.memberCard) return TC12.memberCard(m);
+    return '<div class="card member-card">' +
+      '<button type="button" class="member-main" data-go="member" data-id="' + m.id + '">' +
+      avatarHTML(m, 52) +
+      '<div class="meta"><div class="nm">' + escapeText(fullName(m)) + '</div>' +
+      '<div class="biz">' + escapeText(m.business) + '</div>' +
+      '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      '</div></div></button>' +
+      '<a class="friend-btn" href="' + escapeAttr(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
+      icon("addfriend") + "<span>Add friend</span></a></div>";
+  }
+
+
+
+  function matchTrades(q) {
+    q = String(q || "").toLowerCase().trim();
+    if (!q) return TRADES.slice();
+    return TRADES.filter(function (tr) { return tr.toLowerCase().indexOf(q) !== -1; });
+  }
+  function matchPeople(q) {
+    q = String(q || "").toLowerCase().trim();
+    if (!q) return [];
+    return MEMBERS.filter(function (m) {
+      if (m.isMe) return false;
+      var blob = [fullName(m), m.business, m.trade].join(" ").toLowerCase();
+      return blob.indexOf(q) !== -1;
+    });
+  }
+  function acHTML(q, withMembers) {
+    var trades = matchTrades(q);
+    var people = withMembers ? matchPeople(q) : [];
+    if (!String(q || "").trim()) {
+      if (!withMembers) {
+        return '<div class="ac-group">Trades</div>' + trades.map(function (tr) {
+          return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span></button>';
+        }).join("");
+      }
+      return "";
+    }
+    if (!trades.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
+    var html = "";
+    if (trades.length) {
+      html += '<div class="ac-group">Trades</div>' + trades.map(function (tr) {
+        return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span><span class="ac-kind">Trade</span></button>';
+      }).join("");
+    }
+    if (people.length) {
+      html += '<div class="ac-group">Members</div>' + people.map(function (m) {
+        return '<button type="button" class="ac-item" data-ac-member="' + m.id + '">' + avatarHTML(m, 32) +
+          "<span><span>" + escapeText(fullName(m)) + '</span><span class="sub">' + escapeText(m.business) + " · " + escapeText(m.trade) + "</span></span></button>";
+      }).join("");
+    }
+    return html;
+  }
+  function paintSearchAc() {
+    var box = document.getElementById("searchAc");
+    if (!box) return;
+    var q = state.query || "";
+    if (!q.trim()) { box.hidden = true; box.innerHTML = ""; return; }
+    box.innerHTML = acHTML(q, true);
+    box.hidden = false;
+  }
+  function paintTradeAc(openAll) {
+    var box = document.getElementById("tradeAc");
+    var input = document.getElementById("tradeType");
+    if (!box) return;
+    var q = input ? input.value : "";
+    if (!openAll && !String(q).trim()) { box.hidden = true; box.innerHTML = ""; return; }
+    box.innerHTML = acHTML(q, false);
+    box.hidden = !box.innerHTML;
+  }
+
+  function regionPicker(selectedIds, prefix) {
+    function block(list) {
+      return '<div class="region-grid">' + list.map(function (r) {
+        var on = selectedIds.indexOf(r.id) !== -1;
+        return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
+          "<span><span class=\"n\">" + r.name + "</span>" + (r.suggested ? '<span class="sug">Suggested</span>' : "") + "</span>" +
+          '<span class="tick">' + icon("check") + "</span></button>";
+      }).join("") + "</div>";
+    }
+    var core = REGIONS.filter(function (r) { return !r.suggested; });
+    var sug = REGIONS.filter(function (r) { return r.suggested; });
+    return '<div class="region-sec"><h3>Perth regions</h3><p>The four areas already agreed.</p>' + block(core) + "</div>" +
+      '<div class="region-sec"><h3>Suggested regions</h3><p>Extra areas for a fuller Perth metro map. These can be changed later.</p>' + block(sug) + "</div>";
+  }
+
+  function draftFromMe() {
+    var m = me();
+    return state.draft || {
+      first: m.first, last: m.last, business: m.business, trade: m.trade,
+      bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
+      regions: m.regions.slice()
+    };
+  }
+
+  function parseName(name) {
+    var parts = String(name || "").trim().split(/\s+/);
+    if (!parts[0]) return { first: "Jamie", last: "Hale" };
+    if (parts.length === 1) return { first: parts[0], last: "" };
+    return { first: parts[0], last: parts.slice(1).join(" ") };
+  }
+
+  function captureDraft(form) {
+    var fd = new FormData(form);
+    var n = parseName(fd.get("name"));
+    var current = draftFromMe();
+    state.draft = {
+      first: n.first, last: n.last,
+      business: fd.get("business") || current.business,
+      trade: current.trade,
+      bio: fd.get("bio") || "",
+      phone: fd.get("phone") || "",
+      facebook: fd.get("facebook") || "",
+      page: fd.get("page") || "",
+      regions: (current.regions || me().regions).slice()
+    };
+  }
+
+  function applyDraftToMe() {
+    var d = draftFromMe();
+    var m = me();
+    m.first = d.first; m.last = d.last; m.business = d.business; m.trade = d.trade;
+    m.bio = d.bio; m.phone = d.phone; m.facebook = d.facebook; m.page = d.page;
+    m.regions = (d.regions || []).slice();
+  }
+
+
+
+  function demoFbLink() { return "https://www.facebook.com/demo.halepestcontrol"; }
+
+  function fbConnectBlock(screenId, currentLink) {
+    if (state.fbConnected) {
+      var d = draftFromMe();
+      var who = { first: d.first || "Jamie", last: d.last || "Hale", color: "teal", isMe: true };
+      var link = d.facebook || demoFbLink();
+      return '<div class="fb-card">' + avatarHTML(who, 44) +
+        '<div class="fb-card-meta"><div class="fb-card-k">Facebook connected</div>' +
+        '<div class="fb-card-n">' + escapeText(fullName(who)) + "</div>" +
+        '<div class="fb-card-l">' + escapeText(String(link).replace("https://www.", "")) + "</div></div>" +
+        '<button type="button" class="fb-disconnect" data-action="fb-disconnect">Disconnect</button>' +
+        '<input type="hidden" name="facebook" value="' + escapeAttr(link) + '">' +
+        "</div>";
+    }
+    return '<button type="button" class="btn btn-fb" data-action="fb-connect" data-next="' + screenId + '">' + icon("fb") + " Connect Facebook</button>" +
+      '<div class="or-line"><span>or paste your link</span></div>' +
+      '<div class="field"><label>Facebook profile link</label><input name="facebook" inputmode="url" placeholder="https://www.facebook.com/your.profile" value="' + escapeAttr(currentLink || "") + '">' +
+      '<p class="hint">This is the profile other members will open to send you a friend request.</p></div>';
+  }
+
+  function renderWelcome() {
+    return '<section class="screen dark" id="screen-welcome" data-screen="welcome">' +
+      '<div class="welcome-bg" aria-hidden="true"><div class="ring" style="width:280px;height:280px"></div><div class="ring" style="width:400px;height:400px"></div><div class="ring" style="width:520px;height:520px"></div></div>' +
+      '<div class="welcome-inner"><div class="logo-mark">' + icon("logo") + '</div>' +
+      '<div class="welcome-kicker">Perth tradies</div>' +
+      '<h2>TradeCircle<br><span>Perth</span></h2>' +
+      '<span class="name-badge placeholder-note">Placeholder name</span>' +
+      '<p class="welcome-copy">Join your local areas, meet other trades, and send a Facebook friend request so you can recommend each other in the groups.</p>' +
+      '<ul class="welcome-points">' +
+      '<li><span class="ic">' + icon("check") + "</span> Connect your Facebook in one tap, or paste your link.</li>" +
+      '<li><span class="ic">' + icon("check") + "</span> Pick one or more Perth regions.</li>" +
+      '<li><span class="ic">' + icon("check") + "</span> Weekly meet-ups stay offline — they are not in this app.</li>" +
+      '</ul><div class="welcome-actions">' +
+      '<button class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Continue with Facebook</button>" +
+      '<div class="or-line light"><span>or</span></div>' +
+      '<button class="btn btn-primary" data-go="signup">Create account</button>' +
+      '<button class="btn btn-ghost" data-go="signin">Sign in</button>' +
+      '</div><p class="welcome-foot">Recommendations should only be for people you actually know.</p></div></section>';
+  }
+
+  function renderSignIn() {
+    return '<section class="screen has-header" data-screen="signin">' +
+      '<div class="app-header"><button class="icon-btn" data-go="welcome" aria-label="Back">' + icon("back") + '</button><div class="ht">Sign in</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="auth-hero"><h2>Welcome back</h2><p>Sign in to see members in your Perth areas.</p></div>' +
+      '<form data-form="signin">' +
+      '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="jamie@halepest.demo" autocomplete="username"></div>' +
+      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="demopass" autocomplete="current-password"></div>' +
+      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Sign in</button></form>' +
+      '<p class="hint" style="text-align:center;margin-top:14px">This is a prototype — tap Sign in to continue as Jamie Hale.</p>' +
+      '<div class="auth-bottom">New here? <a class="link" data-go="signup" href="#signup">Create an account</a></div></div></section>';
+  }
+
+  function renderSignUp() {
+    return '<section class="screen has-header" data-screen="signup">' +
+      '<div class="app-header"><button class="icon-btn" data-go="welcome" aria-label="Back">' + icon("back") + '</button><div class="ht">Create account</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="auth-hero"><h2>Join the circle</h2><p>Sign up with Facebook in one tap, or create an account with email.</p></div>' +
+      '<button type="button" class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Sign up with Facebook</button>" +
+      '<div class="or-line"><span>or sign up with email</span></div>' +
+      '<form data-form="signup">' +
+      '<div class="field"><label>Full name</label><input name="name" placeholder="Your name" required></div>' +
+      '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>' +
+      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required></div>' +
+      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Continue</button></form>' +
+      '<div class="auth-bottom">Already have an account? <a class="link" data-go="signin" href="#signin">Sign in</a></div></div></section>';
+  }
+
+  function renderCreateProfile() {
+    if (window.TC12 && TC12.renderCreateProfile) return TC12.renderCreateProfile();
+    var d = draftFromMe();
+    var dummy = { first: d.first || "Add", last: d.last || "photo", color: "teal", isMe: true };
+    return '<section class="screen has-header" data-screen="create-profile">' +
+      '<div class="app-header"><button class="icon-btn" data-go="signup" aria-label="Back">' + icon("back") + '</button><div class="ht">Your profile</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="steps" aria-hidden="true"><span class="on"></span><span></span></div>' +
+      '<div class="auth-hero"><h2>About your business</h2><p>Step 1 of 2. Other members will see this before they send a friend request.</p></div>' +
+      '<form data-form="create-profile"><div class="photo-row">' +
+      '<button type="button" class="photo-btn" data-photo="1" aria-label="Add photo">' + avatarHTML(dummy, 80) + '<span class="cam">' + icon("cam") + "</span></button>" +
+      "<div><strong style=\"font-size:15px;font-weight:800\">Profile photo or logo</strong><p class=\"hint\">Optional. Initials are used if you skip this.</p></div></div>" +
+      '<div class="field"><label>Full name</label><input name="name" placeholder="Jamie Hale" value="' + escapeAttr((d.first && d.last) ? (d.first + " " + d.last) : (d.first || "")) + '"></div>' +
+      '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '"></div>' +
+      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Short bio</label><textarea name="bio" rows="3" placeholder="What you do and where you work">' + escapeText(d.bio || "") + "</textarea></div>" +
+      '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
+      '<div class="group-label" style="margin-top:4px">Facebook profile</div>' +
+      fbConnectBlock("create-profile", d.facebook || "") +
+      '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" placeholder="https://www.facebook.com/your.business" value="' + escapeAttr(d.page || "") + '"></div>' +
+      '<button class="btn btn-primary" type="submit" style="margin-top:6px">Continue to regions</button></form></div></section>';
+  }
+
+  function renderCreateRegions() {
+    var selected = state.stepRegions || [];
+    var disabled = selected.length ? "" : ' disabled style="opacity:.45"';
+    var count = selected.length ? (selected.length + " region" + (selected.length > 1 ? "s" : "") + " selected") : "Select at least one region";
+    return '<section class="screen has-header" data-screen="create-regions">' +
+      '<div class="app-header"><button class="icon-btn" data-go="create-profile" aria-label="Back">' + icon("back") + '</button><div class="ht">Your areas</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span></div>' +
+      '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. You can join more than one region, and change this later.</p></div>' +
+      regionPicker(selected, "create") +
+      '<p class="selected-count">' + count + "</p>" +
+      '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Finish and see members</button>" +
+      '<p class="hint" style="text-align:center;margin-top:12px">This prototype takes you straight in. Approvals, if added later, would use the optional pending screen.</p></div></section>';
+  }
+
+  function renderPending() {
+    return '<section class="screen has-header" data-screen="pending">' +
+      '<div class="app-header"><button class="icon-btn" data-go="create-regions" aria-label="Back">' + icon("back") + '</button><div class="ht">Account status</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="banner tbc">Optional screen — it has not been decided yet whether new members need approval before they appear in the list.</div>' +
+      '<div class="pending-art"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></div>' +
+      '<div class="auth-hero" style="text-align:center"><h2>Pending approval</h2><p>Thanks, Jamie. Your profile would stay hidden until an admin gives the go-ahead. This step may not be used.</p></div>' +
+      '<button class="btn btn-navy" data-go="members" style="margin-top:8px">Preview the members list anyway</button>' +
+      '<button class="btn btn-ghost ink" data-go="edit-profile" style="margin-top:10px">Edit my profile while I wait</button></div></section>';
+  }
+
+  function renderMembers() {
+    if (window.TC12 && TC12.renderMembers) return TC12.renderMembers();
+    var list = filteredMembers();
+    var used = {};
+    MEMBERS.forEach(function (m) { if (!m.isMe) used[m.trade] = true; });
+    var trades = ["All"].concat(TRADES.filter(function (t) { return used[t]; }));
+    var countLabel = state.areaFilter === "mine"
+      ? (list.length + " member" + (list.length === 1 ? "" : "s") + " in your areas")
+      : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
+    return '<section class="screen has-tabs" data-screen="members"><div class="scroll">' +
+      '<h1 class="large-title">Members</h1><p class="count-line">' + countLabel + "</p>" +
+      '<div class="search-wrap"><div class="search">' + icon("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + escapeAttr(state.query) + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div style="height:12px"></div><div class="seg">' +
+      '<button class="' + (state.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
+      '<button class="' + (state.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
+      '</div><div style="height:12px"></div><div class="chips">' +
+      trades.map(function (t) { return '<button class="chip' + (state.tradeFilter === t ? " active" : "") + '" data-trade="' + escapeAttr(t) + '">' + t + "</button>"; }).join("") +
+      "</div>" +
+      (state.tipDismissed ? '<div style="height:10px"></div>' : '<div class="banner info" style="margin:8px 0 14px" id="tipBanner">Tap Add friend to send a Facebook request, or open a profile for details. Weekly meet-ups stay offline. <button class="link" data-action="dismiss-tip" style="margin-left:6px">Got it</button></div>') +
+      '<div id="memberList">' + (list.length ? list.map(memberCard).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the trade filter and search.</p></div>') +
+      "</div></div></section>";
+  }
+
+  function renderMember(id) {
+    if (window.TC12 && TC12.renderMember) return TC12.renderMember(id);
+    var m = MEMBERS.find(function (x) { return x.id === (id || state.selectedMember); }) || MEMBERS[1];
+    state.selectedMember = m.id;
+    var pageBtn = m.page
+      ? '<a class="btn btn-ghost ink" href="' + m.page + '" target="_blank" rel="noopener noreferrer">' + icon("link") + " View business page</a>"
+      : '<button class="btn btn-ghost ink" disabled style="opacity:.45">No business page listed</button>';
+    var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + icon("phone") + '</div><div><div class="k">Phone</div><div class="v">' + m.phone + "</div></div></div>" : "";
+    return '<section class="screen has-header" data-screen="member">' +
+      '<div class="app-header"><button class="icon-btn" data-go="members" aria-label="Back">' + icon("back") + '</button><div class="ht">Member</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
+      '<div class="nm">' + escapeText(fullName(m)) + '</div><div class="biz">' + escapeText(m.business) + "</div>" +
+      '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
+      '<div class="action-stack"><a class="btn btn-fb btn-lg" href="' + m.facebook + '" target="_blank" rel="noopener noreferrer">' +
+      '<span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + icon("fb") + " Open Facebook profile</span><small>Send a friend request</small></a>" +
+      pageBtn + "</div>" +
+      '<p class="hint" style="text-align:center;margin-top:10px">The friend request is sent on Facebook, not inside this app.</p>' +
+      '<div class="info-rows">' + phoneRow +
+      '<div class="info-row"><div class="ic">' + icon("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(regionName).join(", ") + "</div></div></div>" +
+      '<div class="info-row"><div class="ic">' + icon("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + m.facebook.replace("https://www.", "") + "</div></div></div>" +
+      "</div></div></section>";
+  }
+
+  function renderMe() {
+    if (window.TC12 && TC12.renderMe) return TC12.renderMe();
+    var m = me();
+    var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + icon("phone") + '</div><div><div class="k">Phone</div><div class="v">' + m.phone + "</div></div></div>" : "";
+    var pageRow = m.page ? '<div class="info-row"><div class="ic">' + icon("link") + '</div><div><div class="k">Business page</div><div class="v">' + m.page.replace("https://www.", "") + "</div></div></div>" : "";
+    return '<section class="screen has-tabs has-header" data-screen="me">' +
+      '<div class="app-header"><span class="header-spacer"></span><div class="ht">My profile</div><button class="header-link" data-go="edit-profile">Edit</button></div>' +
+      '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
+      '<div class="nm">' + escapeText(fullName(m)) + ' <span class="you-badge">You</span></div>' +
+      '<div class="biz">' + escapeText(m.business) + '</div><div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
+      '<div class="banner info">This is how other members see you. They will use your Facebook profile link to send a friend request.</div>' +
+      '<div class="info-rows">' + phoneRow +
+      '<div class="info-row"><div class="ic">' + icon("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(regionName).join(", ") + "</div></div></div>" +
+      '<div class="info-row"><div class="ic">' + icon("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + m.facebook.replace("https://www.", "") + "</div></div></div>" +
+      pageRow + "</div></div></section>";
+  }
+
+  function renderEdit() {
+    if (window.TC12 && TC12.renderEdit) return TC12.renderEdit();
+    var d = draftFromMe();
+    var m = Object.assign({}, me(), d, { isMe: true });
+    return '<section class="screen has-header" data-screen="edit-profile">' +
+      '<div class="app-header"><button class="icon-btn" data-go="me" aria-label="Back">' + icon("back") + '</button><div class="ht">Edit profile</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><form data-form="edit-profile"><div class="photo-row">' +
+      '<button type="button" class="photo-btn" data-photo="1" aria-label="Change photo">' + avatarHTML(m, 80) + '<span class="cam">' + icon("cam") + "</span></button>" +
+      "<div><strong style=\"font-size:15px;font-weight:800\">Profile photo or logo</strong><p class=\"hint\">Tap to add a photo. Initials are used if you skip this.</p></div></div>" +
+      '<div class="field"><label>Full name</label><input name="name" value="' + escapeAttr(fullName({ first: d.first, last: d.last })) + '"></div>' +
+      '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
+      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
+      '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
+      '<div class="group-label">Facebook profile</div>' +
+      fbConnectBlock("edit-profile", d.facebook || "") +
+      '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
+      '<div class="group-label">Your regions</div>' + regionPicker(d.regions || [], "edit") +
+      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Save changes</button></form></div></section>';
+  }
+
+  function renderSettings() {
+    if (window.TC12 && TC12.renderSettings) return TC12.renderSettings();
+    var m = me();
+    return '<section class="screen has-tabs has-header" data-screen="settings">' +
+      '<div class="app-header"><span class="header-spacer"></span><div class="ht">Settings</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><p class="group-label">Account</p><div class="card group">' +
+      '<button class="set-row" data-go="me"><span class="ic" style="background:#E7F8F1;color:#066B4C">' + icon("pin") + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + escapeText(fullName(m)) + " · " + escapeText(m.trade) + '</span></span><span class="chev">' + icon("chev") + "</span></button>" +
+      '<button class="set-row" data-go="edit-profile"><span class="ic" style="background:#EEF2F6;color:#14314C">' + icon("pencil") + '</span><span class="lab"><span class="a">Edit profile and regions</span><span class="b">Name, trade, Facebook links, areas</span></span><span class="chev">' + icon("chev") + "</span></button>" +
+      (state.fbConnected
+        ? '<button class="set-row" type="button" data-go="edit-profile"><span class="ic" style="background:#E8F1FD;color:#1877F2">' + icon("fb") + '</span><span class="lab"><span class="a">Facebook: Connected</span><span class="b">' + escapeText(String(m.facebook || demoFbLink()).replace("https://www.", "")) + '</span></span><span class="chev">' + icon("chev") + "</span></button>"
+        : '<button class="set-row" type="button" data-action="fb-connect" data-next="settings"><span class="ic" style="background:#E8F1FD;color:#1877F2">' + icon("fb") + '</span><span class="lab"><span class="a">Connect Facebook</span><span class="b">One tap to add your profile link</span></span><span class="chev">' + icon("chev") + "</span></button>") +
+      '</div><p class="group-label">Preferences</p><div class="card group">' +
+      '<button class="set-row" data-action="toggle-notify"><span class="ic" style="background:#FFF6E0;color:#8A5A00">' + icon("bell") + '</span><span class="lab"><span class="a">New member alerts</span><span class="b">A simple on/off for a later build</span></span><span class="toggle' + (state.notify ? " on" : "") + '" id="notifyToggle"></span></button>' +
+      '</div><p class="group-label">How the circle works</p>' +
+      '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
+      '<p class="group-label">About</p><div class="card group">' +
+      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth — placeholder, not final</span></span></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.1 · 16 Nov 2026</span></span></div></div>' +
+      '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
+      '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
+  }
+
+
+  function screenHTML(id) {
+    switch (id) {
+      case "welcome": return renderWelcome();
+      case "signin": return renderSignIn();
+      case "signup": return renderSignUp();
+      case "create-profile":
+      case "create-profile-connected":
+        return renderCreateProfile();
+      case "fb-consent":
+        return renderWelcome();
+      case "create-regions": return renderCreateRegions();
+      case "pending": return renderPending();
+      case "members":
+      case "members-all":
+      case "members-filter":
+      case "members-search":
+        return renderMembers();
+      case "member": return renderMember(state.selectedMember);
+      case "me": return renderMe();
+      case "edit-profile": return renderEdit();
+      case "settings": return renderSettings();
+      default:
+        if (window.TC12 && TC12.render) {
+          var extra = TC12.render(id);
+          if (extra) return extra;
+        }
+        return renderWelcome();
+    }
+  }
+
+  function setHash(id) {
+    var url = new URL(location.href);
+    url.hash = (id === "member") ? ("member/" + state.selectedMember) : id;
+    history.replaceState(null, "", url);
+  }
+
+  function go(id, opts) {
+    opts = opts || {};
+    if (opts.memberId) state.selectedMember = opts.memberId;
+    if (id === "create-profile" && !state.draft) {
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
+      state.stepRegions = [];
+    }
+    if (id === "edit-profile") state.draft = draftFromMe();
+    if (id === "create-regions" && !state.stepRegions) {
+      state.stepRegions = (draftFromMe().regions || []).slice();
+    }
+
+    state.screen = id;
+    screensEl.innerHTML = screenHTML(id);
+    var sc = screensEl.querySelector(".screen");
+    if (sc) sc.classList.add("active");
+
+    var showTabs = TABBED.has(id);
+    tabbar.classList.toggle("show", showTabs);
+    tabbar.querySelectorAll(".tab").forEach(function (t) {
+      var tab = t.dataset.tab;
+      var on = (tab === "members" && (id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "drawer"))
+        || (tab === "me" && (id === "me" || id === "my-regions"))
+        || (tab === "reviews" && (id === "reviews" || id === "review-ideas"))
+        || (tab === "chats" && (id === "chats" || id === "chat-dm" || id === "chat-group"));
+      t.classList.toggle("active", on);
+    });
+    statusBar.classList.toggle("light", DARK.has(id) || id === "welcome");
+    var item = CHOOSER.find(function (c) { return c.id === id; });
+    $("#deviceCaption").textContent = item ? item.title : "TradeCircle Perth";
+    chooserList.querySelectorAll(".chooser-item").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.id === id);
+    });
+    setHash(id);
+    bindScreen();
+    if (id === "fb-consent") openFbSheet("create-profile");
+    if (window.TC12 && TC12.afterGo) TC12.afterGo(id);
+  }
+
+  function bindScreen() {
+    var search = $("#memberSearch");
+    if (search) {
+      var refreshList = function () {
+        var wrap = $("#memberList");
+        if (!wrap) return;
+        var list = filteredMembers();
+        wrap.innerHTML = list.length ? list.map(memberCard).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the trade filter and search.</p></div>';
+        var cl = document.querySelector(".count-line");
+        if (cl) {
+          cl.textContent = state.areaFilter === "mine"
+            ? (list.length + " member" + (list.length === 1 ? "" : "s") + " in your areas")
+            : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
+        }
+      };
+      search.addEventListener("input", function (e) {
+        state.query = e.target.value;
+        refreshList();
+        paintSearchAc();
+      });
+      search.addEventListener("focus", function () { if (state.query) paintSearchAc(); });
+      if (state.query) paintSearchAc();
+    }
+    var tradeType = $("#tradeType");
+    if (tradeType) {
+      tradeType.addEventListener("input", function (e) {
+        var form = e.target.closest("form");
+        if (form) captureDraft(form);
+        var typed = e.target.value;
+        var exact = TRADES.find(function (tr) { return tr.toLowerCase() === typed.toLowerCase(); });
+        if (exact) {
+          var d = draftFromMe();
+          d.trade = exact;
+          state.draft = d;
+        }
+        paintTradeAc(true);
+      });
+      tradeType.addEventListener("focus", function () { paintTradeAc(true); });
+    }
+    if (!$("#photoFile")) {
+      var inp = document.createElement("input");
+      inp.type = "file";
+      inp.accept = "image/*";
+      inp.id = "photoFile";
+      inp.className = "hidden-file";
+      $("#phone").appendChild(inp);
+      inp.addEventListener("change", function () {
+        var f = inp.files && inp.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function () { state.photoData = r.result; go(state.screen); };
+        r.readAsDataURL(f);
+      });
+    }
+  }
+
+  var sheetEl = null;
+  function closeSheet() {
+    if (sheetEl) { sheetEl.remove(); sheetEl = null; }
+  }
+  function openTradeSheet() {
+    closeSheet();
+    var current = draftFromMe().trade;
+    sheetEl = document.createElement("div");
+    sheetEl.className = "overlay show";
+    sheetEl.innerHTML = '<div class="sheet"><div class="sheet-handle"></div><h3>Choose your trade</h3>' +
+      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Type a trade, e.g. plumber" autocomplete="off"></div>' +
+      '<div id="sheetTradeList">' +
+      TRADES.map(function (tr) {
+        return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
+      }).join("") + "</div></div>";
+    var sheetSearch = sheetEl.querySelector("#sheetTradeSearch");
+    if (sheetSearch) {
+      sheetSearch.addEventListener("input", function (e) {
+        var q = e.target.value;
+        var list = matchTrades(q);
+        var box = sheetEl.querySelector("#sheetTradeList");
+        box.innerHTML = list.length ? list.map(function (tr) {
+          return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
+        }).join("") : '<div class="ac-empty">No trades match “' + escapeText(q) + '”</div>';
+      });
+    }
+    $("#phone").appendChild(sheetEl);
+  }
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { toastEl.classList.remove("show"); }, 2400);
+  }
+
+
+  function applyFbConnect() {
+    var form = document.querySelector("#screens form");
+    if (form) captureDraft(form);
+    var d = draftFromMe();
+    if (!d.first) { d.first = "Jamie"; d.last = "Hale"; }
+    d.facebook = demoFbLink();
+    state.draft = d;
+    state.fbConnected = true;
+    var m = me();
+    if (m) {
+      if (!m.first) { m.first = d.first; m.last = d.last; }
+      m.facebook = d.facebook;
+    }
+  }
+
+  function openFbSheet(next) {
+    state.fbNext = next || state.screen || "create-profile";
+    closeSheet();
+    sheetEl = document.createElement("div");
+    sheetEl.className = "overlay show";
+    sheetEl.innerHTML = '<div class="sheet">' +
+      '<div class="sheet-handle"></div>' +
+      '<div class="consent-banner">Prototype mock — this is not a real Facebook login. Nothing is sent to Facebook.</div>' +
+      '<div class="consent-brand"><div class="consent-f">' + icon("fb") + '</div><div><h3>Continue with Facebook</h3><p>TradeCircle Perth is asking for access</p></div></div>' +
+      '<ul class="consent-list">' +
+      '<li><span class="ic">' + icon("check") + "</span><span>Your name and profile photo, so members can recognise you.</span></li>" +
+      '<li><span class="ic">' + icon("link") + "</span><span>A link to your Facebook profile, so members can send you a friend request.</span></li>" +
+      "</ul>" +
+      '<div class="consent-actions">' +
+      '<button type="button" class="btn btn-ghost ink" data-action="fb-consent-cancel">Cancel</button>' +
+      '<button type="button" class="btn btn-fb" data-action="fb-consent-continue">' + icon("fb") + " Continue</button>" +
+      "</div>" +
+      '<p class="consent-note">In a real app this would be Facebook’s own login screen.</p>' +
+      "</div>";
+    document.getElementById("phone").appendChild(sheetEl);
+  }
+
+  function buildChooser() {
+    chooserList.innerHTML = CHOOSER.map(function (c, i) {
+      var num = String(i + 1).padStart(2, "0");
+      return '<button class="chooser-item" data-id="' + c.id + '"><span class="chooser-num">' + num + "</span><span><div class=\"t\">" + c.title + '</div><div class="s">' + c.sub + "</div></span>" +
+        (c.tbc ? '<span class="chooser-tag">TBC</span>' : "") + "</button>";
+    }).join("");
+  }
+
+  document.addEventListener("click", function (e) {
+    if (window.TC12 && TC12.handleClick && TC12.handleClick(e)) return;
+    var chooserBtn = e.target.closest(".chooser-item");
+    if (chooserBtn) {
+      var id = chooserBtn.dataset.id;
+      if (id === "members") { state.areaFilter = "mine"; state.tradeFilter = "All"; state.query = ""; }
+      if (id === "members-all") { state.areaFilter = "all"; state.tradeFilter = "All"; state.query = ""; }
+      if (id === "members-filter") { state.areaFilter = "all"; state.tradeFilter = "Plumber"; state.query = ""; }
+      if (id === "members-search") { state.areaFilter = "all"; state.tradeFilter = "All"; state.query = "plu"; state.tipDismissed = true; }
+      if (id === "member") state.selectedMember = "sarah";
+      if (id === "welcome" || id === "signin" || id === "signup" || id === "fb-consent") {
+        state.fbConnected = false;
+      }
+      if (id === "create-profile") {
+        var m = me();
+        state.fbConnected = false;
+        state.draft = { first: m.first, last: m.last, business: m.business, trade: m.trade, bio: m.bio, phone: m.phone, facebook: "", page: m.page, regions: m.regions.slice() };
+      }
+      if (id === "create-profile-connected") {
+        var m2 = me();
+        state.fbConnected = true;
+        state.draft = { first: m2.first, last: m2.last, business: m2.business, trade: m2.trade, bio: m2.bio, phone: m2.phone, facebook: demoFbLink(), page: m2.page, regions: m2.regions.slice() };
+      }
+      if (id === "edit-profile" || id === "settings" || id === "me") {
+        state.fbConnected = true;
+        me().facebook = me().facebook || demoFbLink();
+      }
+      if (id === "create-regions") state.stepRegions = ["hills", "north"];
+      if (id === "edit-profile" || id === "settings" || id === "me" || id === "google-consent") {
+        state.googleConnected = (id !== "google-consent");
+      }
+      go(id);
+      return;
+    }
+
+    var tab = e.target.closest(".tab");
+    if (tab) {
+      var t = tab.dataset.tab;
+      go(t === "members" ? "members" : t);
+      return;
+    }
+
+    var area = e.target.closest("[data-area]");
+    if (area) {
+      state.areaFilter = area.dataset.area;
+      go(state.areaFilter === "all" ? "members-all" : "members");
+      return;
+    }
+
+    var acTrade = e.target.closest("[data-ac-trade]");
+    if (acTrade) {
+      var picked = acTrade.dataset.acTrade;
+      if (document.getElementById("tradeType")) {
+        var form = e.target.closest("form");
+        if (form) captureDraft(form);
+        var d = draftFromMe();
+        d.trade = picked;
+        state.draft = d;
+        var tin = document.getElementById("tradeType");
+        if (tin) tin.value = picked;
+        var box = document.getElementById("tradeAc");
+        if (box) { box.hidden = true; box.innerHTML = ""; }
+        return;
+      }
+      state.tradeFilter = picked;
+      state.query = "";
+      go(state.areaFilter === "all" ? "members-all" : "members");
+      return;
+    }
+    var acMem = e.target.closest("[data-ac-member]");
+    if (acMem) {
+      state.selectedMember = acMem.dataset.acMember;
+      go("member");
+      return;
+    }
+
+    var trade = e.target.closest("[data-trade]");
+    if (trade && !trade.dataset.tradePick && !trade.dataset.acTrade) {
+      state.tradeFilter = trade.dataset.trade;
+      go(state.areaFilter === "all" ? "members-all" : "members");
+      return;
+    }
+
+    var goBtn = e.target.closest("[data-go]");
+    if (goBtn) {
+      e.preventDefault();
+      var dest = goBtn.dataset.go;
+      if (goBtn.dataset.id) state.selectedMember = goBtn.dataset.id;
+      if (dest === "welcome") { state.draft = null; state.fbConnected = false; }
+      go(dest);
+      return;
+    }
+
+    if (e.target.closest("[data-action='fb-connect']")) {
+      var btn = e.target.closest("[data-action='fb-connect']");
+      var form = e.target.closest("form");
+      if (form) captureDraft(form);
+      openFbSheet(btn.dataset.next || state.screen);
+      return;
+    }
+
+    if (e.target.closest("[data-action='fb-consent-cancel']")) {
+      closeSheet();
+      if (state.screen === "fb-consent") go("welcome");
+      return;
+    }
+
+    if (e.target.closest("[data-action='fb-consent-continue']")) {
+      applyFbConnect();
+      closeSheet();
+      var next = state.fbNext || "create-profile";
+      if (next === "signin" || next === "welcome") next = "create-profile";
+      toast("Facebook connected. Your profile link is filled in.");
+      go(next);
+      return;
+    }
+
+    if (e.target.closest("[data-action='fb-disconnect']")) {
+      state.fbConnected = false;
+      toast("Facebook disconnected. You can paste a link instead.");
+      go(state.screen === "create-profile-connected" ? "create-profile" : state.screen);
+      return;
+    }
+
+    if (e.target.closest("[data-photo]")) {
+      var pf = $("#photoFile");
+      if (pf) pf.click();
+      return;
+    }
+
+    if (e.target.closest("[data-open-trades]")) {
+      var form = e.target.closest("form");
+      if (form) captureDraft(form);
+      openTradeSheet();
+      return;
+    }
+
+    var pick = e.target.closest("[data-trade-pick]");
+    if (pick) {
+      var d = draftFromMe();
+      d.trade = pick.dataset.tradePick;
+      state.draft = d;
+      closeSheet();
+      go(state.screen);
+      return;
+    }
+
+    if (e.target.closest(".overlay") && !e.target.closest(".sheet")) {
+      closeSheet();
+      return;
+    }
+
+    var region = e.target.closest("[data-region]");
+    if (region) {
+      var rid = region.dataset.region;
+      if (region.dataset.prefix === "create") {
+        var set = {};
+        (state.stepRegions || []).forEach(function (x) { set[x] = true; });
+        if (set[rid]) delete set[rid]; else set[rid] = true;
+        state.stepRegions = Object.keys(set);
+        go("create-regions");
+      } else {
+        var form2 = e.target.closest("form");
+        if (form2) captureDraft(form2);
+        var d2 = draftFromMe();
+        var set2 = {};
+        (d2.regions || []).forEach(function (x) { set2[x] = true; });
+        if (set2[rid]) delete set2[rid]; else set2[rid] = true;
+        d2.regions = Object.keys(set2);
+        state.draft = d2;
+        go("edit-profile");
+      }
+      return;
+    }
+
+    if (e.target.closest("[data-action='finish-create']")) {
+      if (!(state.stepRegions || []).length) return;
+      var d3 = draftFromMe();
+      d3.regions = state.stepRegions.slice();
+      state.draft = d3;
+      applyDraftToMe();
+      state.areaFilter = "mine";
+      state.tradeFilter = "All";
+      state.query = "";
+      go("members");
+      toast("You’re in. Browse members in your areas.");
+      return;
+    }
+
+    if (e.target.closest("[data-action='dismiss-tip']")) {
+      state.tipDismissed = true;
+      var b = $("#tipBanner");
+      if (b) b.remove();
+      return;
+    }
+
+    if (e.target.closest("[data-action='toggle-notify']")) {
+      state.notify = !state.notify;
+      var tg = $("#notifyToggle");
+      if (tg) tg.classList.toggle("on", state.notify);
+    }
+  });
+
+  document.addEventListener("submit", function (e) {
+    var form = e.target.closest("form");
+    if (!form) return;
+    e.preventDefault();
+    var type = form.dataset.form;
+    if (type === "signin") {
+      state.areaFilter = "mine";
+      state.tradeFilter = "All";
+      state.query = "";
+      go("members");
+      return;
+    }
+    if (type === "signup") {
+      var fd = new FormData(form);
+      var n = parseName(fd.get("name"));
+      state.draft = { first: n.first, last: n.last, business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
+      state.stepRegions = [];
+      go("create-profile");
+      return;
+    }
+    if (type === "create-profile") {
+      captureDraft(form);
+      if (!state.draft.trade) { toast("Please choose your trade."); return; }
+      if (!state.draft.facebook && !state.fbConnected) { toast("Connect Facebook or paste your profile link."); return; }
+      go("create-regions");
+      return;
+    }
+    if (type === "edit-profile") {
+      captureDraft(form);
+      if (!(state.draft.regions || []).length) { toast("Select at least one region."); return; }
+      applyDraftToMe();
+      go("me");
+      toast("Profile saved.");
+    }
+  });
+
+  function fromHash() {
+    var h = (location.hash || "").replace(/^#\/?/, "");
+    if (!h) return null;
+    if (h.indexOf("member/") === 0) {
+      var mid = h.split("/")[1];
+      if (MEMBERS.some(function (m) { return m.id === mid; })) return { id: "member", memberId: mid };
+    }
+    if (CHOOSER.some(function (c) { return c.id === h; })) return { id: h };
+    return null;
+  }
+
+  window.addEventListener("hashchange", function () {
+    var r = fromHash();
+    if (r && r.id !== state.screen) go(r.id, { memberId: r.memberId });
+  });
+
+  buildChooser();
+
+  var params = new URLSearchParams(location.search);
+  if (params.has("shot") || params.get("mode") === "shot") {
+    document.body.classList.add("shot");
+  }
+  var route = fromHash();
+  var shot = params.get("shot");
+  var start = (shot && CHOOSER.some(function (c) { return c.id === shot; })) ? shot : ((route && route.id) || "welcome");
+  if (start === "members") { state.areaFilter = "mine"; state.tradeFilter = "All"; }
+  if (start === "members-all") { state.areaFilter = "all"; state.tradeFilter = "All"; }
+  if (start === "members-filter") { state.areaFilter = "all"; state.tradeFilter = "Plumber"; }
+  if (start === "members-search") { state.areaFilter = "all"; state.tradeFilter = "All"; state.query = "plu"; state.tipDismissed = true; }
+  if (start === "member") state.selectedMember = (route && route.memberId) || "sarah";
+  if (start === "welcome" || start === "signin" || start === "signup" || start === "fb-consent") {
+    state.fbConnected = false;
+  }
+  if (start === "create-profile") {
+    var mm = me();
+    state.fbConnected = false;
+    state.draft = { first: mm.first, last: mm.last, business: mm.business, trade: mm.trade, bio: mm.bio, phone: mm.phone, facebook: "", page: mm.page, regions: mm.regions.slice() };
+  }
+  if (start === "create-profile-connected") {
+    var mm2 = me();
+    state.fbConnected = true;
+    state.draft = { first: mm2.first, last: mm2.last, business: mm2.business, trade: mm2.trade, bio: mm2.bio, phone: mm2.phone, facebook: demoFbLink(), page: mm2.page, regions: mm2.regions.slice() };
+  }
+  if (start === "edit-profile" || start === "settings" || start === "me" || start === "reviews" || start === "chats" || start === "drawer" || start === "google-consent") {
+    state.fbConnected = true;
+    state.googleConnected = true;
+    me().facebook = me().facebook || demoFbLink();
+  }
+  if (start === "google-consent") state.googleConnected = false;
+  if (start === "create-regions") state.stepRegions = ["hills", "north"];
+  go(start);
+
+  window.TradeCircle = {
+    go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
+    TRADES: TRADES, filteredMembers: filteredMembers,
+    icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,
+    fullName: fullName, me: me, regionName: regionName, toast: toast,
+    closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
+    captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
+    buildChooser: buildChooser, paintSearchAc: paintSearchAc
+  };
+})();
+
+/* TradeCircle Perth — prototype v1.2 */
+(function () {
+  "use strict";
+
+  function T() { return window.TradeCircle || {}; }
+  function S() { return T().state || {}; }
+  function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
+  function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
+  function ico(n) { return T().icon ? T().icon(n) : ""; }
+  function av(m, n) { return T().avatarHTML(m, n); }
+  function fn(m) { return T().fullName(m); }
+  function rn(id) { return T().regionName(id); }
+  function toast(m) { if (T().toast) T().toast(m); }
+  function go(id, mid) { T().go(id, mid); }
+
+  function svg(p, w) {
+    w = w || 20;
+    return '<svg viewBox="0 0 24 24" width="' + w + '" height="' + w + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + p + "</svg>";
+  }
+  const I = {
+    menu: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    bell: svg('<path d="M18 8A6 6 0 106 8c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 004 0"/>'),
+    chat: svg('<path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/>'),
+    star: svg('<path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/>'),
+    pin: svg('<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/>'),
+    user: svg('<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/>'),
+    regions: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>'),
+    fb: svg('<path d="M14 8h3V4h-3a5 5 0 00-5 5v3H6v4h3v7h4v-7h3l1-4h-4V9a1 1 0 011-1z" stroke-width="1.6"/>'),
+    google: '<span class="gmark" aria-hidden="true">G</span>',
+    invite: svg('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/>'),
+    help: svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 1c0 1.5-2.5 2-2.5 3.5"/><path d="M12 17.5h.01"/>'),
+    gear: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9c.3.6.9 1 1.6 1.1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>'),
+    out: svg('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>'),
+    plus: svg('<path d="M12 5v14M5 12h14"/>'),
+    send: svg('<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>'),
+    play: svg('<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>'),
+    file: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>'),
+    loc: svg('<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/>'),
+    tick: '<span class="ticks deliv">OK</span>',
+    tickRead: '<span class="ticks read">OK</span>'
+  };
+  I.tick = '<span class="ticks deliv">++ </span>'.replace("++", "\u2713\u2713");
+  I.tickRead = '<span class="ticks read">++ </span>'.replace("++", "\u2713\u2713");
+
+  const LS = {
+    rel: "tc12_relations",
+    given: "tc12_reviews_given",
+    they: "tc12_they_reviewed",
+    req: "tc12_requests",
+    ideas: "tc12_used_ideas",
+    chats: "tc12_chats",
+    notif: "tc12_notif",
+    glink: "tc12_google_link"
+  };
+
+  const SEED_REL = {
+    sarah: "friends", liam: "pending", priya: "friends", jack: "friends",
+    mei: "none", daniel: "pending", emma: "friends", marcus: "none",
+    tom: "friends", hannah: "none", chris: "friends"
+  };
+  const SEED_GIVEN = { sarah: 1, priya: 1, chris: 1 };
+  const SEED_THEY = { sarah: 1, jack: 1, chris: 1, tom: 1 };
+  const SEED_REQ = [
+    { id: "r1", from: "jack", to: "jamie", dir: "in", status: "open", at: "Today 7:12 am" },
+    { id: "r2", from: "tom", to: "jamie", dir: "in", status: "open", at: "Yesterday" },
+    { id: "r3", from: "jamie", to: "sarah", dir: "out", status: "done", at: "Mon" },
+    { id: "r4", from: "jamie", to: "priya", dir: "out", status: "open", at: "Tue" }
+  ];
+  const GMAP = {
+    jamie: { rating: "4.9", count: 128 }, sarah: { rating: "4.8", count: 86 },
+    liam: { rating: "4.7", count: 54 }, priya: { rating: "4.9", count: 71 },
+    jack: { rating: "4.6", count: 93 }, mei: { rating: "4.8", count: 40 },
+    daniel: { rating: "4.5", count: 33 }, emma: { rating: "4.7", count: 61 },
+    marcus: { rating: "4.8", count: 29 }, tom: { rating: "4.6", count: 47 },
+    hannah: { rating: "4.9", count: 22 }, chris: { rating: "4.8", count: 58 }
+  };
+  const JOBS = {
+    "Pest Control": ["Termite inspection", "General pest treatment", "Pre-purchase inspection", "Rodent control", "Cockroach treatment"],
+    "Carpenter": ["Kitchen install", "Decking", "Home renovation", "Custom cabinetry", "Door hanging"],
+    "Plumber": ["Blocked drain", "Hot water install", "Bathroom fit-out", "Leak repair", "Toilet repair"],
+    "Painter": ["Interior repaint", "Exterior painting", "Room refresh", "Commercial paint job"],
+    "Electrician": ["Power points", "Safety switch upgrade", "Lighting install", "Switchboard work"],
+    "Landscaper": ["Garden design", "Paving", "Retaining wall", "Turf laying"],
+    "Roofer": ["Roof repair", "Gutter replacement", "Roof restoration"],
+    "Air Conditioning": ["Split-system install", "Service and clean", "Repair call-out"],
+    "Tiler": ["Bathroom tiling", "Kitchen splashback", "Floor tiling"],
+    "Fencer": ["Colorbond fence", "Timber fence", "Gate install"],
+    "Handyman": ["Home repairs", "Flat-pack assembly", "General maintenance"],
+    "Locksmith": ["Lock change", "Emergency call-out", "Key cutting"]
+  };
+  const SUBURBS = ["Midland", "Ellenbrook", "Joondalup", "Mundaring", "Kwinana", "Rockingham", "Fremantle", "Armadale", "Morley", "Osborne Park", "Whitfords", "Byford"];
+  const MONTHS = ["July", "August", "September", "October", "November"];
+  const STANDS = [
+    { id: "ontime", label: "On time" },
+    { id: "clean", label: "Left it clean" },
+    { id: "explained", label: "Explained clearly" },
+    { id: "price", label: "Fair price" },
+    { id: "friendly", label: "Friendly" },
+    { id: "quality", label: "Quality work" },
+    { id: "again", label: "Would use again" }
+  ];
+  const STARTERS = [
+    "Had {job} done by {business} in {suburb} this {month}.",
+    "{first} from {business} came out to {suburb} for a {job}.",
+    "Used {business} for {job} in {suburb}.",
+    "Needed a {job} around {suburb} and went with {name} at {business}.",
+    "{business} looked after our {job} in {suburb} this {month}.",
+    "Called {name} at {business} when we needed a {job} in {suburb}.",
+    "Booked {business} for a {job} in {suburb}.",
+    "{name} at {business} handled a {job} for us in {suburb}."
+  ];
+  const MID = {
+    ontime: ["Arrived when they said they would.", "Turned up on time.", "Kept to the time they gave us."],
+    clean: ["Left the place tidy afterwards.", "Worked cleanly and packed up after.", "No mess left behind."],
+    explained: ["Explained the work in plain words.", "Talked us through the job clearly.", "Made the next steps easy to follow."],
+    price: ["The quote felt fair.", "The price was clear from the start.", "No surprise costs."],
+    friendly: ["Friendly and easy to deal with.", "Pleasant to have on site.", "Good to work with."],
+    quality: ["The finish was neat.", "Solid, careful work.", "Happy with the standard of the job."],
+    again: ["Would book them again.", "I would use them next time.", "Happy to call them back."]
+  };
+
+  function load(key, fallback) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return fallback;
+  }
+  function save(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+  }
+
+  var rel = load(LS.rel, null) || Object.assign({}, SEED_REL);
+  var given = load(LS.given, null) || Object.assign({}, SEED_GIVEN);
+  var they = load(LS.they, null) || Object.assign({}, SEED_THEY);
+  var reqs = load(LS.req, null) || SEED_REQ.slice();
+  var usedIdeas = load(LS.ideas, null) || {};
+  var notif = load(LS.notif, null) || {
+    messages: true, mentions: true, reviews: true, members: true,
+    quietOn: false, quietFrom: "21:00", quietTo: "07:00"
+  };
+  var googleLink = load(LS.glink, "") || "https://search.google.com/local/writereview?placeid=demo-hale-pest";
+
+  function persist() {
+    save(LS.rel, rel); save(LS.given, given); save(LS.they, they);
+    save(LS.req, reqs); save(LS.ideas, usedIdeas); save(LS.notif, notif);
+    save(LS.glink, googleLink);
+  }
+
+  function member(id) {
+    var list = T().MEMBERS || [];
+    return list.find(function (m) { return m.id === id; }) || list[1] || {};
+  }
+  function gLink(m) {
+    return "https://search.google.com/local/writereview?placeid=demo-" + m.id;
+  }
+  function relOf(m) { return rel[m.id] || "none"; }
+  function iReviewed(m) { return !!given[m.id]; }
+  function theyReviewed(m) { return !!they[m.id]; }
+  function incomingOpen(id) {
+    return reqs.some(function (r) { return r.dir === "in" && r.from === id && r.status === "open"; });
+  }
+  function needsMyReview(m) {
+    return !iReviewed(m) && (theyReviewed(m) || incomingOpen(m.id));
+  }
+  function passRelFilter(m) {
+    var f = S().relFilter || "all";
+    if (f === "all") return true;
+    if (f === "notfriends") return relOf(m) === "none";
+    if (f === "pending") return relOf(m) === "pending";
+    if (f === "need") return needsMyReview(m);
+    return true;
+  }
+  function unreadTotal() {
+    return (chats || []).reduce(function (n, c) { return n + (c.unread || 0); }, 0);
+  }
+  function notifUnread() {
+    return NOTIFS.filter(function (n) { return n.unread; }).length;
+  }
+  function bellBadge() {
+    var n = notifUnread();
+    return n ? '<span class="bell-dot">' + n + "</span>" : "";
+  }
+  function updateBadges() {
+    var b = document.getElementById("tabChatBadge");
+    if (b) {
+      var n = unreadTotal();
+      b.textContent = n ? String(n) : "";
+      b.hidden = !n;
+    }
+  }
+
+  function topbar(title, right) {
+    return '<div class="app-header">' +
+      '<button class="icon-btn" data-action="open-drawer" aria-label="Open menu">' + I.menu + "</button>" +
+      '<div class="ht">' + title + "</div>" +
+      (right || ('<button class="icon-btn bell-btn" data-go="notifications" aria-label="Notifications">' + I.bell + bellBadge() + "</button>")) +
+      "</div>";
+  }
+
+  function statusPills(m, compact) {
+    var r = relOf(m);
+    var fb = r === "friends"
+      ? '<span class="st st-friends">Facebook friends</span>'
+      : r === "pending"
+        ? '<span class="st st-pending">Request pending</span>'
+        : '<span class="st st-none">Not connected</span>';
+    var mine = iReviewed(m)
+      ? '<span class="st st-yes">You reviewed them</span>'
+      : '<span class="st st-need">Not yet reviewed</span>';
+    var theirs = theyReviewed(m)
+      ? '<span class="st st-yes">They reviewed you</span>'
+      : '<span class="st st-none">They have not reviewed you</span>';
+    if (compact) {
+      mine = iReviewed(m) ? '<span class="st st-yes">You reviewed</span>' : '<span class="st st-need">Need my review</span>';
+      if (!needsMyReview(m) && !iReviewed(m)) mine = '<span class="st st-none">No review yet</span>';
+      theirs = theyReviewed(m) ? '<span class="st st-yes">They reviewed you</span>' : "";
+    }
+    return '<div class="st-row">' + fb + mine + theirs + "</div>";
+  }
+
+  function memberCard(m) {
+    var r = relOf(m);
+    var actions = '<div class="card-actions">';
+    if (r === "none") {
+      actions += '<a class="friend-btn sm" data-action="mark-sent" data-id="' + m.id + '" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
+        ico("addfriend") + "<span>Add friend</span></a>";
+    } else if (r === "pending") {
+      actions += '<button type="button" class="friend-btn sm" style="background:#8A9BB0" data-action="mark-friends" data-id="' + m.id + '"><span>Pending</span></button>';
+    }
+    actions += '<button type="button" class="msg-btn sm" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button></div>";
+    return '<div class="card member-card">' +
+      '<button type="button" class="member-main" data-go="member" data-id="' + m.id + '">' +
+      av(m, 52) +
+      '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
+      '<div class="biz">' + esc(m.business) + "</div>" +
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
+      m.regions.map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
+      "</div>" + statusPills(m, true) +
+      "</div></button>" + actions + "</div>";
+  }
+
+  function relChips() {
+    var cur = S().relFilter || "all";
+    var items = [
+      ["all", "All"],
+      ["notfriends", "Not friends yet"],
+      ["pending", "Pending"],
+      ["need", "Need my review"]
+    ];
+    return '<div class="rel-chips">' + items.map(function (it) {
+      return '<button type="button" class="rel-chip' + (cur === it[0] ? " active" : "") + '" data-rel="' + it[0] + '">' + it[1] + "</button>";
+    }).join("") + "</div>";
+  }
+
+  function renderMembers() {
+    var st = S();
+    var list = T().filteredMembers();
+    var used = {};
+    (T().MEMBERS || []).forEach(function (m) { if (!m.isMe) used[m.trade] = true; });
+    var trades = ["All"].concat((T().TRADES || []).filter(function (t) { return used[t]; }));
+    var countLabel = st.areaFilter === "mine"
+      ? (list.length + " member" + (list.length === 1 ? "" : "s") + " in your areas")
+      : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
+    return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
+      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
+      '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div style="height:10px"></div><div class="seg">' +
+      '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
+      '<button class="' + (st.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
+      '</div>' + relChips() +
+      '<div style="height:8px"></div><div class="chips">' +
+      trades.map(function (t) { return '<button class="chip' + (st.tradeFilter === t ? " active" : "") + '" data-trade="' + esa(t) + '">' + t + "</button>"; }).join("") +
+      "</div>" +
+      (st.tipDismissed ? '<div style="height:10px"></div>' : '<div class="banner info" style="margin:8px 0 14px" id="tipBanner">Tap Add friend to send a Facebook request, or Message to chat in the app. Weekly meet-ups stay offline. <button class="link" data-action="dismiss-tip" style="margin-left:6px">Got it</button></div>') +
+      '<div id="memberList">' + (list.length ? list.map(memberCard).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the filters and search.</p></div>') +
+      "</div></div></section>";
+  }
+
+  function gBadge(m) {
+    var g = GMAP[m.id] || { rating: "\u2014", count: 0 };
+    return '<div class="g-badge">' + I.star + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
+  }
+
+  function renderMember(id) {
+    var m = member(id || S().selectedMember);
+    S().selectedMember = m.id;
+    var r = relOf(m);
+    var fbCta = r === "friends"
+      ? '<a class="btn btn-fb btn-lg" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + ico("fb") + " Open Facebook profile</span><small>You are marked as friends</small></a>"
+      : r === "pending"
+        ? '<a class="btn btn-fb btn-lg" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer" data-action="mark-sent" data-id="' + m.id + '"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + ico("fb") + " Open Facebook profile</span><small>Friend request pending \u2014 tap Friends once they accept</small></a>"
+        : '<a class="btn btn-fb btn-lg" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer" data-action="mark-sent" data-id="' + m.id + '"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + ico("fb") + " Open Facebook profile</span><small>Send a friend request</small></a>";
+    var mark = r === "pending"
+      ? '<button class="btn btn-ghost ink" data-action="mark-friends" data-id="' + m.id + '">Mark as friends</button>'
+      : r === "none"
+        ? '<button class="btn btn-ghost ink" data-action="mark-sent" data-id="' + m.id + '">Mark request as sent</button>'
+        : "";
+    var pageBtn = m.page
+      ? '<a class="btn btn-ghost ink" href="' + esa(m.page) + '" target="_blank" rel="noopener noreferrer">' + ico("link") + " View business page</a>"
+      : "";
+    var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + ico("phone") + '</div><div><div class="k">Phone</div><div class="v">' + esc(m.phone) + "</div></div></div>" : "";
+    return '<section class="screen has-header" data-screen="member">' +
+      '<div class="app-header"><button class="icon-btn" data-go="members" aria-label="Back">' + ico("back") + '</button><div class="ht">Member</div>' +
+      '<button class="icon-btn" data-action="open-chat" data-id="' + m.id + '" aria-label="Message">' + I.chat + "</button></div>" +
+      '<div class="scroll"><div class="profile-hero">' + av(m, 96) +
+      '<div class="nm">' + esc(fn(m)) + '</div><div class="biz">' + esc(m.business) + "</div>" +
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
+      m.regions.map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
+      "</div>" + gBadge(m) + statusPills(m, false) +
+      "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
+      '<div class="action-stack">' + fbCta +
+      '<a class="btn btn-primary" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">Leave a Google review</a>' +
+      '<button class="btn btn-ghost ink" data-action="ask-review" data-id="' + m.id + '">Ask for a Google review</button>' +
+      '<button class="btn btn-ghost ink" data-action="open-chat" data-id="' + m.id + '">Message</button>' +
+      mark + pageBtn + "</div>" +
+      '<p class="hint" style="text-align:center;margin-top:10px">Only review businesses you have actually used. Friend requests are sent on Facebook, not inside this app.</p>' +
+      '<div class="info-rows">' + phoneRow +
+      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
+      '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook).replace("https://www.", "")) + "</div></div></div>" +
+      "</div></div></section>";
+  }
+  function renderMe() {
+    var m = T().me();
+    var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + ico("phone") + '</div><div><div class="k">Phone</div><div class="v">' + esc(m.phone) + "</div></div></div>" : "";
+    var pageRow = m.page ? '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Business page</div><div class="v">' + esc(m.page.replace("https://www.", "")) + "</div></div></div>" : "";
+    return '<section class="screen has-tabs has-header" data-screen="me">' +
+      topbar("My profile", '<button class="header-link" data-go="edit-profile">Edit</button>') +
+      '<div class="scroll"><div class="profile-hero">' + av(m, 96) +
+      '<div class="nm">' + esc(fn(m)) + ' <span class="you-badge">You</span></div>' +
+      '<div class="biz">' + esc(m.business) + '</div><div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
+      m.regions.map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
+      "</div>" + (S().googleConnected ? gBadge(m) : '<div class="g-badge" style="background:#EEF2F6;color:#5B6B7C">Google profile not connected</div>') +
+      "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
+      '<div class="banner info">This is how other members see you. They can friend you on Facebook, message you here, or leave a Google review after a real job.</div>' +
+      '<div class="info-rows">' + phoneRow +
+      '<div class="info-row"><div class="ic">' + ico("pin") + '</div><div><div class="k">Regions</div><div class="v">' + m.regions.map(rn).join(", ") + "</div></div></div>" +
+      '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
+      pageRow +
+      (S().googleConnected ? '<div class="info-row"><div class="ic" style="background:#E8F1FD;color:#1A73E8">G</div><div><div class="k">Google review link</div><div class="v">' + esc(String(googleLink).replace("https://", "")) + "</div></div></div>" : "") +
+      "</div></div></section>";
+  }
+
+  function renderSettings() {
+    var m = T().me();
+    var fbRow = S().fbConnected
+      ? '<button class="set-row" type="button" data-go="edit-profile"><span class="ic" style="background:#E8F1FD;color:#1877F2">' + ico("fb") + '</span><span class="lab"><span class="a">Facebook: Connected</span><span class="b">' + esc(String(m.facebook || T().demoFbLink()).replace("https://www.", "")) + '</span></span><span class="chev">' + ico("chev") + "</span></button>"
+      : '<button class="set-row" type="button" data-action="fb-connect" data-next="settings"><span class="ic" style="background:#E8F1FD;color:#1877F2">' + ico("fb") + '</span><span class="lab"><span class="a">Connect Facebook</span><span class="b">One tap to add your profile link</span></span><span class="chev">' + ico("chev") + "</span></button>";
+    var gRow = S().googleConnected
+      ? '<button class="set-row" type="button" data-action="google-manage"><span class="ic" style="background:#F5F8FF;color:#1A73E8;font-weight:800">G</span><span class="lab"><span class="a">Google Business Profile: Connected</span><span class="b">Members can open your review link</span></span><span class="chev">' + ico("chev") + "</span></button>"
+      : '<button class="set-row" type="button" data-action="google-connect"><span class="ic" style="background:#F5F8FF;color:#1A73E8;font-weight:800">G</span><span class="lab"><span class="a">Connect Google Business Profile</span><span class="b">Add a review link for members</span></span><span class="chev">' + ico("chev") + "</span></button>";
+    return '<section class="screen has-tabs has-header" data-screen="settings">' + topbar("Settings") +
+      '<div class="scroll"><p class="group-label">Account</p><div class="card group">' +
+      '<button class="set-row" data-go="me"><span class="ic" style="background:#E7F8F1;color:#066B4C">' + I.user + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + esc(fn(m)) + " \u00b7 " + esc(m.trade) + '</span></span><span class="chev">' + ico("chev") + "</span></button>" +
+      '<button class="set-row" data-go="edit-profile"><span class="ic" style="background:#EEF2F6;color:#14314C">' + ico("pencil") + '</span><span class="lab"><span class="a">Edit profile and regions</span><span class="b">Name, trade, links, areas</span></span><span class="chev">' + ico("chev") + "</span></button>" +
+      fbRow + gRow +
+      '</div><p class="group-label">Notifications</p><div class="card group">' +
+      '<button class="set-row" data-go="notif-settings"><span class="ic" style="background:#FFF6E0;color:#8A5A00">' + I.bell + '</span><span class="lab"><span class="a">Notification settings</span><span class="b">Messages, reviews, new members, quiet hours</span></span><span class="chev">' + ico("chev") + "</span></button>" +
+      '</div><p class="group-label">How the circle works</p>' +
+      '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
+      '<p class="group-label">About</p><div class="card group">' +
+      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.2 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
+      '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
+  }
+
+  function gBlock() {
+    if (S().googleConnected) {
+      return '<div class="g-card" data-g-block="1"><div class="gmark">G</div><div style="flex:1;min-width:0"><div class="fb-card-k">Google Business Profile connected</div>' +
+        '<div class="fb-card-n">Hale Pest Control</div>' +
+        '<div class="fb-card-l">' + esc(String(googleLink).replace("https://", "")) + '</div></div>' +
+        '<button type="button" class="fb-disconnect" data-action="google-disconnect">Disconnect</button></div>';
+    }
+    return '<div data-g-block="1"><button type="button" class="btn btn-google" data-action="google-connect">' + I.google + " Connect Google Business Profile</button>" +
+      '<div class="or-line"><span>or paste your review link</span></div>' +
+      '<div class="field"><label>Google review link</label><input name="google" inputmode="url" placeholder="Paste your Google review link" value="' + esa(googleLink) + '">' +
+      '<p class="hint">Prototype only \u2014 a real build would use Google official Business Profile connection. Members use this link to leave a review after a real job.</p></div></div>';
+  }
+
+  function injectGoogle() {
+    var form = document.querySelector("form[data-form='create-profile'], form[data-form='edit-profile']");
+    if (!form || form.querySelector("[data-g-block]")) return;
+    var pageField = null;
+    form.querySelectorAll(".field").forEach(function (f) {
+      var lab = f.querySelector("label");
+      if (lab && /business page/i.test(lab.textContent)) pageField = f;
+    });
+    var wrap = document.createElement("div");
+    wrap.innerHTML = '<div class="group-label">Google Business Profile</div>' + gBlock();
+    if (pageField && pageField.parentNode) pageField.parentNode.insertBefore(wrap, pageField.nextSibling);
+    else form.appendChild(wrap);
+  }
+
+  function renderReviews() {
+    var incoming = reqs.filter(function (r) { return r.dir === "in"; });
+    var outgoing = reqs.filter(function (r) { return r.dir === "out"; });
+    var openIn = incoming.filter(function (r) { return r.status === "open"; }).length;
+    var html = '<section class="screen has-tabs has-header" data-screen="reviews">' + topbar("Reviews") +
+      '<div class="scroll"><div class="rev-counts">' +
+      '<div class="rev-count"><div class="n">' + openIn + '</div><div class="l">Requests to write</div></div>' +
+      '<div class="rev-count"><div class="n">' + outgoing.length + '</div><div class="l">Requests you sent</div></div>' +
+      "</div>" +
+      '<div class="notice">This helper gives ideas only. Write the review yourself, and only for a job you actually had done.</div>' +
+      '<p class="group-label">Requests received</p>';
+    incoming.forEach(function (r) {
+      var m = member(r.from);
+      html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(m, 44) +
+        '<div><div class="who">' + esc(fn(m)) + '</div><div class="meta">' + esc(m.business) + " \u00b7 " + r.at + "</div></div></div>" +
+        (r.status === "open"
+          ? '<button class="btn btn-primary" style="margin-top:10px" data-action="open-ideas" data-id="' + m.id + '">Write review</button>'
+          : '<p class="hint" style="margin-top:8px">You already left a review.</p>') +
+        "</div>";
+    });
+    html += '<p class="group-label">Requests you sent</p>';
+    outgoing.forEach(function (r) {
+      var m = member(r.to);
+      html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(m, 44) +
+        '<div><div class="who">' + esc(fn(m)) + '</div><div class="meta">' + esc(m.business) + " \u00b7 " + r.at + " \u00b7 " +
+        (r.status === "done" ? "They left a review" : "Waiting") + "</div></div></div></div>";
+    });
+    html += "</div></section>";
+    return html;
+  }
+
+  function ideaState() {
+    var st = S();
+    st.reviewFor = st.reviewFor || "jack";
+    st.ideaJob = st.ideaJob || "";
+    st.ideaSuburb = st.ideaSuburb || "";
+    st.ideaMonth = st.ideaMonth || "";
+    st.ideaStands = st.ideaStands || [];
+    st.reviewDraft = st.reviewDraft || "";
+    st.pickedIdea = (typeof st.pickedIdea === "number") ? st.pickedIdea : -1;
+    return st;
+  }
+
+  function hash(s) {
+    var h = 0;
+    String(s).split("").forEach(function (c) { h = ((h << 5) - h) + c.charCodeAt(0); h |= 0; });
+    return Math.abs(h);
+  }
+  function fillTpl(tpl, map) {
+    return tpl.replace(/\{(\w+)\}/g, function (_, k) { return map[k] || ""; });
+  }
+  function buildIdeas(m) {
+    var st = ideaState();
+    var job = st.ideaJob || (JOBS[m.trade] || ["the job"])[0];
+    var suburb = st.ideaSuburb || "Midland";
+    var month = st.ideaMonth || "October";
+    var map = { business: m.business, name: fn(m), first: m.first, job: job.toLowerCase(), suburb: suburb, month: month };
+    var used = usedIdeas[m.id] || [];
+    var out = [];
+    var i = 0;
+    var guard = 0;
+    while (out.length < 3 && guard < 40) {
+      var starter = STARTERS[(hash(m.id + job + suburb + month + i) + i * 3) % STARTERS.length];
+      var stands = (st.ideaStands.length ? st.ideaStands : ["quality"]).slice();
+      var mids = stands.map(function (sid, idx) {
+        var arr = MID[sid] || [];
+        return arr.length ? arr[(hash(m.id + sid + i + idx) + i) % arr.length] : "";
+      }).filter(Boolean);
+      var text = [fillTpl(starter, map)].concat(mids).join(" ");
+      if (used.indexOf(text) === -1 && out.indexOf(text) === -1) out.push(text);
+      i++; guard++;
+    }
+    while (out.length < 3) {
+      out.push(fillTpl(STARTERS[out.length % STARTERS.length], map) + " Write a short note in your own words about how the job went.");
+    }
+    return out;
+  }
+
+  function similar(a, b) {
+    function toks(s) {
+      return String(s).toLowerCase().replace(/[^\w\s]/g, " ").split(/\s+/).filter(function (w) { return w.length > 3; });
+    }
+    var A = toks(a), B = toks(b);
+    if (!A.length || !B.length) return 0;
+    var set = {};
+    B.forEach(function (w) { set[w] = 1; });
+    var hit = A.filter(function (w) { return set[w]; }).length;
+    return hit / Math.max(A.length, B.length);
+  }
+
+  function uniqNote(m, draft) {
+    var samples = [];
+    if (given[m.id] && given[m.id].text) samples.push(given[m.id].text);
+    (usedIdeas[m.id] || []).forEach(function (t) { samples.push(t); });
+    if (!draft || draft.length < 12) return { ok: true, msg: "Write the review in your own words before you copy it." };
+    var worst = 0;
+    samples.forEach(function (s) { worst = Math.max(worst, similar(draft, s)); });
+    if (worst >= 0.7) return { ok: false, msg: "This looks very similar to an earlier suggestion for this business. Change it in your own words." };
+    return { ok: true, msg: "Looks different enough \u2014 remember to edit it so it sounds like you." };
+  }
+
+  function renderReviewIdeas() {
+    var st = ideaState();
+    var m = member(st.reviewFor);
+    var jobs = JOBS[m.trade] || ["General job"];
+    if (!st.ideaJob) st.ideaJob = jobs[1] || jobs[0];
+    if (!st.ideaSuburb) st.ideaSuburb = m.regions && m.regions[0] === "kwinana" ? "Kwinana" : "Joondalup";
+    if (!st.ideaMonth) st.ideaMonth = "October";
+    if (!st.ideaStands.length) st.ideaStands = ["ontime", "explained"];
+    var ideas = buildIdeas(m);
+    st._ideas = ideas;
+    var u = uniqNote(m, st.reviewDraft);
+    return '<section class="screen has-header" data-screen="review-ideas">' +
+      '<div class="app-header"><button class="icon-btn" data-go="reviews" aria-label="Back">' + ico("back") + '</button><div class="ht">Review ideas</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">' + av(m, 48) +
+      '<div><div style="font-weight:800">' + esc(fn(m)) + '</div><div class="hint" style="margin:0">' + esc(m.business) + " \u00b7 " + esc(m.trade) + "</div></div></div>" +
+      '<div class="notice">Only review businesses you have actually used. These are ideas and sentence starters, not finished reviews. Write in your own words.</div>' +
+      '<p class="group-label">What job did they do?</p><div class="chips">' +
+      jobs.map(function (j) { return '<button type="button" class="chip' + (st.ideaJob === j ? " active" : "") + '" data-idea-job="' + esa(j) + '">' + esc(j) + "</button>"; }).join("") +
+      '</div><p class="group-label">Suburb</p><div class="chips">' +
+      SUBURBS.map(function (j) { return '<button type="button" class="chip' + (st.ideaSuburb === j ? " active" : "") + '" data-idea-sub="' + esa(j) + '">' + esc(j) + "</button>"; }).join("") +
+      '</div><p class="group-label">When</p><div class="chips">' +
+      MONTHS.map(function (j) { return '<button type="button" class="chip' + (st.ideaMonth === j ? " active" : "") + '" data-idea-mo="' + esa(j) + '">' + esc(j) + "</button>"; }).join("") +
+      '</div><p class="group-label">What stood out?</p><div class="chips">' +
+      STANDS.map(function (j) { return '<button type="button" class="chip' + (st.ideaStands.indexOf(j.id) >= 0 ? " active" : "") + '" data-idea-st="' + j.id + '">' + esc(j.label) + "</button>"; }).join("") +
+      '</div><p class="group-label">Ideas you can start from</p>' +
+      ideas.map(function (t, i) {
+        return '<button type="button" class="idea-card' + (st.pickedIdea === i ? " on" : "") + '" data-pick-idea="' + i + '">' + esc(t) + "</button>";
+      }).join("") +
+      '<button type="button" class="link" data-action="refresh-ideas" style="margin:4px 0 12px">Show different ideas</button>' +
+      '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
+      '<div class="uniq ' + (u.ok ? "ok" : "bad") + '">' + u.msg + "</div>" +
+      '<a class="btn btn-primary" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">Copy and open Google</a>' +
+      '<p class="hint" style="text-align:center">The text is copied so you can paste it into Google and change it before you post.</p></div></section>';
+  }
+  function seedChats() {
+    return [
+      {
+        id: "dm-sarah", type: "dm", memberId: "sarah", pinned: true, muted: false, unread: 0, when: "8:04 am",
+        preview: "Thanks \u2014 I will have a look this week",
+        online: true,
+        messages: [
+          { id: "s1", from: "sarah", type: "text", text: "Morning Jamie, that termite check in Midland was a real help for my client.", time: "7:48 am", ticks: "read" },
+          { id: "s2", from: "me", type: "text", text: "Glad it was useful. I will drop a review for the kitchen job too.", time: "7:51 am", ticks: "read", replyTo: { from: "Sarah", text: "that termite check in Midland was a real help" } },
+          { id: "s3", from: "sarah", type: "text", text: "Legend. I will mention Hale Pest if anyone in the Hills group asks.", time: "7:53 am", ticks: "read", reactions: [{ e: "\ud83d\udc4d", n: 1 }] },
+          { id: "s4", from: "me", type: "voice", duration: "0:08", time: "7:56 am", ticks: "read" },
+          { id: "s5", from: "sarah", type: "photo", time: "8:01 am", ticks: "read" },
+          { id: "s6", from: "me", type: "text", text: "Looks great. Thanks \u2014 I will have a look this week.", time: "8:04 am", ticks: "read" }
+        ]
+      },
+      {
+        id: "grp-hills", type: "group", region: "hills", name: "Hills tradies", pinned: true, muted: false, unread: 2, when: "7:40 am",
+        preview: "@Jamie can you take a termite job in Mundaring?",
+        messages: [
+          { id: "h1", from: "mei", type: "text", text: "Morning team \u2014 I am in Mundaring today if anyone needs a hand on site.", time: "7:12 am" },
+          { id: "h2", from: "tom", type: "location", place: "Stoneville, WA", time: "7:21 am" },
+          { id: "h3", from: "mei", type: "file", fileName: "Site-notes.pdf", size: "240 KB", time: "7:28 am" },
+          { id: "h4", from: "tom", type: "profile", memberId: "mei", time: "7:31 am" },
+          { id: "h5", from: "mei", type: "link", url: "https://example.com/hills-tip", title: "Council tip hours \u2014 Hills", time: "7:36 am" },
+          { id: "h6", from: "tom", type: "text", text: "@Jamie can you take a termite job in Mundaring this afternoon?", time: "7:40 am", mention: "Jamie" }
+        ]
+      },
+      {
+        id: "grp-north", type: "group", region: "north", name: "North tradies", pinned: false, muted: false, unread: 0, when: "Yesterday",
+        preview: "Emma: Servicing in Joondalup tomorrow",
+        messages: [
+          { id: "n1", from: "emma", type: "text", text: "Servicing in Joondalup tomorrow if anyone has a client nearby.", time: "Yesterday" },
+          { id: "n2", from: "chris", type: "text", text: "I might. I will message you.", time: "Yesterday" }
+        ]
+      },
+      {
+        id: "dm-jack", type: "dm", memberId: "jack", pinned: false, muted: false, unread: 1, when: "7:12 am",
+        preview: "Could you leave a Google review when you get a minute?",
+        online: false,
+        messages: [
+          { id: "j1", from: "jack", type: "text", text: "Thanks for coming out to Kwinana last month.", time: "7:05 am" },
+          { id: "j2", from: "jack", type: "text", text: "Could you leave a Google review when you get a minute?", time: "7:12 am" }
+        ]
+      },
+      {
+        id: "dm-liam", type: "dm", memberId: "liam", pinned: false, muted: false, unread: 0, when: "Mon",
+        preview: "Hey Jamie, just sent you a friend request",
+        online: true,
+        messages: [
+          { id: "l1", from: "liam", type: "text", text: "Hey Jamie, just sent you a friend request.", time: "Mon" },
+          { id: "l2", from: "me", type: "text", text: "Got it \u2014 I will accept after I jump on Facebook.", time: "Mon", ticks: "delivered" }
+        ]
+      }
+    ];
+  }
+  var chats = load(LS.chats, null) || seedChats();
+  if (!Array.isArray(chats) || !chats.length) chats = seedChats();
+
+  function chatById(id) {
+    return chats.find(function (c) { return c.id === id; });
+  }
+  function dmFor(memberId) {
+    var c = chats.find(function (x) { return x.type === "dm" && x.memberId === memberId; });
+    if (c) return c;
+    c = { id: "dm-" + memberId, type: "dm", memberId: memberId, pinned: false, muted: false, unread: 0, when: "Now", preview: "", online: false, messages: [] };
+    chats.unshift(c);
+    return c;
+  }
+
+  function renderChats() {
+    var q = (S().chatQuery || "").toLowerCase();
+    var list = chats.filter(function (c) {
+      if (!q) return true;
+      var name = c.type === "group" ? c.name : fn(member(c.memberId));
+      return (name + " " + (c.preview || "")).toLowerCase().indexOf(q) !== -1;
+    });
+    var pinned = list.filter(function (c) { return c.pinned; });
+    var rest = list.filter(function (c) { return !c.pinned; });
+    function row(c) {
+      var m = c.type === "group" ? { first: c.name.split(" ")[0], last: "", color: "navy", isMe: false, trade: "Group" } : member(c.memberId);
+      var name = c.type === "group" ? c.name : fn(m);
+      var avHtml = c.type === "group"
+        ? '<div style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#0B1F33;color:#8BE0C3">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
+        : av(m, 52);
+      var online = c.type === "dm" ? '<span class="' + (c.online ? "dot-on" : "dot-off") + '"></span>' : "";
+      return '<button type="button" class="chat-row" data-action="open-thread" data-chat="' + c.id + '">' +
+        '<div class="av-wrap">' + avHtml + online + "</div>" +
+        '<div class="meta"><div class="nm">' + esc(name) + (c.muted ? ' <span class="muted-ico">M</span>' : "") + "</div>" +
+        '<div class="prev">' + esc(c.preview) + "</div></div>" +
+        '<div class="when">' + esc(c.when) + (c.unread ? '<div class="ub">' + c.unread + "</div>" : "") + "</div></button>";
+    }
+    return '<section class="screen has-tabs has-header" data-screen="chats">' +
+      topbar("Chats", '<button class="icon-btn" data-action="new-group" aria-label="New group">' + I.plus + "</button>") +
+      '<div class="scroll"><div class="search-wrap"><div class="search">' + ico("search") + '<input id="chatSearch" type="search" placeholder="Search chats" value="' + esa(S().chatQuery || "") + '"></div></div>' +
+      (pinned.length ? '<div class="pin-lab">Pinned</div>' + pinned.map(row).join("") : "") +
+      (rest.length ? '<div class="pin-lab">Chats</div>' + rest.map(row).join("") : "") +
+      "</div></section>";
+  }
+
+  function findMemberByName(from) {
+    if (from === "me") return T().me();
+    return member(from);
+  }
+
+  function bubble(msg, chat) {
+    var mine = msg.from === "me";
+    var inner = "";
+    if (msg.replyTo) {
+      inner += '<div class="quote">' + esc(msg.replyTo.from) + " \u2014 " + esc(msg.replyTo.text) + "</div>";
+    }
+    if (msg.type === "voice") {
+      inner += '<div class="voice"><span class="play">' + I.play + '</span><span class="wave">';
+      [8, 14, 10, 18, 12, 16, 9, 15, 11, 7].forEach(function (h) { inner += "<i style=\"height:" + h + 'px"></i>'; });
+      inner += '</span><span style="font-size:11px;font-weight:800">' + (msg.duration || "0:08") + "</span></div>";
+    } else if (msg.type === "photo") {
+      inner += '<div class="photo-bub" role="img" aria-label="Photo of a finished kitchen"></div>';
+    } else if (msg.type === "file") {
+      inner += '<div class="file-row"><span class="file-ico">' + I.file + "</span><div><strong>" + esc(msg.fileName) + "</strong><div class=\"hint\" style=\"margin:0\">" + esc(msg.size || "") + "</div></div></div>";
+    } else if (msg.type === "location") {
+      inner += '<div class="loc-card"><span class="loc-ico">' + I.loc + "</span><div><strong>Location</strong><div class=\"hint\" style=\"margin:0\">" + esc(msg.place) + "</div></div></div>";
+    } else if (msg.type === "profile") {
+      var pm = member(msg.memberId);
+      inner += '<div class="p-card">' + av(pm, 36) + "<div><strong>" + esc(fn(pm)) + "</strong><div class=\"hint\" style=\"margin:0\">" + esc(pm.business) + "</div></div></div>";
+    } else if (msg.type === "link") {
+      inner += '<div class="link-card"><div><strong>' + esc(msg.title) + '</strong><div class="hint" style="margin:0">' + esc((msg.url || "").replace("https://", "")) + "</div></div></div>";
+    } else if (msg.type === "deleted") {
+      inner += '<span class="deleted">Message deleted</span>';
+    } else {
+      var t = esc(msg.text || "");
+      t = t.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
+      inner += t;
+      if (msg.edited) inner += ' <span class="edited">(edited)</span>';
+    }
+    if (msg.reactions && msg.reactions.length) {
+      inner += '<div class="reacts">' + msg.reactions.map(function (r) { return "<span>" + r.e + " " + r.n + "</span>"; }).join("") + "</div>";
+    }
+    inner += '<div class="time">' + esc(msg.time || "") + (mine ? (msg.ticks === "read" ? I.tickRead : I.tick) : "") + "</div>";
+    var who = mine ? "" : (chat.type === "group" ? '<div style="font-size:11px;font-weight:800;color:#5B6B7C;margin-bottom:2px">' + esc(fn(findMemberByName(msg.from))) + "</div>" : "");
+    return '<div class="bub ' + (mine ? "out" : "in") + '" data-msg="' + msg.id + '" data-action="msg-menu">' + who + inner + "</div>";
+  }
+
+  function renderThread(chatId) {
+    var preset = S().screen;
+    var id = chatId || S().chatId || (preset === "chat-group" ? "grp-hills" : "dm-sarah");
+    S().chatId = id;
+    var c = chatById(id) || chats[0];
+    c.unread = 0;
+    var title, sub, avHtml;
+    if (c.type === "group") {
+      title = c.name;
+      sub = "Group \u00b7 " + rn(c.region);
+      avHtml = "";
+    } else {
+      var m = member(c.memberId);
+      title = fn(m);
+      sub = c.online ? "Online" : "Last seen 2h ago";
+      avHtml = av(m, 32);
+    }
+    return '<section class="screen has-header chat-screen" data-screen="' + (c.type === "group" ? "chat-group" : "chat-dm") + '">' +
+      '<div class="app-header"><button class="icon-btn" data-go="chats" aria-label="Back">' + ico("back") + "</button>" +
+      avHtml + '<div class="ht" style="text-align:left">' + esc(title) + '<div style="font-size:11px;font-weight:600;color:var(--muted)">' + esc(sub) + "</div></div>" +
+      '<button class="icon-btn" data-action="chat-more" aria-label="More">...</button></div>' +
+      '<div class="chat-thread" id="chatThread">' + c.messages.map(function (msg) { return bubble(msg, c); }).join("") + "</div>" +
+      '<div class="quick-row">' +
+      '<button type="button" data-action="ask-review-chat">Send review request</button>' +
+      '<button type="button" data-action="share-my-profile">Share my profile</button>' +
+      '<button type="button" data-action="share-location">Share location</button>' +
+      "</div>" +
+      '<div class="chat-composer">' +
+      '<button class="plus" data-action="attach" aria-label="Attach">' + I.plus + "</button>" +
+      '<textarea id="chatInput" rows="1" placeholder="Message"></textarea>' +
+      '<button class="send" data-action="send-chat" aria-label="Send">' + I.send + "</button>" +
+      "</div></section>";
+  }
+  const NOTIFS = [
+    { id: "n1", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "chat-dm", chat: "dm-jack" },
+    { id: "n2", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
+    { id: "n3", title: "New member in Hills", body: "Mei Chen (West Coast Gardens) joined the Hills region.", time: "Yesterday", unread: false, go: "member", who: "mei" },
+    { id: "n4", title: "Sarah mentioned you", body: "In Hills tradies: @Jamie can you take a termite job in Mundaring?", time: "Mon", unread: false, go: "chat-group", chat: "grp-hills" }
+  ];
+
+  function renderNotifications() {
+    return '<section class="screen has-tabs has-header" data-screen="notifications">' + topbar("Notifications") +
+      '<div class="scroll" style="padding:0">' +
+      NOTIFS.map(function (n) {
+        return '<button type="button" class="notif-row' + (n.unread ? " unread" : "") + '" data-action="open-notif" data-nid="' + n.id + '">' +
+          '<div class="ic" style="width:36px;height:36px;border-radius:10px;background:#E7F8F1;color:#066B4C;display:grid;place-items:center;flex:none">' + I.bell + "</div>" +
+          '<div style="flex:1;min-width:0"><div class="ttl">' + esc(n.title) + '</div><div class="bd">' + esc(n.body) + '</div><div class="tm">' + esc(n.time) + "</div></div></button>";
+      }).join("") +
+      "</div></section>";
+  }
+
+  function renderNotifSettings() {
+    function tog(key, a, b) {
+      return '<button class="set-row" data-action="tog-notif" data-key="' + key + '"><span class="lab"><span class="a">' + a + "</span><span class=\"b\">" + b + '</span></span><span class="toggle' + (notif[key] ? " on" : "") + '"></span></button>';
+    }
+    return '<section class="screen has-tabs has-header" data-screen="notif-settings">' + topbar("Notifications") +
+      '<div class="scroll"><p class="group-label">Alerts</p><div class="card group">' +
+      tog("messages", "Messages", "New direct messages") +
+      tog("mentions", "Group mentions", "When someone types @ your name") +
+      tog("reviews", "Review requests", "When a member asks you for a Google review") +
+      tog("members", "New members", "When a tradie joins one of your regions") +
+      '</div><p class="group-label">Quiet hours</p><div class="card group">' +
+      tog("quietOn", "Quiet hours", "Mute alerts overnight") +
+      '<div class="set-row"><span class="lab"><span class="a">From</span></span><input type="time" data-quiet="quietFrom" value="' + esa(notif.quietFrom) + '" style="border:0;font-weight:700"></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">To</span></span><input type="time" data-quiet="quietTo" value="' + esa(notif.quietTo) + '" style="border:0;font-weight:700"></div>' +
+      "</div><p class=\"hint\">This is a prototype. A real build would use your phone notification settings as well.</p></div></section>";
+  }
+
+  function renderLock() {
+    return '<section class="screen" data-screen="lockscreen"><div class="lock">' +
+      '<div class="clk">8:16</div><div class="dt">Monday 16 November</div>' +
+      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Jack Thompson</div><div class="bd">Could you leave a Google review when you get a minute?</div></div>' +
+      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Review request</div><div class="bd">Tom Reeves asked you to review Reeves Fencing.</div></div>' +
+      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">New member in Hills</div><div class="bd">Mei Chen joined the Hills region.</div></div>' +
+      "</div></section>";
+  }
+
+  function renderInvite() {
+    return '<section class="screen has-tabs has-header" data-screen="invite">' + topbar("Invite a tradie") +
+      '<div class="scroll"><div class="auth-hero"><h2>Invite someone you know</h2><p>Share a join link with a tradie you have actually met. They can make a profile and pick their Perth regions.</p></div>' +
+      '<div class="field"><label>Invite link</label><input readonly value="https://tradecircle.perth.demo/join/hale-circle"></div>' +
+      '<button class="btn btn-primary" data-action="copy-invite">Copy invite link</button>' +
+      '<div class="action-stack" style="margin-top:12px">' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="sms">Share by SMS</button>' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="whatsapp">Share on WhatsApp</button>' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="messenger">Share on Messenger</button>' +
+      "</div></div></section>";
+  }
+
+  function renderHelp() {
+    return '<section class="screen has-tabs has-header" data-screen="help">' + topbar("Help & how it works") +
+      '<div class="scroll"><div class="auth-hero"><h2>How the circle works</h2><p>A simple way for local tradies who already know each other to stay in touch and recommend people they have actually met.</p></div>' +
+      '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Weekly meet-ups stay offline</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">The app is for profiles, Facebook friend requests, messages and genuine Google reviews. Catch-ups are organised in person.</p></div>' +
+      '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Recommendations</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend a member in a Facebook group if you have actually met or used them, and say so in your comment.</p></div>' +
+      '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Google reviews</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">The app can suggest ideas after you pick a real job. It will not write a finished review for you. Swapped or ready-made reviews can get a Google profile taken down, and they are against Australian Consumer Law.</p></div>' +
+      "</div></section>";
+  }
+
+  function renderMyRegions() {
+    var m = T().me();
+    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("My regions") +
+      '<div class="scroll"><p class="hint">You can join more than one Perth region. Change this any time.</p>' +
+      T().regionPicker(m.regions || [], "me-regions") +
+      '<button class="btn btn-primary" data-action="save-regions">Save regions</button></div></section>';
+  }
+
+  function drawerInner() {
+    var m = T().me();
+    var items = [
+      ["members", I.user, "Members", ""],
+      ["chats", I.chat, "Chats", ""],
+      ["reviews", I.star, "Reviews", ""],
+      ["notifications", I.bell, "Notifications", ""],
+      ["me", I.user, "My profile", ""],
+      ["my-regions", I.regions, "My regions", ""],
+      ["edit-profile", I.fb, "Facebook connection", "drawer-fb"],
+      ["settings", I.google, "Google Business Profile", "drawer-google"],
+      ["invite", I.invite, "Invite a tradie", ""],
+      ["help", I.help, "Help & how it works", ""],
+      ["settings", I.gear, "Settings", ""]
+    ];
+    var html = '<div class="drawer-head">' + av(m, 64) +
+      '<div class="nm">' + esc(fn(m)) + '</div><div class="biz">' + esc(m.business) + "</div>" +
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
+      (m.regions || []).map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
+      "</div></div><nav class=\"drawer-nav\">";
+    items.forEach(function (it, i) {
+      if (i === 4 || i === 8) html += '<div class="drawer-sep"></div>';
+      var action = it[3] ? ' data-action="' + it[3] + '"' : "";
+      html += '<button type="button" class="drawer-item" data-go="' + it[0] + '"' + action + '><span class="ic">' + it[1] + "</span>" + it[2] + "</button>";
+    });
+    html += '<div class="drawer-sep"></div>';
+    html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.2</div>';
+    return html;
+  }
+
+  function ensureDrawer() {
+    var phone = document.getElementById("phone");
+    if (!phone) return;
+    var o = document.getElementById("drawerOverlay");
+    if (!o) {
+      o = document.createElement("div");
+      o.id = "drawerOverlay";
+      o.className = "drawer-overlay";
+      o.setAttribute("data-action", "close-drawer");
+      phone.appendChild(o);
+    }
+    var d = document.getElementById("appDrawer");
+    if (!d) {
+      d = document.createElement("aside");
+      d.id = "appDrawer";
+      d.className = "drawer";
+      d.setAttribute("aria-label", "Menu");
+      phone.appendChild(d);
+    }
+    d.innerHTML = drawerInner();
+  }
+  function openDrawer() {
+    ensureDrawer();
+    document.getElementById("appDrawer").classList.add("open");
+    document.getElementById("drawerOverlay").classList.add("show");
+  }
+  function closeDrawer() {
+    var d = document.getElementById("appDrawer");
+    var o = document.getElementById("drawerOverlay");
+    if (d) d.classList.remove("open");
+    if (o) o.classList.remove("show");
+  }
+
+  function closeMine() {
+    var o = document.getElementById("tc12Overlay");
+    if (o) o.remove();
+    if (T().closeSheet) T().closeSheet();
+  }
+  function openOverlay(html) {
+    closeMine();
+    var phone = document.getElementById("phone");
+    if (!phone) return;
+    var overlay = document.createElement("div");
+    overlay.className = "overlay show";
+    overlay.id = "tc12Overlay";
+    overlay.innerHTML = '<div class="sheet">' + html + "</div>";
+    phone.appendChild(overlay);
+  }
+
+  function openGoogleSheet() {
+    openOverlay('<div class="sheet-handle"></div><h3>Connect Google Business Profile</h3>' +
+      '<p style="font-size:14px;font-weight:600;color:var(--muted);margin:0 0 14px">Prototype only. In a real app Google would ask you to sign in and pick your business. This preview does not talk to Google.</p>' +
+      '<div class="g-card"><div class="gmark">G</div><div><div class="fb-card-n">Hale Pest Control</div><div class="fb-card-l">Midland, Western Australia</div></div></div>' +
+      '<button class="btn btn-primary" data-action="google-allow">Allow and connect</button>' +
+      '<button class="btn btn-ghost ink" style="margin-top:8px" data-action="close-sheet">Not now</button>');
+  }
+
+  function render(id) {
+    if (id === "drawer") return renderMembers();
+    if (id === "google-consent") return renderSettings();
+    if (id === "reviews") return renderReviews();
+    if (id === "review-ideas") return renderReviewIdeas();
+    if (id === "chats") return renderChats();
+    if (id === "chat-dm" || id === "chat-group") return renderThread();
+    if (id === "notifications") return renderNotifications();
+    if (id === "notif-settings") return renderNotifSettings();
+    if (id === "lockscreen") return renderLock();
+    if (id === "invite") return renderInvite();
+    if (id === "help") return renderHelp();
+    if (id === "my-regions") return renderMyRegions();
+    return null;
+  }
+
+  function refreshIdeasScreen() { go("review-ideas"); }
+  function handleClick(e) {
+    if (e.target.id === "tc12Overlay" || (e.target.closest("#tc12Overlay") && !e.target.closest(".sheet"))) { closeMine(); return true; }
+    if (e.target.closest("[data-action='close-drawer'], #drawerOverlay")) {
+      closeDrawer();
+      return true;
+    }
+    if (e.target.closest("[data-action='open-drawer']")) {
+      openDrawer();
+      return true;
+    }
+    var dItem = e.target.closest(".drawer-item");
+    if (dItem) {
+      var act = dItem.getAttribute("data-action");
+      closeDrawer();
+      if (act === "drawer-fb") { go("edit-profile"); return true; }
+      if (act === "drawer-google") { go("settings"); setTimeout(openGoogleSheet, 30); return true; }
+      if (dItem.dataset.go) { go(dItem.dataset.go); return true; }
+    }
+    var relB = e.target.closest("[data-rel]");
+    if (relB) {
+      S().relFilter = relB.getAttribute("data-rel");
+      go("members");
+      return true;
+    }
+    var job = e.target.closest("[data-idea-job]");
+    if (job) { S().ideaJob = job.getAttribute("data-idea-job"); refreshIdeasScreen(); return true; }
+    var sub = e.target.closest("[data-idea-sub]");
+    if (sub) { S().ideaSuburb = sub.getAttribute("data-idea-sub"); refreshIdeasScreen(); return true; }
+    var mo = e.target.closest("[data-idea-mo]");
+    if (mo) { S().ideaMonth = mo.getAttribute("data-idea-mo"); refreshIdeasScreen(); return true; }
+    var stc = e.target.closest("[data-idea-st]");
+    if (stc) {
+      var sid = stc.getAttribute("data-idea-st");
+      var arr = S().ideaStands || [];
+      var ix = arr.indexOf(sid);
+      if (ix >= 0) arr.splice(ix, 1); else arr.push(sid);
+      S().ideaStands = arr;
+      refreshIdeasScreen();
+      return true;
+    }
+    var pick = e.target.closest("[data-pick-idea]");
+    if (pick) {
+      var i = Number(pick.getAttribute("data-pick-idea"));
+      var ideas = S()._ideas || [];
+      S().pickedIdea = i;
+      S().reviewDraft = ideas[i] || "";
+      refreshIdeasScreen();
+      return true;
+    }
+    var el = e.target.closest("[data-action]");
+    if (!el) return false;
+    var action = el.getAttribute("data-action");
+    var id = el.getAttribute("data-id");
+
+    if (action === "mark-sent") {
+      if (id) { rel[id] = "pending"; persist(); }
+      toast("Marked as request sent. Confirm Friends once they accept.");
+      if (el.tagName === "A") {
+        setTimeout(function () { if (S().screen === "members") go("members"); else go("member", id); }, 200);
+        return false;
+      }
+      go(S().screen === "members" ? "members" : "member", id);
+      return true;
+    }
+    if (action === "mark-friends") {
+      if (id) { rel[id] = "friends"; persist(); }
+      toast("Marked as Facebook friends.");
+      go(S().screen === "members" ? "members" : "member", id);
+      return true;
+    }
+    if (action === "open-chat") {
+      var c = dmFor(id);
+      S().chatId = c.id;
+      go("chat-dm");
+      return true;
+    }
+    if (action === "open-thread") {
+      S().chatId = el.getAttribute("data-chat");
+      var ch = chatById(S().chatId);
+      go(ch && ch.type === "group" ? "chat-group" : "chat-dm");
+      return true;
+    }
+    if (action === "open-ideas") {
+      e.preventDefault();
+      S().reviewFor = id || S().reviewFor || "jack";
+      S().reviewDraft = "";
+      S().pickedIdea = -1;
+      go("review-ideas");
+      return true;
+    }
+    if (action === "ask-review" || action === "ask-review-chat") {
+      var mid = id || (chatById(S().chatId) || {}).memberId || "sarah";
+      reqs.unshift({ id: "r" + Date.now(), from: "jamie", to: mid, dir: "out", status: "open", at: "Just now" });
+      persist();
+      openShareSheet(mid);
+      return true;
+    }
+    if (action === "google-connect") { openGoogleSheet(); return true; }
+    if (action === "google-allow") {
+      S().googleConnected = true;
+      persist();
+      closeMine();
+      toast("Google Business Profile connected (prototype).");
+      go(S().screen === "google-consent" ? "settings" : S().screen);
+      return true;
+    }
+    if (action === "google-disconnect") {
+      S().googleConnected = false;
+      persist();
+      toast("Google profile disconnected.");
+      go(S().screen);
+      return true;
+    }
+    if (action === "google-manage") { openGoogleSheet(); return true; }
+    if (action === "close-sheet") { closeMine(); return true; }
+    if (action === "refresh-ideas") {
+      var mm0 = member(S().reviewFor || "jack");
+      usedIdeas[mm0.id] = (usedIdeas[mm0.id] || []).concat(S()._ideas || []);
+      persist();
+      S().pickedIdea = -1;
+      refreshIdeasScreen();
+      return true;
+    }
+    if (action === "copy-open") {
+      var text = S().reviewDraft || "";
+      var mm = member(id || S().reviewFor);
+      var u = uniqNote(mm, text);
+      if (!text) { toast("Write or pick an idea first."); e.preventDefault(); return true; }
+      try { navigator.clipboard.writeText(text); } catch (err) {}
+      usedIdeas[mm.id] = (usedIdeas[mm.id] || []).concat(S()._ideas || []);
+      given[mm.id] = { text: text, at: Date.now() };
+      reqs.forEach(function (r) { if (r.dir === "in" && r.from === mm.id) r.status = "done"; });
+      persist();
+      toast(u.ok ? "Copied. Paste it into Google and edit it before you post." : "Copied, but it looks similar \u2014 please edit it.");
+      return false;
+    }
+    if (action === "send-chat") { sendChat(); return true; }
+    if (action === "attach") { openAttach(); return true; }
+    if (action === "new-group") {
+      toast("In a later build you could create a new group. This preview already has a group for each region you joined.");
+      return true;
+    }
+    if (action === "share-my-profile") {
+      var c2 = chatById(S().chatId);
+      if (c2) {
+        c2.messages.push({ id: "m" + Date.now(), from: "me", type: "profile", memberId: "jamie", time: "Now", ticks: "sent" });
+        c2.preview = "You shared your profile";
+        c2.when = "Now";
+        save(LS.chats, chats);
+        go(c2.type === "group" ? "chat-group" : "chat-dm");
+      }
+      return true;
+    }
+    if (action === "share-location") {
+      var c3 = chatById(S().chatId);
+      if (c3) {
+        c3.messages.push({ id: "m" + Date.now(), from: "me", type: "location", place: "Midland, WA", time: "Now", ticks: "sent" });
+        c3.preview = "You shared a location";
+        c3.when = "Now";
+        save(LS.chats, chats);
+        go(c3.type === "group" ? "chat-group" : "chat-dm");
+      }
+      return true;
+    }
+    if (action === "chat-more") { openChatMore(); return true; }
+    if (action === "msg-menu") { openReact(el); return true; }
+    if (action === "react") {
+      var mid2 = el.getAttribute("data-msg");
+      var emoji = el.getAttribute("data-emoji");
+      var c4 = chatById(S().chatId);
+      if (c4) {
+        c4.messages.forEach(function (msg) {
+          if (msg.id === mid2) {
+            msg.reactions = msg.reactions || [];
+            var existing = msg.reactions.find(function (r) { return r.e === emoji; });
+            if (existing) existing.n += 1; else msg.reactions.push({ e: emoji, n: 1 });
+          }
+        });
+        save(LS.chats, chats);
+        closeMine();
+        go(c4.type === "group" ? "chat-group" : "chat-dm");
+      }
+      return true;
+    }
+    if (action === "open-notif") {
+      var n = NOTIFS.find(function (x) { return x.id === el.getAttribute("data-nid"); });
+      if (!n) return true;
+      n.unread = false;
+      if (n.chat) S().chatId = n.chat;
+      if (n.who && n.go === "review-ideas") S().reviewFor = n.who;
+      if (n.who && n.go === "member") { go("member", n.who); return true; }
+      go(n.go);
+      return true;
+    }
+    if (action === "tog-notif") {
+      var key = el.getAttribute("data-key");
+      notif[key] = !notif[key];
+      persist();
+      go("notif-settings");
+      return true;
+    }
+    if (action === "copy-invite") {
+      try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {}
+      toast("Invite link copied.");
+      return true;
+    }
+    if (action === "share-invite") {
+      toast("In a real build this would open " + el.getAttribute("data-via") + " with your invite link.");
+      return true;
+    }
+    if (action === "save-regions") {
+      toast("Regions saved.");
+      go("me");
+      return true;
+    }
+    if (action === "mute-chat") {
+      var c5 = chatById(S().chatId);
+      if (c5) { c5.muted = !c5.muted; save(LS.chats, chats); }
+      closeMine();
+      toast(c5 && c5.muted ? "Chat muted." : "Chat unmuted.");
+      return true;
+    }
+    if (action === "block-chat") {
+      closeMine();
+      toast("In a real build you could block or report a member from here.");
+      return true;
+    }
+    if (action === "search-chat") {
+      closeMine();
+      toast("Search in chat would filter messages in a later polish. This preview keeps the conversation in view.");
+      return true;
+    }
+    return false;
+  }
+
+  function openShareSheet(mid) {
+    var m = member(mid);
+    openOverlay('<div class="sheet-handle"></div><h3>Ask for a Google review</h3>' +
+      '<p style="font-size:14px;font-weight:600;color:var(--muted);margin:0 0 12px">Send a request to ' + esc(fn(m)) + '. Ask only after a real job, and do not tell them what to write.</p>' +
+      '<button class="btn btn-primary" data-action="close-sheet">Send in-app request</button>' +
+      '<div class="action-stack" style="margin-top:10px">' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="sms">Share via SMS</button>' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="whatsapp">Share via WhatsApp</button>' +
+      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="messenger">Share via Messenger</button></div>');
+  }
+  function openAttach() {
+    openOverlay('<div class="sheet-handle"></div><h3>Attach</h3><div class="overflow-menu">' +
+      '<button data-action="share-location">Location</button>' +
+      '<button data-action="share-my-profile">Member profile card</button>' +
+      '<button data-action="close-sheet">Photo or video (demo)</button>' +
+      '<button data-action="close-sheet">Voice note (demo)</button>' +
+      '<button data-action="close-sheet">File (demo)</button></div>');
+  }
+  function openChatMore() {
+    var c = chatById(S().chatId);
+    openOverlay('<div class="sheet-handle"></div><h3>Chat options</h3><div class="overflow-menu">' +
+      '<button data-action="search-chat">Search in chat</button>' +
+      '<button data-action="mute-chat">' + (c && c.muted ? "Unmute" : "Mute") + "</button>" +
+      '<button data-action="block-chat">Block or report</button>' +
+      '<button data-action="close-sheet">Cancel</button></div>');
+  }
+  function openReact(bub) {
+    var mid = bub.getAttribute("data-msg");
+    var emojis = ["\uD83D\uDC4D", "\u2764\uFE0F", "\uD83D\uDE02", "\uD83D\uDE2E", "\uD83C\uDF89"];
+    openOverlay('<div class="sheet-handle"></div><h3>React or reply</h3>' +
+      '<div class="react-bar" style="margin:8px auto 14px;width:max-content">' +
+      emojis.map(function (em) {
+        return '<button type="button" style="font-size:22px;background:none;border:0" data-action="react" data-msg="' + mid + '" data-emoji="' + em + '">' + em + "</button>";
+      }).join("") + "</div>" +
+      '<div class="overflow-menu"><button data-action="close-sheet">Reply (demo)</button><button data-action="close-sheet">Edit or delete (your messages)</button></div>');
+  }
+
+  function sendChat() {
+    var box = document.getElementById("chatInput");
+    var text = box ? box.value.trim() : "";
+    if (!text) return;
+    var c = chatById(S().chatId);
+    if (!c) return;
+    c.messages.push({ id: "m" + Date.now(), from: "me", type: "text", text: text, time: "Now", ticks: "sent" });
+    c.preview = text;
+    c.when = "Now";
+    save(LS.chats, chats);
+    go(c.type === "group" ? "chat-group" : "chat-dm");
+    setTimeout(function () {
+      var thread = document.getElementById("chatThread");
+      if (thread) thread.scrollTop = thread.scrollHeight;
+    }, 30);
+  }
+
+  function afterGo(id) {
+    ensureDrawer();
+    if (id !== "drawer") closeDrawer();
+    updateBadges();
+    if (id === "drawer") openDrawer();
+    if (id === "google-consent") {
+      S().googleConnected = false;
+      openGoogleSheet();
+    }
+    if (id === "create-profile" || id === "create-profile-connected" || id === "edit-profile") injectGoogle();
+    if (id === "review-ideas") {
+      var ta = document.getElementById("reviewDraft");
+      if (ta) {
+        ta.addEventListener("input", function () {
+          S().reviewDraft = ta.value;
+          var note = document.querySelector(".uniq");
+          if (note) {
+            var u = uniqNote(member(S().reviewFor || "jack"), ta.value);
+            note.className = "uniq " + (u.ok ? "ok" : "bad");
+            note.textContent = u.msg;
+          }
+        });
+      }
+    }
+    var cs = document.getElementById("chatSearch");
+    if (cs) {
+      cs.addEventListener("input", function (ev) {
+        S().chatQuery = ev.target.value;
+        go("chats");
+        var again = document.getElementById("chatSearch");
+        if (again) { again.value = S().chatQuery; again.focus(); }
+      });
+    }
+    var ci = document.getElementById("chatInput");
+    if (ci) {
+      ci.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); sendChat(); }
+      });
+      var thread = document.getElementById("chatThread");
+      if (thread) thread.scrollTop = thread.scrollHeight;
+    }
+    document.querySelectorAll("[data-quiet]").forEach(function (inp) {
+      inp.addEventListener("change", function () {
+        notif[inp.getAttribute("data-quiet")] = inp.value;
+        persist();
+      });
+    });
+    document.querySelectorAll('[data-prefix="me-regions"]').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var me = T().me();
+        var rid = btn.getAttribute("data-region");
+        var ix = me.regions.indexOf(rid);
+        if (ix >= 0) { if (me.regions.length > 1) me.regions.splice(ix, 1); }
+        else me.regions.push(rid);
+        go("my-regions");
+      });
+    });
+  }
+
+  window.TC12 = {
+    passRelFilter: passRelFilter,
+    memberCard: memberCard,
+    renderMembers: renderMembers,
+    renderMember: renderMember,
+    renderMe: renderMe,
+    renderSettings: renderSettings,
+    render: render,
+    handleClick: handleClick,
+    afterGo: afterGo
+  };
+
+  if (T().go && S().screen) {
+    try { T().go(S().screen, S().selectedMember); } catch (err) {}
+  }
+})();
+
+  </script>
+</body>
+</html>
