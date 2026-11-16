@@ -1,8 +1,35 @@
-/* TradeCircle Perth — super admin prototype v1.5.1 */
+/* TradeCircle Perth — super admin prototype v1.5.4 */
 (function () {
   "use strict";
   function svg(inner) {
     return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + "</svg>";
+  }
+  function facebookF(size, color) {
+    size = size || 18;
+    return '<svg class="f-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="' + (color || "currentColor") + '" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  function googleG(size, mono) {
+    size = size || 16;
+    if (mono) return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  function notifGlyph(type, size) {
+    size = size || 16;
+    var stroke = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+    if (type === "review") return googleG(size);
+    if (type === "queue") return facebookF(size);
+    if (type === "friend") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+    if (type === "member") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>';
+    if (type === "chat") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/></svg>';
+    if (type === "alert") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/></svg>';
+    if (type === "admin") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M12 3l8 3v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-3z"/><path d="M8.5 12l2.5 2.5 5-5"/></svg>';
+    if (type === "limit") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+    return facebookF(size);
+  }
+  function notifTile(type, size) {
+    var styles = { review: ["#E8F1FD","#1A73E8"], queue: ["#E8F1FD","#1877F2"], friend: ["#E8F1FD","#1877F2"], member: ["#E7F8F1","#066B4C"], chat: ["#EEF2F6","#0B1F33"], alert: ["#FFF6E0","#8A5A00"], admin: ["#EEF2F6","#14314C"], limit: ["#F6E8E8","#7A1F1A"] };
+    var st = styles[type] || styles.admin;
+    return '<div class="notif-ico" style="background:' + st[0] + ';color:' + st[1] + '">' + notifGlyph(type, size || 16) + "</div>";
   }
   var I = {
     dash: svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
@@ -35,6 +62,14 @@
     trend: svg('<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>')
   };
 
+  function reviewCap() {
+    try {
+      var n = JSON.parse(localStorage.getItem("tc_review_daily_limit"));
+      if (typeof n === "number" && n >= 1) return n;
+    } catch (e) {}
+    return 3;
+  }
+  var selectedMem = null;
   var trades = (window.TC_TRADES || []).slice();
   var requests = [
     { id: "p1", first: "Nina", last: "Kaur", business: "Kaur Tiling", trade: "Tiler", areas: "South, Fremantle", phone: "0412 000 201", status: "pending", when: "Today 8:10 am", bio: "Bathroom and floor tiling across the southern suburbs." },
@@ -42,8 +77,8 @@
     { id: "p3", first: "Ayla", last: "Santos", business: "Santos Cleaning", trade: "End of Lease Cleaner", areas: "Central / CBD", phone: "0412 000 203", status: "pending", when: "Yesterday", bio: "End-of-lease and after-builders cleans." }
   ];
   var members = [
-    { id: "jamie", name: "Jamie Hale", business: "Hale Pest Control", trade: "Pest Control", areas: "Hills, North", status: "active", joined: "12 Jan 2026" },
-    { id: "sarah", name: "Sarah Nguyen", business: "Nguyen Carpentry", trade: "Carpenter", areas: "North, Joondalup", status: "active", joined: "18 Jan 2026" },
+    { id: "jamie", name: "Jamie Hale", business: "Hale Pest Control", trade: "Pest Control", areas: "Hills, North", status: "active", joined: "12 Jan 2026", website: "https://www.halepest.example.au", facebook: "https://www.facebook.com/demo.halepestcontrol.biz", instagram: "https://www.instagram.com/demo.halepest", linkedin: "https://www.linkedin.com/company/demo-hale-pest", tiktok: "", youtube: "", google: "https://search.google.com/local/writereview?placeid=demo-hale-pest", other: "" },
+    { id: "sarah", name: "Sarah Nguyen", business: "Nguyen Carpentry", trade: "Carpenter", areas: "North, Joondalup", status: "active", joined: "18 Jan 2026", website: "https://www.nguyencarpentry.example.au", facebook: "https://www.facebook.com/demo.nguyencarpentry.biz", instagram: "https://www.instagram.com/demo.nguyencarpentry", linkedin: "", tiktok: "", youtube: "", google: "https://search.google.com/local/writereview?placeid=demo-nguyen-carpentry", other: "" },
     { id: "liam", name: "Liam O’Connor", business: "O’Connor Plumbing", trade: "Plumber", areas: "South, Fremantle", status: "active", joined: "2 Feb 2026" },
     { id: "priya", name: "Priya Sharma", business: "Sharma Painting Co", trade: "Painter", areas: "Hills, East", status: "active", joined: "21 Feb 2026" },
     { id: "mei", name: "Mei Chen", business: "West Coast Gardens", trade: "Landscaper", areas: "Hills, East", status: "active", joined: "4 Mar 2026" },
@@ -80,11 +115,12 @@
     { id: "c2", room: "Jamie ↔ Sarah", from: "Jamie Hale", text: "Thanks for the intro to the Hills job.", flag: "None", when: "Yesterday" }
   ];
   var activity = [
-    { kind: "ok", text: "Emma Brooks was approved and can now join the circle.", at: "Yesterday 4:20 pm" },
-    { kind: "warn", text: "Three new profile requests are waiting for your review.", at: "Today 8:10 am" },
-    { kind: "info", text: "A pest control recommendation alert was sent to the circle.", at: "Yesterday 11:05 am" },
-    { kind: "ok", text: "Tom Reeves jumped the promotion queue (price to be set).", at: "Sat 10:12 am" },
-    { kind: "info", text: "Hannah Lewis left a Google review for Jamie Hale.", at: "Fri 6:30 pm" }
+    { type: "admin", text: "Emma Brooks was approved and can now join the circle.", at: "Yesterday 4:20 pm" },
+    { type: "admin", text: "Three new profile requests are waiting for your review.", at: "Today 8:10 am" },
+    { type: "alert", text: "A pest control recommendation alert was sent to the circle.", at: "Yesterday 11:05 am" },
+    { type: "queue", text: "Tom Reeves jumped the promotion queue (price to be set).", at: "Sat 10:12 am" },
+    { type: "review", text: "Hannah Lewis left a Google review for Jamie Hale.", at: "Fri 6:30 pm" },
+    { type: "limit", text: "Thompson Electrical reached the daily Google review limit (3 of 3).", at: "Today 8:02 am" }
   ];
   var memberWeeks = { labels: ["6 Oct", "13 Oct", "20 Oct", "27 Oct", "3 Nov", "10 Nov"], values: [2, 3, 1, 4, 2, 5] };
   var alertWeeks = { labels: ["6 Oct", "13 Oct", "20 Oct", "27 Oct", "3 Nov", "10 Nov"], values: [3, 5, 2, 6, 4, 7] };
@@ -92,6 +128,7 @@
   var q = "";
   var notifOpen = false;
 
+  I.queue = facebookF(18);
   var NAV = [
     ["dashboard", "Dashboard", "dash", "Overview"],
     ["requests", "Profile requests", "requests", "People"],
@@ -236,7 +273,7 @@
           panel("Recent profile requests", "Approve or decline from here", '<button class="btn btn-ghost btn-sm" data-page="requests">' + I.requests + "<span>View all</span></button>", requestRows(requests, true)) +
           '<div>' +
             panel("Recent activity", "What has happened in the circle", "", '<div class="feed">' + activity.map(function (a) {
-              return '<div class="feed-item"><div class="feed-dot ' + a.kind + '"></div><div><p>' + esc(a.text) + "</p><span>" + esc(a.at) + "</span></div></div>";
+              return '<div class="feed-item">' + notifTile(a.type || "admin", 16) + '<div><p>' + esc(a.text) + "</p><span>" + esc(a.at) + "</span></div></div>";
             }).join("") + "</div>") +
             panel("Promotion queue", "Who is up next", '<button class="btn btn-ghost btn-sm" data-page="queue">' + I.queue + "<span>Manage</span></button>", queue.slice(0, 4).map(function (row) {
               return '<div class="queue-row"><div class="pos' + (row.paid ? " paid" : "") + '">' + row.pos + "</div>" + av(row.name, "av-sm") + "<div><div class=\"name\">" + esc(row.name) + '</div><div class="sub">' + esc(row.when) + "</div></div>" + badge(row.plan) + "</div>";
@@ -336,11 +373,35 @@
         '<div class="field"><label>Message</label><textarea id="bcBody" rows="4">The weekly catch-up is at 6:30 pm in Midland. Bring a mate if you like.</textarea></div>' +
         '<button class="btn btn-primary btn-sm" data-action="broadcast" style="width:auto">' + I.send + "<span>Send mock broadcast</span></button>");
     }
+    if (page === "member-detail") {
+      var m = members.find(function (x) { return x.id === selectedMem; }) || members[0];
+      function linkField(key, label, val) {
+        return '<div class="field"><label>' + label + '</label><input data-link="' + key + '" value="' + esc(val || "") + '" inputmode="url" placeholder="https://"></div>';
+      }
+      return panel("Member", esc(m.name) + " · " + esc(m.business), '<button class="btn btn-ghost btn-sm" data-page="members">Back to members</button>',
+        '<div class="field"><label>Name</label><input value="' + esc(m.name) + '" readonly></div>' +
+        '<div class="field"><label>Business</label><input value="' + esc(m.business) + '" readonly></div>' +
+        '<div class="field"><label>Trade</label><input value="' + esc(m.trade) + '" readonly></div>' +
+        '<p class="panel-sub" style="margin:12px 0 8px"><strong>Links</strong> — website and social profiles. Only filled links show in the app.</p>' +
+        linkField("website", "Website", m.website) +
+        linkField("facebook", "Facebook page", m.facebook) +
+        linkField("instagram", "Instagram", m.instagram) +
+        linkField("linkedin", "LinkedIn", m.linkedin) +
+        linkField("tiktok", "TikTok", m.tiktok) +
+        linkField("youtube", "YouTube", m.youtube) +
+        linkField("google", "Google Business / review link", m.google) +
+        linkField("other", "Other link", m.other) +
+        '<button class="btn btn-primary" data-action="save-mem" data-id="' + m.id + '" style="margin-top:12px">Save links (prototype)</button>' +
+        (window.TCProfile ? '<div style="margin-top:18px"><p class="panel-sub" style="margin-bottom:8px"><strong>Profile</strong> — about the business, expertise, gallery, ideal referral partner and goals. These are optional in the app.</p>' +
+          window.TCProfile.adminHTML({ id: m.id, bio: m.bio || ((window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === m.id; })[0] || {}).bio || "", profile: m.profile || (window.TCProfile.seedFor({ id: m.id })) }) +
+          "</div>" : ""));
+    }
     if (page === "settings") {
       return panel("General settings", "Prototype only — changes stay in this browser session.", "",
         '<div class="setting-row"><div><strong>New members need approval</strong><div class="panel-sub">Decided. New sign-ups wait until you approve them.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
         '<div class="setting-row"><div><strong>Recommendation alerts</strong><div class="panel-sub">Members get a push when someone shares a Facebook post.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
-        '<div class="setting-row"><div><strong>Paid queue jumps</strong><div class="panel-sub">Price to be set. No payments are collected in this prototype.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>');
+        '<div class="setting-row"><div><strong>Paid queue jumps</strong><div class="panel-sub">Price to be set. No payments are collected in this prototype.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
+        '<div class="setting-row"><div><strong>Daily Google review cap</strong><div class="panel-sub">At most this many Google reviews may be left for one business, from the circle, in a Perth calendar day. The default is 3, to reduce the chance of spam flags. The cap resets at midnight, Australia/Perth. The server would enforce this in the real app.</div></div><input id="reviewCap" type="number" min="1" max="20" value="' + reviewCap() + '" style="width:72px;height:40px;border:1px solid var(--line,#d5dde6);border-radius:10px;padding:0 10px;font-weight:800"></div>');
     }
     if (page === "audit") {
       return panel("Audit log", "A record of admin and system actions. Fictional.", "",
@@ -358,6 +419,14 @@
     $("pageEyebrow").textContent = t[0];
     $("pageTitle").textContent = t[1];
     $("page").innerHTML = pageHTML();
+    var capInput = $("reviewCap");
+    if (capInput) {
+      capInput.addEventListener("change", function () {
+        var n = Math.max(1, Math.min(20, Number(capInput.value) || 3));
+        localStorage.setItem("tc_review_daily_limit", JSON.stringify(n));
+        audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Set daily Google review cap to " + n });
+      });
+    }
     var search = $("memSearch");
     if (search) {
       search.value = q;
@@ -427,7 +496,16 @@
       audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Updated a member’s status" });
       paint();
     }
-    if (a === "edit-mem") { window.alert("In a real build this would open an edit form. This is a prototype."); }
+    if (a === "edit-mem") { selectedMem = id; page = "member-detail"; paint(); }
+    if (a === "save-mem") {
+      var mem = members.find(function (x) { return x.id === id; });
+      if (mem) {
+        document.querySelectorAll("[data-link]").forEach(function (inp) { mem[inp.getAttribute("data-link")] = inp.value.trim(); });
+        audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Updated profile links for " + mem.name });
+      }
+      window.alert("Links saved in this prototype only.");
+      paint();
+    }
     if (a === "add-trade") {
       var name = window.prompt("Trade name to add (prototype only)");
       if (name && name.trim()) { trades.unshift(name.trim()); paint(); }

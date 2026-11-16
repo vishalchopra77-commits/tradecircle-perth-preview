@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.3</title>
+  <title>TradeCircle Perth — UI prototype v1.5.4</title>
   <style>
+/* styles.css */
 /* TradeCircle Perth UI v1 */
 @font-face {
   font-family: "Plus Jakarta Sans";
@@ -888,6 +889,9 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 }
 .btn.has-ico svg { flex: none; }
 
+</style>
+  <style>
+/* v12.css */
 /* TradeCircle Perth v1.2 */
 .tabbar {
   grid-template-columns: repeat(5, 1fr);
@@ -1326,6 +1330,9 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   pointer-events: none;
 }
 
+</style>
+  <style>
+/* v15.css */
 /* TradeCircle Perth — prototype v1.5.1 visual polish and new screens */
 
 .btn-primary {
@@ -1741,7 +1748,281 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .dash-feed-item p { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.35; }
 .dash-feed-item span { font-size: 11px; font-weight: 650; color: var(--muted); }
 
-  </style>
+/* v1.5.4 — copy buttons, idea dashboard, profile links, daily review cap */
+
+.copy-btn, .copy-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #E7F8F1; color: #066B4C; border: 0;
+  border-radius: 999px; padding: 6px 10px;
+  font-size: 12px; font-weight: 800; cursor: pointer;
+}
+.copy-btn svg, .copy-chip svg { width: 14px; height: 14px; flex: none; }
+.copy-btn.copied, .copy-chip.copied { background: #066B4C; color: #fff; }
+
+.idea-card {
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+  width: 100%; box-sizing: border-box; cursor: pointer;
+  position: relative;
+}
+.idea-card .idea-text { margin: 0; }
+.idea-card .copy-btn { align-self: flex-end; }
+.idea-cta-row { display: flex; gap: 8px; align-items: stretch; }
+.idea-cta-row .btn { width: auto; flex: 1; }
+.idea-cta-row .btn[data-action="copy-draft"] { flex: 0 0 auto; min-width: 96px; padding: 0 14px; }
+.idea-hint {
+  margin: 4px 0 12px; font-size: 12px; font-weight: 650; line-height: 1.4; color: var(--muted);
+}
+.idea-mini { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.idea-mini .copy-btn { align-self: flex-end; }
+
+.chips-tight { margin-bottom: 6px; }
+.chips-tight .chip { padding: 6px 10px; font-size: 12px; }
+
+.copy-input { display: flex; gap: 8px; align-items: center; }
+.copy-input input { flex: 1; min-width: 0; }
+.copy-input .copy-btn { flex: none; }
+
+.voice-line.ai { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.voice-line.ai .copy-btn { align-self: flex-end; }
+
+.link-row {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 12px 0 4px; justify-content: center;
+}
+.link-ico {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff;
+  box-shadow: 0 4px 12px rgba(11,31,51,0.16);
+}
+.link-ico svg { width: 18px; height: 18px; }
+.link-field label { display: flex; align-items: center; gap: 8px; }
+.link-field-ico {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: grid; place-items: center; color: #fff; flex: none;
+}
+.link-field-ico svg { width: 12px; height: 12px; }
+.link-error { color: #9B2C2C; font-size: 12px; font-weight: 700; margin: 4px 0 0; }
+input.invalid { border-color: #E24B4A; }
+
+.rev-today {
+  font-size: 11px; font-weight: 800; color: #8A5A00; margin-top: 4px;
+}
+.rev-today.warn { color: #9B2C2C; }
+
+.limit-banner {
+  display: flex; gap: 10px; align-items: flex-start;
+  width: 100%; box-sizing: border-box;
+  margin: 8px 0 0; padding: 10px 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #FFF3E9 0%, #FFD9D0 100%);
+  border: 1.5px solid #D94841;
+  color: #7A1F1A;
+  text-align: left;
+}
+.limit-banner .limit-lock {
+  width: 36px; height: 36px; border-radius: 10px; flex: none;
+  display: grid; place-items: center;
+  background: #D94841; color: #fff;
+}
+.limit-banner strong {
+  display: block; font-size: 13px; font-weight: 800; line-height: 1.3;
+}
+.limit-banner .sub {
+  font-size: 12px; font-weight: 800; color: #9B2C2C; margin-top: 3px;
+}
+.limit-remind {
+  display: inline-block; margin-top: 6px; padding: 0;
+  background: none; border: 0; color: #7A1F1A;
+  font-size: 12px; font-weight: 800; text-decoration: underline; cursor: pointer;
+}
+.btn-locked, .btn.btn-locked {
+  background: #F6E8E8; color: #7A1F1A; border: 1.5px solid #E8B4B4;
+  pointer-events: none;
+}
+.btn.btn-locked, .card-actions .btn-locked, .idea-cta-row .btn-locked {
+  width: 100%;
+}
+.dash-attn-btn.btn-locked {
+  width: auto;
+  flex: 0 0 auto;
+  max-width: 42%;
+  white-space: nowrap;
+}
+
+.member-card { flex-wrap: wrap; }
+.member-card .member-main { flex: 1 1 auto; min-width: 0; }
+.member-card .card-actions { flex: 0 0 auto; }
+.member-card .rev-today,
+.member-card .limit-banner {
+  flex: 1 0 100%;
+  width: 100%;
+  margin: 8px 0 0;
+  box-sizing: border-box;
+}
+.member-card .locked-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 999px;
+  background: #F6E8E8;
+  color: #7A1F1A;
+  border: 1.5px solid #E8B4B4;
+  width: auto;
+}
+
+.member-card .card-actions { padding-bottom: 4px; }
+.req-card .limit-banner { margin-top: 10px; }
+.dash-attn-wrap { margin: 0 0 8px; }
+.dash-attn-wrap .limit-banner { margin-top: 6px; }
+
+.tab-g { display: grid; place-items: center; width: 24px; height: 24px; }
+.tab-g svg { grid-area: 1 / 1; width: 22px; height: 22px; }
+.tab-g .g-color { opacity: 0; }
+.tab.active .tab-g .g-color { opacity: 1; }
+.tab.active .tab-g .g-mono { opacity: 0; }
+.sb .g-ico, .icon-legend .g-ico { width: 13px; height: 13px; display: block; }
+
+.tab-f { display: grid; place-items: center; width: 24px; height: 24px; }
+.tab-f svg { grid-area: 1 / 1; width: 20px; height: 20px; }
+.tab-f .f-color { opacity: 0; }
+.tab.active .tab-f .f-color { opacity: 1; }
+.tab.active .tab-f .f-mono { opacity: 0; }
+
+.notif-ico {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.notif-ico svg { width: 16px; height: 16px; display: block; }
+.set-row .notif-ico { width: 32px; height: 32px; border-radius: 9px; }
+.dash-feed-item .notif-ico { width: 32px; height: 32px; border-radius: 9px; }
+.set-row { align-items: center; gap: 10px; }
+
+/* v1.5.4 richer profile */
+.profile-extras { margin: 12px 0 4px; display: flex; flex-direction: column; gap: 12px; }
+.profile-block {
+  background: #fff;
+  border: 1.5px solid var(--line, #D5DDE6);
+  border-radius: 16px;
+  padding: 12px 14px;
+  text-align: left;
+}
+.profile-block .bio { text-align: left; }
+.profile-h {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--faint, #8AA0B2);
+}
+.profile-stat { margin-top: 10px; }
+.profile-stat .k { display: block; font-size: 11px; font-weight: 800; color: var(--muted, #5B6B7C); }
+.profile-stat .v { display: block; margin-top: 2px; font-size: 15px; font-weight: 800; }
+.licence-list { margin: 8px 0 0; padding: 0 0 0 18px; }
+.licence-list li { font-size: 13px; font-weight: 650; margin: 3px 0; }
+.ideal-note { margin: 8px 0 0; font-size: 14px; font-weight: 650; line-height: 1.45; }
+.gal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.gal-cell { position: relative; }
+.gal-tile {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 14px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.gal-ico { flex: 1; display: grid; place-items: center; opacity: .95; }
+.gal-cap { font-size: 10px; font-weight: 800; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.gal-add { background: #EEF2F6; color: #0B1F33; border: 1.5px dashed #C5D0DA; }
+.gal-add .gal-ico { font-size: 28px; font-weight: 700; }
+.gal-remove {
+  position: absolute; top: 4px; right: 4px; z-index: 2;
+  width: 22px; height: 22px; border: 0; border-radius: 50%;
+  background: rgba(11,31,51,.7); color: #fff;
+  font-size: 14px; font-weight: 800; line-height: 22px; padding: 0;
+}
+.goal-row { margin-top: 10px; }
+.goal-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; font-size: 13px; font-weight: 700; }
+.goal-top strong { flex: none; font-size: 12px; color: #066B4C; }
+.goal-bar { height: 8px; border-radius: 99px; background: #EEF2F6; overflow: hidden; margin-top: 6px; }
+.goal-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg,#24E0A6,#0FBE86); }
+.goal-row.done .goal-bar i { background: linear-gradient(90deg,#FFD56A,#0FBE86); }
+.goal-edit { margin-bottom: 8px; }
+.goal-edit input { width: 100%; }
+.goal-nums { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.goal-nums input { width: 72px; flex: none; }
+.gal-viewer {
+  position: fixed; inset: 0;
+  z-index: 9999;
+  background: #0B1F33;
+  display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--safe-top, 47px) + 36px) 20px 28px;
+  box-sizing: border-box;
+}
+.gal-view-panel { width: 100%; color: #fff; }
+.gal-view-close {
+  position: absolute;
+  top: calc(var(--safe-top, 47px) + 8px);
+  right: 16px;
+  background: rgba(255,255,255,.14); color: #fff;
+  border: 0; border-radius: 999px; padding: 6px 12px;
+  font-weight: 800; font-size: 12px;
+  z-index: 2;
+}
+.gal-view-stage {
+  height: 340px; border-radius: 20px;
+  display: grid; place-items: center;
+  color: #fff;
+}
+.gal-view-stage svg { width: 96px; height: 96px; }
+.gal-view-meta { margin-top: 12px; }
+.gal-view-title { font-size: 16px; font-weight: 800; }
+.gal-view-count { font-size: 12px; font-weight: 700; opacity: .8; margin-top: 2px; }
+.gal-view-nav { display: flex; gap: 8px; margin-top: 14px; }
+.gal-view-nav button {
+  flex: 1; border: 0; border-radius: 12px;
+  padding: 10px; font-weight: 800;
+  background: rgba(255,255,255,.14); color: #fff;
+}
+.gal-view-nav button:disabled { opacity: .4; }
+@media (max-width: 400px) {
+  .gal-view-stage { height: 300px; }
+}
+
+.profile-edit .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; gap: 6px; }
+.profile-edit .goal-edit input,
+.goal-nums input {
+  border: 1.5px solid var(--line, #D5DDE6);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: 700;
+  background: #fff;
+}
+.goal-nums input { width: 72px; }
+
+.profile-h, .profile-edit, [data-profile-edit] { scroll-margin-top: 72px; }
+
+</style>
 </head>
 <body>
   <div class="studio" id="studio">
@@ -1750,7 +2031,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.3</span>
+        <span class="version-pill">Prototype v1.5.4</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -1769,6 +2050,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
         <a href="#more">More</a>
         <a href="#subscription">Subscription</a>
         <a href="#my-regions">Your areas</a>
+        <a href="#review-ideas">Review ideas</a>
         <a href="#ai-assistant">AI assistant</a>
         <a href="#rec-alerts">Alerts</a>
         <a href="#promo-queue">Queue</a>
@@ -1776,12 +2058,12 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.3 · 17 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.4 · 17 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -1804,7 +2086,10 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
               Home
             </button>
             <button class="tab" data-tab="reviews" id="tab-reviews">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 6.6H21l-5.4 3.9 2.1 6.5L12 16.6 6.3 20l2.1-6.5L3 9.6h6.8L12 3z"/></svg>
+              <span class="tab-g" aria-hidden="true">
+                <svg class="g-mono" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                <svg class="g-color" viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              </span>
               Reviews
             </button>
             <button class="tab" data-tab="members" id="tab-members">
@@ -1812,7 +2097,10 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
               Facebook
             </button>
             <button class="tab" data-tab="promo-queue" id="tab-queue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 0 1 0 7.6"/><path d="M18.7 5.6a8 8 0 0 1 0 12.8"/></svg>
+              <span class="tab-f" aria-hidden="true">
+                <svg class="f-mono" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>
+                <svg class="f-color" viewBox="0 0 24 24" width="22" height="22" fill="#1877F2"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>
+              </span>
               Queue
             </button>
             <button class="tab" data-tab="more" id="tab-more">
@@ -1833,6 +2121,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
     </div>
   </div>
   <script>
+/* trades.js */
 /* TradeCircle Perth — Australian trades list (see TRADES-SOURCES.md) */
 window.TC_TRADES = [
   "Air Conditioning",
@@ -2078,6 +2367,1286 @@ window.TC_TRADES = [
   "Wrought Iron Worker"
 ];
 
+</script>
+  <script>
+/* ideas-engine.js */
+/* TradeCircle Perth — review and comment idea engine v1.5.4
+   Original fragments only. Not copied from real reviews. See REVIEW-IDEAS-RESEARCH.md. */
+(function (root) {
+  "use strict";
+
+  var MONTHS = ["July", "August", "September", "October", "November", "December", "January", "February", "March"];
+  var SUBURBS = ["Midland", "Ellenbrook", "Joondalup", "Mundaring", "Kwinana", "Rockingham", "Fremantle", "Armadale", "Morley", "Osborne Park", "Whitfords", "Byford"];
+
+  var CATEGORY_JOBS = {
+    pest: ["a termite inspection", "a general pest treatment", "rodent control", "a cockroach treatment", "a pre-purchase inspection", "a termite treatment", "a spider treatment", "a routine pest check"],
+    electrical: ["a safety switch upgrade", "a power point install", "a lighting install", "a switchboard upgrade", "a smoke alarm install", "a fault-finding call-out", "a ceiling fan install", "an EV charger install"],
+    plumbing: ["a blocked drain", "a hot water system swap", "a leak repair", "a tap replacement", "a toilet repair", "bathroom plumbing", "a burst pipe repair", "a gas fitting job"],
+    painting: ["an interior repaint", "exterior painting", "a room refresh", "a ceiling paint", "fence painting", "a full house paint", "prep and paint work", "a feature wall"],
+    carpentry: ["a decking job", "a kitchen install", "door hanging", "custom cabinetry", "skirting and architraves", "a wardrobe build", "a staircase repair", "home renovation carpentry"],
+    building: ["a home renovation", "an extension", "a bathroom renovation", "a kitchen renovation", "repair work", "a new build stage", "a verandah", "structural repairs"],
+    landscaping: ["garden design", "turf laying", "paving", "a retaining wall", "garden maintenance", "an irrigation install", "lawn care", "a tree prune"],
+    roofing: ["a roof repair", "gutter replacement", "a roof restoration", "a leak repair", "roof tiling", "a whirlybird install", "a downpipe repair", "guttering work"],
+    hvac: ["a split-system install", "a service and clean", "a repair call-out", "ducted heating service", "an air-con install", "a filter and coil clean", "a gas heating service", "a breakdown call-out"],
+    tiling: ["bathroom tiling", "a kitchen splashback", "floor tiling", "tile and grout repair", "a shower retile", "balcony tiling", "waterproofing and tiling", "a laundry splashback"],
+    fencing: ["a Colorbond fence", "a timber fence", "a gate install", "pool fencing", "a fence repair", "a boundary fence", "a sliding gate", "a palisade fence"],
+    cleaning: ["a deep clean", "an end-of-lease clean", "a carpet clean", "a window clean", "a pressure clean", "an after-builders clean", "a oven clean", "a regular house clean"],
+    handyman: ["home repairs", "flat-pack assembly", "general maintenance", "a fix-up job", "odds and ends around the house", "a door adjustment", "shelf and hanging work", "a small repair list"],
+    locksmith: ["a lock change", "an emergency call-out", "key cutting", "a lock repair", "security door work", "a rekey", "a lockout call-out", "a deadbolt install"],
+    pool: ["a pool service", "a pump repair", "pool cleaning", "leak detection", "pool fencing", "a salt-cell service", "a filter clean", "a seasonal start-up"],
+    solar: ["a solar panel install", "a solar service", "a solar hot water install", "a panel clean", "an inverter check", "a system health check", "a battery install", "a shading review"],
+    flooring: ["floor sanding", "a timber floor install", "vinyl flooring", "carpet laying", "a laminate install", "an epoxy floor", "a floor refinish", "stair nosing work"],
+    concrete: ["a driveway pour", "a concrete slab", "concrete repairs", "a path and paving job", "excavation", "a patio slab", "a crossover", "a shed pad"],
+    glazing: ["a window install", "a glass repair", "a shower screen install", "window tinting", "a flyscreen repair", "a smashed pane replacement", "a sliding door repair", "mirror install"],
+    design: ["a design consult", "plans for a renovation", "an inspection", "a site assessment", "a concept for our place", "a colour consult", "a measured survey", "a compliance inspection"],
+    removal: ["a house move", "a furniture move", "rubbish removal", "a piano move", "a clean-out", "a skip bin drop-off", "an office move", "a same-day pickup"],
+    specialist: ["the booked job", "work at our place", "a call-out", "the job we needed done", "a site visit and the work that followed", "a booked service"]
+  };
+
+  var CAT_RULES = [
+    ["pest", /pest|termite|weed control/i],
+    ["electrical", /electric|ev charger|light fitting|antenna|intercom|home automation|smart home|fire alarm|stove installer|rangehood|whitegoods|tv antenna|phone technician/i],
+    ["plumbing", /plumb|gas fitter|drain|hot water|septic|sump pump|water pump|water tanks|rainwater|irrigation|jacuzzi|bathtub|shower repair|composting toilet/i],
+    ["painting", /paint|wallpaper|colour consultant/i],
+    ["carpentry", /carpenter|joiner|cabinet|deck|wardrobe|staircase|skirting|furniture assembl|pergola|gazebo|carport|shed builder|workshop builder|verandah/i],
+    ["building", /builder|renovat|extension|kit home|heritage|underpin|demolition|scaffolding|building designer|drafter|architect|structural|surveyor|town planner|renovation manager|conservatory/i],
+    ["landscaping", /landscape|garden|lawn|arborist|tree|pond|playground|irrigation technician/i],
+    ["roofing", /roof|gutter|downpipe|whirlybird|skylight|cladding|siding|facade|pointing/i],
+    ["hvac", /air conditioning|hvac|heating|ducted|ventilation|heat pump|cool room/i],
+    ["tiling", /tiler|tiling|grout|splashback|waterproof|stone|granite|marble|epoxy flooring/i],
+    ["fencing", /fenc|gate|balustrade|wrought iron/i],
+    ["cleaning", /clean|pressure|hydro|strip and polish|brick clean|house washer|grout clean|solar panel clean/i],
+    ["locksmith", /lock|security install|security screen|screen door|shutter/i],
+    ["pool", /pool|sauna/i],
+    ["solar", /solar|energy assessor/i],
+    ["flooring", /floor|carpet layer|vinyl|laminate|wood floor|carpet repair/i],
+    ["concrete", /concrete|concreter|excav|earthmoving|bobcat|driveway|retaining|line marker|steel fix/i],
+    ["glazing", /glazi|glass|window|flyscreen|shower screen|leadlight|tint|awning|blinds|curtain|flyscreen/i],
+    ["design", /designer|interior|home stager|inspector|assessor|damp|moisture|mould|flood restoration|water damage/i],
+    ["removal", /removal|skip bin|rubbish|piano mover|house relocator/i],
+    ["handyman", /handyman|home maintenance|property maintenance|appliance/i]
+  ];
+
+  function categoryFor(trade) {
+    var t = String(trade || "");
+    for (var i = 0; i < CAT_RULES.length; i++) {
+      if (CAT_RULES[i][1].test(t)) return CAT_RULES[i][0];
+    }
+    return "specialist";
+  }
+
+  function articleize(job) {
+    var j = String(job || "").replace(/^an?\s+/i, "").trim();
+    if (!j) return "the job";
+    return (/^[aeiou]/i.test(j) ? "an " : "a ") + j;
+  }
+  function bare(job) {
+    return String(job || "").replace(/^an?\s+/i, "").trim();
+  }
+  function jobFromTrade(trade) {
+    var t = String(trade || "").trim();
+    if (!t) return "";
+    var j = t.replace(/er\b/i, "ing").replace(/or\b/i, "ion").replace(/ist\b/i, "").toLowerCase();
+    if (/install/i.test(t)) return articleize(t.replace(/installer/i, "install").toLowerCase());
+    if (/repair/i.test(t)) return articleize(t.replace(/repairer/i, "repair").toLowerCase());
+    if (/clean/i.test(t)) return articleize(t.toLowerCase().replace(/er\b/, ""));
+    return articleize(t.toLowerCase() + " job");
+  }
+  function jobsFor(trade) {
+    var cat = categoryFor(trade);
+    var list = (CATEGORY_JOBS[cat] || CATEGORY_JOBS.specialist).slice();
+    var derived = jobFromTrade(trade);
+    if (derived && list.indexOf(derived) === -1) list.unshift(derived);
+    return list;
+  }
+
+  /* Openings: original wording. Slots: {job} {business} {name} {first} {suburb} {month} {trade} {perth} */
+  var OPENERS = {
+    casual: [
+      "Had {job} done by {business} in {suburb} this {month}.",
+      "Used {business} for {job} in {suburb}.",
+      "Used {aTrade} in {suburb} — {business} — for {job}.",
+      "Booked {business} in {suburb} this {month} for {job}.",
+      "{first} from {business} came out to {suburb} for {job}.",
+      "Needed {job} around {suburb} and went with {name} at {business}.",
+      "Called {business} when we needed {job} in {suburb}.",
+      "Got {business} in for {job} at our place in {suburb}.",
+      "We used {business} for {job} here in {suburb} this {month}.",
+      "Booked {first} at {business} after we needed {job} in {suburb}.",
+      "Our {trade} this {month} was {business}, for {job} in {suburb}.",
+      "Went with {business}, {aTrade} in {suburb}, for {job}.",
+      "{business} looked after {job} for us in {suburb} this {month}."
+    ],
+    professional: [
+      "We engaged {business} for {job} at our {suburb} property this {month}.",
+      "{business} completed {job} in {suburb} in {month}.",
+      "Appointed {name} of {business} to carry out {job} in {suburb}.",
+      "We booked {business}, {aTrade} in {suburb}, for {job} this {month}.",
+      "{first} from {business} attended our {suburb} property for {job}.",
+      "Required {job} in {suburb} and instructed {business} to complete the work.",
+      "{business} was engaged as our {trade} for {job} in {suburb}.",
+      "This {month} {business} carried out {job} at our home in {suburb}.",
+      "We arranged {job} with {name} at {business}, based in the {suburb} area.",
+      "For {job} in {suburb}, we appointed {business}."
+    ],
+    warm: [
+      "So glad we booked {first} at {business} for {job} in {suburb}.",
+      "We finally got {job} done in {suburb} this {month} with {business}, and it was a good experience.",
+      "{first} from {business} came out to help with {job} in {suburb} and we felt looked after.",
+      "Happy we chose {business} for {job} at our place in {suburb}.",
+      "Needed {job} around {suburb} and {name} at {business} made it straightforward.",
+      "Our {trade} in {suburb} this {month} was {first} from {business}, for {job}.",
+      "Thanks to {business} for taking care of {job} in {suburb} this {month}.",
+      "We called {first} at {business} when we needed {job} in {suburb}, and we are glad we did.",
+      "Had {job} done in {suburb} by {business} and it took a real load off.",
+      "Went with {business} for {job} here in {perth} ({suburb}) and would do the same again."
+    ]
+  };
+
+  var PRAISE = {
+    timeliness: {
+      casual: ["Arrived when they said they would.", "Turned up on time.", "Kept to the time they gave us.", "No waiting around on the day.", "Was there at the time we agreed."],
+      professional: ["Arrived at the agreed time.", "Attended the booking promptly.", "Kept to the scheduled appointment.", "Punctual throughout.", "Arrived as arranged."],
+      warm: ["They were there right when they said, which was a relief.", "Turned up on time, no chasing needed.", "Kept the time they gave us, which we appreciated.", "On time and unhurried.", "Showed up when promised."]
+    },
+    cleanliness: {
+      casual: ["Left the place tidy afterwards.", "Worked cleanly and packed up after.", "No mess left behind.", "Covered the floors and cleaned up properly.", "The site was tidy at the end of the day."],
+      professional: ["The work area was left clean and tidy.", "Housekeeping on site was careful.", "The property was protected and cleaned down afterwards.", "No debris was left behind.", "Site presentation was excellent."],
+      warm: ["They treated the house with care and left it tidy.", "No mess to deal with when they headed off.", "Floors were protected and everything was packed up.", "It did not feel like a building site at the end of the day.", "Clean and considerate in our home."]
+    },
+    value: {
+      casual: ["The quote felt fair.", "The price was clear from the start.", "No surprise costs.", "Charged what they said they would.", "Good value for the work done."],
+      professional: ["The quotation was clear and honoured.", "Pricing was transparent.", "The final invoice matched what was agreed.", "Fairly priced for the scope of work.", "No unexpected variations."],
+      warm: ["We felt the price was fair, with no nasty extras.", "Upfront about the cost, which we liked.", "Charged just what they said — no surprises.", "Good value and honest about the numbers.", "The quote was plain and they stuck to it."]
+    },
+    communication: {
+      casual: ["Explained the work in plain words.", "Talked us through the job clearly.", "Answered our questions without the jargon.", "We always knew what was happening.", "Kept us posted as the job went along."],
+      professional: ["Explained the scope clearly.", "Communication was prompt and clear.", "Options were discussed before work began.", "We were kept informed throughout.", "Questions were answered in plain language."],
+      warm: ["Talked us through everything so we were not guessing.", "Happy to explain things in everyday language.", "Kept in touch, which made the job easier.", "We felt informed the whole way.", "Clear, patient and easy to follow."]
+    },
+    staff: {
+      casual: ["Easy to deal with.", "Friendly and professional on site.", "A pleasure to have at the house.", "Polite, calm and straightforward.", "Good to work with from start to finish."],
+      professional: ["Courteous and professional throughout.", "Conduct on site was respectful.", "A professional manner with the household.", "Straightforward and easy to liaise with.", "Presented well and dealt with us courteously."],
+      warm: ["Lovely to have in the house.", "Friendly without being in the way.", "Felt like they genuinely cared about getting it right.", "Kind, calm and easy to talk to.", "A really decent manner with us."]
+    },
+    quality: {
+      casual: ["The finish was neat.", "Solid, careful work.", "Happy with the standard of the job.", "Took care with the details.", "Did not rush the work."],
+      professional: ["The standard of workmanship was high.", "The finish was neat and even.", "Work was completed with care and attention.", "A thorough, well-executed job.", "Quality was consistent throughout."],
+      warm: ["The finish looks great.", "You can tell they took pride in the work.", "Neat, careful and not rushed.", "Really pleased with how it turned out.", "The result is tidy and well done."]
+    },
+    solved: {
+      casual: ["Sorted the problem out properly.", "Got to the cause rather than a quick patch.", "The issue has been fine since.", "Fixed what we asked and checked it before leaving.", "The job did what we needed."],
+      professional: ["The issue was diagnosed and resolved.", "The work has performed as required since completion.", "The underlying problem was addressed, not only the symptom.", "Tested the work before leaving site.", "The required outcome was achieved."],
+      warm: ["The problem is actually gone, which is a relief.", "They found the cause and fixed it properly.", "Has been fine ever since they finished.", "Checked it over with us before they left.", "Did exactly what we hoped they would."]
+    }
+  };
+
+  var CLOSERS = {
+    casual: [
+      "Would book them again.",
+      "Happy to recommend them.",
+      "Glad we went with them.",
+      "I would use them next time.",
+      "Easy to recommend from this job.",
+      "No issues at all on the day.",
+      "A straightforward job from start to finish.",
+      "Will call them back if we need this again."
+    ],
+    professional: [
+      "I would engage them again.",
+      "I am comfortable recommending their services.",
+      "A professional experience overall.",
+      "Satisfied with the engagement from start to finish.",
+      "We would instruct them again for similar work.",
+      "Recommended on the basis of this job."
+    ],
+    warm: [
+      "Would happily have them back.",
+      "Really glad we chose them.",
+      "Happy to recommend them to anyone nearby.",
+      "One we will keep on our list.",
+      "Felt well looked after the whole way.",
+      "Thanks again — we would use them next time."
+    ]
+  };
+
+  var ALERT_OPENERS = {
+    casual: [
+      "I have used {name} at {business} for {job} and would recommend getting in touch.",
+      "{business} looked after {job} for us in {suburb}. Happy to recommend from that job.",
+      "If you want {aTrade} around {suburb}, I can vouch for {first} from work I have actually seen.",
+      "We have had {business} out in {suburb} for {job}. Genuine recommendation from a real job.",
+      "{first} at {business} did {job} for us. I would use them again.",
+      "For {aTrade} in {suburb} or nearby, we went with {business} and were happy with {job}.",
+      "I know {first} from {business} through {job} in {suburb} and would use them again.",
+      "Used {business} for {job} here in {perth}. Happy to pass on the name.",
+      "If it helps, {business} handled {job} for us in {suburb} and I would recommend them.",
+      "{name} at {business} is the {trade} we used for {job}. Worth a call."
+    ],
+    professional: [
+      "I can recommend {business} for {job} in the {suburb} area, based on work they completed for us.",
+      "We engaged {name} of {business} as our {trade} for {job} in {suburb} and were satisfied.",
+      "For those seeking {aTrade} in {suburb}, {business} completed {job} for us to a good standard.",
+      "I have firsthand experience of {business} carrying out {job} in {suburb} and would recommend an enquiry.",
+      "{first} at {business} undertook {job} at our property. I am comfortable recommending them.",
+      "Based on {job} completed in {suburb}, I would recommend contacting {business}."
+    ],
+    warm: [
+      "If you are after {aTrade} in {suburb}, we were really happy with {first} at {business} for {job}.",
+      "Just a genuine plug for {business} — they did {job} for us in {suburb} and we felt well looked after.",
+      "We used {first} at {business} for {job} and would happily point anyone in {suburb} their way.",
+      "For what it is worth, {business} looked after {job} for us and I would use them again.",
+      "Happy to recommend {name} at {business} after {job} in {suburb} — a real job, not just a name drop."
+    ]
+  };
+
+  function hash(s) {
+    var h = 0;
+    String(s).split("").forEach(function (c) { h = ((h << 5) - h) + c.charCodeAt(0); h |= 0; });
+    return Math.abs(h);
+  }
+  function fillTpl(tpl, map) {
+    return tpl.replace(/\{(\w+)\}/g, function (_, k) { return map[k] || ""; }).replace(/\s+/g, " ").trim();
+  }
+  function similar(a, b) {
+    var stop = { with:1, from:1, they:1, them:1, this:1, that:1, have:1, been:1, were:1, was:1, for:1, the:1, and:1, our:1, their:1, your:1, after:1, when:1, what:1, which:1, would:1, could:1, about:1, into:1, just:1, then:1, than:1, also:1, very:1, really:1, happy:1, recommend:1, local:1, place:1, needed:1, booked:1, called:1, used:1, went:1, done:1, work:1, job:1 };
+    function toks(s) {
+      return String(s).toLowerCase().replace(/[^\w\s]/g, " ").split(/\s+/).filter(function (w) { return w.length > 3 && !stop[w]; });
+    }
+    var A = toks(a), B = toks(b);
+    if (!A.length || !B.length) return 0;
+    var set = {};
+    B.forEach(function (w) { set[w] = 1; });
+    var hit = A.filter(function (w) { return set[w]; }).length;
+    return hit / Math.max(A.length, B.length);
+  }
+  function isBlocked(text, used, batch, threshold) {
+    threshold = threshold || 0.62;
+    if (!text) return true;
+    var all = (used || []).concat(batch || []);
+    for (var i = 0; i < all.length; i++) {
+      if (all[i] === text) return true;
+      if (similar(text, all[i]) >= threshold) return true;
+    }
+    return false;
+  }
+  function pick(arr, seed, n) {
+    if (!arr || !arr.length) return [];
+    var i = Math.abs(seed) % arr.length;
+    var out = [];
+    var guard = 0;
+    while (out.length < Math.min(n || 1, arr.length) && guard < arr.length * 2) {
+      var item = arr[(i + guard) % arr.length];
+      if (out.indexOf(item) === -1) out.push(item);
+      guard++;
+    }
+    return out;
+  }
+  function hasFocus(focuses, key) {
+    return (focuses || []).indexOf(key) >= 0;
+  }
+  function makeMap(opts) {
+    var m = opts.member || {};
+    var jobRaw = opts.job || jobsFor(m.trade)[0];
+    var suburb = opts.suburb || "Midland";
+    var month = opts.month || "October";
+    var first = m.first || (String(m.name || "").split(" ")[0]) || "the tradie";
+    var last = m.last || "";
+    var name = (m.first && m.last) ? (m.first + " " + m.last) : (m.name || first);
+    return {
+      business: m.business || "the business",
+      name: name,
+      first: first,
+      last: last,
+      job: articleize(jobRaw),
+      jobBare: bare(jobRaw),
+      suburb: suburb,
+      month: month,
+      trade: String(m.trade || "tradie").toLowerCase(),
+      aTrade: articleize(String(m.trade || "tradie").toLowerCase()),
+      Trade: m.trade || "Tradie",
+      perth: "Perth",
+      region: opts.region || suburb
+    };
+  }
+
+  function openerFits(tpl, focuses) {
+    var staff = hasFocus(focuses, "staff");
+    var area = hasFocus(focuses, "area");
+    var service = hasFocus(focuses, "service") || hasFocus(focuses, "seo");
+    if (staff && tpl.indexOf("{first}") === -1 && tpl.indexOf("{name}") === -1) return false;
+    if (area && tpl.indexOf("{suburb}") === -1 && tpl.indexOf("{perth}") === -1) return false;
+    if (service && tpl.indexOf("{job}") === -1) return false;
+    return true;
+  }
+
+  function ensureFocuses(text, map, focuses, tone) {
+    var lower = text.toLowerCase();
+    var bits = [];
+    if ((hasFocus(focuses, "service") || hasFocus(focuses, "seo")) && lower.indexOf(map.jobBare.toLowerCase()) === -1) {
+      bits.push("The work was " + map.jobBare);
+    }
+    if (hasFocus(focuses, "seo") && lower.indexOf(map.trade) === -1) {
+      var seoLine = pick(["Happy to recommend them as a local " + map.trade, "A reliable " + map.trade + " for this kind of work", "Good to have a local " + map.trade + " we can call again"], hash(text + map.jobBare), 1)[0];
+      bits.push(seoLine);
+    }
+    if (hasFocus(focuses, "area") && lower.indexOf(map.suburb.toLowerCase()) === -1) {
+      bits.push("This was in " + map.suburb);
+    } else if (hasFocus(focuses, "seo") && lower.indexOf(map.suburb.toLowerCase()) === -1 && !/\bperth\b/i.test(text)) {
+      bits.push("This was in Perth");
+    }
+    if (hasFocus(focuses, "staff") && lower.indexOf(String(map.first).toLowerCase()) === -1 && lower.indexOf(String(map.name).toLowerCase()) === -1) {
+      var manner = pick(PRAISE.staff[tone] || PRAISE.staff.casual, hash(map.first + tone), 1)[0];
+      bits.push(map.first + " was " + manner.replace(/\.$/, "").toLowerCase());
+    }
+    if (!bits.length) return text;
+    var extra = bits.join(". ") + ".";
+    var base = String(text || "").trim().replace(/\.$/, "");
+    return base + ". " + extra;
+  }
+
+  function praiseThemes(focuses, length) {
+    var themes = [];
+    if (hasFocus(focuses, "timeliness")) themes.push("timeliness");
+    if (hasFocus(focuses, "cleanliness")) themes.push("cleanliness");
+    if (hasFocus(focuses, "value")) themes.push("value");
+    if (hasFocus(focuses, "staff")) themes.push("staff");
+    var extras = ["quality", "communication", "solved"];
+    var need = length === "short" ? 1 : length === "detailed" ? 3 : 2;
+    var i = 0;
+    while (themes.length < need && i < extras.length) {
+      if (themes.indexOf(extras[i]) === -1) themes.push(extras[i]);
+      i++;
+    }
+    return themes;
+  }
+
+  function assemble(opts, index) {
+    var tone = opts.tone || "casual";
+    var length = opts.length || "medium";
+    var focuses = opts.focuses || ["seo", "service", "area"];
+    var map = makeMap(opts);
+    var seed = hash([opts.viewerId || "jamie", map.business, map.jobBare, map.suburb, map.month, tone, length, (opts.round || 0), index, focuses.join(",")].join("|")) + hash(String(opts.viewerId || "jamie")) * (17 + index * 3);
+    var openers = (OPENERS[tone] || OPENERS.casual).filter(function (t) { return openerFits(t, focuses); });
+    if (!openers.length) openers = OPENERS[tone] || OPENERS.casual;
+    var opener = fillTpl(pick(openers, seed, 1)[0], map);
+    var themes = praiseThemes(focuses, length);
+    var usedThemeLines = opts._usedLines || [];
+    var mids = [];
+    themes.forEach(function (th, idx) {
+      var bank = (PRAISE[th] && PRAISE[th][tone]) || (PRAISE[th] && PRAISE[th].casual) || [];
+      var choices = bank.filter(function (p) { return usedThemeLines.indexOf(p) === -1; });
+      if (!choices.length) choices = bank;
+      var line = pick(choices, seed + idx * 17 + index * 9, 1)[0];
+      if (line) {
+        mids.push(line);
+        usedThemeLines.push(line);
+      }
+    });
+    opts._usedLines = usedThemeLines;
+    var closerBank = CLOSERS[tone] || CLOSERS.casual;
+    var closer = pick(closerBank, seed + 41, 1)[0];
+    var parts;
+    if (length === "short") {
+      parts = [opener, mids[0]];
+    } else if (length === "detailed") {
+      parts = [opener].concat(mids).concat([closer]);
+    } else {
+      parts = [opener].concat(mids.slice(0, 2));
+      if ((seed + index) % 3 === 0) parts.push(closer);
+    }
+    var text = parts.filter(Boolean).join(" ");
+    return ensureFocuses(text, map, focuses, tone);
+  }
+
+  function buildReviewIdeas(opts) {
+    opts = opts || {};
+    var used = opts.used || [];
+    var out = [];
+    opts._usedLines = [];
+    var i = 0;
+    var guard = 0;
+    var jobs = jobsFor((opts.member && opts.member.trade) || "");
+    while (out.length < 3 && guard < 400) {
+      var local = Object.assign({}, opts);
+      var seen = used.length + out.length;
+      var threshold = 0.62;
+      if (seen > 12) threshold = 0.78;
+      if (seen > 24) threshold = 0.88;
+      if (seen > 48 || guard > 150) threshold = 0.96;
+      if (guard > 250) threshold = 1.01;
+      if (guard > 20) {
+        local.job = jobs[(hash((opts.viewerId || "") + String(guard) + String(opts.round || 0)) + guard) % jobs.length];
+      }
+      local._usedLines = opts._usedLines;
+      local.round = (opts.round || 0) * 400 + guard;
+      var text = assemble(local, i);
+      if (!isBlocked(text, used, out, threshold)) out.push(text);
+      i++;
+      guard++;
+    }
+    var fb = 0;
+    while (out.length < 3) {
+      var map = makeMap(opts);
+      fb++;
+      var fallback = fillTpl("Write a short note in your own words about {job} with {business} in {suburb}.", map) + " Mention what stood out, then change it so it sounds like you.";
+      if (fb > 1 || isBlocked(fallback, used, out, 1.01)) fallback += " (" + (used.length + out.length + fb) + ")";
+      if (isBlocked(fallback, used, out, 1.01)) fallback += " #" + fb;
+      out.push(fallback);
+    }
+    return out;
+  }
+
+  function assembleAlert(opts, index) {
+    var tone = opts.tone || "casual";
+    var focuses = opts.focuses || ["seo", "service", "area"];
+    var map = makeMap(opts);
+    var seed = hash(["alert", opts.viewerId || "jamie", opts.alertId || "", map.business, map.jobBare, tone, (opts.round || 0), index, focuses.join(",")].join("|"));
+    var bank = ALERT_OPENERS[tone] || ALERT_OPENERS.casual;
+    var fitted = bank.filter(function (t) { return openerFits(t, focuses); });
+    if (!fitted.length) fitted = bank;
+    var text = fillTpl(pick(fitted, seed, 1)[0], map);
+    if ((seed + index) % 2 === 1) {
+      var midTheme = hasFocus(focuses, "timeliness") ? "timeliness" : hasFocus(focuses, "value") ? "value" : "quality";
+      var line = pick((PRAISE[midTheme][tone] || PRAISE[midTheme].casual), seed + 3, 1)[0];
+      if (line) text = text.replace(/\.$/, "") + " " + line;
+    }
+    return ensureFocuses(text, map, focuses, tone);
+  }
+
+  function buildAlertIdeas(opts) {
+    opts = opts || {};
+    var used = opts.used || [];
+    var out = [];
+    var i = 0, guard = 0;
+    var jobs = jobsFor((opts.member && opts.member.trade) || "");
+    while (out.length < 3 && guard < 400) {
+      var local = Object.assign({}, opts);
+      var seen = used.length + out.length;
+      var threshold = 0.62;
+      if (seen > 12) threshold = 0.78;
+      if (seen > 24) threshold = 0.88;
+      if (seen > 48 || guard > 150) threshold = 0.96;
+      if (guard > 250) threshold = 1.01;
+      if (guard > 20) local.job = jobs[(hash((opts.viewerId || "") + String(guard)) + i) % jobs.length];
+      local.round = (opts.round || 0) * 400 + guard;
+      var text = assembleAlert(local, i);
+      if (!isBlocked(text, used, out, threshold)) out.push(text);
+      i++; guard++;
+    }
+    var fb = 0;
+    while (out.length < 3) {
+      var map = makeMap(opts);
+      fb++;
+      var fallback = fillTpl("I have used {business} in {suburb} and would recommend getting in touch, in your own words.", map);
+      if (fb > 1 || isBlocked(fallback, used, out, 1.01)) fallback += " (" + (used.length + out.length + fb) + ")";
+      out.push(fallback);
+    }
+    return out;
+  }
+
+  function combinationCount(trade) {
+    var jobs = jobsFor(trade || "Electrician");
+    var tones = ["casual", "professional", "warm"];
+    var openerN = tones.reduce(function (n, t) { return n + OPENERS[t].length; }, 0);
+    var closerN = tones.reduce(function (n, t) { return n + CLOSERS[t].length; }, 0);
+    var praiseN = 0;
+    Object.keys(PRAISE).forEach(function (th) {
+      tones.forEach(function (t) { praiseN += (PRAISE[th][t] || []).length; });
+    });
+    var alertN = tones.reduce(function (n, t) { return n + ALERT_OPENERS[t].length; }, 0);
+    /* Conservative unique texts for one business, one chosen suburb and month:
+       openings × jobs × praise-theme picks (approx 7 themes choose 2) × closers × 3 lengths × 3 tones.
+       Suburb/month chosen by the member multiply further in real use. */
+    var praisePairs = 7 * 6; /* ordered pairs of different themes, rough */
+    var perSetting = openerN * jobs.length * closerN; /* already includes 3 tones in openerN/closerN? openerN is sum across tones */
+    /* Better: per tone, openings * jobs * (praise lines ~ 5^2) * closers * 3 lengths */
+    var perToneJobs = 0;
+    tones.forEach(function (t) {
+      perToneJobs += OPENERS[t].length * jobs.length * 25 * CLOSERS[t].length * 3;
+    });
+    return {
+      jobsForTrade: jobs.length,
+      openings: openerN,
+      closers: closerN,
+      praiseLines: praiseN,
+      alertOpenings: alertN,
+      estimatePerBusinessOneSuburbMonth: perToneJobs,
+      suburbsInPicker: SUBURBS.length,
+      months: MONTHS.length
+    };
+  }
+
+  root.TCIdeas = {
+    MONTHS: MONTHS,
+    SUBURBS: SUBURBS,
+    categoryFor: categoryFor,
+    jobsFor: jobsFor,
+    similar: similar,
+    isBlocked: isBlocked,
+    buildReviewIdeas: buildReviewIdeas,
+    buildAlertIdeas: buildAlertIdeas,
+    combinationCount: combinationCount,
+    OPENERS: OPENERS,
+    PRAISE: PRAISE,
+    CLOSERS: CLOSERS
+  };
+})(typeof window !== "undefined" ? window : global);
+
+</script>
+  <script>
+/* profile-links.js */
+/* TradeCircle Perth — profile website and social links v1.5.4 */
+(function (root) {
+  "use strict";
+
+  function svg(p, w) {
+    w = w || 18;
+    return '<svg viewBox="0 0 24 24" width="' + w + '" height="' + w + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>";
+  }
+
+  var PLATFORMS = [
+    { id: "website", label: "Website", placeholder: "https://www.yourbusiness.com.au", host: null, color: "#0B1F33", icon: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>') },
+    { id: "facebook", label: "Facebook page", placeholder: "https://www.facebook.com/your.business", host: /facebook\.com/i, color: "#1877F2", icon: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>' },
+    { id: "instagram", label: "Instagram", placeholder: "https://www.instagram.com/your.business", host: /instagram\.com/i, color: "#E4405F", icon: svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>') },
+    { id: "linkedin", label: "LinkedIn", placeholder: "https://www.linkedin.com/company/your-business", host: /linkedin\.com/i, color: "#0A66C2", icon: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10v7M8 7.5h.01M11.5 17v-4.2a2.3 2.3 0 014.6 0V17"/>') },
+    { id: "tiktok", label: "TikTok", placeholder: "https://www.tiktok.com/@your.business", host: /tiktok\.com/i, color: "#111111", icon: svg('<path d="M14 4v9.2a3.2 3.2 0 11-2.2-3"/><path d="M14 8.2A6.2 6.2 0 0019 10"/>') },
+    { id: "youtube", label: "YouTube", placeholder: "https://www.youtube.com/@your.business", host: /youtube\.com|youtu\.be/i, color: "#FF0000", icon: svg('<rect x="3" y="6" width="18" height="12" rx="3"/><path d="M10 9.5v5l5-2.5z" fill="currentColor" stroke="none"/>') },
+    { id: "google", label: "Google Business / review link", placeholder: "https://search.google.com/local/writereview?placeid=...", host: /google\.com|maps\.app\.goo\.gl|g\.page/i, color: "#1A73E8", icon: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>' },
+    { id: "other", label: "Other link", placeholder: "https://", host: null, color: "#5B6B7C", icon: svg('<path d="M10 13a5 5 0 007.07 0l2-2a5 5 0 00-7.07-7.07l-1.2 1.2"/><path d="M14 11a5 5 0 00-7.07 0l-2 2a5 5 0 007.07 7.07l1.2-1.2"/>') }
+  ];
+
+  function emptyLinks() {
+    var o = {};
+    PLATFORMS.forEach(function (p) { o[p.id] = ""; });
+    return o;
+  }
+  function normalize(raw) {
+    var s = String(raw || "").trim();
+    if (!s) return "";
+    if (!/^[a-z][a-z0-9+.-]*:/i.test(s)) s = "https://" + s;
+    return s;
+  }
+  function isValid(raw, platform) {
+    var s = String(raw || "").trim();
+    if (!s) return { ok: true, value: "" };
+    var url = normalize(s);
+    if (/\s/.test(url)) return { ok: false, value: url, msg: "Remove the spaces from this link." };
+    var okShape = /^https?:\/\/[^\s/]+\.[^\s]+/i.test(url);
+    if (!okShape) return { ok: false, value: url, msg: "Enter a full web address, starting with https://" };
+    if (platform && platform.host && !platform.host.test(url)) {
+      return { ok: false, value: url, msg: "This does not look like a " + platform.label + " link." };
+    }
+    return { ok: true, value: url };
+  }
+  function fromMember(m) {
+    var links = emptyLinks();
+    if (!m) return links;
+    var src = m.links || {};
+    PLATFORMS.forEach(function (p) { links[p.id] = src[p.id] || ""; });
+    if (!links.facebook && m.page) links.facebook = m.page;
+    if (!links.google && m.googleLink) links.google = m.googleLink;
+    return links;
+  }
+  function applyToMember(m, links) {
+    if (!m) return;
+    m.links = fromMember({ links: links });
+    if (m.links.facebook) m.page = m.links.facebook;
+  }
+  function filled(m) {
+    var links = fromMember(m);
+    return PLATFORMS.filter(function (p) { return !!links[p.id]; }).map(function (p) {
+      return { platform: p, url: links[p.id] };
+    });
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  }
+  function iconRow(m) {
+    var items = filled(m);
+    if (!items.length) return "";
+    return '<div class="link-row" aria-label="Links">' + items.map(function (it) {
+      var p = it.platform;
+      return '<a class="link-ico" href="' + esc(normalize(it.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(p.label) + '" title="' + esc(p.label) + '" style="background:' + p.color + '">' + p.icon + "</a>";
+    }).join("") + "</div>";
+  }
+  function editFields(links) {
+    links = links || emptyLinks();
+    return '<p class="group-label">Links <span class="opt">(optional)</span></p><p class="hint" style="margin-top:0">Add a website or social page. Only the ones you fill in will show on your profile.</p>' +
+      PLATFORMS.map(function (p) {
+        return '<div class="field link-field"><label><span class="link-field-ico" style="background:' + p.color + '">' + p.icon + "</span>" + esc(p.label) + '</label>' +
+          '<input name="link-' + p.id + '" inputmode="url" type="url" placeholder="' + esc(p.placeholder) + '" value="' + esc(links[p.id] || "") + '" data-link-id="' + p.id + '" autocomplete="off">' +
+          '<p class="link-error" hidden></p></div>';
+      }).join("");
+  }
+  function collect(form, current) {
+    var out = fromMember({ links: current });
+    if (!form) return out;
+    PLATFORMS.forEach(function (p) {
+      var el = form.querySelector('[name="link-' + p.id + '"]') || form.querySelector('[data-link-id="' + p.id + '"]');
+      var raw = el ? el.value : (out[p.id] || "");
+      var v = isValid(raw, p);
+      out[p.id] = v.ok ? v.value : normalize(raw);
+    });
+    return out;
+  }
+  function bindValidation(rootEl) {
+    if (!rootEl) return;
+    rootEl.querySelectorAll("[data-link-id]").forEach(function (inp) {
+      function check() {
+        var id = inp.getAttribute("data-link-id");
+        var p = PLATFORMS.filter(function (x) { return x.id === id; })[0];
+        var v = isValid(inp.value, p);
+        var err = inp.parentNode.querySelector(".link-error");
+        if (!err) return v.ok;
+        if (!inp.value.trim() || v.ok) { err.hidden = true; inp.classList.remove("invalid"); return true; }
+        err.hidden = false;
+        err.textContent = v.msg;
+        inp.classList.add("invalid");
+        return false;
+      }
+      inp.addEventListener("blur", check);
+      inp.addEventListener("change", check);
+    });
+  }
+
+  root.TCLinks = {
+    PLATFORMS: PLATFORMS,
+    empty: emptyLinks,
+    normalize: normalize,
+    isValid: isValid,
+    fromMember: fromMember,
+    applyToMember: applyToMember,
+    filled: filled,
+    iconRow: iconRow,
+    editFields: editFields,
+    collect: collect,
+    bindValidation: bindValidation
+  };
+})(typeof window !== "undefined" ? window : global);
+
+</script>
+  <script>
+/* profile-extras.js */
+/* TradeCircle Perth — richer profile sections (v1.5.4) */
+(function (root) {
+  "use strict";
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function esa(s) { return esc(s); }
+
+  var SUBURBS = ["Midland", "Mundaring", "Ellenbrook", "Joondalup", "Wanneroo", "Kwinana", "Rockingham", "Fremantle", "Armadale", "Cannington", "Morley", "Scarborough", "Subiaco", "Perth"];
+  var TRADE_CHIPS = ["Pest Control", "Carpenter", "Builder", "Electrician", "Plumber", "Painter", "Landscaper", "Roofer", "Fencer", "Tiler", "Air Conditioning", "Handyman"];
+  var TONES = {
+    teal: "linear-gradient(160deg,#14C38A 0%,#0B1F33 100%)",
+    amber: "linear-gradient(160deg,#FFD56A 0%,#C06A00 100%)",
+    navy: "linear-gradient(160deg,#3D6A96 0%,#0B1F33 100%)",
+    coral: "linear-gradient(160deg,#F08A6B 0%,#8A2F2A 100%)",
+    moss: "linear-gradient(160deg,#8FBF4A 0%,#2A4A18 100%)",
+    violet: "linear-gradient(160deg,#9B7BE8 0%,#3A2868 100%)",
+    rust: "linear-gradient(160deg,#E08A4A 0%,#6A2E12 100%)",
+    sky: "linear-gradient(160deg,#6EC4F0 0%,#1C4B73 100%)"
+  };
+  var ICONS = {
+    bug: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="5"/><path d="M12 8V5M8 6l1.5 2M16 6l-1.5 2M7 13H4M20 13h-3M8 17l-2 3M16 17l2 3"/></svg>',
+    house: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M6 10.5V20h12V10.5"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L6 14h6l-1 7 8-12h-6l0-6z"/></svg>',
+    leaf: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c8-1 14-8 14-16-8 0-15 6-16 14 3-1 6-1 8 0"/><path d="M8 16c2-3 5-6 9-8"/></svg>',
+    fence: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V8l2-3 2 3v12M10 20V8l2-3 2 3v12M16 20V8l2-3 2 3v12M3 12h18"/></svg>',
+    paint: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6l8-8z"/><path d="M12 6l6 6"/><path d="M6 20h4"/></svg>',
+    wrench: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015 5.1L14 17l-4-4 5.6-5.6z"/><path d="M8 14l-4 4 2 2 4-4"/></svg>',
+    drop: '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 11-12 0c0-4 6-11 6-11z"/></svg>'
+  };
+
+  function empty() {
+    return { years: "", serviceAreas: [], specialties: [], licences: [], gallery: [], idealTrades: [], idealNote: "", goals: [] };
+  }
+
+  function list(v) {
+    if (Array.isArray(v)) return v.map(function (s) { return String(s || "").trim(); }).filter(Boolean);
+    if (v == null || v === "") return [];
+    return String(v).split(/[\n,]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+
+  function normalize(p) {
+    p = p || {};
+    var out = empty();
+    out.years = p.years === 0 || p.years ? String(p.years) : "";
+    out.serviceAreas = list(p.serviceAreas);
+    out.specialties = list(p.specialties);
+    out.licences = list(p.licences);
+    out.idealTrades = list(p.idealTrades);
+    out.idealNote = p.idealNote || "";
+    out.gallery = Array.isArray(p.gallery) ? p.gallery.map(function (g, i) {
+      return { id: g.id || ("g" + (i + 1)), title: g.title || ("Job photo " + (i + 1)), tone: g.tone || "teal", icon: g.icon || "house" };
+    }) : [];
+    out.goals = Array.isArray(p.goals) ? p.goals.map(function (g, i) {
+      return { id: g.id || ("goal" + (i + 1)), label: g.label || "", current: Number(g.current) || 0, target: Number(g.target) || 0 };
+    }).filter(function (g) { return g.label; }) : [];
+    return out;
+  }
+
+  function tile(title, tone, icon) { return { id: title.toLowerCase().replace(/[^a-z0-9]+/g, "-"), title: title, tone: tone, icon: icon }; }
+  function goal(label, current, target) { return { id: label.slice(0, 12).replace(/\s+/g, "-").toLowerCase(), label: label, current: current, target: target }; }
+
+  var SEEDS = {
+    jamie: {
+      years: 14,
+      serviceAreas: ["Midland", "Mundaring", "Ellenbrook", "Joondalup", "Wanneroo"],
+      specialties: ["Termite inspections", "Pre-purchase inspections", "General pest", "Commercial"],
+      licences: ["Pest management technician licence (WA)"],
+      gallery: [tile("Termite inspection", "teal", "bug"), tile("Treatment around the home", "moss", "house"), tile("Pre-purchase report", "navy", "wrench"), tile("Garden treatment", "amber", "leaf")],
+      idealTrades: ["Carpenter", "Builder", "Electrician"],
+      idealNote: "I work well with carpenters and builders when a renovation needs a termite inspection first.",
+      goals: [goal("Leave 8 genuine Google reviews this quarter", 5, 8), goal("Meet 6 new tradies in the Hills", 4, 6), goal("Comment on 4 recommendation alerts this month", 2, 4)]
+    },
+    sarah: {
+      years: 9,
+      serviceAreas: ["Joondalup", "Wanneroo", "Scarborough", "Perth"],
+      specialties: ["Kitchens", "Decks", "Home renovations", "Custom joinery"],
+      licences: ["Registered builder (restricted)"],
+      gallery: [tile("Kitchen joinery", "coral", "house"), tile("New deck", "amber", "leaf"), tile("Renovation framing", "navy", "wrench")],
+      idealTrades: ["Electrician", "Plumber", "Painter", "Tiler"],
+      idealNote: "I often need a sparky, a plumber and a tiler on the same kitchen or bathroom job.",
+      goals: [goal("Refer 5 trusted trades this quarter", 3, 5), goal("Get 10 Google reviews from real jobs", 6, 10)]
+    },
+    jack: {
+      years: 11,
+      serviceAreas: ["Kwinana", "Rockingham", "Safety Bay"],
+      specialties: ["Safety switch upgrades", "Rewires", "Solar-ready boards", "Lighting"],
+      licences: ["Electrical contractor licence (WA)", "Working at heights"],
+      gallery: [tile("Switchboard upgrade", "amber", "bolt"), tile("New lighting", "navy", "house"), tile("Site fit-off", "teal", "wrench")],
+      idealTrades: ["Builder", "Air Conditioning", "Carpenter"],
+      idealNote: "Happy to team up with builders and air-con techs on new homes and upgrades.",
+      goals: [goal("Finish 6 safety-switch jobs this month", 6, 6), goal("Meet 4 new builders in Kwinana", 1, 4)]
+    },
+    tom: {
+      years: 8,
+      serviceAreas: ["Mundaring", "Armadale", "Midland"],
+      specialties: ["Colorbond fences", "Timber fences", "Gates", "Retaining"],
+      licences: [],
+      gallery: [tile("Colorbond fence", "olive", "fence"), tile("Timber gate", "amber", "fence"), tile("Boundary fence", "moss", "house")],
+      idealTrades: ["Landscaper", "Builder", "Carpenter"],
+      idealNote: "Landscapers and builders often call me in when a new yard or home needs a fence and gate.",
+      goals: [goal("Share 3 Facebook recommendations this month", 1, 3)]
+    },
+    liam: {
+      years: 16,
+      serviceAreas: ["Fremantle", "Cannington", "Perth"],
+      specialties: ["Bathroom fit-outs", "Hot water", "Blocked drains"],
+      licences: ["Plumbing and gas fitting licence (WA)"],
+      gallery: [tile("Bathroom rough-in", "navy", "drop"), tile("Hot water install", "sky", "wrench")],
+      idealTrades: ["Tiler", "Electrician", "Carpenter"],
+      idealNote: "Bathroom jobs go smoothly when I can call a tiler and a sparky I already know.",
+      goals: [goal("Get 6 Google reviews this quarter", 2, 6)]
+    },
+    priya: {
+      years: 7,
+      serviceAreas: ["Morley", "Midland", "Perth"],
+      specialties: ["Interior painting", "Exteriors", "Colour consults"],
+      licences: [],
+      gallery: [tile("Interior repaint", "violet", "paint"), tile("Exterior trim", "coral", "house")],
+      idealTrades: ["Carpenter", "Plasterer"],
+      idealNote: "I like to follow a carpenter or plasterer so the paint goes on a tidy surface.",
+      goals: [goal("Meet 5 new renovators this quarter", 2, 5)]
+    },
+    mei: {
+      years: 10,
+      serviceAreas: ["Mundaring", "Ellenbrook", "Midland"],
+      specialties: ["Garden design", "Paving", "Retaining walls"],
+      licences: [],
+      gallery: [tile("Paving and garden", "moss", "leaf"), tile("Retaining wall", "teal", "house")],
+      idealTrades: ["Fencer", "Carpenter", "Electrician"],
+      idealNote: "A fence builder and a carpenter on the same site makes a garden job finish cleanly.",
+      goals: [goal("Do 4 jobs with another circle member", 2, 4)]
+    },
+    emma: {
+      years: 6,
+      serviceAreas: ["Joondalup", "Perth", "Subiaco"],
+      specialties: ["Split-system installs", "Servicing", "Office fit-outs"],
+      licences: ["Refrigerant handling licence"],
+      gallery: [tile("Split-system install", "sky", "house")],
+      idealTrades: ["Electrician", "Builder"],
+      idealNote: "I need a licensed electrician on most install days.",
+      goals: [goal("Leave 5 genuine reviews this quarter", 1, 5)]
+    }
+  };
+
+  function seedFor(m) {
+    if (!m) return empty();
+    return normalize(SEEDS[m.id] || {});
+  }
+
+  function fromMember(m) {
+    if (!m) return empty();
+    if (m.profile && (m.profile.years || (m.profile.gallery && m.profile.gallery.length) || (m.profile.specialties && m.profile.specialties.length))) {
+      return normalize(m.profile);
+    }
+    return seedFor(m);
+  }
+
+  function applyToMember(m, p) {
+    if (!m) return;
+    m.profile = normalize(p);
+  }
+
+  function hydrate(list) {
+    (list || []).forEach(function (m) {
+      if (!m.profile) m.profile = seedFor(m);
+      else m.profile = normalize(Object.assign(seedFor(m), m.profile));
+    });
+  }
+
+  function chips(arr, cls) {
+    return (arr || []).map(function (t) {
+      return '<span class="pill ' + (cls || "t-pill") + '">' + esc(t) + "</span>";
+    }).join("");
+  }
+
+  function galleryTile(item, i, mid, mine) {
+    var bg = TONES[item.tone] || TONES.teal;
+    var ico = ICONS[item.icon] || ICONS.house;
+    var remove = mine
+      ? '<button type="button" class="gal-remove" data-action="gal-remove" data-id="' + esa(mid) + '" data-gid="' + esa(item.id) + '" aria-label="Remove photo">×</button>'
+      : "";
+    return '<div class="gal-cell"><button type="button" class="gal-tile" data-action="gal-open" data-id="' + esa(mid) + '" data-index="' + i + '" style="background:' + bg + '">' +
+      '<span class="gal-ico" aria-hidden="true">' + ico + "</span>" +
+      '<span class="gal-cap">' + esc(item.title) + "</span></button>" + remove + "</div>";
+  }
+
+  function viewHTML(m, opts) {
+    opts = opts || {};
+    var p = fromMember(m);
+    var mine = !!opts.mine;
+    var mid = (m && m.id) || "";
+    var parts = [];
+
+    var aboutBits = [];
+    if (m && m.bio) aboutBits.push('<p class="bio" style="margin:0">' + esc(m.bio) + "</p>");
+    if (p.years) aboutBits.push('<div class="profile-stat"><span class="k">Years in business</span><span class="v">' + esc(p.years) + " years</span></div>");
+    if (p.serviceAreas.length) aboutBits.push('<div class="profile-stat"><span class="k">Service areas</span><div class="tags" style="margin-top:6px">' + chips(p.serviceAreas, "r-pill") + "</div></div>");
+    if (aboutBits.length) {
+      parts.push('<section class="profile-block"><h3 class="profile-h">About my business</h3>' + aboutBits.join("") + "</section>");
+    }
+
+    var exp = [];
+    if (p.specialties.length) exp.push('<div class="tags">' + chips(p.specialties, "t-pill") + "</div>");
+    if (p.licences.length) {
+      exp.push('<p class="profile-stat k" style="margin:10px 0 4px">Licences</p><ul class="licence-list">' + p.licences.map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ul>");
+    }
+    if (exp.length) parts.push('<section class="profile-block"><h3 class="profile-h">Expertise</h3>' + exp.join("") + "</section>");
+
+    if (p.gallery.length || mine) {
+      var add = mine
+        ? '<div class="gal-cell"><button type="button" class="gal-tile gal-add" data-action="gal-add" data-id="' + esa(mid) + '"><span class="gal-ico" aria-hidden="true">+</span><span class="gal-cap">Add photo</span></button></div>'
+        : "";
+      var emptyGal = !p.gallery.length ? '<p class="hint" style="margin:0 0 8px">No job photos yet. Add a few so other members can see the kind of work you do. These are placeholders in the prototype.</p>' : "";
+      parts.push('<section class="profile-block"><h3 class="profile-h">Image gallery</h3>' + emptyGal +
+        '<div class="gal-grid">' + p.gallery.map(function (g, i) { return galleryTile(g, i, mid, mine); }).join("") + add + "</div>" +
+        (mine ? '<p class="hint">Photos are placeholders in this prototype. Tap a tile to view it full screen. Add or remove is a mock only.</p>' : "") +
+        "</section>");
+    }
+
+    if (p.idealTrades.length || p.idealNote) {
+      parts.push('<section class="profile-block"><h3 class="profile-h">My ideal referral partner</h3>' +
+        (p.idealTrades.length ? '<div class="tags">' + chips(p.idealTrades, "t-pill") + "</div>" : "") +
+        (p.idealNote ? '<p class="ideal-note">' + esc(p.idealNote) + "</p>" : "") +
+        "</section>");
+    }
+
+    if (p.goals.length) {
+      var rows = p.goals.map(function (g) {
+        var pct = g.target ? Math.max(0, Math.min(100, Math.round((g.current / g.target) * 100))) : 0;
+        var done = g.target && g.current >= g.target;
+        return '<div class="goal-row' + (done ? " done" : "") + '"><div class="goal-top"><span>' + esc(g.label) + "</span><strong>" + g.current + " of " + g.target + "</strong></div>" +
+          '<div class="goal-bar" role="progressbar" aria-valuenow="' + g.current + '" aria-valuemin="0" aria-valuemax="' + g.target + '"><i style="width:' + pct + '%"></i></div></div>';
+      }).join("");
+      parts.push('<section class="profile-block"><h3 class="profile-h">My goals</h3>' + rows + "</section>");
+    }
+
+    if (!parts.length) return "";
+    return '<div class="profile-extras">' + parts.join("") + "</div>";
+  }
+
+  function chipToggle(name, value, on) {
+    return '<button type="button" class="chip' + (on ? " active" : "") + '" data-profile-chip="' + esa(name) + '" data-value="' + esa(value) + '">' + esc(value) + "</button>";
+  }
+
+  function editFields(p) {
+    p = normalize(p);
+    function csv(arr) { return (arr || []).join(", "); }
+    var goalRows = (p.goals.length ? p.goals : [{ label: "", current: "", target: "" }]).map(function (g, i) {
+      return '<div class="goal-edit field" data-goal-row>' +
+        '<input data-goal="label" placeholder="Goal, e.g. Meet 5 new tradies" value="' + esa(g.label || "") + '">' +
+        '<div class="goal-nums"><input data-goal="current" inputmode="numeric" placeholder="Now" value="' + esa(g.current === 0 || g.current ? g.current : "") + '">' +
+        '<span>of</span>' +
+        '<input data-goal="target" inputmode="numeric" placeholder="Target" value="' + esa(g.target || "") + '"></div></div>';
+    }).join("");
+    return '<div class="profile-edit" data-profile-edit="1">' +
+      '<p class="group-label">About my business <span class="opt">(optional)</span></p>' +
+      '<div class="field"><label>Years in business</label><input name="profileYears" inputmode="numeric" placeholder="e.g. 10" value="' + esa(p.years) + '"></div>' +
+      '<div class="field"><label>Service areas</label><input name="profileAreas" placeholder="Suburbs, separated by commas" value="' + esa(csv(p.serviceAreas)) + '">' +
+      '<div class="chips chips-tight" style="margin-top:8px">' + SUBURBS.map(function (s) { return chipToggle("serviceAreas", s, p.serviceAreas.indexOf(s) !== -1); }).join("") + "</div></div>" +
+      '<p class="group-label">Expertise <span class="opt">(optional)</span></p>' +
+      '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Termite inspections, Decks" value="' + esa(csv(p.specialties)) + '"></div>' +
+      '<div class="field"><label>Licences</label><textarea name="profileLicences" rows="2" placeholder="One licence per line">' + esc(p.licences.join("\n")) + "</textarea></div>" +
+      '<p class="group-label">My ideal referral partner <span class="opt">(optional)</span></p>' +
+      '<div class="chips chips-tight">' + TRADE_CHIPS.map(function (s) { return chipToggle("idealTrades", s, p.idealTrades.indexOf(s) !== -1); }).join("") + "</div>" +
+      '<input type="hidden" name="profileIdealTrades" value="' + esa(csv(p.idealTrades)) + '">' +
+      '<div class="field" style="margin-top:8px"><label>A short sentence</label><textarea name="profileIdealNote" rows="2" placeholder="Who you like to work with, and why">' + esc(p.idealNote) + "</textarea></div>" +
+      '<p class="group-label">My goals <span class="opt">(optional)</span></p>' +
+      '<div data-goal-list>' + goalRows + "</div>" +
+      '<button type="button" class="btn btn-ghost ink" data-action="add-goal" style="margin:4px 0 12px">Add a goal</button>' +
+      '<p class="hint">Job photos can be added or removed on My profile. These fields are optional and you can leave them blank.</p>' +
+      "</div>";
+  }
+
+  function collect(form, current) {
+    var p = normalize(current);
+    if (!form) return p;
+    var years = form.querySelector("[name='profileYears']");
+    var areas = form.querySelector("[name='profileAreas']");
+    var spec = form.querySelector("[name='profileSpecialties']");
+    var lic = form.querySelector("[name='profileLicences']");
+    var note = form.querySelector("[name='profileIdealNote']");
+    var idealHid = form.querySelector("[name='profileIdealTrades']");
+    if (years) p.years = String(years.value || "").trim();
+    if (areas) p.serviceAreas = list(areas.value);
+    if (spec) p.specialties = list(spec.value);
+    if (lic) p.licences = list(lic.value);
+    if (note) p.idealNote = String(note.value || "").trim();
+    if (idealHid) p.idealTrades = list(idealHid.value);
+    var goals = [];
+    form.querySelectorAll("[data-goal-row]").forEach(function (row) {
+      var label = (row.querySelector("[data-goal='label']") || {}).value || "";
+      if (!String(label).trim()) return;
+      goals.push({
+        label: String(label).trim(),
+        current: Number((row.querySelector("[data-goal='current']") || {}).value) || 0,
+        target: Number((row.querySelector("[data-goal='target']") || {}).value) || 0
+      });
+    });
+    if (form.querySelector("[data-goal-row]")) p.goals = goals;
+    return p;
+  }
+
+  function syncChipInput(form, name, hiddenName, joinedInto) {
+    var selected = [];
+    form.querySelectorAll('[data-profile-chip="' + name + '"].active').forEach(function (b) {
+      selected.push(b.getAttribute("data-value"));
+    });
+    var hid = form.querySelector("[name='" + (hiddenName || "") + "']");
+    if (hid) hid.value = selected.join(", ");
+    var inp = form.querySelector("[name='" + (joinedInto || "") + "']");
+    if (inp && name === "serviceAreas") {
+      var typed = list(inp.value);
+      selected.forEach(function (s) { if (typed.indexOf(s) === -1) typed.push(s); });
+      /* also drop unchecked suburbs that were only from chips */
+      inp.value = typed.filter(function (s) {
+        if (SUBURBS.indexOf(s) === -1) return true;
+        return selected.indexOf(s) !== -1;
+      }).join(", ");
+    }
+  }
+
+  function bindForm(form) {
+    if (!form || form.getAttribute("data-profile-bound") === "1") return;
+    form.setAttribute("data-profile-bound", "1");
+    form.addEventListener("click", function (e) {
+      var chip = e.target.closest("[data-profile-chip]");
+      if (chip) {
+        e.preventDefault();
+        chip.classList.toggle("active");
+        var name = chip.getAttribute("data-profile-chip");
+        if (name === "serviceAreas") syncChipInput(form, name, "", "profileAreas");
+        if (name === "idealTrades") syncChipInput(form, name, "profileIdealTrades", "");
+      }
+      if (e.target.closest("[data-action='add-goal']")) {
+        e.preventDefault();
+        var listEl = form.querySelector("[data-goal-list]");
+        if (listEl) listEl.insertAdjacentHTML("beforeend",
+          '<div class="goal-edit field" data-goal-row><input data-goal="label" placeholder="Goal, e.g. Meet 5 new tradies" value="">' +
+          '<div class="goal-nums"><input data-goal="current" inputmode="numeric" placeholder="Now" value=""><span>of</span>' +
+          '<input data-goal="target" inputmode="numeric" placeholder="Target" value=""></div></div>');
+      }
+    });
+  }
+
+  var viewer = { open: false, mid: "", index: 0, items: [] };
+
+  function closeViewer() {
+    var el = document.getElementById("galleryViewer");
+    if (el) el.remove();
+    viewer.open = false;
+  }
+
+  function renderViewer() {
+    var el = document.getElementById("galleryViewer");
+    if (!el || !viewer.items.length) return;
+    var i = viewer.index;
+    var item = viewer.items[i];
+    var bg = TONES[item.tone] || TONES.teal;
+    var ico = ICONS[item.icon] || ICONS.house;
+    el.querySelector(".gal-view-stage").style.background = bg;
+    el.querySelector(".gal-view-ico").innerHTML = ico;
+    el.querySelector(".gal-view-title").textContent = item.title;
+    el.querySelector(".gal-view-count").textContent = (i + 1) + " of " + viewer.items.length;
+    el.querySelector("[data-action='gal-prev']").disabled = viewer.items.length < 2;
+    el.querySelector("[data-action='gal-next']").disabled = viewer.items.length < 2;
+  }
+
+  function openViewer(mid, index) {
+    var m = null;
+    try { m = (window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === mid; })[0]; } catch (e) {}
+    var items = fromMember(m).gallery;
+    if (!items.length) return;
+    viewer.mid = mid;
+    viewer.items = items;
+    viewer.index = Math.max(0, Math.min(items.length - 1, Number(index) || 0));
+    viewer.open = true;
+    closeViewer();
+    viewer.open = true;
+    var host = document.getElementById("phone") || document.body;
+    var wrap = document.createElement("div");
+    wrap.id = "galleryViewer";
+    wrap.className = "gal-viewer";
+    wrap.innerHTML = '<div class="gal-view-panel">' +
+      '<button type="button" class="gal-view-close" data-action="gal-close" aria-label="Close">Close</button>' +
+      '<div class="gal-view-stage"><span class="gal-view-ico" aria-hidden="true"></span></div>' +
+      '<div class="gal-view-meta"><div class="gal-view-title"></div><div class="gal-view-count"></div></div>' +
+      '<div class="gal-view-nav"><button type="button" data-action="gal-prev">Previous</button>' +
+      '<button type="button" data-action="gal-next">Next</button></div></div>';
+    host.appendChild(wrap);
+    renderViewer();
+    var startX = 0, startY = 0, tracking = false;
+    var stage = wrap.querySelector(".gal-view-stage");
+    function onStart(ev) {
+      var t = ev.touches ? ev.touches[0] : ev;
+      startX = t.clientX; startY = t.clientY; tracking = true;
+    }
+    function onEnd(ev) {
+      if (!tracking) return;
+      tracking = false;
+      var t = ev.changedTouches ? ev.changedTouches[0] : ev;
+      var dx = t.clientX - startX, dy = t.clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) step(1); else step(-1);
+      }
+    }
+    stage.addEventListener("touchstart", onStart, { passive: true });
+    stage.addEventListener("touchend", onEnd);
+    stage.addEventListener("pointerdown", onStart);
+    stage.addEventListener("pointerup", onEnd);
+  }
+
+  function step(dir) {
+    if (!viewer.items.length) return;
+    viewer.index = (viewer.index + dir + viewer.items.length) % viewer.items.length;
+    renderViewer();
+  }
+
+  var ADD_POOL = [
+    tile("On-site work", "navy", "wrench"),
+    tile("Finished job", "teal", "house"),
+    tile("Before and after", "amber", "paint"),
+    tile("Detail shot", "moss", "leaf"),
+    tile("Workshop", "coral", "wrench")
+  ];
+
+  function addPhoto(m) {
+    if (!m) return;
+    var p = fromMember(m);
+    var used = p.gallery.map(function (g) { return g.title; });
+    var next = ADD_POOL.filter(function (t) { return used.indexOf(t.title) === -1; })[0] || tile("Job photo " + (p.gallery.length + 1), "sky", "house");
+    next = { id: "g" + Date.now(), title: next.title, tone: next.tone, icon: next.icon };
+    p.gallery.push(next);
+    applyToMember(m, p);
+  }
+
+  function removePhoto(m, gid) {
+    if (!m) return;
+    var p = fromMember(m);
+    p.gallery = p.gallery.filter(function (g) { return g.id !== gid; });
+    applyToMember(m, p);
+  }
+
+  function adminHTML(m) {
+    return viewHTML(m, { mine: false });
+  }
+
+  root.TCProfile = {
+    empty: empty,
+    normalize: normalize,
+    fromMember: fromMember,
+    applyToMember: applyToMember,
+    hydrate: hydrate,
+    seedFor: seedFor,
+    viewHTML: viewHTML,
+    editFields: editFields,
+    collect: collect,
+    bindForm: bindForm,
+    openViewer: openViewer,
+    closeViewer: closeViewer,
+    step: step,
+    addPhoto: addPhoto,
+    removePhoto: removePhoto,
+    adminHTML: adminHTML,
+    SUBURBS: SUBURBS
+  };
+})(typeof window !== "undefined" ? window : global);
+
+</script>
+  <script>
+/* review-cap.js */
+/* TradeCircle Perth — daily Google review cap per business, v1.5.4
+   Cap is per reviewee, per Perth calendar day. Default 3. */
+(function (root) {
+  "use strict";
+
+  var LS_LIMIT = "tc_review_daily_limit";
+  var LS_COUNTS = "tc_review_daily_counts";
+  var DEFAULT_LIMIT = 3;
+
+  function load(key, fallback) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return fallback;
+  }
+  function save(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+  }
+
+  function perthToday() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Australia/Perth",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+  }
+  function msUntilMidnightPerth() {
+    var today = perthToday();
+    var p = today.split("-").map(Number);
+    /* Next midnight AWST (UTC+8) is 16:00 UTC on this calendar date. */
+    var next = Date.UTC(p[0], p[1] - 1, p[2], 16, 0, 0);
+    return Math.max(0, next - Date.now());
+  }
+  function opensInLabel() {
+    var ms = msUntilMidnightPerth();
+    var h = Math.floor(ms / 3600000);
+    var m = Math.floor((ms % 3600000) / 60000);
+    if (h <= 0 && m <= 0) return "Opens shortly";
+    if (h <= 0) return "Opens in " + m + "m";
+    return "Opens in " + h + "h " + m + "m";
+  }
+
+  function limit() {
+    var n = load(LS_LIMIT, null);
+    if (typeof n === "number" && n >= 1 && n <= 20) return n;
+    if (root.TradeCircle && root.TradeCircle.state && root.TradeCircle.state.reviewDailyLimit) {
+      return Number(root.TradeCircle.state.reviewDailyLimit) || DEFAULT_LIMIT;
+    }
+    return DEFAULT_LIMIT;
+  }
+  function setLimit(n) {
+    n = Math.max(1, Math.min(20, Number(n) || DEFAULT_LIMIT));
+    save(LS_LIMIT, n);
+    if (root.TradeCircle && root.TradeCircle.state) root.TradeCircle.state.reviewDailyLimit = n;
+    return n;
+  }
+
+  function rawCounts() {
+    return load(LS_COUNTS, null) || seedCounts();
+  }
+  function seedCounts() {
+    /* Jack Thompson / Thompson Electrical already at the daily cap (fictional). */
+    var today = perthToday();
+    var data = {
+      jack: { date: today, n: 3, by: ["sarah", "mei", "priya"] }
+    };
+    save(LS_COUNTS, data);
+    return data;
+  }
+  function row(bizId) {
+    var all = rawCounts();
+    var today = perthToday();
+    var r = all[bizId] || { date: today, n: 0, by: [] };
+    if (r.date !== today) r = { date: today, n: 0, by: [] };
+    return r;
+  }
+  function persistRow(bizId, r) {
+    var all = rawCounts();
+    all[bizId] = r;
+    save(LS_COUNTS, all);
+  }
+  function countFor(bizId) { return row(bizId).n || 0; }
+  function atLimit(bizId) { return countFor(bizId) >= limit(); }
+  function remaining(bizId) { return Math.max(0, limit() - countFor(bizId)); }
+  function record(bizId, viewerId) {
+    if (!bizId) return row(bizId);
+    var r = row(bizId);
+    var cap = limit();
+    if (r.n >= cap) return r;
+    r.n += 1;
+    if (viewerId && r.by.indexOf(viewerId) === -1) r.by.push(viewerId);
+    persistRow(bizId, r);
+    return r;
+  }
+
+  function svgLock() {
+    return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+  }
+
+  function counterHTML(bizId) {
+    var n = countFor(bizId);
+    var cap = limit();
+    var cls = n >= cap ? "rev-today warn" : "rev-today";
+    return '<div class="' + cls + '">Reviews today: ' + n + " of " + cap + "</div>";
+  }
+
+  function bannerHTML(bizId, opts) {
+    opts = opts || {};
+    if (!atLimit(bizId)) return "";
+    var cap = limit();
+    var n = countFor(bizId);
+    return '<div class="limit-banner" role="status">' +
+      '<div class="limit-lock" aria-hidden="true">' + svgLock() + "</div>" +
+      "<div><strong>Daily limit reached: " + n + " of " + cap + " Google reviews today</strong>" +
+      '<div class="sub">Opens tomorrow<span class="limit-eta"> \u00b7 ' + opensInLabel() + "</span></div>" +
+      "</div></div>";
+  }
+
+  function lockedButton(label) {
+    return '<button type="button" class="btn btn-locked has-ico" disabled aria-disabled="true">' +
+      svgLock() + "<span>" + (label || "Locked today") + "</span></button>";
+  }
+
+  root.TCReviews = {
+    DEFAULT_LIMIT: DEFAULT_LIMIT,
+    perthToday: perthToday,
+    opensInLabel: opensInLabel,
+    msUntilMidnightPerth: msUntilMidnightPerth,
+    limit: limit,
+    setLimit: setLimit,
+    countFor: countFor,
+    atLimit: atLimit,
+    remaining: remaining,
+    record: record,
+    counterHTML: counterHTML,
+    bannerHTML: bannerHTML,
+    lockedButton: lockedButton,
+    lockIcon: svgLock,
+    row: row
+  };
+})(typeof window !== "undefined" ? window : global);
+
+</script>
+  <script>
+/* app.js */
 (function () {
   const TRADES = (window.TC_TRADES && window.TC_TRADES.length) ? window.TC_TRADES.slice() : [
     "Pest Control", "Carpenter", "Painter", "Plumber", "Electrician",
@@ -2122,6 +3691,16 @@ window.TC_TRADES = [
       phone: "0412 000 101",
       facebook: "https://www.facebook.com/demo.halepestcontrol",
       page: "https://www.facebook.com/demo.halepestcontrol.biz",
+      links: {
+        website: "https://www.halepest.example.au",
+        facebook: "https://www.facebook.com/demo.halepestcontrol.biz",
+        instagram: "https://www.instagram.com/demo.halepest",
+        linkedin: "https://www.linkedin.com/company/demo-hale-pest",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-hale-pest",
+        other: ""
+      },
       color: "teal", isMe: true
     },
     {
@@ -2132,6 +3711,16 @@ window.TC_TRADES = [
       phone: "0412 000 102",
       facebook: "https://www.facebook.com/demo.nguyencarpentry",
       page: "https://www.facebook.com/demo.nguyencarpentry.biz",
+      links: {
+        website: "https://www.nguyencarpentry.example.au",
+        facebook: "https://www.facebook.com/demo.nguyencarpentry.biz",
+        instagram: "https://www.instagram.com/demo.nguyencarpentry",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-nguyen-carpentry",
+        other: ""
+      },
       color: "coral"
     },
     {
@@ -2142,6 +3731,16 @@ window.TC_TRADES = [
       phone: "0412 000 103",
       facebook: "https://www.facebook.com/demo.oconnorplumbing",
       page: "https://www.facebook.com/demo.oconnorplumbing.biz",
+      links: {
+        website: "https://www.oconnorplumbing.example.au",
+        facebook: "https://www.facebook.com/demo.oconnorplumbing.biz",
+        instagram: "",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-oconnor-plumbing",
+        other: ""
+      },
       color: "navy"
     },
     {
@@ -2162,6 +3761,16 @@ window.TC_TRADES = [
       phone: "0412 000 105",
       facebook: "https://www.facebook.com/demo.thompsonelectrical",
       page: "https://www.facebook.com/demo.thompsonelectrical.biz",
+      links: {
+        website: "https://www.thompsonelectrical.example.au",
+        facebook: "https://www.facebook.com/demo.thompsonelectrical.biz",
+        instagram: "",
+        linkedin: "https://www.linkedin.com/company/demo-thompson-electrical",
+        tiktok: "",
+        youtube: "https://www.youtube.com/@demo.thompsonelectrical",
+        google: "https://search.google.com/local/writereview?placeid=demo-thompson-electrical",
+        other: ""
+      },
       color: "amber"
     },
     {
@@ -2212,6 +3821,16 @@ window.TC_TRADES = [
       phone: "0412 000 110",
       facebook: "https://www.facebook.com/demo.reevesfencing",
       page: "https://www.facebook.com/demo.reevesfencing.biz",
+      links: {
+        website: "https://www.reevesfencing.example.au",
+        facebook: "https://www.facebook.com/demo.reevesfencing.biz",
+        instagram: "https://www.instagram.com/demo.reevesfencing",
+        linkedin: "",
+        tiktok: "https://www.tiktok.com/@demo.reevesfencing",
+        youtube: "",
+        google: "",
+        other: ""
+      },
       color: "olive"
     },
     {
@@ -2562,6 +4181,8 @@ window.TC_TRADES = [
     return state.draft || {
       first: m.first, last: m.last, business: m.business, trade: m.trade,
       bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
+      links: (window.TCLinks ? TCLinks.fromMember(m) : (m.links || {})),
+      profile: (window.TCProfile ? TCProfile.fromMember(m) : (m.profile || {})),
       regions: m.regions.slice()
     };
   }
@@ -2590,6 +4211,8 @@ window.TC_TRADES = [
       phone: fd.get("phone") || "",
       facebook: fd.get("facebook") || "",
       page: fd.get("page") || "",
+      links: (window.TCLinks ? TCLinks.collect(form, current.links || current) : (current.links || {})),
+      profile: (window.TCProfile ? TCProfile.collect(form, current.profile || current) : (current.profile || {})),
       regions: (current.regions || me().regions).slice()
     };
   }
@@ -2599,6 +4222,8 @@ window.TC_TRADES = [
     var m = me();
     m.first = d.first; m.last = d.last; m.business = d.business; m.trade = d.trade;
     m.bio = d.bio; m.phone = d.phone; m.facebook = d.facebook; m.page = d.page;
+    if (window.TCLinks) TCLinks.applyToMember(m, d.links || d);
+    if (window.TCProfile) TCProfile.applyToMember(m, d.profile || d);
     m.regions = (d.regions || []).slice();
   }
 
@@ -2879,7 +4504,7 @@ window.TC_TRADES = [
     opts = opts || {};
     if (opts.memberId) state.selectedMember = opts.memberId;
     if (id === "create-profile" && !state.draft) {
-      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: [] };
       state.stepRegions = [];
     }
     if (id === "edit-profile") state.draft = draftFromMe();
@@ -3432,7 +5057,10 @@ window.TC_TRADES = [
   };
 })();
 
-/* TradeCircle Perth — prototype v1.5.3 */
+</script>
+  <script>
+/* v12.js */
+/* TradeCircle Perth — prototype v1.5.4 */
 (function () {
   "use strict";
 
@@ -3640,11 +5268,73 @@ window.TC_TRADES = [
       "</div></div>";
   }
 
+function googleG(size, mono) {
+    size = size || 18;
+    if (mono) {
+      return '<svg class="g-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    }
+    return '<svg class="g-ico g-color" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+function facebookF(size, color) {
+    size = size || 18;
+    var fill = color || "currentColor";
+    return '<svg class="f-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="' + fill + '" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  function peopleIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+  }
+  function personPlusIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>';
+  }
+  function shieldCheckIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-3z"/><path d="M8.5 12l2.5 2.5 5-5"/></svg>';
+  }
+  function lockIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+  }
+  function megaIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/></svg>';
+  }
+  function chatIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/></svg>';
+  }
+  var NOTIF_STYLE = {
+    review: { bg: "#E8F1FD", color: "#1A73E8", icon: "review" },
+    queue: { bg: "#E8F1FD", color: "#1877F2", icon: "queue" },
+    friend: { bg: "#E8F1FD", color: "#1877F2", icon: "friend" },
+    member: { bg: "#E7F8F1", color: "#066B4C", icon: "member" },
+    chat: { bg: "#EEF2F6", color: "#0B1F33", icon: "chat" },
+    alert: { bg: "#FFF6E0", color: "#8A5A00", icon: "alert" },
+    admin: { bg: "#EEF2F6", color: "#14314C", icon: "admin" },
+    limit: { bg: "#F6E8E8", color: "#7A1F1A", icon: "limit" }
+  };
+  function notifGlyph(type, size) {
+    size = size || 16;
+    if (type === "review") return (typeof googleG === "function" ? googleG(size) : "");
+    if (type === "queue") return facebookF(size);
+    if (type === "friend") return peopleIco(size);
+    if (type === "member") return personPlusIco(size);
+    if (type === "chat") return chatIco(size);
+    if (type === "alert") return megaIco(size);
+    if (type === "admin") return shieldCheckIco(size);
+    if (type === "limit") return lockIco(size);
+    return megaIco(size);
+  }
+  function notifTile(type, size) {
+    var st = NOTIF_STYLE[type] || NOTIF_STYLE.alert;
+    return '<div class="notif-ico" style="background:' + st.bg + ';color:' + st.color + '">' + notifGlyph(type, size || 16) + "</div>";
+  }
   function fbMark() {
     return '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
   }
   function starMark() {
-    return '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/></svg>';
+    return googleG(13, true);
   }
   function statusIcon(cls, label, inner) {
     return '<span class="sb ' + cls + '" role="img" aria-label="' + label + '" title="' + label + '">' + inner + "</span>";
@@ -3758,7 +5448,7 @@ window.TC_TRADES = [
 
   function gBadge(m) {
     var g = GMAP[m.id] || { rating: "\u2014", count: 0 };
-    return '<div class="g-badge">' + I.star + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
+    return '<div class="g-badge">' + googleG(14) + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
   }
 
   function renderMember(id) {
@@ -3839,7 +5529,7 @@ window.TC_TRADES = [
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.3 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.4 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -4003,7 +5693,7 @@ window.TC_TRADES = [
       '<button type="button" class="link" data-action="refresh-ideas" style="margin:4px 0 12px">Show different ideas</button>' +
       '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
       '<div class="uniq ' + (u.ok ? "ok" : "bad") + '">' + u.msg + "</div>" +
-      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + I.star + "<span>Copy and open Google</span></a>" +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + googleG(18) + "<span>Copy and open Google</span></a>" +
       '<p class="hint" style="text-align:center">The text is copied so you can paste it into Google and change it before you post.</p></div></section>';
   }
   function seedChats() {
@@ -4181,33 +5871,47 @@ window.TC_TRADES = [
       "</div></section>";
   }
   const NOTIFS = [
-    { id: "n1", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "chat-dm", chat: "dm-jack" },
-    { id: "n2", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
-    { id: "n3", title: "New member in Hills", body: "Mei Chen (West Coast Gardens) joined the Hills region.", time: "Yesterday", unread: false, go: "member", who: "mei" },
-    { id: "n4", title: "Sarah mentioned you", body: "In Hills tradies: @Jamie can you take a termite job in Mundaring?", time: "Mon", unread: false, go: "chat-group", chat: "grp-hills" }
+    { id: "n0", type: "limit", title: "Daily review limit reached", body: "Thompson Electrical already has 3 of 3 Google reviews from the circle today. Opens tomorrow.", time: "8:02 am", unread: true, go: "member", who: "jack" },
+    { id: "n1", type: "review", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "review-ideas", who: "jack" },
+    { id: "n2", type: "review", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
+    { id: "n5", type: "review", title: "Sarah left you a Google review", body: "Review back when you can, if the daily limit is not already full.", time: "Yesterday", unread: true, go: "reviews-back", who: "sarah" },
+    { id: "n6", type: "friend", title: "Liam O’Connor", body: "Sent you a Facebook friend request.", time: "Yesterday", unread: true, go: "member", who: "liam" },
+    { id: "n7", type: "queue", title: "Facebook promotion queue", body: "You’re fourth in the queue. Your turn is coming up this week.", time: "Yesterday", unread: false, go: "promo-queue" },
+    { id: "n8", type: "alert", title: "Recommendation alert", body: "Someone in the Hills group is asking for a pest controller.", time: "Yesterday", unread: false, go: "rec-alerts" },
+    { id: "n3", type: "member", title: "New member in Hills", body: "Mei Chen (West Coast Gardens) joined the Hills region.", time: "Yesterday", unread: false, go: "member", who: "mei" },
+    { id: "n4", type: "chat", title: "Sarah mentioned you", body: "In Hills tradies: @Jamie can you take a termite job in Mundaring?", time: "Mon", unread: false, go: "chat-group", chat: "grp-hills" },
+    { id: "n9", type: "admin", title: "Emma Brooks was approved", body: "Emma has joined the circle after admin approval.", time: "Mon", unread: false, go: "member", who: "emma" }
   ];
 
   function renderNotifications() {
     return '<section class="screen has-tabs has-header" data-screen="notifications">' + topbar("Notifications") +
-      '<div class="scroll" style="padding:0">' +
+      '<div class="scroll" style="padding-left:0;padding-right:0">' +
       NOTIFS.map(function (n) {
         return '<button type="button" class="notif-row' + (n.unread ? " unread" : "") + '" data-action="open-notif" data-nid="' + n.id + '">' +
-          '<div class="ic" style="width:36px;height:36px;border-radius:10px;background:#E7F8F1;color:#066B4C;display:grid;place-items:center;flex:none">' + I.bell + "</div>" +
+          notifTile(n.type || "alert", 16) +
           '<div style="flex:1;min-width:0"><div class="ttl">' + esc(n.title) + '</div><div class="bd">' + esc(n.body) + '</div><div class="tm">' + esc(n.time) + "</div></div></button>";
       }).join("") +
       "</div></section>";
   }
 
   function renderNotifSettings() {
-    function tog(key, a, b) {
-      return '<button class="set-row" data-action="tog-notif" data-key="' + key + '"><span class="lab"><span class="a">' + a + "</span><span class=\"b\">" + b + '</span></span><span class="toggle' + (notif[key] ? " on" : "") + '"></span></button>';
+    function tog(key, a, b, type) {
+      return '<button class="set-row" data-action="tog-notif" data-key="' + key + '">' + notifTile(type || "alert", 16) + '<span class="lab"><span class="a">' + a + "</span><span class=\"b\">" + b + '</span></span><span class="toggle' + (notif[key] ? " on" : "") + '"></span></button>';
     }
+    if (typeof notif.queue === "undefined") notif.queue = true;
+    if (typeof notif.friends === "undefined") notif.friends = true;
+    if (typeof notif.alerts === "undefined") notif.alerts = true;
+    if (typeof notif.limits === "undefined") notif.limits = true;
     return '<section class="screen has-tabs has-header" data-screen="notif-settings">' + topbar("Notifications") +
       '<div class="scroll"><p class="group-label">Alerts</p><div class="card group">' +
-      tog("messages", "Messages", "New direct messages") +
-      tog("mentions", "Group mentions", "When someone types @ your name") +
-      tog("reviews", "Review requests", "When a member asks you for a Google review") +
-      tog("members", "New members", "When a tradie joins one of your regions") +
+      tog("messages", "Messages", "New direct messages", "chat") +
+      tog("mentions", "Group mentions", "When someone types @ your name", "chat") +
+      tog("reviews", "Review requests", "When a member asks you for a Google review", "review") +
+      tog("friends", "Friend requests", "When someone sends you a Facebook friend request", "friend") +
+      tog("queue", "Promotion queue", "When your Facebook queue turn is coming up", "queue") +
+      tog("alerts", "Recommendation alerts", "When someone shares a Facebook post with the circle", "alert") +
+      tog("members", "New members", "When a tradie joins one of your regions", "member") +
+      tog("limits", "Daily review limit", "When a business reaches 3 Google reviews for the day", "limit") +
       '</div><p class="group-label">Quiet hours</p><div class="card group">' +
       tog("quietOn", "Quiet hours", "Mute alerts overnight") +
       '<div class="set-row"><span class="lab"><span class="a">From</span></span><input type="time" data-quiet="quietFrom" value="' + esa(notif.quietFrom) + '" style="border:0;font-weight:700"></div>' +
@@ -4287,7 +5991,7 @@ window.TC_TRADES = [
     var items = [
       ["members", I.user, "Members", ""],
       ["chats", I.chat, "Chats", ""],
-      ["reviews", I.star, "Reviews", ""],
+      ["reviews", googleG(18), "Reviews", ""],
       ["notifications", I.bell, "Notifications", ""],
       ["me", I.user, "My profile", ""],
       ["my-regions", I.regions, "Your areas", ""],
@@ -4310,7 +6014,7 @@ window.TC_TRADES = [
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.3</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.4</div>';
     return html;
   }
 
@@ -4517,7 +6221,7 @@ window.TC_TRADES = [
       var mm = member(id || S().reviewFor);
       var u = uniqNote(mm, text);
       if (!text) { toast("Write or pick an idea first."); e.preventDefault(); return true; }
-      try { navigator.clipboard.writeText(text); } catch (err) {}
+      if (window.TC154 && TC154.copyText) TC154.copyText(text); else { try { navigator.clipboard.writeText(text); } catch (err) {} }
       usedIdeas[mm.id] = (usedIdeas[mm.id] || []).concat(S()._ideas || []);
       given[mm.id] = { text: text, at: Date.now() };
       reqs.forEach(function (r) { if (r.dir === "in" && r.from === mm.id) r.status = "done"; });
@@ -4591,7 +6295,7 @@ window.TC_TRADES = [
       return true;
     }
     if (action === "copy-invite") {
-      try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {}
+      if (window.TC154 && TC154.copyText) TC154.copyText("https://tradecircle.perth.demo/join/hale-circle"); else { try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {} }
       toast("Invite link copied.");
       return true;
     }
@@ -4727,6 +6431,7 @@ window.TC_TRADES = [
     });
   }
 
+  window.notifTile = notifTile;
   window.TC12 = {
     passRelFilter: passRelFilter,
     memberCard: memberCard,
@@ -4740,7 +6445,8 @@ window.TC_TRADES = [
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     unreadTotal: unreadTotal,
-    notifUnread: notifUnread
+    notifUnread: notifUnread,
+    notifTile: notifTile
   };
 
   if (T().go && S().screen) {
@@ -4748,7 +6454,10 @@ window.TC_TRADES = [
   }
 })();
 
-/* TradeCircle Perth — prototype v1.5.3 */
+</script>
+  <script>
+/* v15.js */
+/* TradeCircle Perth — prototype v1.5.4 */
 (function () {
   "use strict";
 
@@ -4791,6 +6500,20 @@ window.TC_TRADES = [
     open: svg('<path d="M14 5h5v5"/><path d="M19 5L10 14"/><path d="M5 10v9h9"/>')
   };
 
+function googleG(size, mono) {
+    size = size || 18;
+    if (mono) {
+      return '<svg class="g-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    }
+    return '<svg class="g-ico g-color" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  I.g = googleG(18);
+  I.gMono = googleG(18, true);
+  function facebookF(size, color) {
+    size = size || 18;
+    return '<svg class="f-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="' + (color || 'currentColor') + '" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  I.fLogo = facebookF(18);
   function gLink(m) {
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";
@@ -4868,7 +6591,7 @@ window.TC_TRADES = [
       '<button type="button" class="msg-btn sm" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button></div>";
     var back = "";
     if (theyReviewed(m) && !iReviewed(m) && !reviewedBack(m)) {
-      back = '<button type="button" class="slim-cta" data-action="review-back" data-id="' + m.id + '">' + I.star + " Review back</button>";
+      back = '<button type="button" class="slim-cta" data-action="review-back" data-id="' + m.id + '">' + googleG(16) + " Review back</button>";
     } else if (theyReviewed(m) && (iReviewed(m) || reviewedBack(m))) {
       back = '<div class="reviewed-tick">' + I.check + " Reviewed \u2713</div>";
     }
@@ -4881,9 +6604,9 @@ window.TC_TRADES = [
       var fb = r === "friends" ? "sb-friends" : r === "pending" ? "sb-pending" : "sb-none";
       var fl = r === "friends" ? "Facebook friends" : r === "pending" ? "Friend request pending" : "Not connected on Facebook";
       status = '<div class="sb-row"><span class="sb ' + fb + '" role="img" aria-label="' + fl + '" title="' + fl + '">' + I.fb + "</span>";
-      if (iReviewed(m) || reviewedBack(m)) status += '<span class="sb sb-you" role="img" aria-label="You reviewed them" title="You reviewed them">' + I.star + "</span>";
-      else if (theyReviewed(m)) status += '<span class="sb sb-need" role="img" aria-label="Needs your review" title="Needs your review">' + I.star + "</span>";
-      if (theyReviewed(m)) status += '<span class="sb sb-they" role="img" aria-label="They reviewed you" title="They reviewed you">' + I.star + "</span>";
+      if (iReviewed(m) || reviewedBack(m)) status += '<span class="sb sb-you" role="img" aria-label="You reviewed them" title="You reviewed them">' + googleG(13, true) + "</span>";
+      else if (theyReviewed(m)) status += '<span class="sb sb-need" role="img" aria-label="Needs your review" title="Needs your review">' + googleG(13, true) + "</span>";
+      if (theyReviewed(m)) status += '<span class="sb sb-they" role="img" aria-label="They reviewed you" title="They reviewed you">' + googleG(13, true) + "</span>";
       status += "</div>";
     }
     return '<div class="card member-card">' +
@@ -4902,9 +6625,9 @@ window.TC_TRADES = [
       return '<div class="review-back-banner"><div>' + I.check + '</div><div><p>' + esc(m.first) + " left you a Google review.</p>" +
         '<div class="reviewed-tick">Reviewed \u2713</div></div></div>';
     }
-    return '<div class="review-back-banner"><div>' + I.star + "</div><div><p>" + esc(m.first) + " left you a Google review.</p>" +
+    return '<div class="review-back-banner"><div>' + googleG(18) + "</div><div><p>" + esc(m.first) + " left you a Google review.</p>" +
       '<a class="btn-review-back" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="review-back" data-id="' + m.id + '">' +
-      I.star + "<span>Review back</span></a></div></div>";
+      googleG(16) + "<span>Review back</span></a></div></div>";
   }
 
   /* ---------- Recommendation alerts (fictional) ---------- */
@@ -4974,7 +6697,7 @@ window.TC_TRADES = [
       : "Request a free turn in the Facebook promotion queue";
     var cta = p.mine ? "View queue" : "Request a turn";
     return '<button type="button" class="home-promo" data-go="promo-queue">' +
-      '<span class="home-promo-ico">' + I.mega + "</span>" +
+      '<span class="home-promo-ico">' + facebookF(18) + "</span>" +
       '<span class="home-promo-body"><strong>Your turn to promote</strong><span>' + esc(sub) + "</span></span>" +
       '<span class="home-promo-cta">' + cta + "</span></button>";
   }
@@ -4986,7 +6709,7 @@ window.TC_TRADES = [
     }
     function icoWait(n) { return (T().icon ? T().icon(n) : ""); }
     return '<p class="group-label">Circle tools</p><div class="card group me-tools">' +
-      row("promo-queue", I.mega, "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
+      row("promo-queue", facebookF(18), "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
       row("rec-alerts", I.bell, "background:#FFF6E0;color:#8A5A00", "Recommendation alerts", "Help the circle comment on a post") +
       row("ai-assistant", I.spark, "background:#EEF2F6;color:#0B1F33", "AI assistant", "Voice commands while you drive") +
       "</div>";
@@ -4996,11 +6719,11 @@ window.TC_TRADES = [
     var tiles = [
       ["For you", [
         ["me", I.user, "teal", "My profile"],
-        ["promo-queue", I.mega, "navy", "Queue"],
+        ["promo-queue", facebookF(18), "navy", "Queue"],
         ["rec-alerts", I.bell, "amber", "Alerts"],
         ["ai-assistant", I.spark, "moss", "AI assistant"],
         ["my-regions", I.queue, "steel", "Your areas"],
-        ["reviews", I.star, "amber", "Reviews"],
+        ["reviews", googleG(18), "amber", "Reviews"],
         ["chats", I.chat, "navy", "Chat"],
         ["members", I.fb.indexOf("<svg") === 0 ? I.user : I.user, "teal", "Facebook"]
       ]],
@@ -5080,14 +6803,14 @@ window.TC_TRADES = [
       if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
       var btn = goTo === "rec-alert"
         ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
-        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '"' + (goTo === "member" ? ' data-id="' + row[0] + '"' : "") + ">" + row[5] + "</button>";
+        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '" data-id="' + row[0] + '">' + row[5] + "</button>";
       var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
       return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
     }).join("") : '<p class="hint">You’re all caught up.</p>';
 
     var actions = [
       ["rec-compose", I.send, "teal", "Send alert"],
-      ["promo-queue", I.mega, "navy", place.mine ? "View the queue" : "Request a turn"],
+      ["promo-queue", facebookF(18), "navy", place.mine ? "View the queue" : "Request a turn"],
       ["ai-assistant", I.spark, "moss", "AI assistant"],
       ["invite", I.send, "amber", "Invite"]
     ];
@@ -5096,13 +6819,15 @@ window.TC_TRADES = [
     }).join("") + "</div>";
 
     var feed = [
-      ["ok", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
-      ["info", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
-      ["warn", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
-      ["ok", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"]
+      ["review", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
+      ["alert", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
+      ["queue", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
+      ["admin", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"],
+      ["limit", "Thompson Electrical reached the daily Google review limit (3 of 3).", "Today 8:02 am"]
     ];
     var feedHtml = feed.map(function (f) {
-      return '<div class="dash-feed-item"><div class="feed-dot ' + f[0] + '"></div><div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
+      var tile = (window.notifTile ? window.notifTile(f[0], 16) : '<div class="feed-dot ' + f[0] + '"></div>');
+      return '<div class="dash-feed-item">' + tile + '<div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
     }).join("");
 
     return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
@@ -5111,9 +6836,9 @@ window.TC_TRADES = [
       "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
       '<div class="dash-stats">' +
       tile("teal", I.user, String(friends), "Friends") +
-      tile("amber", I.star, String(recd), "Reviews received") +
-      tile("navy", I.check, String(gave), "Reviews given") +
-      tile("moss", I.mega, place.mine ? "#" + place.mine : "—", "Queue place") +
+      tile("amber", googleG(18), String(recd), "Reviews received") +
+      tile("navy", googleG(18), String(gave), "Reviews given") +
+      tile("moss", facebookF(18), place.mine ? "#" + place.mine : "—", "Queue place") +
       "</div>" +
       '<p class="group-label">Needs your attention</p>' +
       '<div class="dash-attn-list">' + attnHtml + "</div>" +
@@ -5241,12 +6966,12 @@ window.TC_TRADES = [
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
         : '<p class="hint">You’re not in the queue yet.</p>') +
       (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
-        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.mega + "<span>Request a turn</span></button>") +
+        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + facebookF(18) + "<span>Request a turn</span></button>") +
       "</div>" +
       '<div class="queue-card"><div class="areas-card-h">Jump the queue</div>' +
       '<p class="plan-price"><span class="price-tbc">Price to be set</span></p>' +
       '<p class="hint">No payment is taken in this prototype. In the real app, a paid jump would go through the App Store, Google Play, or Stripe on the web. Until a price is chosen, this stays on the waiting list.</p>' +
-      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.mega + "<span>Coming later</span></button></div>" +
+      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + facebookF(18) + "<span>Coming later</span></button></div>" +
       '<p class="group-label">Current queue</p>' +
       q.map(function (row, i) {
         var m = member(row.memberId);
@@ -5270,10 +6995,10 @@ window.TC_TRADES = [
     html += '<p class="group-label">Requests received</p>';
     html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("jack"), 44) +
       '<div><div class="who">Jack Thompson</div><div class="meta">Thompson Electrical \u00b7 Today 7:12 am</div></div></div>' +
-      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="jack">' + I.star + "<span>Write review</span></button></div>";
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="jack">' + googleG(16) + "<span>Write review</span></button></div>";
     html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("tom"), 44) +
       '<div><div class="who">Tom Reeves</div><div class="meta">Reeves Fencing \u00b7 Yesterday</div></div></div>' +
-      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="tom">' + I.star + "<span>Write review</span></button></div>";
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="tom">' + googleG(16) + "<span>Write review</span></button></div>";
     html += "</div></section>";
     return html;
   }
@@ -5308,7 +7033,7 @@ window.TC_TRADES = [
       reviewBackBanner(m) +
       '<p class="bio">' + esc(m.bio) + "</p>" +
       '<div class="action-stack">' + friendButton(m) +
-      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + I.star + "<span>Leave a Google review</span></a>" +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + googleG(16) + "<span>Leave a Google review</span></a>" +
       '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for a Google review</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button>" +
       pageBtn + "</div>" +
@@ -5357,7 +7082,7 @@ window.TC_TRADES = [
       var cmd = el.getAttribute("data-cmd");
       var map = {
         updates: [{ who: "you", text: "Any new friend requests?" }, { who: "ai", text: "Liam O’Connor sent a friend request. I can open his Facebook profile so you can tap Add friend yourself." }],
-        reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. I can open Sarah’s Google review page so you can tap Review back." }],
+        reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. Thompson Electrical has already had 3 Google reviews from the circle today, which is the daily limit, so that review page is locked until tomorrow. I can open Sarah’s Google review page so you can tap Review back." }],
         "open-liam": [{ who: "you", text: "Open Liam’s Facebook profile." }, { who: "ai", text: "Opening Liam’s Facebook profile now. Tap Add friend when you’re ready. I won’t send the request for you." }],
         messages: [{ who: "you", text: "Read my latest messages." }, { who: "ai", text: "Sarah said: “Thanks — I will have a look this week.” Jack asked if you could leave a Google review." }],
         queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the Facebook promotion queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
@@ -5530,7 +7255,7 @@ window.TC_TRADES = [
         var extra = [
           ["ai-assistant", I.spark, "AI assistant"],
           ["rec-alerts", I.bell, "Recommendation alerts"],
-          ["promo-queue", I.mega, "Facebook promotion queue"]
+          ["promo-queue", facebookF(18), "Facebook promotion queue"]
         ];
         extra.forEach(function (it) {
           if (nav.querySelector('[data-go="' + it[0] + '"]')) return;
@@ -5589,6 +7314,611 @@ window.TC_TRADES = [
   window.TC15 = { render: render, handle: handle, memberCard: memberCard };
 })();
 
-  </script>
+</script>
+  <script>
+/* v154.js */
+/* TradeCircle Perth — prototype v1.5.4 integration */
+(function () {
+  "use strict";
+
+  function T() { return window.TradeCircle || {}; }
+  function S() { return T().state || {}; }
+  function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
+  function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
+  function ico(n) { return T().icon ? T().icon(n) : ""; }
+  function av(m, n) { return T().avatarHTML(m, n); }
+  function fn(m) { return T().fullName(m); }
+  function toast(m) { if (T().toast) T().toast(m); }
+  function go(id, mid) { T().go(id, mid); }
+  function member(id) {
+    return (T().MEMBERS || []).find(function (m) { return m.id === id; }) || T().me();
+  }
+  function meId() { return S().meId || (T().me && T().me() && T().me().id) || "jamie"; }
+  function R() { return window.TCReviews || null; }
+  function Ideas() { return window.TCIdeas || null; }
+  function Links() { return window.TCLinks || null; }
+  function Prof() { return window.TCProfile || null; }
+
+  function svg(p, w) {
+    w = w || 16;
+    return '<svg viewBox="0 0 24 24" width="' + w + '" height="' + w + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + p + "</svg>";
+  }
+  var COPY_ICO = svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/>');
+  var CHECK_ICO = svg('<path d="M5 12l5 5L20 7"/>');
+  function googleG(size, mono) {
+    size = size || 18;
+    if (mono) {
+      return '<svg class="g-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    }
+    return '<svg class="g-ico g-color" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  var STAR_ICO = googleG(18);
+
+  function copyFallback(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.setAttribute("aria-hidden", "true");
+    ta.style.cssText = "position:fixed;top:0;left:0;width:2em;height:2em;padding:0;margin:0;border:0;outline:none;background:transparent;opacity:0.01;z-index:9999;";
+    var parent = document.querySelector("#phone") || document.body;
+    parent.appendChild(ta);
+    ta.focus();
+    if (navigator.userAgent.match(/ipad|iphone|ipod/i)) {
+      var range = document.createRange();
+      range.selectNodeContents(ta);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ta.setSelectionRange(0, ta.value.length);
+    } else {
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+    }
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+    parent.removeChild(ta);
+    return ok;
+  }
+  function copyText(text) {
+    text = String(text == null ? "" : text);
+    if (!text) return false;
+    if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      try {
+        var p = navigator.clipboard.writeText(text);
+        if (p && typeof p.then === "function") {
+          p.catch(function () { copyFallback(text); });
+          return true;
+        }
+        return true;
+      } catch (err) {
+        return copyFallback(text);
+      }
+    }
+    return copyFallback(text);
+  }
+  function copyBtn(text, toastMsg) {
+    return '<button type="button" class="copy-btn" data-action="copy-text" data-text="' + esa(text) + '" data-toast="' + esa(toastMsg || "Copied.") + '">' + COPY_ICO + "<span>Copy</span></button>";
+  }
+  function flashCopied(btn) {
+    if (!btn) return;
+    if (!btn.getAttribute("data-copy-label")) btn.setAttribute("data-copy-label", btn.innerHTML);
+    if (!btn.style.minWidth) btn.style.minWidth = btn.offsetWidth + "px";
+    btn.classList.add("copied");
+    var span = btn.querySelector("span");
+    if (span && btn.classList.contains("btn")) {
+      span.textContent = "Copied \u2713";
+      var icoEl = btn.querySelector("svg");
+      if (icoEl) icoEl.outerHTML = CHECK_ICO;
+    } else {
+      btn.innerHTML = CHECK_ICO + "<span>Copied \u2713</span>";
+    }
+    clearTimeout(btn._copyT);
+    btn._copyT = setTimeout(function () {
+      btn.classList.remove("copied");
+      btn.innerHTML = btn.getAttribute("data-copy-label");
+      btn.style.minWidth = "";
+    }, 1800);
+  }
+
+  var LS_USED = "tc154_used_ideas";
+  var LS_ALERT = "tc154_used_alert_ideas";
+  function loadJSON(key, fb) {
+    try { var r = localStorage.getItem(key); if (r) return JSON.parse(r); } catch (e) {}
+    return fb;
+  }
+  function saveJSON(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+  }
+  function usedFor(bizId) { return (loadJSON(LS_USED, {})[bizId] || []).slice(); }
+  function markUsed(bizId, texts) {
+    var all = loadJSON(LS_USED, {});
+    all[bizId] = all[bizId] || [];
+    (Array.isArray(texts) ? texts : [texts]).forEach(function (t) {
+      if (t && all[bizId].indexOf(t) === -1) all[bizId].push(t);
+    });
+    saveJSON(LS_USED, all);
+  }
+  function usedAlert(aid) { return (loadJSON(LS_ALERT, {})[aid] || []).slice(); }
+  function markAlertUsed(aid, texts) {
+    var all = loadJSON(LS_ALERT, {});
+    all[aid] = all[aid] || [];
+    (Array.isArray(texts) ? texts : [texts]).forEach(function (t) {
+      if (t && all[aid].indexOf(t) === -1) all[aid].push(t);
+    });
+    saveJSON(LS_ALERT, all);
+  }
+
+  function ideaState() {
+    var st = S();
+    st.reviewFor = st.reviewFor || st.selectedMember || "jack";
+    st.ideaJob = st.ideaJob || "";
+    st.ideaSuburb = st.ideaSuburb || "";
+    st.ideaMonth = st.ideaMonth || "";
+    st.ideaLength = st.ideaLength || "medium";
+    st.ideaTone = st.ideaTone || "casual";
+    st.ideaFocus = st.ideaFocus && st.ideaFocus.length ? st.ideaFocus : ["seo", "service", "area"];
+    st.reviewDraft = st.reviewDraft || "";
+    st.pickedIdea = (typeof st.pickedIdea === "number") ? st.pickedIdea : -1;
+    st.ideaRound = st.ideaRound || 0;
+    return st;
+  }
+
+  function chip(label, on, attrs) {
+    return '<button type="button" class="chip' + (on ? " active" : "") + '" ' + attrs + ">" + esc(label) + "</button>";
+  }
+
+  function gLink(m) {
+    if (window.TC12 && false) {}
+    var name = encodeURIComponent((m && m.business) || "Business");
+    return "https://www.google.com/search?q=" + name + "+Perth+reviews";
+  }
+
+  function renderReviewIdeas() {
+    var st = ideaState();
+    var m = member(st.reviewFor);
+    var engine = Ideas();
+    var jobs = engine ? engine.jobsFor(m.trade) : ["the booked job"];
+    var suburbs = (engine && engine.SUBURBS) || ["Midland", "Kwinana", "Joondalup"];
+    var months = (engine && engine.MONTHS) || ["October", "November"];
+    if (!st.ideaJob) st.ideaJob = jobs[1] || jobs[0];
+    if (!st.ideaSuburb) st.ideaSuburb = (m.regions && m.regions[0] === "kwinana") ? "Kwinana" : (suburbs[0] || "Midland");
+    if (!st.ideaMonth) st.ideaMonth = "October";
+    var focuses = st.ideaFocus;
+    var ideas = engine
+      ? engine.buildReviewIdeas({
+        member: m,
+        viewerId: meId(),
+        job: st.ideaJob,
+        suburb: st.ideaSuburb,
+        month: st.ideaMonth,
+        length: st.ideaLength,
+        tone: st.ideaTone,
+        focuses: focuses,
+        used: usedFor(m.id),
+        round: st.ideaRound
+      })
+      : ["Write a short review in your own words."];
+    st._ideas = ideas;
+    var capped = R() && R().atLimit(m.id);
+    var focusMeta = [
+      ["seo", "Search-friendly"],
+      ["service", "Service"],
+      ["area", "Area"],
+      ["staff", "Staff"],
+      ["value", "Value"],
+      ["timeliness", "Timeliness"],
+      ["cleanliness", "Cleanliness"]
+    ];
+    function row(label, html) {
+      return '<p class="group-label">' + label + '</p><div class="chips chips-tight">' + html + "</div>";
+    }
+    var cta = capped
+      ? (R().bannerHTML(m.id) + R().lockedButton("Locked today"))
+      : '<div class="idea-cta-row">' +
+        '<button type="button" class="btn btn-ghost ink has-ico" data-action="copy-draft">' + COPY_ICO + "<span>Copy</span></button>" +
+        '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + STAR_ICO + "<span>Copy and open Google</span></a>" +
+        "</div>" +
+        '<button type="button" class="btn btn-ghost ink has-ico" data-action="left-review" data-id="' + m.id + '" style="margin-top:8px">' + CHECK_ICO + "<span>Done, I left this review</span></button>" +
+        '<p class="hint" style="text-align:center">Copy an idea, or write your own, then paste it into Google and change it before you post. Tap Done after you have posted it.</p>';
+
+    return '<section class="screen has-header" data-screen="review-ideas">' +
+      '<div class="app-header"><button class="icon-btn" data-go="reviews" aria-label="Back">' + ico("back") + '</button><div class="ht">Review ideas</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">' + av(m, 48) +
+      '<div><div style="font-weight:800">' + esc(fn(m)) + '</div><div class="hint" style="margin:0">' + esc(m.business) + " \u00b7 " + esc(m.trade) + "</div>" +
+      (R() ? R().counterHTML(m.id) : "") + "</div></div>" +
+      (capped ? R().bannerHTML(m.id, { remind: true }) : "") +
+      '<div class="notice">Only review businesses you have actually used. These are ideas and sentence starters, not finished reviews. Write in your own words.</div>' +
+      row("What job did they do?", jobs.slice(0, 8).map(function (j) {
+        return chip(j.replace(/^an?\s+/i, ""), st.ideaJob === j, 'data-idea-job="' + esa(j) + '"');
+      }).join("")) +
+      row("Suburb", suburbs.map(function (j) {
+        return chip(j, st.ideaSuburb === j, 'data-idea-sub="' + esa(j) + '"');
+      }).join("")) +
+      row("When", months.map(function (j) {
+        return chip(j, st.ideaMonth === j, 'data-idea-mo="' + esa(j) + '"');
+      }).join("")) +
+      row("Length", ["short", "medium", "detailed"].map(function (j) {
+        var lab = j === "short" ? "Short" : j === "detailed" ? "Detailed" : "Medium";
+        return chip(lab, st.ideaLength === j, 'data-idea-len="' + j + '"');
+      }).join("")) +
+      row("Tone", ["casual", "professional", "warm"].map(function (j) {
+        var lab = j.charAt(0).toUpperCase() + j.slice(1);
+        return chip(lab, st.ideaTone === j, 'data-idea-tone="' + j + '"');
+      }).join("")) +
+      row("Focus on", focusMeta.map(function (j) {
+        return chip(j[1], focuses.indexOf(j[0]) >= 0, 'data-idea-focus="' + j[0] + '"');
+      }).join("")) +
+      '<p class="hint" style="margin-top:0">Search-friendly mentions the trade, the job and the suburb in natural wording, the way local search likes — never keyword-stuffed.</p>' +
+      '<p class="group-label">Ideas you can start from</p>' +
+      ideas.map(function (t, i) {
+        return '<div class="idea-card' + (st.pickedIdea === i ? " on" : "") + '" data-pick-idea="' + i + '" role="button" tabindex="0">' +
+          '<p class="idea-text">' + esc(t) + "</p>" +
+          copyBtn(t, "Copied, now paste it in Google") +
+          "</div>";
+      }).join("") +
+      '<p class="idea-hint">These ideas are just for you. Other members will see different ones, so the same wording does not end up on Google twice. Please change a few words in your own voice before you post.</p>' +
+      '<button type="button" class="link" data-action="refresh-ideas" style="margin:0 0 12px">Show different ideas</button>' +
+      '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
+      cta +
+      "</div></section>";
+  }
+
+  function enhanceCard(m, html) {
+    if (!R()) return html;
+    var extra = R().counterHTML(m.id);
+    if (R().atLimit(m.id)) {
+      extra += R().bannerHTML(m.id, { remind: true });
+      html = html.replace(/<button type="button" class="slim-cta" data-action="review-back"[^>]*>[\s\S]*?<\/button>/,
+        '<span class="locked-pill">Locked today</span>');
+    }
+    if (html.indexOf("member-main") >= 0 && html.indexOf("limit-banner") === -1) {
+      var last = html.lastIndexOf("</div>");
+      if (last !== -1) html = html.slice(0, last) + extra + html.slice(last);
+    }
+    return html;
+  }
+
+  function lockedOrReview(m, openHtml) {
+    if (R() && R().atLimit(m.id)) return R().bannerHTML(m.id, { remind: true }) + R().counterHTML(m.id) + R().lockedButton("Locked today");
+    return (R() ? R().counterHTML(m.id) : "") + openHtml;
+  }
+
+  function handle(e) {
+    if (Prof()) {
+      if (e.target.closest("[data-action='gal-close']") || e.target.id === "galleryViewer") {
+        if (e.target.id === "galleryViewer" || e.target.closest("[data-action='gal-close']")) {
+          Prof().closeViewer();
+          return true;
+        }
+      }
+      if (e.target.closest("[data-action='gal-prev']")) { Prof().step(-1); return true; }
+      if (e.target.closest("[data-action='gal-next']")) { Prof().step(1); return true; }
+      var rm = e.target.closest("[data-action='gal-remove']");
+      if (rm) {
+        e.preventDefault();
+        e.stopPropagation();
+        Prof().removePhoto(member(rm.getAttribute("data-id") || meId()), rm.getAttribute("data-gid"));
+        toast("Photo removed in this prototype only.");
+        go("me");
+        return true;
+      }
+      var add = e.target.closest("[data-action='gal-add']");
+      if (add) {
+        Prof().addPhoto(member(add.getAttribute("data-id") || meId()));
+        toast("Photo added in this prototype only.");
+        go("me");
+        return true;
+      }
+      var open = e.target.closest("[data-action='gal-open']");
+      if (open) {
+        Prof().openViewer(open.getAttribute("data-id"), open.getAttribute("data-index"));
+        return true;
+      }
+    }
+    var capBtn = e.target.closest("[data-action='open-ideas'], [data-action='review-back'], [data-action='copy-open']");
+    if (capBtn && R()) {
+      var capId = capBtn.getAttribute("data-id") || S().reviewFor;
+      if (capId && R().atLimit(capId)) {
+        e.preventDefault();
+        toast("Daily limit reached: " + R().limit() + " of " + R().limit() + " Google reviews today. Opens tomorrow.");
+        return true;
+      }
+    }
+    var copyEl = e.target.closest("[data-action='copy-text'], [data-action='copy-draft'], [data-action='copy-idea'], [data-action='copy-invite']");
+    if (copyEl) {
+      e.preventDefault();
+      e.stopPropagation();
+      var action = copyEl.getAttribute("data-action");
+      var text = "";
+      var msg = copyEl.getAttribute("data-toast") || "Copied.";
+      if (action === "copy-draft") {
+        var ta = document.getElementById("reviewDraft");
+        text = (ta && ta.value) || S().reviewDraft || "";
+        if (!text) { toast("Write or pick an idea first."); return true; }
+        msg = "Copied, now paste it in Google";
+        if (S().reviewFor) markUsed(S().reviewFor, text);
+      } else if (action === "copy-invite") {
+        text = "https://tradecircle.perth.demo/join/hale-circle";
+        msg = "Invite link copied.";
+      } else {
+        text = copyEl.getAttribute("data-text") || "";
+        if (S().screen === "review-ideas" && S().reviewFor) markUsed(S().reviewFor, text);
+        if (S().screen === "rec-alert" && S().alertId) markAlertUsed(S().alertId, text);
+        if (!copyEl.getAttribute("data-toast") && S().screen === "review-ideas") msg = "Copied, now paste it in Google";
+        if (!copyEl.getAttribute("data-toast") && S().screen === "rec-alert") msg = "Copied, now paste it on Facebook";
+      }
+      if (!text) { toast("Nothing to copy."); return true; }
+      copyText(text);
+      flashCopied(copyEl);
+      toast(msg);
+      return true;
+    }
+    if (e.target.closest("[data-pick-idea]") && e.target.closest("[data-action]")) return false;
+    var len = e.target.closest("[data-idea-len]");
+    if (len) { S().ideaLength = len.getAttribute("data-idea-len"); go("review-ideas"); return true; }
+    var tone = e.target.closest("[data-idea-tone]");
+    if (tone) { S().ideaTone = tone.getAttribute("data-idea-tone"); go("review-ideas"); return true; }
+    var foc = e.target.closest("[data-idea-focus]");
+    if (foc) {
+      var idf = foc.getAttribute("data-idea-focus");
+      var arr = (S().ideaFocus || ["seo", "service", "area"]).slice();
+      var ix = arr.indexOf(idf);
+      if (ix >= 0) arr.splice(ix, 1); else arr.push(idf);
+      S().ideaFocus = arr;
+      go("review-ideas");
+      return true;
+    }
+    var refresh = e.target.closest("[data-action='refresh-ideas']");
+    if (refresh) {
+      var mid = S().reviewFor || "jack";
+      markUsed(mid, S()._ideas || []);
+      S().ideaRound = (S().ideaRound || 0) + 1;
+      S().pickedIdea = -1;
+      go("review-ideas");
+      return true;
+    }
+    var left = e.target.closest("[data-action='left-review']");
+    if (left) {
+      var bid = left.getAttribute("data-id") || S().reviewFor;
+      if (R()) {
+        if (R().atLimit(bid)) { toast("Daily limit reached. Opens tomorrow."); return true; }
+        R().record(bid, meId());
+      }
+      markUsed(bid, S().reviewDraft || (S()._ideas || [])[S().pickedIdea] || "");
+      toast("Thanks. Marked as left today (" + (R() ? R().countFor(bid) + " of " + R().limit() : "") + ").");
+      go("reviews");
+      return true;
+    }
+    var remind = e.target.closest("[data-action='remind-review']");
+    if (remind) {
+      toast("Reminder set for tomorrow morning (prototype).");
+      return true;
+    }
+    return false;
+  }
+
+  function enhanceHome() {
+    if (!R()) return;
+    var map = {};
+    (T().MEMBERS || []).forEach(function (m) { map[fn(m)] = m.id; });
+    document.querySelectorAll(".dash-attn").forEach(function (el) {
+      if (el.parentNode && el.parentNode.classList.contains("dash-attn-wrap")) return;
+      var name = (el.querySelector("strong") || {}).textContent || "";
+      var id = map[name];
+      var btn = el.querySelector(".dash-attn-btn");
+      if (!id || !R().atLimit(id) || !btn || !/review/i.test(btn.textContent || "")) return;
+      btn.outerHTML = '<button type="button" class="dash-attn-btn btn-locked" disabled>Locked today</button>';
+      var wrap = document.createElement("div");
+      wrap.className = "dash-attn-wrap";
+      el.parentNode.insertBefore(wrap, el);
+      wrap.appendChild(el);
+      wrap.insertAdjacentHTML("beforeend", R().bannerHTML(id, { remind: true }));
+    });
+  }
+
+
+  function injectProfileExtras(sc, m, mine) {
+    if (!Prof() || !sc || !m || sc.querySelector(".profile-extras")) return;
+    var html = Prof().viewHTML(m, { mine: !!mine });
+    if (!html) return;
+    var bio = sc.querySelector(".scroll > p.bio, .profile-hero + p.bio, p.bio");
+    if (bio) {
+      bio.insertAdjacentHTML("afterend", html);
+      bio.remove();
+    } else {
+      var after = sc.querySelector(".limit-banner") || sc.querySelector(".review-back-banner") || sc.querySelector(".profile-hero");
+      if (after) after.insertAdjacentHTML("afterend", html);
+    }
+  }
+
+  function enhanceMe() {
+    var screen = document.querySelector('.screen[data-screen="me"]');
+    var me = T().me && T().me();
+    if (!screen || !me) return;
+    var sc = screen.querySelector(".info-rows");
+    if (Links() && sc && !screen.querySelector(".link-row")) {
+      var row = Links().iconRow(me);
+      if (row) sc.insertAdjacentHTML("beforebegin", '<p class="group-label">Links</p>' + row);
+    }
+    injectProfileExtras(screen, me, true);
+  }
+
+  function enhanceMemberDom() {
+    var sc = document.querySelector('.screen[data-screen="member"]');
+    if (!sc) return;
+    var m = member(S().selectedMember);
+    if (!m) return;
+    if (Links() && !sc.querySelector(".link-row")) {
+      var stack = sc.querySelector(".action-stack");
+      var row = Links().iconRow(m);
+      if (row && stack) stack.insertAdjacentHTML("beforebegin", '<p class="group-label" style="text-align:center">Links</p>' + row);
+    }
+    injectProfileExtras(sc, m, false);
+    if (!R()) return;
+    var hero = sc.querySelector(".profile-hero");
+    if (hero && !hero.querySelector(".rev-today")) hero.insertAdjacentHTML("beforeend", R().counterHTML(m.id));
+    if (R().atLimit(m.id)) {
+      if (!sc.querySelector(".limit-banner")) {
+        var host = sc.querySelector(".review-back-banner") || sc.querySelector(".action-stack") || hero;
+        if (host) host.insertAdjacentHTML("beforebegin", R().bannerHTML(m.id, { remind: true }));
+      }
+      sc.querySelectorAll("[data-action='open-ideas'], [data-action='review-back']").forEach(function (leave) {
+        leave.outerHTML = R().lockedButton("Locked today");
+      });
+    }
+  }
+
+  function enhanceReviewsDom() {
+    if (!R()) return;
+    document.querySelectorAll(".req-card, .review-back-banner").forEach(function (card) {
+      var btn = card.querySelector("[data-action='open-ideas'], [data-action='review-back']");
+      if (!btn) return;
+      var id = btn.getAttribute("data-id");
+      if (!id) return;
+      if (!card.querySelector(".rev-today")) btn.insertAdjacentHTML("beforebegin", R().counterHTML(id));
+      if (R().atLimit(id) && !card.querySelector(".limit-banner")) {
+        btn.insertAdjacentHTML("beforebegin", R().bannerHTML(id, { remind: true }));
+        btn.outerHTML = R().lockedButton("Locked today");
+      }
+    });
+  }
+
+  function enhanceAlertDom() {
+    var sc = document.querySelector('.screen[data-screen="rec-alert"]');
+    if (!sc || !Ideas()) return;
+    var list = sc.querySelectorAll(".idea-mini");
+    if (!list.length) return;
+    /* Rebuild comment ideas with unique unused set if still the seed three and we have an engine. */
+  }
+
+  function enhanceInviteDom() {
+    var sc = document.querySelector('.screen[data-screen="invite"]');
+    if (!sc) return;
+    var field = sc.querySelector(".field");
+    if (field && !field.querySelector(".copy-input")) {
+      var inp = field.querySelector("input");
+      if (inp) {
+        var wrap = document.createElement("div");
+        wrap.className = "copy-input";
+        inp.parentNode.insertBefore(wrap, inp);
+        wrap.appendChild(inp);
+        wrap.insertAdjacentHTML("beforeend", copyBtn("https://tradecircle.perth.demo/join/hale-circle", "Invite link copied."));
+      }
+    }
+  }
+
+  function enhanceVoiceDom() {
+    document.querySelectorAll(".voice-line.ai").forEach(function (el) {
+      if (el.querySelector(".copy-btn")) return;
+      var text = el.textContent.trim();
+      if (!text) return;
+      el.insertAdjacentHTML("beforeend", copyBtn(text, "Copied."));
+    });
+    if (!R() || !R().atLimit("jack")) return;
+    /* If this mock is about leaving Jack a review, append a limit note when relevant. */
+  }
+
+  function enhanceAlertIdeasDom() {
+    var sc = document.querySelector('.screen[data-screen="rec-alert"]');
+    if (!sc) return;
+    sc.querySelectorAll(".idea-mini .slim-cta, .idea-mini [data-action='copy-idea']").forEach(function (btn) {
+      if (btn.classList.contains("copy-btn")) return;
+      var text = btn.getAttribute("data-text") || "";
+      btn.outerHTML = copyBtn(text, "Copied, now paste it on Facebook");
+    });
+  }
+
+  function enhanceEditDom() {
+    if (!Links()) return;
+    var form = document.querySelector("form[data-form='create-profile'], form[data-form='edit-profile']");
+    if (!form || form.querySelector("[data-link-id]")) return;
+    var m = (form.getAttribute("data-form") === "edit-profile") ? (T().me && T().me()) : (S().draft || {});
+    var links = Links().fromMember(m);
+    if (S().draft && S().draft.links) links = Links().fromMember({ links: S().draft.links, page: S().draft.page });
+    var html = Links().editFields(links);
+    var pageField = null;
+    form.querySelectorAll(".field").forEach(function (f) {
+      var lab = f.querySelector("label");
+      if (lab && /business page/i.test(lab.textContent)) pageField = f;
+    });
+    var wrap = document.createElement("div");
+    wrap.innerHTML = html;
+    if (pageField && pageField.parentNode) pageField.parentNode.insertBefore(wrap, pageField.nextSibling);
+    else form.insertBefore(wrap, form.querySelector("[type='submit']") || null);
+    Links().bindValidation(form);
+    if (Prof() && !form.querySelector("[data-profile-edit]")) {
+      var p = (S().draft && S().draft.profile) ? S().draft.profile : Prof().fromMember(m);
+      var block = document.createElement("div");
+      block.innerHTML = Prof().editFields(p);
+      var submit = form.querySelector("[type='submit']");
+      if (submit) form.insertBefore(block, submit);
+      else form.appendChild(block);
+      Prof().bindForm(form);
+    }
+  }
+
+  function after(id) {
+    if (id === "home") enhanceHome();
+    if (id === "me") enhanceMe();
+    if (id === "member") enhanceMemberDom();
+    if (id === "reviews" || id === "reviews-back") enhanceReviewsDom();
+    if (id === "invite") enhanceInviteDom();
+    if (id === "ai-voice") enhanceVoiceDom();
+    if (id === "rec-alert") enhanceAlertIdeasDom();
+    if (id === "edit-profile" || id === "create-profile" || id === "create-profile-connected") enhanceEditDom();
+    if (id === "members") {
+      /* cards already enhanced via memberCard wrap */
+    }
+    var ta = document.getElementById("reviewDraft");
+    if (ta && id === "review-ideas") {
+      ta.addEventListener("input", function () { S().reviewDraft = ta.value; });
+    }
+  }
+
+  function wrapCard(orig) {
+    return function (m) {
+      var html = orig(m);
+      return enhanceCard(m, html);
+    };
+  }
+
+  function aiLimitNote() {
+    if (!R() || !R().atLimit("jack")) return;
+    /* Patch upcoming AI log when asking to review Jack */
+  }
+
+  function install() {
+    if (Prof() && T().MEMBERS) Prof().hydrate(T().MEMBERS);
+    if (!window.TC12) return;
+    var prevClick = TC12.handleClick;
+    TC12.handleClick = function (e) {
+      if (handle(e)) return true;
+      return prevClick ? prevClick(e) : false;
+    };
+    var prevRender = TC12.render;
+    TC12.render = function (id) {
+      if (id === "review-ideas") return renderReviewIdeas();
+      return prevRender ? prevRender(id) : null;
+    };
+    if (TC12.memberCard) TC12.memberCard = wrapCard(TC12.memberCard);
+    var prevAfter = TC12.afterGo;
+    TC12.afterGo = function (id) {
+      if (prevAfter) prevAfter(id);
+      after(id);
+    };
+    window.TC154 = {
+      copyText: copyText,
+      copyBtn: copyBtn,
+      flashCopied: flashCopied,
+      renderReviewIdeas: renderReviewIdeas,
+      usedFor: usedFor,
+      markUsed: markUsed
+    };
+  }
+
+  install();
+})();
+
+</script>
 </body>
 </html>

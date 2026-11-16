@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.3 */
+/* TradeCircle Perth — prototype v1.5.4 */
 (function () {
   "use strict";
 
@@ -206,11 +206,73 @@
       "</div></div>";
   }
 
+function googleG(size, mono) {
+    size = size || 18;
+    if (mono) {
+      return '<svg class="g-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    }
+    return '<svg class="g-ico g-color" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+function facebookF(size, color) {
+    size = size || 18;
+    var fill = color || "currentColor";
+    return '<svg class="f-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="' + fill + '" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  function peopleIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+  }
+  function personPlusIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>';
+  }
+  function shieldCheckIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-3z"/><path d="M8.5 12l2.5 2.5 5-5"/></svg>';
+  }
+  function lockIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';
+  }
+  function megaIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/></svg>';
+  }
+  function chatIco(size) {
+    size = size || 18;
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/></svg>';
+  }
+  var NOTIF_STYLE = {
+    review: { bg: "#E8F1FD", color: "#1A73E8", icon: "review" },
+    queue: { bg: "#E8F1FD", color: "#1877F2", icon: "queue" },
+    friend: { bg: "#E8F1FD", color: "#1877F2", icon: "friend" },
+    member: { bg: "#E7F8F1", color: "#066B4C", icon: "member" },
+    chat: { bg: "#EEF2F6", color: "#0B1F33", icon: "chat" },
+    alert: { bg: "#FFF6E0", color: "#8A5A00", icon: "alert" },
+    admin: { bg: "#EEF2F6", color: "#14314C", icon: "admin" },
+    limit: { bg: "#F6E8E8", color: "#7A1F1A", icon: "limit" }
+  };
+  function notifGlyph(type, size) {
+    size = size || 16;
+    if (type === "review") return (typeof googleG === "function" ? googleG(size) : "");
+    if (type === "queue") return facebookF(size);
+    if (type === "friend") return peopleIco(size);
+    if (type === "member") return personPlusIco(size);
+    if (type === "chat") return chatIco(size);
+    if (type === "alert") return megaIco(size);
+    if (type === "admin") return shieldCheckIco(size);
+    if (type === "limit") return lockIco(size);
+    return megaIco(size);
+  }
+  function notifTile(type, size) {
+    var st = NOTIF_STYLE[type] || NOTIF_STYLE.alert;
+    return '<div class="notif-ico" style="background:' + st.bg + ';color:' + st.color + '">' + notifGlyph(type, size || 16) + "</div>";
+  }
   function fbMark() {
     return '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
   }
   function starMark() {
-    return '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.4L20 9.3l-4 3.9.9 5.5L12 16.2 7.1 18.7 8 13.2 4 9.3l5.4-.9z"/></svg>';
+    return googleG(13, true);
   }
   function statusIcon(cls, label, inner) {
     return '<span class="sb ' + cls + '" role="img" aria-label="' + label + '" title="' + label + '">' + inner + "</span>";
@@ -324,7 +386,7 @@
 
   function gBadge(m) {
     var g = GMAP[m.id] || { rating: "\u2014", count: 0 };
-    return '<div class="g-badge">' + I.star + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
+    return '<div class="g-badge">' + googleG(14) + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
   }
 
   function renderMember(id) {
@@ -405,7 +467,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.3 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.4 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -569,7 +631,7 @@
       '<button type="button" class="link" data-action="refresh-ideas" style="margin:4px 0 12px">Show different ideas</button>' +
       '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
       '<div class="uniq ' + (u.ok ? "ok" : "bad") + '">' + u.msg + "</div>" +
-      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + I.star + "<span>Copy and open Google</span></a>" +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + googleG(18) + "<span>Copy and open Google</span></a>" +
       '<p class="hint" style="text-align:center">The text is copied so you can paste it into Google and change it before you post.</p></div></section>';
   }
   function seedChats() {
@@ -747,33 +809,47 @@
       "</div></section>";
   }
   const NOTIFS = [
-    { id: "n1", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "chat-dm", chat: "dm-jack" },
-    { id: "n2", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
-    { id: "n3", title: "New member in Hills", body: "Mei Chen (West Coast Gardens) joined the Hills region.", time: "Yesterday", unread: false, go: "member", who: "mei" },
-    { id: "n4", title: "Sarah mentioned you", body: "In Hills tradies: @Jamie can you take a termite job in Mundaring?", time: "Mon", unread: false, go: "chat-group", chat: "grp-hills" }
+    { id: "n0", type: "limit", title: "Daily review limit reached", body: "Thompson Electrical already has 3 of 3 Google reviews from the circle today. Opens tomorrow.", time: "8:02 am", unread: true, go: "member", who: "jack" },
+    { id: "n1", type: "review", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "review-ideas", who: "jack" },
+    { id: "n2", type: "review", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
+    { id: "n5", type: "review", title: "Sarah left you a Google review", body: "Review back when you can, if the daily limit is not already full.", time: "Yesterday", unread: true, go: "reviews-back", who: "sarah" },
+    { id: "n6", type: "friend", title: "Liam O’Connor", body: "Sent you a Facebook friend request.", time: "Yesterday", unread: true, go: "member", who: "liam" },
+    { id: "n7", type: "queue", title: "Facebook promotion queue", body: "You’re fourth in the queue. Your turn is coming up this week.", time: "Yesterday", unread: false, go: "promo-queue" },
+    { id: "n8", type: "alert", title: "Recommendation alert", body: "Someone in the Hills group is asking for a pest controller.", time: "Yesterday", unread: false, go: "rec-alerts" },
+    { id: "n3", type: "member", title: "New member in Hills", body: "Mei Chen (West Coast Gardens) joined the Hills region.", time: "Yesterday", unread: false, go: "member", who: "mei" },
+    { id: "n4", type: "chat", title: "Sarah mentioned you", body: "In Hills tradies: @Jamie can you take a termite job in Mundaring?", time: "Mon", unread: false, go: "chat-group", chat: "grp-hills" },
+    { id: "n9", type: "admin", title: "Emma Brooks was approved", body: "Emma has joined the circle after admin approval.", time: "Mon", unread: false, go: "member", who: "emma" }
   ];
 
   function renderNotifications() {
     return '<section class="screen has-tabs has-header" data-screen="notifications">' + topbar("Notifications") +
-      '<div class="scroll" style="padding:0">' +
+      '<div class="scroll" style="padding-left:0;padding-right:0">' +
       NOTIFS.map(function (n) {
         return '<button type="button" class="notif-row' + (n.unread ? " unread" : "") + '" data-action="open-notif" data-nid="' + n.id + '">' +
-          '<div class="ic" style="width:36px;height:36px;border-radius:10px;background:#E7F8F1;color:#066B4C;display:grid;place-items:center;flex:none">' + I.bell + "</div>" +
+          notifTile(n.type || "alert", 16) +
           '<div style="flex:1;min-width:0"><div class="ttl">' + esc(n.title) + '</div><div class="bd">' + esc(n.body) + '</div><div class="tm">' + esc(n.time) + "</div></div></button>";
       }).join("") +
       "</div></section>";
   }
 
   function renderNotifSettings() {
-    function tog(key, a, b) {
-      return '<button class="set-row" data-action="tog-notif" data-key="' + key + '"><span class="lab"><span class="a">' + a + "</span><span class=\"b\">" + b + '</span></span><span class="toggle' + (notif[key] ? " on" : "") + '"></span></button>';
+    function tog(key, a, b, type) {
+      return '<button class="set-row" data-action="tog-notif" data-key="' + key + '">' + notifTile(type || "alert", 16) + '<span class="lab"><span class="a">' + a + "</span><span class=\"b\">" + b + '</span></span><span class="toggle' + (notif[key] ? " on" : "") + '"></span></button>';
     }
+    if (typeof notif.queue === "undefined") notif.queue = true;
+    if (typeof notif.friends === "undefined") notif.friends = true;
+    if (typeof notif.alerts === "undefined") notif.alerts = true;
+    if (typeof notif.limits === "undefined") notif.limits = true;
     return '<section class="screen has-tabs has-header" data-screen="notif-settings">' + topbar("Notifications") +
       '<div class="scroll"><p class="group-label">Alerts</p><div class="card group">' +
-      tog("messages", "Messages", "New direct messages") +
-      tog("mentions", "Group mentions", "When someone types @ your name") +
-      tog("reviews", "Review requests", "When a member asks you for a Google review") +
-      tog("members", "New members", "When a tradie joins one of your regions") +
+      tog("messages", "Messages", "New direct messages", "chat") +
+      tog("mentions", "Group mentions", "When someone types @ your name", "chat") +
+      tog("reviews", "Review requests", "When a member asks you for a Google review", "review") +
+      tog("friends", "Friend requests", "When someone sends you a Facebook friend request", "friend") +
+      tog("queue", "Promotion queue", "When your Facebook queue turn is coming up", "queue") +
+      tog("alerts", "Recommendation alerts", "When someone shares a Facebook post with the circle", "alert") +
+      tog("members", "New members", "When a tradie joins one of your regions", "member") +
+      tog("limits", "Daily review limit", "When a business reaches 3 Google reviews for the day", "limit") +
       '</div><p class="group-label">Quiet hours</p><div class="card group">' +
       tog("quietOn", "Quiet hours", "Mute alerts overnight") +
       '<div class="set-row"><span class="lab"><span class="a">From</span></span><input type="time" data-quiet="quietFrom" value="' + esa(notif.quietFrom) + '" style="border:0;font-weight:700"></div>' +
@@ -853,7 +929,7 @@
     var items = [
       ["members", I.user, "Members", ""],
       ["chats", I.chat, "Chats", ""],
-      ["reviews", I.star, "Reviews", ""],
+      ["reviews", googleG(18), "Reviews", ""],
       ["notifications", I.bell, "Notifications", ""],
       ["me", I.user, "My profile", ""],
       ["my-regions", I.regions, "Your areas", ""],
@@ -876,7 +952,7 @@
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.3</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.4</div>';
     return html;
   }
 
@@ -1083,7 +1159,7 @@
       var mm = member(id || S().reviewFor);
       var u = uniqNote(mm, text);
       if (!text) { toast("Write or pick an idea first."); e.preventDefault(); return true; }
-      try { navigator.clipboard.writeText(text); } catch (err) {}
+      if (window.TC154 && TC154.copyText) TC154.copyText(text); else { try { navigator.clipboard.writeText(text); } catch (err) {} }
       usedIdeas[mm.id] = (usedIdeas[mm.id] || []).concat(S()._ideas || []);
       given[mm.id] = { text: text, at: Date.now() };
       reqs.forEach(function (r) { if (r.dir === "in" && r.from === mm.id) r.status = "done"; });
@@ -1157,7 +1233,7 @@
       return true;
     }
     if (action === "copy-invite") {
-      try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {}
+      if (window.TC154 && TC154.copyText) TC154.copyText("https://tradecircle.perth.demo/join/hale-circle"); else { try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {} }
       toast("Invite link copied.");
       return true;
     }
@@ -1293,6 +1369,7 @@
     });
   }
 
+  window.notifTile = notifTile;
   window.TC12 = {
     passRelFilter: passRelFilter,
     memberCard: memberCard,
@@ -1306,7 +1383,8 @@
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     unreadTotal: unreadTotal,
-    notifUnread: notifUnread
+    notifUnread: notifUnread,
+    notifTile: notifTile
   };
 
   if (T().go && S().screen) {

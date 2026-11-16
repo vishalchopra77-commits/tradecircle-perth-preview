@@ -42,6 +42,16 @@
       phone: "0412 000 101",
       facebook: "https://www.facebook.com/demo.halepestcontrol",
       page: "https://www.facebook.com/demo.halepestcontrol.biz",
+      links: {
+        website: "https://www.halepest.example.au",
+        facebook: "https://www.facebook.com/demo.halepestcontrol.biz",
+        instagram: "https://www.instagram.com/demo.halepest",
+        linkedin: "https://www.linkedin.com/company/demo-hale-pest",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-hale-pest",
+        other: ""
+      },
       color: "teal", isMe: true
     },
     {
@@ -52,6 +62,16 @@
       phone: "0412 000 102",
       facebook: "https://www.facebook.com/demo.nguyencarpentry",
       page: "https://www.facebook.com/demo.nguyencarpentry.biz",
+      links: {
+        website: "https://www.nguyencarpentry.example.au",
+        facebook: "https://www.facebook.com/demo.nguyencarpentry.biz",
+        instagram: "https://www.instagram.com/demo.nguyencarpentry",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-nguyen-carpentry",
+        other: ""
+      },
       color: "coral"
     },
     {
@@ -62,6 +82,16 @@
       phone: "0412 000 103",
       facebook: "https://www.facebook.com/demo.oconnorplumbing",
       page: "https://www.facebook.com/demo.oconnorplumbing.biz",
+      links: {
+        website: "https://www.oconnorplumbing.example.au",
+        facebook: "https://www.facebook.com/demo.oconnorplumbing.biz",
+        instagram: "",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "https://search.google.com/local/writereview?placeid=demo-oconnor-plumbing",
+        other: ""
+      },
       color: "navy"
     },
     {
@@ -82,6 +112,16 @@
       phone: "0412 000 105",
       facebook: "https://www.facebook.com/demo.thompsonelectrical",
       page: "https://www.facebook.com/demo.thompsonelectrical.biz",
+      links: {
+        website: "https://www.thompsonelectrical.example.au",
+        facebook: "https://www.facebook.com/demo.thompsonelectrical.biz",
+        instagram: "",
+        linkedin: "https://www.linkedin.com/company/demo-thompson-electrical",
+        tiktok: "",
+        youtube: "https://www.youtube.com/@demo.thompsonelectrical",
+        google: "https://search.google.com/local/writereview?placeid=demo-thompson-electrical",
+        other: ""
+      },
       color: "amber"
     },
     {
@@ -132,6 +172,16 @@
       phone: "0412 000 110",
       facebook: "https://www.facebook.com/demo.reevesfencing",
       page: "https://www.facebook.com/demo.reevesfencing.biz",
+      links: {
+        website: "https://www.reevesfencing.example.au",
+        facebook: "https://www.facebook.com/demo.reevesfencing.biz",
+        instagram: "https://www.instagram.com/demo.reevesfencing",
+        linkedin: "",
+        tiktok: "https://www.tiktok.com/@demo.reevesfencing",
+        youtube: "",
+        google: "",
+        other: ""
+      },
       color: "olive"
     },
     {
@@ -482,6 +532,8 @@
     return state.draft || {
       first: m.first, last: m.last, business: m.business, trade: m.trade,
       bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
+      links: (window.TCLinks ? TCLinks.fromMember(m) : (m.links || {})),
+      profile: (window.TCProfile ? TCProfile.fromMember(m) : (m.profile || {})),
       regions: m.regions.slice()
     };
   }
@@ -510,6 +562,8 @@
       phone: fd.get("phone") || "",
       facebook: fd.get("facebook") || "",
       page: fd.get("page") || "",
+      links: (window.TCLinks ? TCLinks.collect(form, current.links || current) : (current.links || {})),
+      profile: (window.TCProfile ? TCProfile.collect(form, current.profile || current) : (current.profile || {})),
       regions: (current.regions || me().regions).slice()
     };
   }
@@ -519,6 +573,8 @@
     var m = me();
     m.first = d.first; m.last = d.last; m.business = d.business; m.trade = d.trade;
     m.bio = d.bio; m.phone = d.phone; m.facebook = d.facebook; m.page = d.page;
+    if (window.TCLinks) TCLinks.applyToMember(m, d.links || d);
+    if (window.TCProfile) TCProfile.applyToMember(m, d.profile || d);
     m.regions = (d.regions || []).slice();
   }
 
@@ -799,7 +855,7 @@
     opts = opts || {};
     if (opts.memberId) state.selectedMember = opts.memberId;
     if (id === "create-profile" && !state.draft) {
-      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: [] };
       state.stepRegions = [];
     }
     if (id === "edit-profile") state.draft = draftFromMe();

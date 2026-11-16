@@ -2,9 +2,9 @@
 
 This note is for Vishal and for any assistant (Claude, ChatGPT or similar) continuing the work. It is written in plain words. It is a plan, not a build yet.
 
-**Date:** 16 November 2026, Australia/Perth.  
+**Date:** 17 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.3.
+**Current design:** clickable prototype v1.5.4.
 
 ---
 
@@ -184,3 +184,18 @@ The ordinary queue is free. A paid “jump the queue” is planned later, with t
 
 ### Recommendation alerts
 A member pastes a Facebook post link and the circle is notified. Comment ideas stay suggestions only. Each person writes their own words on Facebook.
+
+## 8c. Added in the v1.5.4 prototype (still a plan for the real app)
+
+### Unique review and comment ideas
+The prototype suggests review ideas and Facebook recommendation comments from a large combinatorial pool (openings, trade-specific job phrases, Perth suburbs, praise, closings, tone, length and focus). Those lines are suggestions only. The member must edit them in their own words and post them themselves.
+
+The real back end should store a **hash of each used idea**, keyed by the business (for Google reviews) or by the Facebook post (for recommendation comments). Once a member copies or uses an idea, that exact text must not be shown to anyone else for the same business or post. A **similarity check** should also block near-duplicates (shared wording after common words are ignored), so two members do not leave almost the same review.
+
+If the pool for a business or post runs low, the server should keep generating fresh combinations. Production can also call an **LLM** for new unique suggestions, but every LLM line must go through the same used-hash and similarity checks before it is shown.
+
+### Daily Google review cap
+To reduce the risk of Google treating a burst of circle reviews as spam, any one member or business may receive at most **3 Google reviews from the circle in a Perth calendar day** (midnight to midnight, Australia/Perth). The count goes up when a member confirms they left the review (“Done, I left a review” / “I left it”), not merely when they open the ideas screen. The cap is **configurable** in super admin Settings (default 3).
+
+The **server must enforce** this cap per reviewee per Perth day. The app should show a clear lock banner (“Daily limit reached: 3 of 3 Google reviews today”, “Opens tomorrow”, and an optional countdown) and disable Review / Review back for that business until the next Perth midnight.
+

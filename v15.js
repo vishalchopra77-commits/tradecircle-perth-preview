@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.3 */
+/* TradeCircle Perth — prototype v1.5.4 */
 (function () {
   "use strict";
 
@@ -41,6 +41,20 @@
     open: svg('<path d="M14 5h5v5"/><path d="M19 5L10 14"/><path d="M5 10v9h9"/>')
   };
 
+function googleG(size, mono) {
+    size = size || 18;
+    if (mono) {
+      return '<svg class="g-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09zM12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23zM5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84zM12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+    }
+    return '<svg class="g-ico g-color" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  I.g = googleG(18);
+  I.gMono = googleG(18, true);
+  function facebookF(size, color) {
+    size = size || 18;
+    return '<svg class="f-ico" viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="' + (color || 'currentColor') + '" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+  I.fLogo = facebookF(18);
   function gLink(m) {
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";
@@ -118,7 +132,7 @@
       '<button type="button" class="msg-btn sm" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button></div>";
     var back = "";
     if (theyReviewed(m) && !iReviewed(m) && !reviewedBack(m)) {
-      back = '<button type="button" class="slim-cta" data-action="review-back" data-id="' + m.id + '">' + I.star + " Review back</button>";
+      back = '<button type="button" class="slim-cta" data-action="review-back" data-id="' + m.id + '">' + googleG(16) + " Review back</button>";
     } else if (theyReviewed(m) && (iReviewed(m) || reviewedBack(m))) {
       back = '<div class="reviewed-tick">' + I.check + " Reviewed \u2713</div>";
     }
@@ -131,9 +145,9 @@
       var fb = r === "friends" ? "sb-friends" : r === "pending" ? "sb-pending" : "sb-none";
       var fl = r === "friends" ? "Facebook friends" : r === "pending" ? "Friend request pending" : "Not connected on Facebook";
       status = '<div class="sb-row"><span class="sb ' + fb + '" role="img" aria-label="' + fl + '" title="' + fl + '">' + I.fb + "</span>";
-      if (iReviewed(m) || reviewedBack(m)) status += '<span class="sb sb-you" role="img" aria-label="You reviewed them" title="You reviewed them">' + I.star + "</span>";
-      else if (theyReviewed(m)) status += '<span class="sb sb-need" role="img" aria-label="Needs your review" title="Needs your review">' + I.star + "</span>";
-      if (theyReviewed(m)) status += '<span class="sb sb-they" role="img" aria-label="They reviewed you" title="They reviewed you">' + I.star + "</span>";
+      if (iReviewed(m) || reviewedBack(m)) status += '<span class="sb sb-you" role="img" aria-label="You reviewed them" title="You reviewed them">' + googleG(13, true) + "</span>";
+      else if (theyReviewed(m)) status += '<span class="sb sb-need" role="img" aria-label="Needs your review" title="Needs your review">' + googleG(13, true) + "</span>";
+      if (theyReviewed(m)) status += '<span class="sb sb-they" role="img" aria-label="They reviewed you" title="They reviewed you">' + googleG(13, true) + "</span>";
       status += "</div>";
     }
     return '<div class="card member-card">' +
@@ -152,9 +166,9 @@
       return '<div class="review-back-banner"><div>' + I.check + '</div><div><p>' + esc(m.first) + " left you a Google review.</p>" +
         '<div class="reviewed-tick">Reviewed \u2713</div></div></div>';
     }
-    return '<div class="review-back-banner"><div>' + I.star + "</div><div><p>" + esc(m.first) + " left you a Google review.</p>" +
+    return '<div class="review-back-banner"><div>' + googleG(18) + "</div><div><p>" + esc(m.first) + " left you a Google review.</p>" +
       '<a class="btn-review-back" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="review-back" data-id="' + m.id + '">' +
-      I.star + "<span>Review back</span></a></div></div>";
+      googleG(16) + "<span>Review back</span></a></div></div>";
   }
 
   /* ---------- Recommendation alerts (fictional) ---------- */
@@ -224,7 +238,7 @@
       : "Request a free turn in the Facebook promotion queue";
     var cta = p.mine ? "View queue" : "Request a turn";
     return '<button type="button" class="home-promo" data-go="promo-queue">' +
-      '<span class="home-promo-ico">' + I.mega + "</span>" +
+      '<span class="home-promo-ico">' + facebookF(18) + "</span>" +
       '<span class="home-promo-body"><strong>Your turn to promote</strong><span>' + esc(sub) + "</span></span>" +
       '<span class="home-promo-cta">' + cta + "</span></button>";
   }
@@ -236,7 +250,7 @@
     }
     function icoWait(n) { return (T().icon ? T().icon(n) : ""); }
     return '<p class="group-label">Circle tools</p><div class="card group me-tools">' +
-      row("promo-queue", I.mega, "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
+      row("promo-queue", facebookF(18), "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
       row("rec-alerts", I.bell, "background:#FFF6E0;color:#8A5A00", "Recommendation alerts", "Help the circle comment on a post") +
       row("ai-assistant", I.spark, "background:#EEF2F6;color:#0B1F33", "AI assistant", "Voice commands while you drive") +
       "</div>";
@@ -246,11 +260,11 @@
     var tiles = [
       ["For you", [
         ["me", I.user, "teal", "My profile"],
-        ["promo-queue", I.mega, "navy", "Queue"],
+        ["promo-queue", facebookF(18), "navy", "Queue"],
         ["rec-alerts", I.bell, "amber", "Alerts"],
         ["ai-assistant", I.spark, "moss", "AI assistant"],
         ["my-regions", I.queue, "steel", "Your areas"],
-        ["reviews", I.star, "amber", "Reviews"],
+        ["reviews", googleG(18), "amber", "Reviews"],
         ["chats", I.chat, "navy", "Chat"],
         ["members", I.fb.indexOf("<svg") === 0 ? I.user : I.user, "teal", "Facebook"]
       ]],
@@ -330,14 +344,14 @@
       if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
       var btn = goTo === "rec-alert"
         ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
-        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '"' + (goTo === "member" ? ' data-id="' + row[0] + '"' : "") + ">" + row[5] + "</button>";
+        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '" data-id="' + row[0] + '">' + row[5] + "</button>";
       var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
       return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
     }).join("") : '<p class="hint">You’re all caught up.</p>';
 
     var actions = [
       ["rec-compose", I.send, "teal", "Send alert"],
-      ["promo-queue", I.mega, "navy", place.mine ? "View the queue" : "Request a turn"],
+      ["promo-queue", facebookF(18), "navy", place.mine ? "View the queue" : "Request a turn"],
       ["ai-assistant", I.spark, "moss", "AI assistant"],
       ["invite", I.send, "amber", "Invite"]
     ];
@@ -346,13 +360,15 @@
     }).join("") + "</div>";
 
     var feed = [
-      ["ok", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
-      ["info", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
-      ["warn", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
-      ["ok", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"]
+      ["review", "Hannah Lewis left a Google review for Hale Pest Control.", "Friday 6:30 pm"],
+      ["alert", "You marked a recommendation alert as commented.", "Yesterday 11:20 am"],
+      ["queue", "Tom Reeves jumped the Facebook promotion queue (price to be set).", "Saturday 10:12 am"],
+      ["admin", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"],
+      ["limit", "Thompson Electrical reached the daily Google review limit (3 of 3).", "Today 8:02 am"]
     ];
     var feedHtml = feed.map(function (f) {
-      return '<div class="dash-feed-item"><div class="feed-dot ' + f[0] + '"></div><div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
+      var tile = (window.notifTile ? window.notifTile(f[0], 16) : '<div class="feed-dot ' + f[0] + '"></div>');
+      return '<div class="dash-feed-item">' + tile + '<div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
     }).join("");
 
     return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
@@ -361,9 +377,9 @@
       "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
       '<div class="dash-stats">' +
       tile("teal", I.user, String(friends), "Friends") +
-      tile("amber", I.star, String(recd), "Reviews received") +
-      tile("navy", I.check, String(gave), "Reviews given") +
-      tile("moss", I.mega, place.mine ? "#" + place.mine : "—", "Queue place") +
+      tile("amber", googleG(18), String(recd), "Reviews received") +
+      tile("navy", googleG(18), String(gave), "Reviews given") +
+      tile("moss", facebookF(18), place.mine ? "#" + place.mine : "—", "Queue place") +
       "</div>" +
       '<p class="group-label">Needs your attention</p>' +
       '<div class="dash-attn-list">' + attnHtml + "</div>" +
@@ -491,12 +507,12 @@
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
         : '<p class="hint">You’re not in the queue yet.</p>') +
       (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
-        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + I.mega + "<span>Request a turn</span></button>") +
+        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + facebookF(18) + "<span>Request a turn</span></button>") +
       "</div>" +
       '<div class="queue-card"><div class="areas-card-h">Jump the queue</div>' +
       '<p class="plan-price"><span class="price-tbc">Price to be set</span></p>' +
       '<p class="hint">No payment is taken in this prototype. In the real app, a paid jump would go through the App Store, Google Play, or Stripe on the web. Until a price is chosen, this stays on the waiting list.</p>' +
-      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + I.mega + "<span>Coming later</span></button></div>" +
+      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + facebookF(18) + "<span>Coming later</span></button></div>" +
       '<p class="group-label">Current queue</p>' +
       q.map(function (row, i) {
         var m = member(row.memberId);
@@ -520,10 +536,10 @@
     html += '<p class="group-label">Requests received</p>';
     html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("jack"), 44) +
       '<div><div class="who">Jack Thompson</div><div class="meta">Thompson Electrical \u00b7 Today 7:12 am</div></div></div>' +
-      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="jack">' + I.star + "<span>Write review</span></button></div>";
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="jack">' + googleG(16) + "<span>Write review</span></button></div>";
     html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("tom"), 44) +
       '<div><div class="who">Tom Reeves</div><div class="meta">Reeves Fencing \u00b7 Yesterday</div></div></div>' +
-      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="tom">' + I.star + "<span>Write review</span></button></div>";
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="tom">' + googleG(16) + "<span>Write review</span></button></div>";
     html += "</div></section>";
     return html;
   }
@@ -558,7 +574,7 @@
       reviewBackBanner(m) +
       '<p class="bio">' + esc(m.bio) + "</p>" +
       '<div class="action-stack">' + friendButton(m) +
-      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + I.star + "<span>Leave a Google review</span></a>" +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + googleG(16) + "<span>Leave a Google review</span></a>" +
       '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for a Google review</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button>" +
       pageBtn + "</div>" +
@@ -607,7 +623,7 @@
       var cmd = el.getAttribute("data-cmd");
       var map = {
         updates: [{ who: "you", text: "Any new friend requests?" }, { who: "ai", text: "Liam O’Connor sent a friend request. I can open his Facebook profile so you can tap Add friend yourself." }],
-        reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. I can open Sarah’s Google review page so you can tap Review back." }],
+        reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. Thompson Electrical has already had 3 Google reviews from the circle today, which is the daily limit, so that review page is locked until tomorrow. I can open Sarah’s Google review page so you can tap Review back." }],
         "open-liam": [{ who: "you", text: "Open Liam’s Facebook profile." }, { who: "ai", text: "Opening Liam’s Facebook profile now. Tap Add friend when you’re ready. I won’t send the request for you." }],
         messages: [{ who: "you", text: "Read my latest messages." }, { who: "ai", text: "Sarah said: “Thanks — I will have a look this week.” Jack asked if you could leave a Google review." }],
         queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the Facebook promotion queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
@@ -780,7 +796,7 @@
         var extra = [
           ["ai-assistant", I.spark, "AI assistant"],
           ["rec-alerts", I.bell, "Recommendation alerts"],
-          ["promo-queue", I.mega, "Facebook promotion queue"]
+          ["promo-queue", facebookF(18), "Facebook promotion queue"]
         ];
         extra.forEach(function (it) {
           if (nav.querySelector('[data-go="' + it[0] + '"]')) return;

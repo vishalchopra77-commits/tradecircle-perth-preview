@@ -2,13 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.3-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.4-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.3) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.4) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -36,7 +36,9 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - Facebook friend status and Google review status, with filters such as “Not friends yet” and “Need my review”
 - **Google Business Profile** connection (mocked in this prototype)
 - One-tap **review requests**
-- **Review ideas helper** — suggestions only, not finished or pre-written reviews
+- **Review ideas helper** — suggestions only, not finished or pre-written reviews, with a Copy button and unique ideas per member
+- **Daily Google review cap** of 3 per business per Perth day, with a clear lock banner when the limit is reached
+- Profile **website and social links** (Facebook page, Instagram, LinkedIn, TikTok, YouTube, Google Business, Other)
 - Full in-app **chat** (one-to-one and a group per region) with modern chat features and push notification mocks
 - Top-left **hamburger menu** plus bottom tabs
 - **Subscription** screen: Free (current, everything included now) and Pro (coming later) with a **Price to be set** label
@@ -47,13 +49,23 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 
 ---
 
+## What’s new in v1.5.4
+
+Review idea cards (and other suggested text) have a clear **Copy** button. Tapping it copies the text and shows “Copied, now paste it in Google”. Ideas are unique per member and per business: a line that has already been copied or used is not shown to someone else. “Show different ideas” also skips used lines. A large combinatorial engine (openings, trade-specific jobs, Perth suburbs, praise, closings, tone, length and focus chips) keeps variety high. Focus defaults are Medium, Casual, and Search-friendly + Service + Area. See [REVIEW-IDEAS-RESEARCH.md](REVIEW-IDEAS-RESEARCH.md).
+
+A member or business can receive at most **3 Google reviews per day** from the circle (Perth midnight reset). At 3 of 3, a lock banner says the daily limit is reached and opens tomorrow, and Review / Review back is locked. The cap is configurable in super admin Settings.
+
+Profiles have a **Links** section (website, Facebook page, Instagram, LinkedIn, TikTok, YouTube, Google Business, optional Other), plus optional **About my business** (bio, years in business, service areas), **Expertise** (specialty chips and licences), an **image gallery** with a full-screen swipe viewer (mock add/remove on My profile), **My ideal referral partner**, and **My goals** with progress. These fields are optional in sign-up and edit, and also show in the admin member detail view.
+
+Icons: Reviews use the Google **G** everywhere a Google review is meant; the Queue uses the Facebook **f** (the Facebook members tab keeps the people icon). Notifications, the Home activity feed, notification settings and the admin activity feed each use a type-specific tinted icon (G for reviews, f for the queue, people for friend requests, person-plus for new members, chat bubble for mentions, megaphone for recommendation alerts, shield for approvals, lock for the daily limit).
+
 ## What’s new in v1.5.3
 
 The bottom menu is now **Home, Reviews, Facebook, Queue, More**. Chat has moved into the top bar, next to the bell, with an unread badge. Home is a member dashboard: a greeting, stat tiles, a “Needs your attention” list, quick actions and a recent activity feed. After sign-in, or when previewing the app from the approval screen, you land on Home.
 
 ## What’s new in v1.5.2
 
-The Facebook promotion queue is now easy to find: it has its own **Queue** tab on the bottom menu (megaphone icon), a “Your turn to promote” card at the top of the Facebook/members home, and a row on My profile. The bottom menu is now Reviews, Facebook, Chat, Queue and More. More opens a full menu with a search box and a grid of round shortcut tiles, grouped in sections. The active tab uses a TradeCircle green pill, not a copied colour scheme. The slide-out menu is still there from the header, with a proper queue icon.
+The Facebook promotion queue is now easy to find: it has its own **Queue** tab on the bottom menu (Facebook f icon in v1.5.4), a “Your turn to promote” card at the top of the Facebook/members home, and a row on My profile. The bottom menu is now Reviews, Facebook, Chat, Queue and More. More opens a full menu with a search box and a grid of round shortcut tiles, grouped in sections. The active tab uses a TradeCircle green pill, not a copied colour scheme. The slide-out menu is still there from the header, with a proper queue icon.
 
 ## What’s new in v1.5.1
 
@@ -147,7 +159,8 @@ More stills are in [`screens/`](screens/), including the polished v1.5.1 admin p
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
-| **v1.5.3 (current)** | 17 Nov 2026, about 2:25 am | Home dashboard as the first tab. Chat icon in the header next to notifications. Bottom menu: Home, Reviews, Facebook, Queue, More. Sign-in lands on Home. |
+| **v1.5.4 (current)** | 17 Nov 2026, about 3:15 am | Copy buttons on review ideas and other suggested text; unique idea engine and focus chips; daily Google review cap (3 per business, Perth midnight); profile links; Google G / Facebook f icons; typed notification icons. |
+| **v1.5.3** | 17 Nov 2026, about 2:25 am | Home dashboard as the first tab. Chat icon in the header next to notifications. Bottom menu: Home, Reviews, Facebook, Queue, More. Sign-in lands on Home. |
 | **v1.5.2** | 17 Nov 2026, about 2:15 am | Facebook promotion queue on the bottom menu, home card and profile. Five-tab bar (Reviews, Facebook, Chat, Queue, More). More menu is an apps grid with search. Brand-coloured active-tab pill. |
 | **v1.5.1** | 16 Nov 2026, about 10:50 am | Polished super admin (icons, gradient KPIs, charts, dashboard requests, activity, queue preview, header with search and notifications). Mobile bottom nav. Alert headline grammar and button icons in the app. |
 | **v1.5** | 16 Nov 2026, about 10:40 am | First/last name; awaiting approval; AI assistant (mock); chat attachments and emoji; 241 trades; admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue |
@@ -207,4 +220,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.5.3 · 17 November 2026, Australia/Perth*
+*Prototype v1.5.4 · 17 November 2026, Australia/Perth*
