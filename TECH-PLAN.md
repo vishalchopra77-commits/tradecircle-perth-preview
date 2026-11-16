@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 16 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.4.
+**Current design:** clickable prototype v1.5.
 
 ---
 
@@ -164,3 +164,20 @@ These are stages, not a quote and not a calendar. Time depends on how many peopl
 ---
 
 *This plan is a technical and product note, not legal, tax or financial advice. Store rules and AWS services can change; check the official pages before a real build.*
+
+
+---
+
+## 8. Added in the v1.5 prototype (still a plan for the real app)
+
+### AI assistant
+Members would connect **their own** Grok, ChatGPT, Claude or similar account. Voice commands can read updates, set reminders and open the right screen. The assistant must **not** send Facebook friend requests or post Google reviews. It opens the Facebook profile or Google review page, and the member taps the button. Apple, Google and Meta rules, plus Australian Consumer Law on reviews, all point the same way: the person has to take that last step.
+
+### Admin and approvals
+A web admin dashboard (also usable on a phone) lets Vishal approve new members, manage trades and regions, see alerts, run the promotion queue, handle reports, and send broadcasts. The real version would sit behind a signed-in admin account on AWS in Sydney, with an audit log.
+
+### Promotion queue payments
+The ordinary queue is free. A paid “jump the queue” is planned later, with the price still to be set. If that paid jump is sold **inside the iPhone or Android app**, Apple and Google generally require their own in-app purchase (Apple Review Guideline 3.1.1; Google Play billing). A payment collected on the **website or admin** could use Stripe (or similar). Do not invent a price. Do not take card details in a custom form inside the store apps.
+
+### Recommendation alerts
+A member pastes a Facebook post link and the circle is notified. Comment ideas stay suggestions only. Each person writes their own words on Facebook.

@@ -2,13 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.4-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.4) are ready in this repo; the live site updates after they are pushed.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5) are ready in this repo; the live site updates after they are pushed.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -40,10 +40,30 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - Full in-app **chat** (one-to-one and a group per region) with modern chat features and push notification mocks
 - Top-left **hamburger menu** plus bottom tabs
 - **Subscription** screen: Free (current, everything included now) and Pro (coming later) with a **Price to be set** label
+- **AI assistant** (mock) with voice commands that open pages for the member to tap
+- Chat attachments (photo, file, camera) and emoji
+- **Recommendation alerts** and a free **promotion queue** (paid jump later, price to be set)
+- **Super admin** web dashboard, including approval of new members
 
 ---
 
-## What’s new in v1.4
+## What’s new in v1.5
+
+Released 16 November 2026, Australia/Perth.
+
+- Separate **First name** and **Last name** on sign-up, profile creation and edit
+- New members **wait for admin approval** (Awaiting approval screen)
+- **AI assistant** (prototype/mock): connect Grok, ChatGPT, Claude or other; voice commands for updates, reminders and navigation. Friend requests and Google reviews are never sent automatically — the assistant opens the page, and the member taps the button
+- Chat **attach** (camera, photo, file) plus an **emoji** picker, with sample photo and file messages
+- **241 Australian trades** in the picker and search, sourced from hipages, Oneflare, Airtasker, ServiceSeeking and Yellow Pages style directories — see [TRADES-SOURCES.md](TRADES-SOURCES.md)
+- **Super admin** dashboard (`admin.html`): approve members, manage regions, trades, alerts, the promotion queue, reports, chats, plans, AI settings, broadcasts and an audit log. Demo login, mobile-friendly
+- Facebook-style friend buttons: **Add friend** / **Request sent** / **Friends ✓**
+- Instagram-style **Review back** when someone left you a Google review, plus **Reviewed ✓**. Review helper stays **ideas only**
+- **Recommendation alerts**: paste a Facebook post, pick the trade, send to the circle; alert card with Open post, comment ideas and Copy, and “Done, I commented”
+- **Promotion queue**: free turns, paid “Jump the queue” later with **Price to be set** (no payment in this prototype)
+- Visual polish: button icons and tasteful gradients
+
+### What’s new in v1.4
 
 Released 16 November 2026, Australia/Perth.
 
@@ -109,7 +129,8 @@ More stills are in [`screens/`](screens/).
 | v1.1 | 16 Nov 2026, about 8:06–8:15 am | Facebook sign-up and connect, Add friend, trade autocomplete, paste-link backup |
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
-| **v1.4 (current)** | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
+| v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
+| **v1.5 (current)** | 16 Nov 2026, about 10:40 am | First/last name; awaiting approval; AI assistant (mock); chat attachments and emoji; 241 trades; admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue |
 
 Older versions are in [`archive/v1/`](archive/v1/) and [`archive/v1.1/`](archive/v1.1/). Do not delete them — archive first, then add a new version.
 
@@ -134,7 +155,7 @@ In short:
 
 - Work on this GitHub copy (and keep the Drive backup in sync). Do not treat the Mac folder as the source of truth.
 - Fictional data only. No secrets.
-- Never delete files. Archive the previous version first, then bump the number (next is v1.5).
+- Never delete files. Archive the previous version first, then bump the number (next is v1.6).
 - Ask Vishal one question at a time, in plain words, when a decision is needed.
 - Keep weekly meet-ups offline. Keep the Facebook paste-link backup. Keep the review helper as **ideas only**.
 
@@ -144,9 +165,11 @@ Further decisions (16 November 2026): Vishal already has Apple App Store and Goo
 
 Open questions still waiting on Vishal:
 
-1. Should new tradies join straight away, or should he approve each new member first?
-2. What is the real app name?
-3. When he is ready: what should a paid plan include, and what is the price?
+1. What is the real app name?
+2. When he is ready: what should a paid plan include, and what is the price?
+3. When he is ready: what should “Jump the queue” cost? (Until then, use **Price to be set**.)
+
+New members wait for Vishal’s approval (decided in v1.5).
 
 ---
 
@@ -164,4 +187,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.4 · 16 November 2026, Australia/Perth*
+*Prototype v1.5 · 16 November 2026, Australia/Perth*

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TradeCircle Perth — Super admin (prototype v1.5)</title>
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    @font-face { font-family: "Plus Jakarta Sans"; src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
+  </style>
+</head>
+<body>
+  <div id="loginView" class="admin-login">
+    <form class="login-card" id="loginForm">
+      <span class="mock">Demo login — prototype only</span>
+      <h1>Super admin</h1>
+      <p>TradeCircle Perth dashboard. This is a mock. Nothing is saved on a server.</p>
+      <div class="field"><label>Email</label><input name="email" type="email" value="vishal@tradecircle.demo" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input name="password" type="password" value="demopass" autocomplete="current-password"></div>
+      <button class="btn btn-primary" type="submit">Sign in to dashboard</button>
+      <p style="margin:14px 0 0;font-size:12px;font-weight:600;color:#5B6B7C;text-align:center">Use the pre-filled demo details. <a href="index.html">Back to the app preview</a></p>
+    </form>
+  </div>
+
+  <div id="appView" class="shell hidden">
+    <div id="backdrop" class="backdrop hidden"></div>
+    <aside class="side" id="side">
+      <div class="brand"><strong>TradeCircle</strong><span>Super admin · v1.5</span></div>
+      <nav id="nav"></nav>
+    </aside>
+    <main class="main">
+      <div class="top">
+        <button class="btn btn-ghost btn-sm menu-btn" id="menuBtn" type="button">Menu</button>
+        <h1 id="pageTitle">Dashboard</h1>
+        <span class="mock">Fictional data</span>
+      </div>
+      <div id="page"></div>
+    </main>
+  </div>
+  <script src="trades.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

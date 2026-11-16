@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.4 (16 November 2026, Australia/Perth).  
+**Current prototype version:** v1.5 (16 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -65,7 +65,7 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 - Sign-up has **Sign up with Facebook**.
 - There is also **Continue with Facebook** / **Connect Facebook** so a tradie can connect their Facebook in one tap.
 - One-tap Facebook sign-up can reasonably bring in a name and photo. It **cannot reliably** bring in a public profile URL that works for sending friend requests. Facebook must approve the app before it shares that link (`user_link` permission + App Review; Advanced Access also needs Business Verification), and even then Meta’s docs say the official link may only open for people who are already connected. So the prototype keeps a **“paste your Facebook link” fallback**, and **Add friend** uses that pasted link.
-- Every member card in the list has an **Add friend** / **Send friend request** button, so people do not have to open the profile first.
+- Every member card has a Facebook-style button: **Add friend**, **Request sent**, or **Friends ✓**.
 - Member profiles and cards show Facebook friend status: already friends, request pending, or not connected yet.
 
 ### Google Business Profile and reviews
@@ -95,7 +95,24 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 - Chat features in the prototype: search, pinned chats, unread badges, online / last-seen, typing, read ticks, replies, emoji reactions, voice notes, photos, files, location, link previews, shared member profile cards, @mentions in region groups, message edit/delete (demo), mute, block or report, and quick actions such as “Send review request” and “Share my profile”.
 - Push notifications for messages, review requests and new members, with on/off switches and quiet hours. The prototype includes a lock-screen mock, an in-app notifications centre, and notification settings.
 
-### Subscription (v1.3, unchanged in v1.4)
+### AI assistant (v1.5)
+
+- Members can connect their own Grok, ChatGPT, Claude or other assistant (prototype mock only — nothing is sent).
+- Voice commands while driving: updates, read messages, reminders, navigation, queue position and recommendation alerts.
+- Friend requests and Google reviews are **never sent automatically**. The assistant opens the Facebook profile or Google review page, and the member taps the button.
+
+### Recommendation alerts and promotion queue (v1.5)
+
+- Paste a Facebook post, pick the trade, send to the circle. Members get a push alert and a card with Open post, comment ideas (suggestions only) and “Done, I commented”.
+- Promotion queue: everyone takes a free turn. Jumping the queue is later, labelled **Price to be set**. No payment is taken in the prototype. A real paid jump in the iPhone or Android app would go through Apple or Google billing; a website payment could use Stripe.
+
+### Super admin (v1.5)
+
+- A separate, mobile-friendly web dashboard (`admin.html`) for Vishal as super admin.
+- New profile requests can be approved or declined. New members see **Awaiting approval** until they are approved.
+- Also: members, regions, trades, alerts log, queue, reports, chat moderation, plans, AI settings, broadcasts and an audit log. Demo login only.
+
+### Subscription (v1.3, unchanged in later versions)
 
 - The app is free for now. A **Subscription** screen shows the Free plan (current, everything included) and a **Pro (coming later)** card with the label **Price to be set**.
 - Details of how a later paid plan would work, including store billing rules, are in [TECH-PLAN.md](TECH-PLAN.md).
@@ -118,7 +135,8 @@ All earlier versions were archived, not deleted.
 | **v1.1** | 16 Nov 2026, about 8:06–8:15 am | “Sign up with Facebook” and “Continue with Facebook”, Connect Facebook (mock consent), paste-your-Facebook-link fallback, Disconnect, **Add friend** on every member card, and typing search with autocomplete for trades and members (also on the trade picker). |
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
-| **v1.4 (current)** | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
+| v1.4 | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
+| **v1.5 (current)** | 16 Nov 2026, about 10:40 am | First and last name fields; new members wait for admin approval; AI assistant (mock, voice commands open pages to tap); chat photo/file/emoji; 241 Australian trades; super admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue (jump later, price to be set). |
 
 ---
 
@@ -139,9 +157,10 @@ For a real build, read [TECH-PLAN.md](TECH-PLAN.md) and the Facebook Login notes
 
 ## 5. Open questions (not decided yet)
 
-1. **Member approval.** Should any tradie be able to sign up straight away, or should Vishal (or an admin) approve each new member first? The v1 design includes a pending-approval screen, but this was asked and has not been answered.
-2. **Real app name.** “TradeCircle Perth” is a placeholder only.
-3. **Paid plan (later).** What should Pro include, and what is the price? Until that is decided, keep the label “Price to be set”.
+1. **App name.** TradeCircle Perth is still a placeholder.
+2. **Paid plan and queue jump prices.** Not set. Always use “Price to be set”. Do not invent a price.
+
+Decided in v1.5: new members wait for Vishal to approve them.
 
 Other context from earlier discussion, not yet locked as product rules: the circle is aimed at Perth trades (pest control, carpenter, painter, plumber, and similar). Regions mentioned so far are Hills, Kwinana, North and South, plus an All Perth metro view.
 

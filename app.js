@@ -1,5 +1,5 @@
 (function () {
-  const TRADES = [
+  const TRADES = (window.TC_TRADES && window.TC_TRADES.length) ? window.TC_TRADES.slice() : [
     "Pest Control", "Carpenter", "Painter", "Plumber", "Electrician",
     "Landscaper", "Roofer", "Air Conditioning", "Tiler", "Fencer",
     "Handyman", "Locksmith", "Plasterer"
@@ -165,7 +165,7 @@
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
     { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
     { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
-    { id: "pending", title: "Pending approval", sub: "Optional / not decided yet", tbc: true },
+    { id: "pending", title: "Awaiting approval", sub: "New members wait for admin approval" },
     { id: "members", title: "Members — My areas", sub: "Default member list" },
     { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
     { id: "members-filter", title: "Members — Trade filter", sub: "Plumbers only, as an example" },
@@ -188,10 +188,17 @@
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
     { id: "my-regions", title: "Your areas", sub: "All of your areas in one list" },
-    { id: "my-regions-all", title: "Your areas — all metro", sub: "Join all Perth metro turned on" }
+    { id: "my-regions-all", title: "Your areas — all metro", sub: "Join all Perth metro turned on" },
+    { id: "ai-assistant", title: "AI assistant", sub: "Connect Grok, ChatGPT or Claude" },
+    { id: "ai-voice", title: "AI voice command", sub: "Hands-free mock conversation" },
+    { id: "rec-alerts", title: "Recommendation alerts", sub: "Posts the circle can help with" },
+    { id: "rec-compose", title: "Send a recommendation alert", sub: "Paste a Facebook post link" },
+    { id: "rec-alert", title: "Alert card", sub: "Open post, comment ideas, mark done" },
+    { id: "promo-queue", title: "Promotion queue", sub: "Free turns, or jump the queue later" },
+    { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "google-consent"]);
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -260,6 +267,7 @@
       pin: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
       link: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5h5v5M19 5l-8 8"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>',
       pencil: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"/></svg>',
+      user: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>',
       bell: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
       addfriend: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>'
     };
@@ -330,12 +338,14 @@
     var people = withMembers ? matchPeople(q) : [];
     if (!String(q || "").trim()) {
       if (!withMembers) {
-        return '<div class="ac-group">Trades</div>' + trades.map(function (tr) {
+        var starter = trades.slice(0, 12);
+        return '<div class="ac-group">Trades</div>' + starter.map(function (tr) {
           return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span></button>';
-        }).join("");
+        }).join("") + (trades.length > 12 ? '<div class="ac-empty">Type to search all ' + trades.length + ' trades</div>' : "");
       }
       return "";
     }
+    trades = trades.slice(0, 12);
     if (!trades.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
     var html = "";
     if (trades.length) {
@@ -483,10 +493,15 @@
 
   function captureDraft(form) {
     var fd = new FormData(form);
-    var n = parseName(fd.get("name"));
     var current = draftFromMe();
+    var first = String(fd.get("first") || "").trim();
+    var last = String(fd.get("last") || "").trim();
+    if (!first && !last && fd.get("name")) {
+      var n = parseName(fd.get("name"));
+      first = n.first; last = n.last;
+    }
     state.draft = {
-      first: n.first, last: n.last,
+      first: first || current.first, last: last || current.last,
       business: fd.get("business") || current.business,
       trade: current.trade,
       bio: fd.get("bio") || "",
@@ -567,7 +582,8 @@
       '<button type="button" class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Sign up with Facebook</button>" +
       '<div class="or-line"><span>or sign up with email</span></div>' +
       '<form data-form="signup">' +
-      '<div class="field"><label>Full name</label><input name="name" placeholder="Your name" required></div>' +
+      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" required autocomplete="given-name"></div>' +
+      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" required autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>' +
       '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required></div>' +
       '<button class="btn btn-primary" type="submit" style="margin-top:8px">Continue</button></form>' +
@@ -585,7 +601,8 @@
       '<form data-form="create-profile"><div class="photo-row">' +
       '<button type="button" class="photo-btn" data-photo="1" aria-label="Add photo">' + avatarHTML(dummy, 80) + '<span class="cam">' + icon("cam") + "</span></button>" +
       "<div><strong style=\"font-size:15px;font-weight:800\">Profile photo or logo</strong><p class=\"hint\">Optional. Initials are used if you skip this.</p></div></div>" +
-      '<div class="field"><label>Full name</label><input name="name" placeholder="Jamie Hale" value="' + escapeAttr((d.first && d.last) ? (d.first + " " + d.last) : (d.first || "")) + '"></div>' +
+      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
+      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '"></div>' +
       '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
       '<div class="field"><label>Short bio</label><textarea name="bio" rows="3" placeholder="What you do and where you work">' + escapeText(d.bio || "") + "</textarea></div>" +
@@ -606,18 +623,24 @@
       '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. All of your areas are shown together. Join all of Perth metro at once, or tick only the areas you work in. You can change this later.</p></div>' +
       regionPicker(selected, "create") +
       '<p class="selected-count">' + count + "</p>" +
-      '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Finish and see members</button>" +
-      '<p class="hint" style="text-align:center;margin-top:12px">This prototype takes you straight in. Approvals, if added later, would use the optional pending screen.</p></div></section>';
+      '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Submit for approval</button>" +
+      '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the list.</p></div></section>';
   }
 
   function renderPending() {
+    var d = draftFromMe();
+    var who = escapeText((d.first || "Jamie") + (d.last ? " " + d.last : ""));
     return '<section class="screen has-header" data-screen="pending">' +
-      '<div class="app-header"><button class="icon-btn" data-go="create-regions" aria-label="Back">' + icon("back") + '</button><div class="ht">Account status</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="banner tbc">Optional screen — it has not been decided yet whether new members need approval before they appear in the list.</div>' +
-      '<div class="pending-art"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></div>' +
-      '<div class="auth-hero" style="text-align:center"><h2>Pending approval</h2><p>Thanks, Jamie. Your profile would stay hidden until an admin gives the go-ahead. This step may not be used.</p></div>' +
-      '<button class="btn btn-navy" data-go="members" style="margin-top:8px">Preview the members list anyway</button>' +
-      '<button class="btn btn-ghost ink" data-go="edit-profile" style="margin-top:10px">Edit my profile while I wait</button></div></section>';
+      '<div class="app-header"><button class="icon-btn" data-go="create-regions" aria-label="Back">' + icon("back") + '</button><div class="ht">Awaiting approval</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll">' +
+      '<div class="pending-art">' + icon("check") + "</div>" +
+      '<div class="auth-hero" style="text-align:center"><h2>Thanks, ' + escapeText(d.first || "Jamie") + '. We’re reviewing your profile.</h2>' +
+      "<p>Your profile stays hidden until a TradeCircle admin approves it. You’ll get a notification when you’re in. This usually takes a day.</p></div>" +
+      '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
+      '<p class="hint" style="margin:0">Name: ' + who + '<br>Trade: ' + escapeText(d.trade || "To be added") + "</p></div>" +
+      '<p class="hint" style="text-align:center">This is a prototype. Use the screen list, or the preview below, to look around while you wait.</p>' +
+      '<button class="btn btn-navy has-ico" data-go="members" style="margin-top:8px">' + icon("user") + "<span>Preview the members list</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-go="edit-profile" style="margin-top:10px">' + icon("pencil") + "<span>Edit my profile while I wait</span></button></div></section>";
   }
 
   function renderMembers() {
@@ -696,7 +719,8 @@
       '<div class="scroll"><form data-form="edit-profile"><div class="photo-row">' +
       '<button type="button" class="photo-btn" data-photo="1" aria-label="Change photo">' + avatarHTML(m, 80) + '<span class="cam">' + icon("cam") + "</span></button>" +
       "<div><strong style=\"font-size:15px;font-weight:800\">Profile photo or logo</strong><p class=\"hint\">Tap to add a photo. Initials are used if you skip this.</p></div></div>" +
-      '<div class="field"><label>Full name</label><input name="name" value="' + escapeAttr(fullName({ first: d.first, last: d.last })) + '"></div>' +
+      '<div class="name-row"><div class="field"><label>First name</label><input name="first" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
+      '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
       '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
       '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
@@ -807,7 +831,7 @@
       var tab = t.dataset.tab;
       var on = (tab === "members" && (id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "drawer"))
         || (tab === "me" && (id === "me" || id === "my-regions" || id === "my-regions-all"))
-        || (tab === "reviews" && (id === "reviews" || id === "review-ideas"))
+        || (tab === "reviews" && (id === "reviews" || id === "reviews-back" || id === "review-ideas"))
         || (tab === "chats" && (id === "chats" || id === "chat-dm" || id === "chat-group"));
       t.classList.toggle("active", on);
     });
@@ -1160,8 +1184,8 @@
       state.areaFilter = "mine";
       state.tradeFilter = "All";
       state.query = "";
-      go("members");
-      toast("You’re in. Browse members in your areas.");
+      go("pending");
+      toast("Thanks. Your profile is waiting for approval.");
       return;
     }
 
@@ -1193,8 +1217,10 @@
     }
     if (type === "signup") {
       var fd = new FormData(form);
-      var n = parseName(fd.get("name"));
-      state.draft = { first: n.first, last: n.last, business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
+      var first = String(fd.get("first") || "").trim();
+      var last = String(fd.get("last") || "").trim();
+      if (!first && fd.get("name")) { var n = parseName(fd.get("name")); first = n.first; last = n.last; }
+      state.draft = { first: first || "Jamie", last: last || "Hale", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
       state.stepRegions = [];
       go("create-profile");
       return;

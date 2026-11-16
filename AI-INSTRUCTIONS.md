@@ -21,7 +21,7 @@ When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly sa
 ## 2. How to continue the work
 
 1. Read `START-HERE.md`, this file, and `README.md` in the current version folder.
-2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.4**.
+2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.5**.
 3. Only change what Vishal asked for in the current request. Do not redesign unrelated screens.
 4. Keep all demo data fictional. Do not add real customer names, phone numbers, addresses, passwords, API keys, or other secrets.
 5. Ask Vishal **one question at a time**, in plain non-technical words, when a decision is required. Do not assume an answer.
@@ -45,6 +45,9 @@ Before you replace a released version:
 - Copy the full previous version into an `Archive` folder, with a clear name that includes the version and a timestamp in Australia/Perth (example: `ui-v1.2-20261116-082800-AWST`).
 - Leave the archive in GitHub (for example under `archive/`) and in the Drive **Archive** subfolder.
 - Do not overwrite the only copy of an older version.
+
+### AI assistant must not post for the member
+The AI assistant may open a Facebook profile or a Google review page. It must **never** send a friend request or post a review. The member taps that button themselves.
 
 ### Review ideas only (compliance)
 This is a hard product rule.
@@ -76,16 +79,18 @@ The real product is **one app for both iPhone and Android**, hosted on AWS in th
 ### Open questions
 Do not decide these for him:
 
-1. Should new tradies join straight away, or should he approve each new member first?
-2. What is the real app name?
-3. When he is ready: what should a paid plan include, and what is the price?
+1. What is the real app name?
+2. When he is ready: what should a paid plan include, and what is the price?
+3. When he is ready: what should “Jump the queue” cost? (Until then, use **Price to be set**.)
+
+New members **do** wait for Vishal’s approval. That was decided in v1.5.
 
 ---
 
 ## 4. Version numbering
 
 - The first design was **v1**.
-- Small feature additions use a point number: **v1.1**, **v1.2**, **v1.3**, **v1.4**, and so on.
+- Small feature additions use a point number: **v1.1**, **v1.2**, **v1.3**, **v1.4**, **v1.5**, and so on.
 - Use a new major number (**v2**) only for a large change, such as a full visual redesign or the start of a real (non-prototype) build, and only after saying so clearly.
 - Put the version in `README.md`, in the in-app settings/drawer version label, and in the delivery note to Vishal.
 - Do not skip numbers. Do not reuse a number for a different set of files.
@@ -107,7 +112,7 @@ Do these steps in order. Do not skip the archive step.
    - If GitHub Pages is enabled, confirm the preview link opens the new version.
    - Do not force-push or rewrite published history unless Vishal clearly asked for that.
 7. **Refresh the Google Drive backup:**
-   - Upload the new current unpacked files into a folder named like `v1.4 (current)`.
+   - Upload the new current unpacked files into a folder named like `v1.5 (current)`.
    - Move the previous “current” folder into **Archive** (or leave it there and clearly mark the new one as current).
    - Also upload a `.zip` (easiest download) and a `.tgz` of the new version.
    - Keep START-HERE and this instructions file at the Drive folder root, and as Google Docs if those copies already exist.
@@ -122,7 +127,9 @@ If you cannot push to GitHub (the repo does not exist yet, or you do not have ac
 
 In the current version folder (and in the GitHub repo, once created):
 
-- `index.html` — desktop chooser plus the app; loads `styles.css`, `v12.css`, `app.js`, `v12.js`
+- `index.html` — desktop chooser plus the app; loads `styles.css`, `v12.css`, `v15.css`, `trades.js`, `app.js`, `v12.js`, `v15.js`
+- `admin.html` — super admin dashboard (with `admin.css` and `admin.js`)
+- `TRADES-SOURCES.md` — where the Australian trades list came from
 - `TradeCircle-Perth.html` — same prototype with CSS and JS inlined (still needs `fonts/`)
 - `README.md` — version notes, Facebook Login limits, review-policy sources
 - `START-HERE.md`, `AI-INSTRUCTIONS.md` and `TECH-PLAN.md` — this hand-off pack and the real-app plan

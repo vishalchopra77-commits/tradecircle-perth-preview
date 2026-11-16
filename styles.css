@@ -871,3 +871,11 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   border-color: rgba(15, 190, 134, 0.4);
   color: #fff;
 }
+
+.name-row { display: flex; gap: 10px; }
+.name-row .field { flex: 1; min-width: 0; }
+#sheetTradeList { max-height: 52vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.btn.has-ico, button.has-ico {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn.has-ico svg { flex: none; }
