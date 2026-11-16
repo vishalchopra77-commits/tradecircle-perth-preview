@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.2 */
+/* TradeCircle Perth — prototype v1.3 */
 (function () {
   "use strict";
 
@@ -29,6 +29,7 @@
     google: '<span class="gmark" aria-hidden="true">G</span>',
     invite: svg('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/>'),
     help: svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 1c0 1.5-2.5 2-2.5 3.5"/><path d="M12 17.5h.01"/>'),
+    sub: svg('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/>'),
     gear: svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9c.3.6.9 1 1.6 1.1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>'),
     out: svg('<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>'),
     plus: svg('<path d="M12 5v14M5 12h14"/>'),
@@ -360,7 +361,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.2 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.3 \u00b7 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -745,7 +746,36 @@
       "</div></section>";
   }
 
-  function renderInvite() {
+  function renderSubscription() {
+    return '<section class="screen has-tabs has-header" data-screen="subscription">' + topbar("Subscription") +
+      '<div class="scroll">' +
+      '<div class="auth-hero"><h2>Plans</h2><p>The app is free for now. A paid plan can be added later. The price has not been set.</p></div>' +
+      '<article class="plan-card current">' +
+        '<div class="plan-top"><h3>Free</h3><span class="plan-badge">Your plan</span></div>' +
+        '<p class="plan-price">Free</p>' +
+        '<p class="plan-note">Everything in the app today is included.</p>' +
+        '<ul class="plan-list">' +
+          '<li>Profile, regions and member list</li>' +
+          '<li>Facebook friend requests</li>' +
+          '<li>Google review requests and ideas</li>' +
+          '<li>In-app chat and notifications</li>' +
+        '</ul>' +
+      '</article>' +
+      '<article class="plan-card coming">' +
+        '<div class="plan-top"><h3>Pro (coming later)</h3><span class="plan-badge later">Later</span></div>' +
+        '<p class="plan-price"><span class="price-tbc-label">Price to be set</span></p>' +
+        '<p class="plan-note">No price has been chosen yet. When it is, payment would go through the App Store and Google Play, not a card form in the app.</p>' +
+        '<ul class="plan-list">' +
+          '<li>Extra features to be decided</li>' +
+          '<li>Still free to use the app until then</li>' +
+        '</ul>' +
+        '<button type="button" class="btn btn-primary" disabled>Coming later</button>' +
+      '</article>' +
+      '<p class="settings-foot" style="padding-top:4px">Placeholder only. This screen does not take payment.</p>' +
+      "</div></section>";
+  }
+
+    function renderInvite() {
     return '<section class="screen has-tabs has-header" data-screen="invite">' + topbar("Invite a tradie") +
       '<div class="scroll"><div class="auth-hero"><h2>Invite someone you know</h2><p>Share a join link with a tradie you have actually met. They can make a profile and pick their Perth regions.</p></div>' +
       '<div class="field"><label>Invite link</label><input readonly value="https://tradecircle.perth.demo/join/hale-circle"></div>' +
@@ -787,6 +817,7 @@
       ["settings", I.google, "Google Business Profile", "drawer-google"],
       ["invite", I.invite, "Invite a tradie", ""],
       ["help", I.help, "Help & how it works", ""],
+      ["subscription", I.sub, "Subscription", ""],
       ["settings", I.gear, "Settings", ""]
     ];
     var html = '<div class="drawer-head">' + av(m, 64) +
@@ -795,13 +826,13 @@
       (m.regions || []).map(function (x) { return '<span class="pill r-pill">' + rn(x) + "</span>"; }).join("") +
       "</div></div><nav class=\"drawer-nav\">";
     items.forEach(function (it, i) {
-      if (i === 4 || i === 8) html += '<div class="drawer-sep"></div>';
+      if (i === 4 || i === 8 || i === 10) html += '<div class="drawer-sep"></div>';
       var action = it[3] ? ' data-action="' + it[3] + '"' : "";
       html += '<button type="button" class="drawer-item" data-go="' + it[0] + '"' + action + '><span class="ic">' + it[1] + "</span>" + it[2] + "</button>";
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.2</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.3</div>';
     return html;
   }
 
@@ -872,6 +903,7 @@
     if (id === "notifications") return renderNotifications();
     if (id === "notif-settings") return renderNotifSettings();
     if (id === "lockscreen") return renderLock();
+    if (id === "subscription") return renderSubscription();
     if (id === "invite") return renderInvite();
     if (id === "help") return renderHelp();
     if (id === "my-regions") return renderMyRegions();

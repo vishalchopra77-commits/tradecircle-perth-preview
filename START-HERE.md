@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.2 (16 November 2026, Australia/Perth).  
+**Current prototype version:** v1.3 (16 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -14,8 +14,9 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 
 Vishal wants him, Claude, ChatGPT and any other assistant to work **centrally on the online versions**, not in his Mac folder. His Mac will be updated later, once a version is finished.
 
-- **Source of truth (once the repository exists):** `https://github.com/vishalchopra77-commits/tradecircle-perth-preview`
-- **Live preview (once GitHub Pages is on):** `https://vishalchopra77-commits.github.io/tradecircle-perth-preview`
+- **Source of truth:** [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview)
+- **Live preview:** [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+- **How the real app will be built:** [TECH-PLAN.md](TECH-PLAN.md) (and the Google Doc of the same name, if present)
 - **This Google Drive folder** is a **backup copy** of the files and this hand-off pack, so work can continue if a chat hits a usage limit.
 - How to continue, the standing rules, version numbering, and how to deliver a new version are in **AI-INSTRUCTIONS.md** (and in the Google Doc of the same name, if present). Read that file before you change anything.
 
@@ -36,6 +37,13 @@ The app’s job is to make it easy for tradies to find each other, become Facebo
 A coordinated or fake-looking recommendation can get Facebook accounts flagged, and Australian Consumer Law requires recommendations to be genuine. The plan is that members only vouch for people they have actually met or used, and can honestly say something like “I know him personally”, because they meet weekly and are friends on Facebook.
 
 ---
+
+## 1a. Later build decisions (16 November 2026)
+
+- Vishal already has Apple App Store and Google Play developer accounts.
+- The real product will be **one app for iPhone and Android**, not two separate apps. The recommendation (React Native with Expo) and the reasons are in [TECH-PLAN.md](TECH-PLAN.md).
+- Files and hosting will be on **AWS**, in the Sydney region (`ap-southeast-2`).
+- The app is **free for now**. A subscription can be added later. Prices are not set. Use the label **“Price to be set”**. Do not invent a price. When a paid plan is sold inside the store apps, payment must go through Apple and Google billing — see TECH-PLAN.md.
 
 ## 2. What the app should do (agreed so far)
 
@@ -86,6 +94,11 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 - Chat features in the prototype: search, pinned chats, unread badges, online / last-seen, typing, read ticks, replies, emoji reactions, voice notes, photos, files, location, link previews, shared member profile cards, @mentions in region groups, message edit/delete (demo), mute, block or report, and quick actions such as “Send review request” and “Share my profile”.
 - Push notifications for messages, review requests and new members, with on/off switches and quiet hours. The prototype includes a lock-screen mock, an in-app notifications centre, and notification settings.
 
+### Subscription (v1.3)
+
+- The app is free for now. A **Subscription** screen shows the Free plan (current, everything included) and a **Pro (coming later)** card with the label **Price to be set**.
+- Details of how a later paid plan would work, including store billing rules, are in [TECH-PLAN.md](TECH-PLAN.md).
+
 ### Navigation
 
 - A **hamburger / burger menu** (three lines) at the top-left opens a slide-out drawer, so many items can fit.
@@ -102,7 +115,8 @@ All earlier versions were archived, not deleted.
 |---|---|---|
 | **v1** | 16 Nov 2026, about 7:39–7:56 am | First 13 clickable screens: welcome, sign in, sign up, create profile, pick regions, a pending-approval screen (not yet decided — see open questions), members list with “My areas” and “All Perth metro” filters and a trade filter, member profile with “Open Facebook profile”, my profile, edit profile, settings. Placeholder name TradeCircle Perth. All members are made up. |
 | **v1.1** | 16 Nov 2026, about 8:06–8:15 am | “Sign up with Facebook” and “Continue with Facebook”, Connect Facebook (mock consent), paste-your-Facebook-link fallback, Disconnect, **Add friend** on every member card, and typing search with autocomplete for trades and members (also on the trade picker). |
-| **v1.2 (current)** | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
+| v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
+| **v1.3 (current)** | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
 
 ---
 
@@ -117,7 +131,7 @@ Treat everything in these files as a **design preview**, not a backend or a prod
 - “Create group”, some chat actions (edit/delete), and similar controls are demo behaviour.
 - There is no real user accounts system, no real notifications service, and no live Facebook or Google API.
 
-For a real build, read the Facebook Login notes in `v1.2 (current)/README.md`. In short: name and photo are the easy part (`public_profile`); a usable friend-request profile URL is not guaranteed even after `user_link` App Review; keep the paste-link fallback.
+For a real build, read [TECH-PLAN.md](TECH-PLAN.md) and the Facebook Login notes in `README.md`. In short: name and photo are the easy part (`public_profile`); a usable friend-request profile URL is not guaranteed even after `user_link` App Review; keep the paste-link fallback.
 
 ---
 
@@ -125,6 +139,7 @@ For a real build, read the Facebook Login notes in `v1.2 (current)/README.md`. I
 
 1. **Member approval.** Should any tradie be able to sign up straight away, or should Vishal (or an admin) approve each new member first? The v1 design includes a pending-approval screen, but this was asked and has not been answered.
 2. **Real app name.** “TradeCircle Perth” is a placeholder only.
+3. **Paid plan (later).** What should Pro include, and what is the price? Until that is decided, keep the label “Price to be set”.
 
 Other context from earlier discussion, not yet locked as product rules: the circle is aimed at Perth trades (pest control, carpenter, painter, plumber, and similar). Regions mentioned so far are Hills, Kwinana, North and South, plus an All Perth metro view.
 
@@ -138,6 +153,8 @@ TradeCircle App - Mac Files/
   START-HERE                             ← same content as a Google Doc, if present
   AI-INSTRUCTIONS.md                     ← rules and delivery process for assistants
   AI-INSTRUCTIONS                        ← same content as a Google Doc, if present
+  TECH-PLAN.md                           ← how the real iPhone and Android app would be built
+  TECH-PLAN                              ← same content as a Google Doc, if present
   TradeCircle-Perth-v1.2.zip             ← easiest download of the current prototype
   ui-v1.2.tgz                            ← same v1.2 files as a .tgz bundle
   v1.2 (current)/                        ← full unpacked current prototype
@@ -175,7 +192,7 @@ To compare older versions, unzip the matching file in **Archive** and open that 
 
 ## 8. Guidance for an assistant continuing this work
 
-- Read AI-INSTRUCTIONS.md and follow it. Work on the GitHub / Drive copies, not the Mac folder.
+- Read AI-INSTRUCTIONS.md and follow it. Work on the GitHub / Drive copies, not the Mac folder. For the real build, also read [TECH-PLAN.md](TECH-PLAN.md).
 - Stay on this project (Facebook Business Marketing / TradeCircle Perth). Do not invent a different product.
 - Use “TradeCircle Perth” only as a placeholder name unless the owner chooses a new name.
 - Keep weekly meetups offline. Do not add them as an in-app feature unless the owner asks.

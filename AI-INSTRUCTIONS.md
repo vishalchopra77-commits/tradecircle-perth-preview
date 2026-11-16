@@ -1,6 +1,6 @@
 # AI instructions — TradeCircle Perth
 
-Read **START-HERE.md** first for the product concept, agreed features, version history, open questions and how to open the prototype. This file is the working agreement for Claude, ChatGPT, Grok, or any other assistant continuing the work.
+Read **START-HERE.md** first for the product concept, agreed features, version history, open questions and how to open the prototype. Read **TECH-PLAN.md** for how the real iPhone and Android app would be built (one app, AWS in Sydney, security, store rules, free now and a subscription later). This file is the working agreement for Claude, ChatGPT, Grok, or any other assistant continuing the work.
 
 The owner is Vishal Chopra. He wants everyone to work together on the **online copies**, not on his Mac folder. The Mac will be updated later, once a version is finished, as a local copy only.
 
@@ -10,11 +10,9 @@ The owner is Vishal Chopra. He wants everyone to work together on the **online c
 
 | Place | Role |
 |---|---|
-| **GitHub:** `https://github.com/vishalchopra77-commits/tradecircle-perth-preview` | **Source of truth** once the repository exists. New work is committed here. The live preview, once GitHub Pages is on, is expected at `https://vishalchopra77-commits.github.io/tradecircle-perth-preview`. |
+| **GitHub:** [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview) | **Source of truth.** New work is committed here. Live preview: [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/). |
 | **Google Drive folder:** TradeCircle App - Mac Files | **Backup copy** of the files, plus this hand-off pack, so another assistant can keep going if a chat hits a usage limit. Keep it in sync after each released version. |
 | **Vishal’s Mac** (`Documents/Projects/Facebook-Business-Marketing`) | **Not** the source of truth. Do not treat the Mac folder as the place to continue work. A copy will be made to the Mac later, when a version is finished. The Mac is often offline. |
-
-If the GitHub repository has not been created yet, say so clearly, keep working in a complete local/Drive set of files, and do not invent a different repo name. The planned name is `tradecircle-perth-preview` under the account `vishalchopra77-commits`.
 
 When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly said a Drive or chat file is newer and has not been pushed yet. In that case, reconcile and push to GitHub.
 
@@ -23,7 +21,7 @@ When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly sa
 ## 2. How to continue the work
 
 1. Read `START-HERE.md`, this file, and `README.md` in the current version folder.
-2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.2**.
+2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 16 November 2026, Australia/Perth, that is **v1.3**.
 3. Only change what Vishal asked for in the current request. Do not redesign unrelated screens.
 4. Keep all demo data fictional. Do not add real customer names, phone numbers, addresses, passwords, API keys, or other secrets.
 5. Ask Vishal **one question at a time**, in plain non-technical words, when a decision is required. Do not assume an answer.
@@ -65,6 +63,13 @@ Keep the **paste your Facebook link** fallback. Do not claim that one-tap Facebo
 ### Weekly meetups stay offline
 Do not add the weekly in-person meetings as an in-app feature unless Vishal asks for that.
 
+
+### Subscription and prices
+The app is **free for now**. A paid plan may come later. Until Vishal sets a price, always write **“Price to be set”**. Do not invent a price or a fee. When a digital subscription is sold inside the iPhone or Android app, use Apple In-App Purchase and Google Play billing, as explained in [TECH-PLAN.md](TECH-PLAN.md).
+
+### One app, AWS in Sydney
+The real product is **one app for both iPhone and Android**, hosted on AWS in the Sydney region. Follow [TECH-PLAN.md](TECH-PLAN.md). Do not plan two separate native apps unless Vishal changes that decision.
+
 ### Placeholder name
 “TradeCircle Perth” is a temporary name. Keep using it until Vishal chooses a real name. Do not silently rename the product.
 
@@ -73,6 +78,7 @@ Do not decide these for him:
 
 1. Should new tradies join straight away, or should he approve each new member first?
 2. What is the real app name?
+3. When he is ready: what should a paid plan include, and what is the price?
 
 ---
 
@@ -119,7 +125,7 @@ In the current version folder (and in the GitHub repo, once created):
 - `index.html` — desktop chooser plus the app; loads `styles.css`, `v12.css`, `app.js`, `v12.js`
 - `TradeCircle-Perth.html` — same prototype with CSS and JS inlined (still needs `fonts/`)
 - `README.md` — version notes, Facebook Login limits, review-policy sources
-- `START-HERE.md` and `AI-INSTRUCTIONS.md` — this hand-off pack
+- `START-HERE.md`, `AI-INSTRUCTIONS.md` and `TECH-PLAN.md` — this hand-off pack and the real-app plan
 - `overview.png`, `overview-chat.png`, `screens/`, `fonts/`
 
 Older versions live under `archive/` (GitHub) or **Archive** (Drive). Bundles: `TradeCircle-Perth-vX.Y.zip` and `ui-vX.Y.tgz`.
@@ -128,7 +134,7 @@ Older versions live under `archive/` (GitHub) or **Archive** (Drive). Bundles: `
 
 ## 7. If you are estimating or building further
 
-If Vishal asks how long a real app would take, say clearly what is already only a UI mock and what would still have to be built: accounts, Facebook Login and App Review, Google Business Profile APIs, real chat, real push notifications, member approval if he chooses it, and hosting. Do not treat this prototype as a finished product.
+If Vishal asks how long a real app would take, start from [TECH-PLAN.md](TECH-PLAN.md). Say clearly what is already only a UI mock and what would still have to be built: one React Native (Expo) app for iPhone and Android, AWS in Sydney, accounts (including Sign in with Apple), Facebook Login and App Review, Google Business Profile APIs, real chat, real push notifications, account deletion, report and block, member approval if he chooses it, and — later — store billing once prices are set. Do not treat this prototype as a finished product. Do not invent prices or AWS costs.
 
 ---
 

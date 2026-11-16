@@ -183,12 +183,13 @@
     { id: "notif-settings", title: "Notification settings", sub: "Toggles and quiet hours" },
     { id: "lockscreen", title: "Lock screen push", sub: "Mock notifications on the lock screen" },
     { id: "drawer", title: "Menu drawer", sub: "Hamburger slide-out navigation" },
+    { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
     { id: "my-regions", title: "My regions", sub: "Areas you have joined" }
   ];
 
-  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "invite", "help", "my-regions", "drawer", "google-consent"]);
+  const TABBED = new Set(["members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "drawer", "google-consent"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -1141,7 +1142,7 @@
     state.fbConnected = true;
     state.draft = { first: mm2.first, last: mm2.last, business: mm2.business, trade: mm2.trade, bio: mm2.bio, phone: mm2.phone, facebook: demoFbLink(), page: mm2.page, regions: mm2.regions.slice() };
   }
-  if (start === "edit-profile" || start === "settings" || start === "me" || start === "reviews" || start === "chats" || start === "drawer" || start === "google-consent") {
+  if (start === "edit-profile" || start === "settings" || start === "me" || start === "reviews" || start === "chats" || start === "drawer" || start === "google-consent" || start === "subscription" || start === "invite" || start === "help") {
     state.fbConnected = true;
     state.googleConnected = true;
     me().facebook = me().facebook || demoFbLink();

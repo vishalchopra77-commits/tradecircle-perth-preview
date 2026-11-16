@@ -2,16 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.2-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.3-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
-[![Repo](https://img.shields.io/badge/repository-live-0B1F33)](https://github.com/vishalchopra77-commits/tradecircle-perth-preview)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — live.
-
-**[Repository](https://github.com/vishalchopra77-commits/tradecircle-perth-preview)** — live.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.3) are ready in this repo; the live site updates after they are pushed.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -25,7 +22,7 @@ Members meet in person every week — those meet-ups stay **offline**, not in th
 
 This repository is a **clickable HTML/CSS/JavaScript UI prototype**, not a real shipped app. Facebook and Google consent screens are mocks. Chat and review drafts stay on the device. **All member names, businesses, ratings, chats and photos are fictional.**
 
-The online GitHub copy is the source of truth once this repo exists. [Google Drive](https://drive.google.com/drive/folders/14jfv6IgaBUlpMkdCxcK1f4gNQhL59qpX) is the backup. The Mac folder is updated later, when a version is finished.
+The online GitHub copy is the source of truth: [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview). [Google Drive](https://drive.google.com/drive/folders/14jfv6IgaBUlpMkdCxcK1f4gNQhL59qpX) is the backup. The Mac folder is updated later, when a version is finished.
 
 ---
 
@@ -41,12 +38,22 @@ The online GitHub copy is the source of truth once this repo exists. [Google Dri
 - **Review ideas helper** — suggestions only, not finished or pre-written reviews
 - Full in-app **chat** (one-to-one and a group per region) with modern chat features and push notification mocks
 - Top-left **hamburger menu** plus bottom tabs
+- **Subscription** screen: Free (current, everything included now) and Pro (coming later) with a **Price to be set** label
 
 ---
 
-## What’s new in v1.2
+## What’s new in v1.3
 
 Released 16 November 2026, Australia/Perth.
+
+- **Subscription** screen (Free now, Pro later) with a clearly labelled **Price to be set** — no invented prices
+- A drawer menu item for Subscription
+- **[TECH-PLAN.md](TECH-PLAN.md)** — how one app will work on iPhone and Android, AWS in Sydney, security, store rules, and a later subscription
+
+### What’s new in v1.2
+
+Released 16 November 2026, Australia/Perth.
+
 
 - Hamburger menu and slide-out drawer
 - Google Business Profile connection
@@ -75,6 +82,7 @@ Chat, notifications and the lock-screen mock:
 | Review ideas helper | ![Review ideas](screens/20-review-ideas.png) |
 | Chats | ![Chats](screens/21-chats.png) |
 | Menu drawer | ![Drawer](screens/27-drawer.png) |
+| Subscription | ![Subscription](screens/32-subscription.png) |
 
 More stills are in [`screens/`](screens/).
 
@@ -86,7 +94,8 @@ More stills are in [`screens/`](screens/).
 | --- | --- | --- |
 | v1 | 16 Nov 2026, about 7:39–7:56 am | First 13 screens: sign-up, profile, regions, member list, settings |
 | v1.1 | 16 Nov 2026, about 8:06–8:15 am | Facebook sign-up and connect, Add friend, trade autocomplete, paste-link backup |
-| **v1.2 (current)** | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
+| v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
+| **v1.3 (current)** | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 
 Older versions are in [`archive/v1/`](archive/v1/) and [`archive/v1.1/`](archive/v1.1/). Do not delete them — archive first, then add a new version.
 
@@ -94,7 +103,7 @@ Older versions are in [`archive/v1/`](archive/v1/) and [`archive/v1.1/`](archive
 
 ## How to open the prototype
 
-1. **Online (live):** [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/) — [repository](https://github.com/vishalchopra77-commits/tradecircle-perth-preview) (live)
+1. **Online (once Pages is live):** [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 2. **On a computer:** open `index.html` in a browser. You get a studio view with the phone in the middle and a screen list on the right. Use **Open the app** on the left, or click a screen name.
 3. **On a phone:** the same `index.html` opens the app full screen.
 4. `TradeCircle-Perth.html` is the same prototype with CSS and JavaScript inlined. Keep the `fonts/` folder beside either file.
@@ -105,7 +114,7 @@ Deep links: `index.html#members`, `index.html#chats`, `index.html#reviews`, `ind
 
 ## How to work on it
 
-Read **[AI-INSTRUCTIONS.md](AI-INSTRUCTIONS.md)** before you change anything, and **[START-HERE.md](START-HERE.md)** for the full product story and open questions.
+Read **[AI-INSTRUCTIONS.md](AI-INSTRUCTIONS.md)** before you change anything, **[START-HERE.md](START-HERE.md)** for the full product story and open questions, and **[TECH-PLAN.md](TECH-PLAN.md)** for how the real iPhone and Android app would be built (one app, AWS in Sydney, free now, subscription later).
 
 In short:
 
@@ -117,8 +126,13 @@ In short:
 
 Open questions still waiting on Vishal:
 
+Further decisions (16 November 2026): Vishal already has Apple App Store and Google Play developer accounts. The real app will be **one app for iPhone and Android**, hosted on **AWS in Sydney**. It stays **free for now**; a subscription can come later, with prices still to be set.
+
+Open questions still waiting on Vishal:
+
 1. Should new tradies join straight away, or should he approve each new member first?
 2. What is the real app name?
+3. When he is ready: what should a paid plan include, and what is the price?
 
 ---
 
@@ -136,4 +150,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.2 · 16 November 2026, Australia/Perth*
+*Prototype v1.3 · 16 November 2026, Australia/Perth*
