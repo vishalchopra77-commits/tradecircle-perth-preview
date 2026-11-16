@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>TradeCircle Perth — Super admin (prototype v1.5)</title>
+  <title>TradeCircle Perth — Super admin (prototype v1.5.1)</title>
   <link rel="stylesheet" href="admin.css" />
   <style>
     @font-face { font-family: "Plus Jakarta Sans"; src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
@@ -12,30 +12,52 @@
 <body>
   <div id="loginView" class="admin-login">
     <form class="login-card" id="loginForm">
+      <div class="login-mark" aria-hidden="true">TC</div>
       <span class="mock">Demo login — prototype only</span>
       <h1>Super admin</h1>
       <p>TradeCircle Perth dashboard. This is a mock. Nothing is saved on a server.</p>
       <div class="field"><label>Email</label><input name="email" type="email" value="vishal@tradecircle.demo" autocomplete="username"></div>
       <div class="field"><label>Password</label><input name="password" type="password" value="demopass" autocomplete="current-password"></div>
-      <button class="btn btn-primary" type="submit">Sign in to dashboard</button>
-      <p style="margin:14px 0 0;font-size:12px;font-weight:600;color:#5B6B7C;text-align:center">Use the pre-filled demo details. <a href="index.html">Back to the app preview</a></p>
+      <button class="btn btn-primary" type="submit" id="loginBtn">Sign in to dashboard</button>
+      <p class="login-foot">Use the pre-filled demo details. <a href="index.html">Back to the app preview</a></p>
     </form>
   </div>
 
   <div id="appView" class="shell hidden">
     <div id="backdrop" class="backdrop hidden"></div>
     <aside class="side" id="side">
-      <div class="brand"><strong>TradeCircle</strong><span>Super admin · v1.5</span></div>
+      <div class="brand">
+        <div class="login-mark sm" aria-hidden="true">TC</div>
+        <div><strong>TradeCircle</strong><span>Super admin · v1.5.1</span></div>
+      </div>
       <nav id="nav"></nav>
     </aside>
-    <main class="main">
-      <div class="top">
-        <button class="btn btn-ghost btn-sm menu-btn" id="menuBtn" type="button">Menu</button>
-        <h1 id="pageTitle">Dashboard</h1>
-        <span class="mock">Fictional data</span>
-      </div>
-      <div id="page"></div>
-    </main>
+    <div class="workspace">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu"></button>
+        <div class="top-search">
+          <span class="top-search-ico" aria-hidden="true"></span>
+          <input id="globalSearch" type="search" placeholder="Search members, trades, requests…" autocomplete="off">
+        </div>
+        <button class="icon-btn" id="notifBtn" type="button" aria-label="Notifications"><span class="bell-dot">3</span></button>
+        <div class="admin-chip" title="Vishal Chopra">
+          <div class="av av-teal">VC</div>
+          <div class="admin-meta"><strong>Vishal Chopra</strong><span>Super admin</span></div>
+        </div>
+      </header>
+      <div id="notifPanel" class="notif-panel hidden" role="dialog" aria-label="Notifications"></div>
+      <main class="main">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow" id="pageEyebrow">Overview</p>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+          <span class="mock">Fictional data</span>
+        </div>
+        <div id="page"></div>
+      </main>
+    </div>
+    <nav class="bottom-nav" id="bottomNav" aria-label="Main"></nav>
   </div>
   <script src="trades.js"></script>
   <script src="admin.js"></script>

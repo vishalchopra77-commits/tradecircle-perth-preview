@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.5 (16 November 2026, Australia/Perth).  
+**Current prototype version:** v1.5.1 (16 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -106,6 +106,9 @@ A coordinated or fake-looking recommendation can get Facebook accounts flagged, 
 - Paste a Facebook post, pick the trade, send to the circle. Members get a push alert and a card with Open post, comment ideas (suggestions only) and “Done, I commented”.
 - Promotion queue: everyone takes a free turn. Jumping the queue is later, labelled **Price to be set**. No payment is taken in the prototype. A real paid jump in the iPhone or Android app would go through Apple or Google billing; a website payment could use Stripe.
 
+### Super admin (v1.5.1)
+The admin home screen now shows gradient KPI cards, weekly charts, recent profile requests you can approve or decline on the spot, a recent activity feed and a promotion-queue preview. The header has search, notifications and your avatar. Every sidebar item and button has an icon. On a phone, a bottom bar covers the main sections, and a menu drawer opens the rest.
+
 ### Super admin (v1.5)
 
 - A separate, mobile-friendly web dashboard (`admin.html`) for Vishal as super admin.
@@ -136,7 +139,8 @@ All earlier versions were archived, not deleted.
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
-| **v1.5 (current)** | 16 Nov 2026, about 10:40 am | First and last name fields; new members wait for admin approval; AI assistant (mock, voice commands open pages to tap); chat photo/file/emoji; 241 Australian trades; super admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue (jump later, price to be set). |
+| **v1.5.1 (current)** | 16 Nov 2026, about 10:50 am | Polished super admin (icons, gradient KPIs, charts, approve/decline on the dashboard, activity feed, queue preview, search and notifications). Mobile bottom nav. Alert headlines such as “Someone’s asking for a pest controller”. |
+| **v1.5** | 16 Nov 2026, about 10:40 am | First and last name fields; new members wait for admin approval; AI assistant (mock, voice commands open pages to tap); chat photo/file/emoji; 241 Australian trades; super admin dashboard; Facebook-style friend buttons; Review back; recommendation alerts; promotion queue (jump later, price to be set). |
 
 ---
 

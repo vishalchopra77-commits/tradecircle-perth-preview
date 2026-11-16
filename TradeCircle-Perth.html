@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5</title>
+  <title>TradeCircle Perth — UI prototype v1.5.1</title>
   <style>
 /* TradeCircle Perth UI v1 */
 @font-face {
@@ -1298,7 +1298,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   pointer-events: none;
 }
 
-/* TradeCircle Perth — prototype v1.5 visual polish and new screens */
+/* TradeCircle Perth — prototype v1.5.1 visual polish and new screens */
 
 .btn-primary {
   background: linear-gradient(180deg, #24E0A6 0%, #0FBE86 100%);
@@ -1488,7 +1488,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5</span>
+        <span class="version-pill">Prototype v1.5.1</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -1513,12 +1513,12 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a free promotion queue with paid jump later (price to be set); Facebook-style friend buttons; Instagram-style Review back; and a mobile-friendly admin dashboard.</li>
+          <li><strong>Confirmed:</strong> first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a free promotion queue with paid jump later (price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5 · 16 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.1 · 16 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -2371,8 +2371,8 @@ window.TC_TRADES = [
       '</ul><div class="welcome-actions">' +
       '<button class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Continue with Facebook</button>" +
       '<div class="or-line light"><span>or</span></div>' +
-      '<button class="btn btn-primary" data-go="signup">Create account</button>' +
-      '<button class="btn btn-ghost" data-go="signin">Sign in</button>' +
+      '<button class="btn btn-primary has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
+      '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>" +
       '</div><p class="welcome-foot">Recommendations should only be for people you actually know.</p></div></section>';
   }
 
@@ -2383,7 +2383,7 @@ window.TC_TRADES = [
       '<form data-form="signin">' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="jamie@halepest.demo" autocomplete="username"></div>' +
       '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="demopass" autocomplete="current-password"></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Sign in</button></form>' +
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Sign in</span></button></form>" +
       '<p class="hint" style="text-align:center;margin-top:14px">This is a prototype — tap Sign in to continue as Jamie Hale.</p>' +
       '<div class="auth-bottom">New here? <a class="link" data-go="signup" href="#signup">Create an account</a></div></div></section>';
   }
@@ -2399,7 +2399,7 @@ window.TC_TRADES = [
       '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" required autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>' +
       '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Continue</button></form>' +
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form>" +
       '<div class="auth-bottom">Already have an account? <a class="link" data-go="signin" href="#signin">Sign in</a></div></div></section>';
   }
 
@@ -2423,7 +2423,7 @@ window.TC_TRADES = [
       '<div class="group-label" style="margin-top:4px">Facebook profile</div>' +
       fbConnectBlock("create-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" placeholder="https://www.facebook.com/your.business" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:6px">Continue to regions</button></form></div></section>';
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:6px">' + icon("pin") + "<span>Continue to regions</span></button></form></div></section>";
   }
 
   function renderCreateRegions() {
@@ -2436,7 +2436,7 @@ window.TC_TRADES = [
       '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. All of your areas are shown together. Join all of Perth metro at once, or tick only the areas you work in. You can change this later.</p></div>' +
       regionPicker(selected, "create") +
       '<p class="selected-count">' + count + "</p>" +
-      '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Submit for approval</button>" +
+      '<button class="btn btn-primary has-ico" data-action="finish-create"' + disabled + ">" + icon("check") + "<span>Submit for approval</span></button>" +
       '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the list.</p></div></section>';
   }
 
@@ -2542,7 +2542,7 @@ window.TC_TRADES = [
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
       '<div class="group-label">Your areas</div>' + regionPicker(d.regions || [], "edit") +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Save changes</button></form></div></section>';
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
 
   function renderSettings() {
@@ -3132,7 +3132,7 @@ window.TC_TRADES = [
   };
 })();
 
-/* TradeCircle Perth — prototype v1.5 */
+/* TradeCircle Perth — prototype v1.5.1 */
 (function () {
   "use strict";
 
@@ -3532,7 +3532,7 @@ window.TC_TRADES = [
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.1 \u00b7 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -3696,7 +3696,7 @@ window.TC_TRADES = [
       '<button type="button" class="link" data-action="refresh-ideas" style="margin:4px 0 12px">Show different ideas</button>' +
       '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
       '<div class="uniq ' + (u.ok ? "ok" : "bad") + '">' + u.msg + "</div>" +
-      '<a class="btn btn-primary" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">Copy and open Google</a>' +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + I.star + "<span>Copy and open Google</span></a>" +
       '<p class="hint" style="text-align:center">The text is copied so you can paste it into Google and change it before you post.</p></div></section>';
   }
   function seedChats() {
@@ -3940,7 +3940,7 @@ window.TC_TRADES = [
           '<li>Extra features to be decided</li>' +
           '<li>Still free to use the app until then</li>' +
         '</ul>' +
-        '<button type="button" class="btn btn-primary" disabled>Coming later</button>' +
+        '<button type="button" class="btn btn-primary has-ico" disabled>' + I.sub + "<span>Coming later</span></button>" +
       '</article>' +
       '<p class="settings-foot" style="padding-top:4px">Placeholder only. This screen does not take payment.</p>' +
       "</div></section>";
@@ -3950,11 +3950,11 @@ window.TC_TRADES = [
     return '<section class="screen has-tabs has-header" data-screen="invite">' + topbar("Invite a tradie") +
       '<div class="scroll"><div class="auth-hero"><h2>Invite someone you know</h2><p>Share a join link with a tradie you have actually met. They can make a profile and pick their Perth regions.</p></div>' +
       '<div class="field"><label>Invite link</label><input readonly value="https://tradecircle.perth.demo/join/hale-circle"></div>' +
-      '<button class="btn btn-primary" data-action="copy-invite">Copy invite link</button>' +
+      '<button class="btn btn-primary has-ico" data-action="copy-invite">' + I.invite + "<span>Copy invite link</span></button>" +
       '<div class="action-stack" style="margin-top:12px">' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="sms">Share by SMS</button>' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="whatsapp">Share on WhatsApp</button>' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="messenger">Share on Messenger</button>' +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="sms">' + I.send + "<span>Share by SMS</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="whatsapp">' + I.send + "<span>Share on WhatsApp</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="messenger">' + I.fb + "<span>Share on Messenger</span></button>" +
       "</div></div></section>";
   }
 
@@ -3972,7 +3972,7 @@ window.TC_TRADES = [
     return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("Your areas") +
       '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
       T().regionPicker(m.regions || [], "me-regions") +
-      '<button class="btn btn-primary" data-action="save-regions">Save areas</button></div></section>';
+      '<button class="btn btn-primary has-ico" data-action="save-regions">' + I.regions + "<span>Save areas</span></button></div></section>";
   }
 
   function drawerInner() {
@@ -4003,7 +4003,7 @@ window.TC_TRADES = [
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.1</div>';
     return html;
   }
 
@@ -4060,7 +4060,7 @@ window.TC_TRADES = [
     openOverlay('<div class="sheet-handle"></div><h3>Connect Google Business Profile</h3>' +
       '<p style="font-size:14px;font-weight:600;color:var(--muted);margin:0 0 14px">Prototype only. In a real app Google would ask you to sign in and pick your business. This preview does not talk to Google.</p>' +
       '<div class="g-card"><div class="gmark">G</div><div><div class="fb-card-n">Hale Pest Control</div><div class="fb-card-l">Midland, Western Australia</div></div></div>' +
-      '<button class="btn btn-primary" data-action="google-allow">Allow and connect</button>' +
+      '<button class="btn btn-primary has-ico" data-action="google-allow">' + I.google + "<span>Allow and connect</span></button>" +
       '<button class="btn btn-ghost ink" style="margin-top:8px" data-action="close-sheet">Not now</button>');
   }
 
@@ -4437,7 +4437,7 @@ window.TC_TRADES = [
   }
 })();
 
-/* TradeCircle Perth — prototype v1.5 */
+/* TradeCircle Perth — prototype v1.5.1 */
 (function () {
   "use strict";
 
@@ -4480,6 +4480,21 @@ window.TC_TRADES = [
   function gLink(m) {
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";
+  }
+  function tradeAsk(trade) {
+    var t = String(trade || "").trim();
+    var map = {
+      "Pest Control": "a pest controller",
+      "Air Conditioning": "an air conditioning technician",
+      "HVAC Technician": "an HVAC technician",
+      "End of Lease Cleaner": "an end-of-lease cleaner"
+    };
+    if (map[t]) return map[t];
+    var lower = t.toLowerCase();
+    if (/(er|or|ist|ian|man|person|technician)$/i.test(t.replace(/\s/g,"")) || /(er|or|ist|ian|man|person|technician)$/i.test(t)) {
+      return (/^[aeiou]/i.test(lower) ? "an " : "a ") + lower;
+    }
+    return "a " + lower + " professional";
   }
 
   var rel = {};
@@ -4717,7 +4732,7 @@ window.TC_TRADES = [
     var helped = (a.helped || []).map(function (id) { return esc(fn(member(id))); }).join(", ");
     return '<section class="screen has-header" data-screen="rec-alert">' +
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Alert</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="auth-hero"><h2>Someone’s asking for a ' + esc(a.trade.toLowerCase()) + '</h2><p>' + esc(a.ask) + " Help " + esc(fn(member(a.by)).split(" ")[0]) + ".</p></div>" +
+      '<div class="scroll"><div class="auth-hero"><h2>Someone’s asking for ' + esc(tradeAsk(a.trade)) + '</h2><p>' + esc(a.ask) + " Help " + esc(fn(member(a.by)).split(" ")[0]) + " get a genuine recommendation.</p></div>" +
       '<a class="btn btn-fb has-ico" href="' + esa(a.link) + '" target="_blank" rel="noopener noreferrer">' + I.open + "<span>Open post</span></a>" +
       '<p class="group-label">What to do</p><ol class="steps-ol">' +
       "<li>Open the Facebook post.</li>" +
@@ -4902,7 +4917,7 @@ window.TC_TRADES = [
         link: (linkEl && linkEl.value) || "https://www.facebook.com/groups/demo",
         trade: trade,
         by: "jamie",
-        ask: "Someone is asking for a " + trade.toLowerCase() + " in a Facebook group.",
+        ask: "Someone in a Facebook group is asking for " + tradeAsk(trade) + ".",
         status: "open",
         helped: [],
         ideas: [

@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 16 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.
+**Current design:** clickable prototype v1.5.1.
 
 ---
 
@@ -167,6 +167,9 @@ These are stages, not a quote and not a calendar. Time depends on how many peopl
 
 
 ---
+
+## 8b. Polished in the v1.5.1 prototype
+The super admin is now a full control panel: icon navigation, gradient KPI cards with trends, weekly charts, approve/decline on the dashboard, an activity feed, a promotion-queue preview, and a header with search, notifications and the admin avatar. Mobile uses a bottom bar plus a drawer. This is still a clickable prototype with fictional data.
 
 ## 8. Added in the v1.5 prototype (still a plan for the real app)
 

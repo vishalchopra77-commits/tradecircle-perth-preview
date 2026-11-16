@@ -558,8 +558,8 @@
       '</ul><div class="welcome-actions">' +
       '<button class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Continue with Facebook</button>" +
       '<div class="or-line light"><span>or</span></div>' +
-      '<button class="btn btn-primary" data-go="signup">Create account</button>' +
-      '<button class="btn btn-ghost" data-go="signin">Sign in</button>' +
+      '<button class="btn btn-primary has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
+      '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>" +
       '</div><p class="welcome-foot">Recommendations should only be for people you actually know.</p></div></section>';
   }
 
@@ -570,7 +570,7 @@
       '<form data-form="signin">' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="jamie@halepest.demo" autocomplete="username"></div>' +
       '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="demopass" autocomplete="current-password"></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Sign in</button></form>' +
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Sign in</span></button></form>" +
       '<p class="hint" style="text-align:center;margin-top:14px">This is a prototype — tap Sign in to continue as Jamie Hale.</p>' +
       '<div class="auth-bottom">New here? <a class="link" data-go="signup" href="#signup">Create an account</a></div></div></section>';
   }
@@ -586,7 +586,7 @@
       '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" required autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>' +
       '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Continue</button></form>' +
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form>" +
       '<div class="auth-bottom">Already have an account? <a class="link" data-go="signin" href="#signin">Sign in</a></div></div></section>';
   }
 
@@ -610,7 +610,7 @@
       '<div class="group-label" style="margin-top:4px">Facebook profile</div>' +
       fbConnectBlock("create-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" placeholder="https://www.facebook.com/your.business" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<button class="btn btn-primary" type="submit" style="margin-top:6px">Continue to regions</button></form></div></section>';
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:6px">' + icon("pin") + "<span>Continue to regions</span></button></form></div></section>";
   }
 
   function renderCreateRegions() {
@@ -623,7 +623,7 @@
       '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. All of your areas are shown together. Join all of Perth metro at once, or tick only the areas you work in. You can change this later.</p></div>' +
       regionPicker(selected, "create") +
       '<p class="selected-count">' + count + "</p>" +
-      '<button class="btn btn-primary" data-action="finish-create"' + disabled + ">Submit for approval</button>" +
+      '<button class="btn btn-primary has-ico" data-action="finish-create"' + disabled + ">" + icon("check") + "<span>Submit for approval</span></button>" +
       '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the list.</p></div></section>';
   }
 
@@ -729,7 +729,7 @@
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
       '<div class="group-label">Your areas</div>' + regionPicker(d.regions || [], "edit") +
-      '<button class="btn btn-primary" type="submit" style="margin-top:8px">Save changes</button></form></div></section>';
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
 
   function renderSettings() {

@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5 */
+/* TradeCircle Perth — prototype v1.5.1 */
 (function () {
   "use strict";
 
@@ -398,7 +398,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5 \u00b7 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.1 \u00b7 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -562,7 +562,7 @@
       '<button type="button" class="link" data-action="refresh-ideas" style="margin:4px 0 12px">Show different ideas</button>' +
       '<div class="field"><label>Write or edit your review</label><textarea id="reviewDraft" rows="4" placeholder="Use an idea as a starting point, then write it in your own words.">' + esc(st.reviewDraft) + "</textarea></div>" +
       '<div class="uniq ' + (u.ok ? "ok" : "bad") + '">' + u.msg + "</div>" +
-      '<a class="btn btn-primary" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">Copy and open Google</a>' +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="copy-open" data-id="' + m.id + '">' + I.star + "<span>Copy and open Google</span></a>" +
       '<p class="hint" style="text-align:center">The text is copied so you can paste it into Google and change it before you post.</p></div></section>';
   }
   function seedChats() {
@@ -806,7 +806,7 @@
           '<li>Extra features to be decided</li>' +
           '<li>Still free to use the app until then</li>' +
         '</ul>' +
-        '<button type="button" class="btn btn-primary" disabled>Coming later</button>' +
+        '<button type="button" class="btn btn-primary has-ico" disabled>' + I.sub + "<span>Coming later</span></button>" +
       '</article>' +
       '<p class="settings-foot" style="padding-top:4px">Placeholder only. This screen does not take payment.</p>' +
       "</div></section>";
@@ -816,11 +816,11 @@
     return '<section class="screen has-tabs has-header" data-screen="invite">' + topbar("Invite a tradie") +
       '<div class="scroll"><div class="auth-hero"><h2>Invite someone you know</h2><p>Share a join link with a tradie you have actually met. They can make a profile and pick their Perth regions.</p></div>' +
       '<div class="field"><label>Invite link</label><input readonly value="https://tradecircle.perth.demo/join/hale-circle"></div>' +
-      '<button class="btn btn-primary" data-action="copy-invite">Copy invite link</button>' +
+      '<button class="btn btn-primary has-ico" data-action="copy-invite">' + I.invite + "<span>Copy invite link</span></button>" +
       '<div class="action-stack" style="margin-top:12px">' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="sms">Share by SMS</button>' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="whatsapp">Share on WhatsApp</button>' +
-      '<button class="btn btn-ghost ink" data-action="share-invite" data-via="messenger">Share on Messenger</button>' +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="sms">' + I.send + "<span>Share by SMS</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="whatsapp">' + I.send + "<span>Share on WhatsApp</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="messenger">' + I.fb + "<span>Share on Messenger</span></button>" +
       "</div></div></section>";
   }
 
@@ -838,7 +838,7 @@
     return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("Your areas") +
       '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
       T().regionPicker(m.regions || [], "me-regions") +
-      '<button class="btn btn-primary" data-action="save-regions">Save areas</button></div></section>';
+      '<button class="btn btn-primary has-ico" data-action="save-regions">' + I.regions + "<span>Save areas</span></button></div></section>";
   }
 
   function drawerInner() {
@@ -869,7 +869,7 @@
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.1</div>';
     return html;
   }
 
@@ -926,7 +926,7 @@
     openOverlay('<div class="sheet-handle"></div><h3>Connect Google Business Profile</h3>' +
       '<p style="font-size:14px;font-weight:600;color:var(--muted);margin:0 0 14px">Prototype only. In a real app Google would ask you to sign in and pick your business. This preview does not talk to Google.</p>' +
       '<div class="g-card"><div class="gmark">G</div><div><div class="fb-card-n">Hale Pest Control</div><div class="fb-card-l">Midland, Western Australia</div></div></div>' +
-      '<button class="btn btn-primary" data-action="google-allow">Allow and connect</button>' +
+      '<button class="btn btn-primary has-ico" data-action="google-allow">' + I.google + "<span>Allow and connect</span></button>" +
       '<button class="btn btn-ghost ink" style="margin-top:8px" data-action="close-sheet">Not now</button>');
   }
 

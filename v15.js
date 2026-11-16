@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5 */
+/* TradeCircle Perth — prototype v1.5.1 */
 (function () {
   "use strict";
 
@@ -41,6 +41,21 @@
   function gLink(m) {
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";
+  }
+  function tradeAsk(trade) {
+    var t = String(trade || "").trim();
+    var map = {
+      "Pest Control": "a pest controller",
+      "Air Conditioning": "an air conditioning technician",
+      "HVAC Technician": "an HVAC technician",
+      "End of Lease Cleaner": "an end-of-lease cleaner"
+    };
+    if (map[t]) return map[t];
+    var lower = t.toLowerCase();
+    if (/(er|or|ist|ian|man|person|technician)$/i.test(t.replace(/\s/g,"")) || /(er|or|ist|ian|man|person|technician)$/i.test(t)) {
+      return (/^[aeiou]/i.test(lower) ? "an " : "a ") + lower;
+    }
+    return "a " + lower + " professional";
   }
 
   var rel = {};
@@ -278,7 +293,7 @@
     var helped = (a.helped || []).map(function (id) { return esc(fn(member(id))); }).join(", ");
     return '<section class="screen has-header" data-screen="rec-alert">' +
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Alert</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="auth-hero"><h2>Someone’s asking for a ' + esc(a.trade.toLowerCase()) + '</h2><p>' + esc(a.ask) + " Help " + esc(fn(member(a.by)).split(" ")[0]) + ".</p></div>" +
+      '<div class="scroll"><div class="auth-hero"><h2>Someone’s asking for ' + esc(tradeAsk(a.trade)) + '</h2><p>' + esc(a.ask) + " Help " + esc(fn(member(a.by)).split(" ")[0]) + " get a genuine recommendation.</p></div>" +
       '<a class="btn btn-fb has-ico" href="' + esa(a.link) + '" target="_blank" rel="noopener noreferrer">' + I.open + "<span>Open post</span></a>" +
       '<p class="group-label">What to do</p><ol class="steps-ol">' +
       "<li>Open the Facebook post.</li>" +
@@ -463,7 +478,7 @@
         link: (linkEl && linkEl.value) || "https://www.facebook.com/groups/demo",
         trade: trade,
         by: "jamie",
-        ask: "Someone is asking for a " + trade.toLowerCase() + " in a Facebook group.",
+        ask: "Someone in a Facebook group is asking for " + tradeAsk(trade) + ".",
         status: "open",
         helped: [],
         ideas: [
