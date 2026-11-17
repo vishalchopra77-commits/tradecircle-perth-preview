@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.6</title>
+  <title>TradeCircle Perth — UI prototype v1.5.7</title>
   <style>
 /* styles.css */
 /* TradeCircle Perth UI v1 */
@@ -894,8 +894,8 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 /* v12.css */
 /* TradeCircle Perth v1.2 */
 .tabbar {
-  grid-template-columns: repeat(5, 1fr);
-  padding: 8px 6px 20px;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 8px 10px 20px;
   background: rgba(255,255,255,0.94);
 }
 .tab {
@@ -2326,6 +2326,62 @@ input.invalid { border-color: #E24B4A; }
 .ov-card + .group-label { margin-top: 8px; }
 .dash-attn-wrap { margin-bottom: 8px; }
 
+
+/* v1.5.7 — Facebook tab Circle / Promotion queue switch */
+.fb-seg-bar {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(var(--safe-top) + 52px);
+  z-index: 18;
+  padding: 8px 16px 10px;
+  background: linear-gradient(180deg, #ffffff 65%, rgba(255,255,255,0.92));
+  box-sizing: border-box;
+}
+.screen.has-header.has-fb-seg .scroll {
+  padding-top: calc(var(--safe-top) + 52px + 88px);
+}
+.fb-seg {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 4px;
+  background: #E7ECF3;
+  border: 1.5px solid #D3DCE6;
+  border-radius: 16px;
+  padding: 5px;
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.06);
+}
+.fb-seg-btn {
+  border: 0;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 7px 8px 8px;
+  min-height: 52px;
+  background: transparent;
+  color: #5B6B7C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1.2;
+}
+.fb-seg-lab {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.fb-seg-place {
+  font-size: 11px;
+  font-weight: 750;
+  color: #166FE5;
+}
+.fb-seg-btn.active {
+  background: #fff;
+  color: #0B1F33;
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.12);
+}
+.fb-seg-btn.active .fb-seg-place { color: #166FE5; }
+
 </style>
 </head>
 <body>
@@ -2335,7 +2391,7 @@ input.invalid { border-color: #E24B4A; }
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.6</span>
+        <span class="version-pill">Prototype v1.5.7</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -2362,12 +2418,12 @@ input.invalid { border-color: #E24B4A; }
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard with separate Google, Facebook and Messages sections; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard with separate Google, Facebook and Messages sections; Chat in the top bar next to notifications; a Facebook tab with Circle and Promotion queue (queue stays easy to find) and a queue row on profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.6 · 17 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.7 · 17 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -2397,15 +2453,11 @@ input.invalid { border-color: #E24B4A; }
               Reviews
             </button>
             <button class="tab" data-tab="members" id="tab-members">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              Facebook
-            </button>
-            <button class="tab" data-tab="promo-queue" id="tab-queue">
               <span class="tab-f" aria-hidden="true">
                 <svg class="f-mono" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>
                 <svg class="f-color" viewBox="0 0 24 24" width="22" height="22" fill="#1877F2"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>
               </span>
-              Queue
+              Facebook
             </button>
             <button class="tab" data-tab="more" id="tab-more">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -4875,9 +4927,7 @@ window.TC_TRADES = [
       } else if (tab === "reviews") {
         on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
       } else if (tab === "members") {
-        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
-      } else if (tab === "promo-queue") {
-        on = id === "promo-queue";
+        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member" || id === "promo-queue";
       } else if (tab === "more") {
         on = !!moreScreens[id];
       }
@@ -5364,7 +5414,7 @@ window.TC_TRADES = [
 </script>
   <script>
 /* v12.js */
-/* TradeCircle Perth — prototype v1.5.6 */
+/* TradeCircle Perth — prototype v1.5.7 */
 (function () {
   "use strict";
 
@@ -5839,7 +5889,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.6 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.7 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -6324,7 +6374,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.6</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.7</div>';
     return html;
   }
 
@@ -6769,7 +6819,7 @@ function facebookF(size, color) {
 </script>
   <script>
 /* v15.js */
-/* TradeCircle Perth — prototype v1.5.6 */
+/* TradeCircle Perth — prototype v1.5.7 */
 (function () {
   "use strict";
 
@@ -7002,6 +7052,30 @@ function googleG(size, mono) {
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
     return { q: q, mine: mine, total: q.length };
   }
+  function fbSegment(which) {
+    var p = myQueuePlace();
+    var place = p.mine ? ("Your place #" + p.mine) : "Request a turn";
+    var circleOn = which === "circle";
+    var queueOn = which === "queue";
+    return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections">' +
+      '<div class="fb-seg">' +
+      '<button type="button" role="tab" class="fb-seg-btn' + (circleOn ? " active" : "") + '" data-go="members" aria-selected="' + (circleOn ? "true" : "false") + '">' +
+      '<span class="fb-seg-lab">Circle</span></button>' +
+      '<button type="button" role="tab" class="fb-seg-btn' + (queueOn ? " active" : "") + '" data-go="promo-queue" aria-selected="' + (queueOn ? "true" : "false") + '">' +
+      '<span class="fb-seg-lab">Promotion queue</span>' +
+      '<span class="fb-seg-place">' + esc(place) + "</span></button>" +
+      "</div></div>";
+  }
+  function withFbSeg(html, which) {
+    if (!html) return html;
+    html = html.replace('class="screen has-tabs has-header"', 'class="screen has-tabs has-header has-fb-seg"');
+    html = html.replace('<div class="ht">Members</div>', '<div class="ht">Facebook</div>');
+    html = html.replace('<div class="ht">Facebook promotion queue</div>', '<div class="ht">Facebook</div>');
+    if (html.indexOf("fb-seg-bar") === -1) {
+      html = html.replace('<div class="scroll">', fbSegment(which) + '<div class="scroll">');
+    }
+    return html;
+  }
   function homePromoBlock() {
     var p = myQueuePlace();
     var sub = p.mine
@@ -7031,7 +7105,7 @@ function googleG(size, mono) {
     var tiles = [
       ["For you", [
         ["me", I.user, "teal", "My profile"],
-        ["promo-queue", facebookF(18), "navy", "Queue"],
+        ["promo-queue", facebookF(18), "navy", "Promo queue"],
         ["rec-alerts", I.bell, "amber", "Alerts"],
         ["ai-assistant", I.spark, "moss", "AI assistant"],
         ["my-regions", I.queue, "steel", "Your areas"],
@@ -7358,7 +7432,7 @@ function googleG(size, mono) {
     var q = queue();
     var mine = 0;
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
-    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook promotion queue") +
+    return withFbSeg('<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook") +
       '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
@@ -7377,7 +7451,7 @@ function googleG(size, mono) {
           '<div style="font-weight:800;width:24px">' + (i + 1) + "</div>" + av(m, 40) +
           "<div style=\"flex:1;min-width:0\"><strong>" + esc(fn(m)) + "</strong><div class=\"hint\" style=\"margin:0\">" + esc(m.business) + (row.paid ? " \u00b7 Paid jump (later)" : " \u00b7 Free turn") + "</div></div></div>";
       }).join("") +
-      "</div></section>";
+      "</div></section>", "queue");
   }
 
   function renderReviews() {
@@ -7668,6 +7742,9 @@ function googleG(size, mono) {
       }
     };
     var prevMembers = TC12.renderMembers;
+    if (prevMembers) {
+      TC12.renderMembers = function () { return withFbSeg(prevMembers.apply(this, arguments), "circle"); };
+    }
     var prevMe = TC12.renderMe;
     TC12.renderMe = function () {
       var html = prevMe ? prevMe() : "";

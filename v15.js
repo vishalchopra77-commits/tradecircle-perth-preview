@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.6 */
+/* TradeCircle Perth — prototype v1.5.7 */
 (function () {
   "use strict";
 
@@ -231,6 +231,30 @@ function googleG(size, mono) {
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
     return { q: q, mine: mine, total: q.length };
   }
+  function fbSegment(which) {
+    var p = myQueuePlace();
+    var place = p.mine ? ("Your place #" + p.mine) : "Request a turn";
+    var circleOn = which === "circle";
+    var queueOn = which === "queue";
+    return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections">' +
+      '<div class="fb-seg">' +
+      '<button type="button" role="tab" class="fb-seg-btn' + (circleOn ? " active" : "") + '" data-go="members" aria-selected="' + (circleOn ? "true" : "false") + '">' +
+      '<span class="fb-seg-lab">Circle</span></button>' +
+      '<button type="button" role="tab" class="fb-seg-btn' + (queueOn ? " active" : "") + '" data-go="promo-queue" aria-selected="' + (queueOn ? "true" : "false") + '">' +
+      '<span class="fb-seg-lab">Promotion queue</span>' +
+      '<span class="fb-seg-place">' + esc(place) + "</span></button>" +
+      "</div></div>";
+  }
+  function withFbSeg(html, which) {
+    if (!html) return html;
+    html = html.replace('class="screen has-tabs has-header"', 'class="screen has-tabs has-header has-fb-seg"');
+    html = html.replace('<div class="ht">Members</div>', '<div class="ht">Facebook</div>');
+    html = html.replace('<div class="ht">Facebook promotion queue</div>', '<div class="ht">Facebook</div>');
+    if (html.indexOf("fb-seg-bar") === -1) {
+      html = html.replace('<div class="scroll">', fbSegment(which) + '<div class="scroll">');
+    }
+    return html;
+  }
   function homePromoBlock() {
     var p = myQueuePlace();
     var sub = p.mine
@@ -260,7 +284,7 @@ function googleG(size, mono) {
     var tiles = [
       ["For you", [
         ["me", I.user, "teal", "My profile"],
-        ["promo-queue", facebookF(18), "navy", "Queue"],
+        ["promo-queue", facebookF(18), "navy", "Promo queue"],
         ["rec-alerts", I.bell, "amber", "Alerts"],
         ["ai-assistant", I.spark, "moss", "AI assistant"],
         ["my-regions", I.queue, "steel", "Your areas"],
@@ -587,7 +611,7 @@ function googleG(size, mono) {
     var q = queue();
     var mine = 0;
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
-    return '<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook promotion queue") +
+    return withFbSeg('<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook") +
       '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
       (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
@@ -606,7 +630,7 @@ function googleG(size, mono) {
           '<div style="font-weight:800;width:24px">' + (i + 1) + "</div>" + av(m, 40) +
           "<div style=\"flex:1;min-width:0\"><strong>" + esc(fn(m)) + "</strong><div class=\"hint\" style=\"margin:0\">" + esc(m.business) + (row.paid ? " \u00b7 Paid jump (later)" : " \u00b7 Free turn") + "</div></div></div>";
       }).join("") +
-      "</div></section>";
+      "</div></section>", "queue");
   }
 
   function renderReviews() {
@@ -897,6 +921,9 @@ function googleG(size, mono) {
       }
     };
     var prevMembers = TC12.renderMembers;
+    if (prevMembers) {
+      TC12.renderMembers = function () { return withFbSeg(prevMembers.apply(this, arguments), "circle"); };
+    }
     var prevMe = TC12.renderMe;
     TC12.renderMe = function () {
       var html = prevMe ? prevMe() : "";

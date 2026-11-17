@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 17 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.6.
+**Current design:** clickable prototype v1.5.7.
 
 ---
 
@@ -206,3 +206,7 @@ The Home dashboard now shows **separate overviews** for Google reviews, Facebook
 ## 8e. Added in the v1.5.6 prototype
 
 The separated Home overviews from v1.5.5 now use **colourful gradient stat tiles** again (icon, large number, label, decorative corner circle), in a distinct colour family per section, so the layout stays easy to scan without looking plain.
+
+## 8f. Added in the v1.5.7 prototype
+
+The member app now has a **four-tab** bottom menu: Home, Reviews, Facebook, More. The Facebook tab (Facebook f icon) contains both the circle/members list and the promotion queue, switched with a prominent **Circle | Promotion queue** control. The queue segment shows the member’s place in the queue so it stays easy to find.

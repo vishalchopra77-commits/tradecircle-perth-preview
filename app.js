@@ -922,9 +922,7 @@
       } else if (tab === "reviews") {
         on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
       } else if (tab === "members") {
-        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member";
-      } else if (tab === "promo-queue") {
-        on = id === "promo-queue";
+        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member" || id === "promo-queue";
       } else if (tab === "more") {
         on = !!moreScreens[id];
       }

@@ -963,3 +963,59 @@ input.invalid { border-color: #E24B4A; }
 
 .ov-card + .group-label { margin-top: 8px; }
 .dash-attn-wrap { margin-bottom: 8px; }
+
+
+/* v1.5.7 — Facebook tab Circle / Promotion queue switch */
+.fb-seg-bar {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(var(--safe-top) + 52px);
+  z-index: 18;
+  padding: 8px 16px 10px;
+  background: linear-gradient(180deg, #ffffff 65%, rgba(255,255,255,0.92));
+  box-sizing: border-box;
+}
+.screen.has-header.has-fb-seg .scroll {
+  padding-top: calc(var(--safe-top) + 52px + 88px);
+}
+.fb-seg {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 4px;
+  background: #E7ECF3;
+  border: 1.5px solid #D3DCE6;
+  border-radius: 16px;
+  padding: 5px;
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.06);
+}
+.fb-seg-btn {
+  border: 0;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 7px 8px 8px;
+  min-height: 52px;
+  background: transparent;
+  color: #5B6B7C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1.2;
+}
+.fb-seg-lab {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.fb-seg-place {
+  font-size: 11px;
+  font-weight: 750;
+  color: #166FE5;
+}
+.fb-seg-btn.active {
+  background: #fff;
+  color: #0B1F33;
+  box-shadow: 0 2px 8px rgba(11, 31, 51, 0.12);
+}
+.fb-seg-btn.active .fb-seg-place { color: #166FE5; }
