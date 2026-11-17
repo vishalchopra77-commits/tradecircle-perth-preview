@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.5.7 (17 November 2026, Australia/Perth).  
+**Current prototype version:** v1.5.8 (18 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -139,7 +139,8 @@ All earlier versions were archived, not deleted.
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
-| **v1.5.7 (current)** | 17 Nov 2026, about 8:45 pm | Facebook and Queue bottom tabs combined into one Facebook tab (f icon) with a Circle / Promotion queue switch (Your place #4 on the queue segment). Bottom bar is now Home, Reviews, Facebook, More. |
+| **v1.5.8 (current)** | 18 Nov 2026, about 6:45 am | Basic multi-step sign-up (Facebook, email or phone, then first and last name, then business and regions) ending in Send for approval. After approval, a fill-or-skip Complete your profile step; a Finish your profile card if skipped. Shared queue wait of about 6 days for place #4. |
+| **v1.5.7** | 17 Nov 2026, about 8:45 pm | Facebook and Queue bottom tabs combined into one Facebook tab (f icon) with a Circle / Promotion queue switch (Your place #4 on the queue segment). Bottom bar is now Home, Reviews, Facebook, More. |
 | **v1.5.6** | 17 Nov 2026, about 8:40 pm | Colourful gradient stat tiles restored inside the separated Home sections (Google amber/navy, Facebook blue/navy, Messages teal, Friends green), with tinted section headers. |
 | **v1.5.5** | 17 Nov 2026, about 8:35 pm | Home dashboard split into separate Google reviews, Facebook, Messages and Friends overview cards, with soft tints instead of mixed gradient stat tiles; chats-list preview overflow tightened. |
 | **v1.5.4** | 17 Nov 2026, about 3:15 am | Copy buttons on suggested review and comment text; unique combinatorial idea engine with focus chips (see REVIEW-IDEAS-RESEARCH.md); daily Google review cap of 3 per business, Perth midnight reset, lock banner when full; profile website and social links; Google G for reviews and Facebook f for the promotion queue; typed icons on notifications, Home feed, settings and admin activity. |

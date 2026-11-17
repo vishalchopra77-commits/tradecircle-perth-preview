@@ -1,0 +1,31 @@
+/* TradeCircle Perth v1.5.8 — signup polish, complete-profile, finish-profile card */
+.signup-steps { display: flex; gap: 6px; margin: 4px 0 6px; }
+.signup-steps span { flex: 1; height: 4px; border-radius: 99px; background: #E4EAF0; }
+.signup-steps span.on { background: #0B6E4F; }
+.step-lab { margin: 0 0 14px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #5B6B7C; }
+
+.screen[data-screen="complete-profile"] .scroll { padding-bottom: 110px; }
+.cp-hero h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.03em; }
+.cp-hero p { margin: 0 0 14px; color: #5B6B7C; font-size: 14px; line-height: 1.45; }
+.cp-progress { margin: 0 0 16px; }
+.cp-progress .bar { height: 8px; border-radius: 99px; background: #E4EAF0; overflow: hidden; }
+.cp-progress .bar > i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #0B6E4F, #1AA37A); transition: width .2s ease; }
+.cp-progress .lab { margin-top: 6px; font-size: 12px; font-weight: 700; color: #0B6E4F; }
+.cp-count { float: right; font-size: 11px; font-weight: 700; color: #5B6B7C; }
+.cp-count.over { color: #B42318; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.chip-row .chip { border: 1px solid #D5DEE7; background: #fff; color: #14314C; border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 700; }
+.chip-row .chip.active { background: #E7F8F1; border-color: #0B6E4F; color: #066B4C; }
+.cp-sticky { position: sticky; bottom: 0; left: 0; right: 0; display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, transparent, #F5F7FA 18%); }
+.cp-sticky .btn { flex: 1; }
+
+.finish-card { display: flex; gap: 12px; align-items: flex-start; background: linear-gradient(135deg, #FFF8E8, #F3FBF7); border: 1px solid #F0E0B8; border-radius: 16px; padding: 14px; margin: 0 0 16px; }
+.finish-card .ring { width: 48px; height: 48px; flex: none; }
+.finish-card h3 { margin: 0 0 2px; font-size: 16px; }
+.finish-card p { margin: 0 0 10px; font-size: 13px; color: #5B6B7C; line-height: 1.4; }
+.finish-card .btn { width: 100%; }
+
+.set-row.demo-signup .ic { background: #EEF2F6; color: #14314C; }
+
+.pending-demo { margin-top: 16px; }
+.more-demo-tile { }

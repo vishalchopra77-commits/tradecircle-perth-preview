@@ -31,7 +31,7 @@
   };
 
   function empty() {
-    return { years: "", serviceAreas: [], specialties: [], licences: [], gallery: [], idealTrades: [], idealNote: "", goals: [] };
+    return { years: "", about: "", goal: "", serviceAreas: [], specialties: [], licences: [], gallery: [], idealTrades: [], idealNote: "", goals: [] };
   }
 
   function list(v) {
@@ -44,6 +44,8 @@
     p = p || {};
     var out = empty();
     out.years = p.years === 0 || p.years ? String(p.years) : "";
+    out.about = p.about || "";
+    out.goal = p.goal || "";
     out.serviceAreas = list(p.serviceAreas);
     out.specialties = list(p.specialties);
     out.licences = list(p.licences);
@@ -194,7 +196,10 @@
     var parts = [];
 
     var aboutBits = [];
-    if (m && m.bio) aboutBits.push('<p class="bio" style="margin:0">' + esc(m.bio) + "</p>");
+    if (m && m.tagline) aboutBits.push('<p class="tagline">' + esc(m.tagline) + "</p>");
+    if (p.about) aboutBits.push('<p class="bio" style="margin:0">' + esc(p.about) + "</p>");
+    else if (m && m.bio) aboutBits.push('<p class="bio" style="margin:0">' + esc(m.bio) + "</p>");
+    if (p.goal) aboutBits.push('<div class="profile-stat"><span class="k">My goal</span><span class="v">' + esc(p.goal) + "</span></div>");
     if (p.years) aboutBits.push('<div class="profile-stat"><span class="k">Years in business</span><span class="v">' + esc(p.years) + " years</span></div>");
     if (p.serviceAreas.length) aboutBits.push('<div class="profile-stat"><span class="k">Service areas</span><div class="tags" style="margin-top:6px">' + chips(p.serviceAreas, "r-pill") + "</div></div>");
     if (aboutBits.length) {
@@ -283,6 +288,10 @@
     var note = form.querySelector("[name='profileIdealNote']");
     var idealHid = form.querySelector("[name='profileIdealTrades']");
     if (years) p.years = String(years.value || "").trim();
+    var about = form.querySelector("[name='profileAbout']");
+    var goal = form.querySelector("[name='profileGoal']");
+    if (about) p.about = String(about.value || "").trim();
+    if (goal) p.goal = String(goal.value || "").trim();
     if (areas) p.serviceAreas = list(areas.value);
     if (spec) p.specialties = list(spec.value);
     if (lic) p.licences = list(lic.value);
@@ -332,6 +341,7 @@
         var name = chip.getAttribute("data-profile-chip");
         if (name === "serviceAreas") syncChipInput(form, name, "", "profileAreas");
         if (name === "idealTrades") syncChipInput(form, name, "profileIdealTrades", "");
+        if (name === "specialties") syncChipInput(form, name, "", "profileSpecialties");
       }
       if (e.target.closest("[data-action='add-goal']")) {
         e.preventDefault();

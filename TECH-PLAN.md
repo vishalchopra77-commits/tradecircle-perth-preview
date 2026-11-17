@@ -2,9 +2,9 @@
 
 This note is for Vishal and for any assistant (Claude, ChatGPT or similar) continuing the work. It is written in plain words. It is a plan, not a build yet.
 
-**Date:** 17 November 2026, Australia/Perth.  
+**Date:** 18 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.7.
+**Current design:** clickable prototype v1.5.8.
 
 ---
 
@@ -210,3 +210,7 @@ The separated Home overviews from v1.5.5 now use **colourful gradient stat tiles
 ## 8f. Added in the v1.5.7 prototype
 
 The member app now has a **four-tab** bottom menu: Home, Reviews, Facebook, More. The Facebook tab (Facebook f icon) contains both the circle/members list and the promotion queue, switched with a prominent **Circle | Promotion queue** control. The queue segment shows the member’s place in the queue so it stays easy to find.
+
+## 8g. Added in the v1.5.8 prototype
+
+Sign-up is a short, basic flow (Facebook, email or phone, then name, then business and regions) that ends with **Send for approval**. After approval, members see **Complete your profile** first and can fill it in or skip. Skipped profiles show a **Finish your profile** reminder with a percentage complete. Queue wait days use one shared calculation everywhere: (place − 1) × 2, so place #4 is about 6 days.

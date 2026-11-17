@@ -1,4 +1,4 @@
-/* TradeCircle Perth — super admin prototype v1.5.7 */
+/* TradeCircle Perth — super admin prototype v1.5.8 */
 (function () {
   "use strict";
   function svg(inner) {

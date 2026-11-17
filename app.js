@@ -209,13 +209,17 @@
   const CHOOSER = [
     { id: "welcome", title: "Welcome", sub: "First open of the app" },
     { id: "signin", title: "Sign in", sub: "Email and password" },
-    { id: "signup", title: "Sign up", sub: "Sign up with Facebook or email" },
+    { id: "signup", title: "Sign up — choose method", sub: "Facebook, email or phone" },
+    { id: "signup-email", title: "Sign up — email", sub: "Email and password" },
+    { id: "signup-phone", title: "Sign up — phone", sub: "Phone number and a one-time code" },
+    { id: "signup-name", title: "Sign up — name", sub: "First and last name" },
     { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
-    { id: "create-profile", title: "Create profile", sub: "Connect Facebook or paste a link" },
+    { id: "create-profile", title: "Sign up — business and areas", sub: "Business details, trade, regions, then send for approval" },
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
     { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
     { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
-    { id: "pending", title: "Awaiting approval", sub: "New members wait for admin approval" },
+    { id: "pending", title: "Awaiting approval", sub: "Waiting for a super admin, with a demo approve button" },
+    { id: "complete-profile", title: "Complete your profile", sub: "After approval: fill or skip the extra profile details" },
     { id: "home", title: "Home — member dashboard", sub: "Greeting, stats, things that need you, quick actions" },
     { id: "members", title: "Members — My areas", sub: "Default member list" },
     { id: "members-all", title: "Members — All Perth metro", sub: "Metro-wide filter" },
@@ -461,6 +465,9 @@
     ids = (ids || []).slice();
     if (prefix === "create") {
       state.stepRegions = ids;
+      if (state.screen === "create-profile" || state.screen === "create-profile-connected" || state.screen === "signup-business") {
+        return state.screen;
+      }
       return isAllMetro(ids) && state.screen === "create-regions-all" ? "create-regions-all" : "create-regions";
     }
     if (prefix === "me-regions") {
@@ -532,6 +539,7 @@
     return state.draft || {
       first: m.first, last: m.last, business: m.business, trade: m.trade,
       bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
+      abn: m.abn || "", email: m.email || "", tagline: m.tagline || "",
       links: (window.TCLinks ? TCLinks.fromMember(m) : (m.links || {})),
       profile: (window.TCProfile ? TCProfile.fromMember(m) : (m.profile || {})),
       regions: m.regions.slice()
@@ -560,11 +568,14 @@
       trade: current.trade,
       bio: fd.get("bio") || "",
       phone: fd.get("phone") || "",
-      facebook: fd.get("facebook") || "",
-      page: fd.get("page") || "",
+      facebook: fd.get("facebook") || current.facebook || "",
+      page: fd.get("page") || current.page || "",
+      abn: (fd.get("abn") != null ? String(fd.get("abn") || "").trim() : (current.abn || "")),
+      email: (fd.get("email") != null ? String(fd.get("email") || "").trim() : (current.email || "")),
+      tagline: (fd.get("tagline") != null ? String(fd.get("tagline") || "").trim() : (current.tagline || "")),
       links: (window.TCLinks ? TCLinks.collect(form, current.links || current) : (current.links || {})),
       profile: (window.TCProfile ? TCProfile.collect(form, current.profile || current) : (current.profile || {})),
-      regions: (current.regions || me().regions).slice()
+      regions: (current.regions || me().regions || []).slice()
     };
   }
 
@@ -573,6 +584,7 @@
     var m = me();
     m.first = d.first; m.last = d.last; m.business = d.business; m.trade = d.trade;
     m.bio = d.bio; m.phone = d.phone; m.facebook = d.facebook; m.page = d.page;
+    m.abn = d.abn || m.abn || ""; m.email = d.email || m.email || ""; m.tagline = d.tagline || m.tagline || "";
     if (window.TCLinks) TCLinks.applyToMember(m, d.links || d);
     if (window.TCProfile) TCProfile.applyToMember(m, d.profile || d);
     m.regions = (d.regions || []).slice();
@@ -601,6 +613,14 @@
       '<p class="hint">This is the profile other members will open to send you a friend request.</p></div>';
   }
 
+  function signupSteps(n, total) {
+    total = total || 3;
+    var bits = [];
+    for (var i = 1; i <= total; i++) bits.push('<span' + (i <= n ? ' class="on"' : "") + "></span>");
+    return '<div class="steps signup-steps" aria-label="Step ' + n + " of " + total + '">' + bits.join("") +
+      '</div><p class="step-lab">Step ' + n + " of " + total + "</p>";
+  }
+
   function renderWelcome() {
     return '<section class="screen dark" id="screen-welcome" data-screen="welcome">' +
       '<div class="welcome-bg" aria-hidden="true"><div class="ring" style="width:280px;height:280px"></div><div class="ring" style="width:400px;height:400px"></div><div class="ring" style="width:520px;height:520px"></div></div>' +
@@ -610,11 +630,11 @@
       '<span class="name-badge placeholder-note">Placeholder name</span>' +
       '<p class="welcome-copy">Join your local areas, meet other trades, and send a Facebook friend request so you can recommend each other in the groups.</p>' +
       '<ul class="welcome-points">' +
-      '<li><span class="ic">' + icon("check") + "</span> Connect your Facebook in one tap, or paste your link.</li>" +
+      '<li><span class="ic">' + icon("check") + "</span> Sign up with Facebook, email or your phone number.</li>" +
       '<li><span class="ic">' + icon("check") + "</span> Pick one or more Perth regions.</li>" +
       '<li><span class="ic">' + icon("check") + "</span> Weekly meet-ups stay offline — they are not in this app.</li>" +
       '</ul><div class="welcome-actions">' +
-      '<button class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Continue with Facebook</button>" +
+      '<button class="btn btn-fb" data-action="fb-connect" data-next="signup-name">' + icon("fb") + " Continue with Facebook</button>" +
       '<div class="or-line light"><span>or</span></div>' +
       '<button class="btn btn-primary has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
       '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>" +
@@ -634,71 +654,96 @@
   }
 
   function renderSignUp() {
-    return '<section class="screen has-header" data-screen="signup">' +
+    var method = state.signupMethod || (state.screen === "signup-email" ? "email" : state.screen === "signup-phone" ? "phone" : "");
+    var screenId = state.screen === "signup-email" || state.screen === "signup-phone" ? state.screen : "signup";
+    var d = draftFromMe();
+    var body;
+    if (method === "email") {
+      body = '<div class="auth-hero"><h2>Continue with email</h2><p>Use an email and a password. This is a prototype — nothing is sent to a real inbox.</p></div>' +
+        '<form data-form="signup-email">' +
+        '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="' + escapeAttr(d.email || "") + '" required autocomplete="email"></div>' +
+        '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required autocomplete="new-password"></div>' +
+        '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form>" +
+        '<button type="button" class="btn btn-ghost ink" data-action="signup-method" data-method="" style="margin-top:10px">Back to options</button>';
+    } else if (method === "phone") {
+      body = '<div class="auth-hero"><h2>Continue with your phone</h2><p>We will send a one-time code. This is a prototype — no SMS is really sent.</p></div>' +
+        '<form data-form="signup-phone">' +
+        '<div class="field"><label>Phone number</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '" required autocomplete="tel"></div>' +
+        (state.otpSent
+          ? '<div class="field"><label>One-time code</label><input name="otp" inputmode="numeric" placeholder="6-digit code" value="482913" required><p class="hint">Prototype code: 482913. Use this to continue.</p></div>' +
+            '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Verify and continue</span></button>"
+          : '<button class="btn btn-primary has-ico" type="button" data-action="send-otp" style="margin-top:8px">' + icon("phone") + "<span>Send code</span></button>") +
+        "</form>" +
+        '<button type="button" class="btn btn-ghost ink" data-action="signup-method" data-method="" style="margin-top:10px">Back to options</button>';
+    } else {
+      body = '<div class="auth-hero"><h2>Join the circle</h2><p>Start with Facebook, email or your phone number. First and last name come next, then your business and areas.</p></div>' +
+        '<button type="button" class="btn btn-fb" data-action="fb-connect" data-next="signup-name">' + icon("fb") + " Continue with Facebook</button>" +
+        '<div class="or-line"><span>or</span></div>' +
+        '<button type="button" class="btn btn-primary has-ico" data-action="signup-method" data-method="email">' + icon("user") + "<span>Continue with email</span></button>" +
+        '<button type="button" class="btn btn-ghost ink has-ico" data-action="signup-method" data-method="phone" style="margin-top:10px">' + icon("phone") + "<span>Continue with phone number</span></button>";
+    }
+    return '<section class="screen has-header" data-screen="' + screenId + '">' +
       '<div class="app-header"><button class="icon-btn" data-go="welcome" aria-label="Back">' + icon("back") + '</button><div class="ht">Create account</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="auth-hero"><h2>Join the circle</h2><p>Sign up with Facebook in one tap, or create an account with email.</p></div>' +
-      '<button type="button" class="btn btn-fb" data-action="fb-connect" data-next="create-profile">' + icon("fb") + " Sign up with Facebook</button>" +
-      '<div class="or-line"><span>or sign up with email</span></div>' +
-      '<form data-form="signup">' +
-      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" required autocomplete="given-name"></div>' +
-      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" required autocomplete="family-name"></div></div>' +
-      '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>' +
-      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required></div>' +
-      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form>" +
+      '<div class="scroll">' + signupSteps(1) + body +
       '<div class="auth-bottom">Already have an account? <a class="link" data-go="signin" href="#signin">Sign in</a></div></div></section>';
   }
 
-  function renderCreateProfile() {
-    if (window.TC12 && TC12.renderCreateProfile) return TC12.renderCreateProfile();
+  function renderSignupName() {
     var d = draftFromMe();
-    var dummy = { first: d.first || "Add", last: d.last || "photo", color: "teal", isMe: true };
+    var note = state.fbConnected
+      ? "We have filled these from Facebook. You can change them."
+      : "Use the name other members should see.";
+    return '<section class="screen has-header" data-screen="signup-name">' +
+      '<div class="app-header"><button class="icon-btn" data-go="signup" aria-label="Back">' + icon("back") + '</button><div class="ht">Your name</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll">' + signupSteps(2) +
+      '<div class="auth-hero"><h2>What is your name?</h2><p>' + note + "</p></div>" +
+      '<form data-form="signup-name">' +
+      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" value="' + escapeAttr(d.first || "") + '" required autocomplete="given-name"></div>' +
+      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" value="' + escapeAttr(d.last || "") + '" required autocomplete="family-name"></div></div>' +
+      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form></div></section>";
+  }
+
+  function renderCreateProfile() {
+    var d = draftFromMe();
+    var selected = state.stepRegions || d.regions || [];
+    state.stepRegions = selected.slice();
+    var count = selected.length ? (selected.length + " region" + (selected.length > 1 ? "s" : "") + " selected") : "Select at least one region";
     return '<section class="screen has-header" data-screen="create-profile">' +
-      '<div class="app-header"><button class="icon-btn" data-go="signup" aria-label="Back">' + icon("back") + '</button><div class="ht">Your profile</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="steps" aria-hidden="true"><span class="on"></span><span></span></div>' +
-      '<div class="auth-hero"><h2>About your business</h2><p>Step 1 of 2. Other members will see this before they send a friend request.</p></div>' +
-      '<form data-form="create-profile"><div class="photo-row">' +
-      '<button type="button" class="photo-btn" data-photo="1" aria-label="Add photo">' + avatarHTML(dummy, 80) + '<span class="cam">' + icon("cam") + "</span></button>" +
-      "<div><strong style=\"font-size:15px;font-weight:800\">Profile photo or logo</strong><p class=\"hint\">Optional. Initials are used if you skip this.</p></div></div>" +
-      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
-      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
-      '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '"></div>' +
-      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
-      '<div class="field"><label>Short bio</label><textarea name="bio" rows="3" placeholder="What you do and where you work">' + escapeText(d.bio || "") + "</textarea></div>" +
-      '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
-      '<div class="group-label" style="margin-top:4px">Facebook profile</div>' +
-      fbConnectBlock("create-profile", d.facebook || "") +
-      '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" placeholder="https://www.facebook.com/your.business" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:6px">' + icon("pin") + "<span>Continue to regions</span></button></form></div></section>";
+      '<div class="app-header"><button class="icon-btn" data-go="signup-name" aria-label="Back">' + icon("back") + '</button><div class="ht">Business and areas</div><span class="header-spacer"></span></div>' +
+      '<div class="scroll">' + signupSteps(3) +
+      '<div class="auth-hero"><h2>Business details and areas</h2><p>Tell the circle what you do and where you work, then send your profile for approval.</p></div>' +
+      '<form data-form="signup-business">' +
+      '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '" required></div>' +
+      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full Australian trades list. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="12 345 678 901" value="' + escapeAttr(d.abn || "") + '"></div>' +
+      '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
+      '<p class="group-label">Your Perth areas</p>' +
+      regionPicker(selected, "create") +
+      '<p class="selected-count">' + count + "</p>" +
+      '<button class="btn btn-primary has-ico" type="button" data-action="finish-create">' + icon("check") + "<span>Send for approval</span></button>" +
+      '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the circle. You can add a bio, links and more after you are approved.</p></form></div></section>';
   }
 
   function renderCreateRegions() {
-    var selected = state.stepRegions || [];
-    var disabled = selected.length ? "" : ' disabled style="opacity:.45"';
-    var count = selected.length ? (selected.length + " region" + (selected.length > 1 ? "s" : "") + " selected") : "Select at least one region";
-    return '<section class="screen has-header" data-screen="create-regions">' +
-      '<div class="app-header"><button class="icon-btn" data-go="create-profile" aria-label="Back">' + icon("back") + '</button><div class="ht">Your areas</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span></div>' +
-      '<div class="auth-hero"><h2>Where do you work?</h2><p>Step 2 of 2. All of your areas are shown together. Join all of Perth metro at once, or tick only the areas you work in. You can change this later.</p></div>' +
-      regionPicker(selected, "create") +
-      '<p class="selected-count">' + count + "</p>" +
-      '<button class="btn btn-primary has-ico" data-action="finish-create"' + disabled + ">" + icon("check") + "<span>Submit for approval</span></button>" +
-      '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the list.</p></div></section>';
+    return renderCreateProfile();
   }
 
   function renderPending() {
     var d = draftFromMe();
     var who = escapeText((d.first || "Jamie") + (d.last ? " " + d.last : ""));
+    var bits = "Name: " + who + "<br>Trade: " + escapeText(d.trade || "To be added");
+    if (d.business) bits += "<br>Business: " + escapeText(d.business);
+    if (d.abn) bits += "<br>ABN: " + escapeText(d.abn);
     return '<section class="screen has-header" data-screen="pending">' +
-      '<div class="app-header"><button class="icon-btn" data-go="create-regions" aria-label="Back">' + icon("back") + '</button><div class="ht">Awaiting approval</div><span class="header-spacer"></span></div>' +
+      '<div class="app-header"><button class="icon-btn" data-go="create-profile" aria-label="Back">' + icon("back") + '</button><div class="ht">Awaiting approval</div><span class="header-spacer"></span></div>' +
       '<div class="scroll">' +
       '<div class="pending-art">' + icon("check") + "</div>" +
-      '<div class="auth-hero" style="text-align:center"><h2>Thanks, ' + escapeText(d.first || "Jamie") + '. We’re reviewing your profile.</h2>' +
-      "<p>Your profile stays hidden until a TradeCircle admin approves it. You’ll get a notification when you’re in. This usually takes a day.</p></div>" +
+      '<div class="auth-hero" style="text-align:center"><h2>Thanks, ' + escapeText(d.first || "Jamie") + ". We are reviewing your profile.</h2>" +
+      "<p>Your profile stays hidden until a TradeCircle admin approves it. You will get a notification when you are in. This usually takes a day.</p></div>" +
       '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
-      '<p class="hint" style="margin:0">Name: ' + who + '<br>Trade: ' + escapeText(d.trade || "To be added") + "</p></div>" +
-      '<p class="hint" style="text-align:center">This is a prototype. Use the screen list, or the preview below, to look around while you wait.</p>' +
-      '<button class="btn btn-navy has-ico" data-go="home" style="margin-top:8px">' + icon("user") + "<span>Preview the app</span></button>" +
-      '<button class="btn btn-ghost ink has-ico" data-go="edit-profile" style="margin-top:10px">' + icon("pencil") + "<span>Edit my profile while I wait</span></button></div></section>";
+      '<p class="hint" style="margin:0">' + bits + "</p></div>" +
+      '<button class="btn btn-primary has-ico" type="button" data-action="simulate-approval" style="margin-top:16px">' + icon("check") + "<span>Demo: simulate approval</span></button>" +
+      '<p class="hint" style="text-align:center;margin-top:10px">In the real app a super admin approves new members from the admin dashboard. This button is only here so you can try the next step.</p></div></section>';
   }
 
   function renderMembers() {
@@ -817,10 +862,18 @@
     switch (id) {
       case "welcome": return renderWelcome();
       case "signin": return renderSignIn();
-      case "signup": return renderSignUp();
+      case "signup":
+      case "signup-email":
+      case "signup-phone":
+        return renderSignUp();
+      case "signup-name":
+        return renderSignupName();
       case "create-profile":
       case "create-profile-connected":
+      case "signup-business":
         return renderCreateProfile();
+      case "complete-profile":
+        return (window.TC158 && TC158.renderComplete) ? TC158.renderComplete() : renderPending();
       case "fb-consent":
         return renderWelcome();
       case "create-regions":
@@ -1027,7 +1080,10 @@
     var form = document.querySelector("#screens form");
     if (form) captureDraft(form);
     var d = draftFromMe();
-    if (!d.first) { d.first = "Jamie"; d.last = "Hale"; }
+    if (!d.first) {
+      if (state.onboarding && state.onboarding.fresh) { d.first = "Alex"; d.last = "Reid"; }
+      else { d.first = "Jamie"; d.last = "Hale"; }
+    }
     d.facebook = demoFbLink();
     state.draft = d;
     state.fbConnected = true;
@@ -1200,8 +1256,8 @@
     if (e.target.closest("[data-action='fb-consent-continue']")) {
       applyFbConnect();
       closeSheet();
-      var next = state.fbNext || "create-profile";
-      if (next === "signin" || next === "welcome") next = "create-profile";
+      var next = state.fbNext || "signup-name";
+      if (next === "signin" || next === "welcome") next = "signup-name";
       toast("Facebook connected. Your profile link is filled in.");
       go(next);
       return;
@@ -1263,8 +1319,20 @@
     }
 
     if (e.target.closest("[data-action='finish-create']")) {
-      if (!(state.stepRegions || []).length) return;
+      var formC = e.target.closest("form") || document.querySelector("form[data-form='signup-business']");
+      if (formC) captureDraft(formC);
+      var tinC = document.getElementById("tradeType");
+      if (tinC) {
+        var exactC = TRADES.find(function (tr) { return tr.toLowerCase() === String(tinC.value || "").trim().toLowerCase(); });
+        var dC = draftFromMe();
+        if (exactC) dC.trade = exactC;
+        else if (tinC.value.trim()) dC.trade = tinC.value.trim();
+        state.draft = dC;
+      }
       var d3 = draftFromMe();
+      if (!(d3.business || "").trim()) { toast("Please add your business name."); return; }
+      if (!(d3.trade || "").trim()) { toast("Please choose your trade."); return; }
+      if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
       d3.regions = state.stepRegions.slice();
       state.draft = d3;
       applyDraftToMe();
@@ -1276,6 +1344,32 @@
       return;
     }
 
+    var methodBtn = e.target.closest("[data-action='signup-method']");
+    if (methodBtn) {
+      state.signupMethod = methodBtn.getAttribute("data-method") || "";
+      state.otpSent = false;
+      go(state.signupMethod === "email" ? "signup-email" : state.signupMethod === "phone" ? "signup-phone" : "signup");
+      return;
+    }
+    if (e.target.closest("[data-action='send-otp']")) {
+      var formO = e.target.closest("form") || document.querySelector("form[data-form='signup-phone']");
+      if (formO) captureDraft(formO);
+      state.otpSent = true;
+      state.signupMethod = "phone";
+      go("signup-phone");
+      toast("Code sent (prototype): 482913");
+      return;
+    }
+    if (e.target.closest("[data-action='simulate-approval']")) {
+      state.onboarding = state.onboarding || {};
+      state.onboarding.forceComplete = true;
+      state.onboarding.skipped = false;
+      state.onboarding.done = false;
+      if (window.TC158 && TC158.onApproved) TC158.onApproved();
+      go("complete-profile");
+      toast("Approved. Next, finish a few profile details, or skip for now.");
+      return;
+    }
     if (e.target.closest("[data-action='dismiss-tip']")) {
       state.tipDismissed = true;
       var b = $("#tipBanner");
@@ -1302,21 +1396,52 @@
       go("home");
       return;
     }
-    if (type === "signup") {
-      var fd = new FormData(form);
-      var first = String(fd.get("first") || "").trim();
-      var last = String(fd.get("last") || "").trim();
-      if (!first && fd.get("name")) { var n = parseName(fd.get("name")); first = n.first; last = n.last; }
-      state.draft = { first: first || "Jamie", last: last || "Hale", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", regions: [] };
-      state.stepRegions = [];
+    if (type === "signup" || type === "signup-email") {
+      captureDraft(form);
+      var fdE = new FormData(form);
+      var dE = draftFromMe();
+      dE.email = String(fdE.get("email") || dE.email || "").trim();
+      state.draft = dE;
+      state.signupMethod = "email";
+      go("signup-name");
+      return;
+    }
+    if (type === "signup-phone") {
+      captureDraft(form);
+      state.signupMethod = "phone";
+      go("signup-name");
+      return;
+    }
+    if (type === "signup-name") {
+      captureDraft(form);
+      var fdN = new FormData(form);
+      var dN = draftFromMe();
+      dN.first = String(fdN.get("first") || "").trim() || dN.first;
+      dN.last = String(fdN.get("last") || "").trim() || dN.last;
+      if (!dN.first || !dN.last) { toast("Please add your first and last name."); return; }
+      state.draft = dN;
       go("create-profile");
       return;
     }
-    if (type === "create-profile") {
+    if (type === "create-profile" || type === "signup-business") {
       captureDraft(form);
+      var tin = document.getElementById("tradeType");
+      if (tin) {
+        var exact = TRADES.find(function (tr) { return tr.toLowerCase() === String(tin.value || "").trim().toLowerCase(); });
+        var dB = draftFromMe();
+        if (exact) dB.trade = exact;
+        else if (tin.value.trim()) dB.trade = tin.value.trim();
+        state.draft = dB;
+      }
+      if (!state.draft.business) { toast("Please add your business name."); return; }
       if (!state.draft.trade) { toast("Please choose your trade."); return; }
-      if (!state.draft.facebook && !state.fbConnected) { toast("Connect Facebook or paste your profile link."); return; }
-      go("create-regions");
+      if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
+      var dF = draftFromMe();
+      dF.regions = state.stepRegions.slice();
+      state.draft = dF;
+      applyDraftToMe();
+      go("pending");
+      toast("Thanks. Your profile is waiting for approval.");
       return;
     }
     if (type === "edit-profile") {
@@ -1358,8 +1483,16 @@
   if (start === "members-filter") { state.areaFilter = "all"; state.tradeFilter = "Plumber"; }
   if (start === "members-search") { state.areaFilter = "all"; state.tradeFilter = "All"; state.query = "plu"; state.tipDismissed = true; }
   if (start === "member") state.selectedMember = (route && route.memberId) || "sarah";
-  if (start === "welcome" || start === "signin" || start === "signup" || start === "fb-consent") {
+  if (start === "welcome" || start === "signin" || start === "signup" || start === "signup-email" || start === "signup-phone" || start === "fb-consent") {
     state.fbConnected = false;
+  }
+  if (start === "signup-email") state.signupMethod = "email";
+  if (start === "signup-phone") { state.signupMethod = "phone"; state.otpSent = true; }
+  if (start === "signup-name") {
+    state.draft = state.draft || { first: "Alex", last: "Reid", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", abn: "", email: "", regions: [] };
+  }
+  if (start === "complete-profile") {
+    state.onboarding = { fresh: true, forceComplete: true, skipped: false, done: false, fill: {} };
   }
   if (start === "create-profile") {
     var mm = me();

@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.7 */
+/* TradeCircle Perth — prototype v1.5.8 */
 (function () {
   "use strict";
 
@@ -225,6 +225,17 @@ function googleG(size, mono) {
   }
 
 
+  function queueWaitDays(placeNum) {
+    placeNum = Number(placeNum) || 0;
+    if (placeNum <= 1) return 0;
+    return (placeNum - 1) * 2;
+  }
+  function queueWaitPhrase(placeNum) {
+    var d = queueWaitDays(placeNum);
+    if (!d) return "Your turn is now";
+    return "about " + d + " days";
+  }
+  window.TCQueueWait = { days: queueWaitDays, phrase: queueWaitPhrase };
   function myQueuePlace() {
     var q = queue();
     var mine = 0;
@@ -394,7 +405,7 @@ function googleG(size, mono) {
     }
 
     var nextTurn = place.mine
-      ? ("Your turn is in about " + ((place.mine - 1) * 2) + " days, at one post every couple of days.")
+      ? ("Your turn is in " + queueWaitPhrase(place.mine) + ", at one post every couple of days.")
       : "Request a free turn when you are ready.";
     var fbBody = '<div class="ov-stats">' +
       ovStat("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "—", "fb", facebookF(16)) +
@@ -614,7 +625,7 @@ function googleG(size, mono) {
     return withFbSeg('<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook") +
       '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
-      (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 about " + (mine * 2) + " days, at one post every couple of days</span></div>"
+      (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 " + queueWaitPhrase(mine) + ", at one post every couple of days</span></div>"
         : '<p class="hint">You’re not in the queue yet.</p>') +
       (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
         : '<button class="btn btn-primary has-ico" data-action="join-queue">' + facebookF(18) + "<span>Request a turn</span></button>") +
@@ -736,7 +747,7 @@ function googleG(size, mono) {
         reviews: [{ who: "you", text: "Who left me a Google review?" }, { who: "ai", text: "Sarah Nguyen and Jack Thompson left you a Google review. Thompson Electrical has already had 3 Google reviews from the circle today, which is the daily limit, so that review page is locked until tomorrow. I can open Sarah’s Google review page so you can tap Review back." }],
         "open-liam": [{ who: "you", text: "Open Liam’s Facebook profile." }, { who: "ai", text: "Opening Liam’s Facebook profile now. Tap Add friend when you’re ready. I won’t send the request for you." }],
         messages: [{ who: "you", text: "Read my latest messages." }, { who: "ai", text: "Sarah said: “Thanks — I will have a look this week.” Jack asked if you could leave a Google review." }],
-        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number 4 in the Facebook promotion queue, about eight days at the current pace. Jumping the queue is not priced yet." }],
+        queue: [{ who: "you", text: "Where am I in the promotion queue?" }, { who: "ai", text: "You’re number " + ((window.TCQueueWait && myQueuePlace) ? (myQueuePlace().mine || 4) : 4) + " in the Facebook promotion queue, " + (window.TCQueueWait ? window.TCQueueWait.phrase((myQueuePlace && myQueuePlace().mine) || 4) : "about 6 days") + " at the current pace. Jumping the queue is not priced yet." }],
         alerts: [{ who: "you", text: "Any recommendation alerts?" }, { who: "ai", text: "Yes. Someone is asking for a pest controller. I can open the alert so you can go to the Facebook post and comment in your own words." }],
         remind: [{ who: "you", text: "Remind me to review Jack tomorrow." }, { who: "ai", text: "Reminder set for tomorrow morning (mock). I’ll nudge you to open Jack’s Google review page — you’ll write and post it yourself." }]
       };
