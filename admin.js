@@ -1,4 +1,4 @@
-/* TradeCircle Perth — super admin prototype v1.5.8 */
+/* TradeCircle Perth — super admin prototype v1.5.9 */
 (function () {
   "use strict";
   function svg(inner) {
@@ -124,6 +124,13 @@
   ];
   var memberWeeks = { labels: ["6 Oct", "13 Oct", "20 Oct", "27 Oct", "3 Nov", "10 Nov"], values: [2, 3, 1, 4, 2, 5] };
   var alertWeeks = { labels: ["6 Oct", "13 Oct", "20 Oct", "27 Oct", "3 Nov", "10 Nov"], values: [3, 5, 2, 6, 4, 7] };
+  var fbPosts = [
+    { id: "p1", group: "Perth Hills Community Noticeboard", ask: "Anyone recommend a good electrician in Kalamunda?", member: "Jack Thompson", trade: "Electrician", link: "facebook.com/groups/perth.hills.noticeboard.demo/posts/482190", when: "Today 8:04 am", vouched: 3, of: 8, status: "Open", notified: true },
+    { id: "p2", group: "Hills Mums & Dads", ask: "Need a reliable pest controller in Midland for termites.", member: "Jamie Hale", trade: "Pest Control", link: "facebook.com/groups/hills.mums.dads.demo/posts/771204", when: "Today 8:10 am", vouched: 5, of: 12, status: "Open", notified: true },
+    { id: "p3", group: "Joondalup Home Owners", ask: "Looking for a plumber in Mullaloo, leaking tap.", member: "Liam O’Connor", trade: "Plumber", link: "facebook.com/groups/joondalup.homeowners.demo/posts/119004", when: "Yesterday", vouched: 1, of: 8, status: "Open", notified: true },
+    { id: "p4", group: "Northern Suburbs Tradie Talk", ask: "Anyone know a good carpenter in Warwick for a deck repair?", member: "Sarah Nguyen", trade: "Carpenter", link: "facebook.com/groups/northern.tradie.talk.demo/posts/330112", when: "Yesterday", vouched: 6, of: 8, status: "Done", notified: true },
+    { id: "p5", group: "Fremantle Community Noticeboard", ask: "Need an air-con technician in Fremantle before the weekend.", member: "Emma Brooks", trade: "Air Conditioning", link: "facebook.com/groups/fremantle.community.demo/posts/908441", when: "5 days ago", vouched: 2, of: 8, status: "Expired", notified: false }
+  ];
   var page = "dashboard";
   var q = "";
   var notifOpen = false;
@@ -136,6 +143,7 @@
     ["regions", "Regions", "regions", "Lists"],
     ["trades", "Trades", "trades"],
     ["alerts", "Recommendation alerts", "alerts", "Circle"],
+    ["fb-posts", "Facebook recommendations", "alerts"],
     ["queue", "Promotion queue", "queue"],
     ["reports", "Reports", "reports"],
     ["chats", "Chat moderation", "chats"],
@@ -152,6 +160,8 @@
     regions: ["Lists", "Regions"],
     trades: ["Lists", "Trades"],
     alerts: ["Circle", "Recommendation alerts"],
+    "fb-posts": ["Circle", "Facebook recommendations"],
+    "fb-posts-list": ["Circle", "Facebook recommendations"],
     queue: ["Circle", "Promotion queue"],
     reports: ["Circle", "Reports"],
     chats: ["Circle", "Chat moderation"],
@@ -187,6 +197,8 @@
       active: ["b-ok", "Active"],
       suspended: ["b-no", "Suspended"],
       Open: ["b-wait", "Open"],
+      Done: ["b-ok", "Done"],
+      Expired: ["b-info", "Expired"],
       Handled: ["b-ok", "Handled"],
       open: ["b-wait", "Open"],
       "Free turn": ["b-info", "Free turn"],
@@ -231,7 +243,7 @@
       ["queue", "Queue", "queue"],
       ["more", "More", "menu"]
     ].map(function (it) {
-      var active = it[0] === "more" ? ["regions", "trades", "alerts", "reports", "chats", "plans", "ai", "broadcast", "settings", "audit"].indexOf(page) >= 0 : page === it[0];
+      var active = it[0] === "more" ? ["regions", "trades", "alerts", "fb-posts", "reports", "chats", "plans", "ai", "broadcast", "settings", "audit"].indexOf(page) >= 0 : page === it[0];
       var count = it[0] === "requests" && pendingCount() ? '<span class="count">' + pendingCount() + "</span>" : "";
       return '<button class="bnav' + (active ? " active" : "") + '" data-page="' + it[0] + '">' + I[it[2]] + "<span>" + it[1] + "</span>" + count + "</button>";
     }).join("");
@@ -325,6 +337,31 @@
           return "<tr><td data-label=\"Posted by\">" + who(a.by, "") + '</td><td data-label="Trade">' + esc(a.trade) + '</td><td data-label="Facebook post">' + esc(a.post) + '</td><td data-label="Comments">' + a.comments + '</td><td data-label="When">' + esc(a.when) + '</td><td data-label="Status">' + badge(a.status) + "</td></tr>";
         }).join("") + "</tbody></table>");
     }
+
+    if (page === "fb-posts" || page === "fb-posts-list") {
+      var groups = ["Perth Hills Community Noticeboard", "Hills Mums & Dads", "Joondalup Home Owners", "Northern Suburbs Tradie Talk", "Fremantle Community Noticeboard"];
+      var form = panel("Post a recommendation request", "Paste a Facebook group post and choose the member the circle should vouch for. Members will see this in the Facebook tab, under Recommend.", "",
+        '<form id="fbPostForm" class="fb-post-form">' +
+        '<div class="field"><label>Facebook post link</label><input name="link" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.hills.noticeboard.demo/posts/482190"></div>' +
+        '<div class="field"><label>Facebook group</label><select name="group">' + groups.map(function (g) { return "<option>" + esc(g) + "</option>"; }).join("") + "</select></div>" +
+        '<div class="field"><label>Member to recommend</label><div class="admin-mem-chips">' +
+        members.filter(function (m) { return m.status === "active"; }).map(function (m) {
+          return '<label><input type="checkbox" name="mem" value="' + esc(m.id) + '"> ' + esc(m.name) + " · " + esc(m.trade) + "</label>";
+        }).join("") + "</div></div>" +
+        '<div class="field"><label>Note for members <span style="font-weight:600;text-transform:none;letter-spacing:0">(optional)</span></label><textarea name="note" rows="3" placeholder="e.g. They asked for an electrician in Kalamunda. Only comment if you actually know Jack’s work."></textarea></div>' +
+        '<div class="field"><label class="admin-toggle"><input type="checkbox" name="notify" checked> Notify members in the circle</label></div>' +
+        '<button class="btn btn-primary" type="submit" data-action="post-fb-rec">' + I.alerts + "<span>Post to the circle</span></button>" +
+        '<p class="panel-sub" style="margin-top:10px">This is a prototype. Nothing is posted to Facebook. Members open the link themselves and write their own recommendation.</p></form>');
+      var list = panel("Posted links", fbPosts.length + " posts · completion is fictional", "",
+        '<table><thead><tr><th>Group</th><th>Member</th><th>Request</th><th>Vouched</th><th>When</th><th>Status</th></tr></thead><tbody>' +
+        fbPosts.map(function (p) {
+          var pct = Math.round((p.vouched / p.of) * 100);
+          return "<tr><td data-label=\"Group\">" + esc(p.group) + '</td><td data-label="Member">' + who(p.member, p.trade) + '</td><td data-label="Request">' + esc(p.ask) + '</td><td data-label="Vouched"><span class="prog-mini"><i style="width:' + pct + '%"></i></span>' + p.vouched + " of " + p.of + '</td><td data-label="When">' + esc(p.when) + '</td><td data-label="Status">' + badge(p.status) + "</td></tr>";
+        }).join("") + "</tbody></table>");
+      if (page === "fb-posts-list") return list + form;
+      return form + list;
+    }
+
     if (page === "queue") {
       return panel("Promotion queue", "Everyone gets a free turn. Jumping the queue is paid, with the price still to be set.", "",
         (queue.length ? '<table><thead><tr><th>#</th><th>Member</th><th>Plan</th><th>When</th><th></th></tr></thead><tbody>' +

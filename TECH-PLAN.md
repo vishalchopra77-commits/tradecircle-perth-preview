@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 18 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.8.
+**Current design:** clickable prototype v1.5.9.
 
 ---
 
@@ -214,3 +214,7 @@ The member app now has a **four-tab** bottom menu: Home, Reviews, Facebook, More
 ## 8g. Added in the v1.5.8 prototype
 
 Sign-up is a short, basic flow (Facebook, email or phone, then name, then business and regions) that ends with **Send for approval**. After approval, members see **Complete your profile** first and can fill it in or skip. Skipped profiles show a **Finish your profile** reminder with a percentage complete. Queue wait days use one shared calculation everywhere: (place − 1) × 2, so place #4 is about 6 days.
+
+## 8h. Added in the v1.5.9 prototype
+
+Member and own profiles show a **trade cover photo** at the top (local images, no hotlinking), with the avatar overlapping the bottom edge. A **small line icon** is shown after every trade label. **Your areas** is edited from My profile, not from the Facebook Circle list. The Facebook tab has three segments — **Circle | Recommend | Queue**. Recommend is a feed of admin-posted Facebook group links where members can open the post, copy a unique vouch suggestion, and mark the task done. Members cannot vouch for their own business on that feed. Super admin can paste a Facebook post link, choose the member, notify the circle, and see completion stats. This remains a prototype: nothing is posted to Facebook automatically.

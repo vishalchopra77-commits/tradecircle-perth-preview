@@ -1019,3 +1019,24 @@ input.invalid { border-color: #E24B4A; }
   box-shadow: 0 2px 8px rgba(11, 31, 51, 0.12);
 }
 .fb-seg-btn.active .fb-seg-place { color: #166FE5; }
+
+/* v1.5.9 — three Facebook segments */
+.fb-seg.fb-seg-3 { grid-template-columns: 1fr 1.2fr 1fr; }
+.fb-seg-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
+  margin-right: 3px;
+  border-radius: 99px;
+  background: #1877F2;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 16px;
+  vertical-align: middle;
+}
+.fb-seg-btn.active .fb-seg-badge { background: #1877F2; }
+.fb-seg-place { display: inline-flex; align-items: center; gap: 0; }

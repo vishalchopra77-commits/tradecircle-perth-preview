@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.8 */
+/* TradeCircle Perth — prototype v1.5.9 */
 (function () {
   "use strict";
 
@@ -367,15 +367,8 @@ function facebookF(size, color) {
       : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
     var mineIds = (T().me() && T().me().regions) ? T().me().regions : [];
     var allMine = T().isAllMetro && T().isAllMetro(mineIds);
-    var areasCard = "";
-    if (st.areaFilter === "mine" && T().selectedAreasCard) {
-      var sub = allMine
-        ? "You’ve joined all Perth metro, so this list includes every member. The All Perth metro filter is still there if you want the city-wide view."
-        : "Members from all of your areas are shown together in one list.";
-      areasCard = T().selectedAreasCard(mineIds, { title: "Your areas", changeTo: "my-regions", changeLabel: "Change", sub: sub });
-    }
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
-      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" + areasCard +
+      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
       '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
@@ -446,7 +439,7 @@ function facebookF(size, color) {
       "</div>" + (S().googleConnected ? gBadge(m) : '<div class="g-badge" style="background:#EEF2F6;color:#5B6B7C">Google profile not connected</div>') +
       "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They can friend you on Facebook, message you here, or leave a Google review after a real job.</div>' +
-      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Your areas", changeTo: "my-regions", changeLabel: "Change" }) : "") +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "My areas", changeTo: "my-regions", changeLabel: "Change", sub: "These are the Perth regions on your profile. Change them here anytime." }) : "") +
       '<div class="info-rows">' + phoneRow +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
       pageRow +
@@ -473,7 +466,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.8 \u00b7 18 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.9 \u00b7 18 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -924,7 +917,7 @@ function facebookF(size, color) {
 
   function renderMyRegions() {
     var m = T().me();
-    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("Your areas") +
+    return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("My areas") +
       '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
       T().regionPicker(m.regions || [], "me-regions") +
       '<button class="btn btn-primary has-ico" data-action="save-regions">' + I.regions + "<span>Save areas</span></button></div></section>";
@@ -958,7 +951,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.8</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.9</div>';
     return html;
   }
 
@@ -1248,7 +1241,7 @@ function facebookF(size, color) {
       return true;
     }
     if (action === "save-regions") {
-      toast("Your areas were saved.");
+      toast("My areas were saved.");
       go("me");
       return true;
     }

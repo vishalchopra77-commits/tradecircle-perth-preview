@@ -348,3 +348,14 @@ tbody tr:hover { background: #F8FAFC; }
 .pill { display: inline-flex; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; background: #EEF2F6; }
 .t-pill { background: #E7F8F1; color: #066B4C; }
 .r-pill { background: #E8F1FD; color: #1C4B73; }
+
+.admin-mem-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-mem-chips label {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #D3DCE6; border-radius: 999px; padding: 6px 12px;
+  font-size: 13px; font-weight: 700; cursor: pointer; background: #fff;
+}
+.admin-mem-chips input { margin: 0; }
+.admin-toggle { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.prog-mini { height: 6px; border-radius: 99px; background: #E4EAF0; overflow: hidden; width: 88px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.prog-mini > i { display: block; height: 100%; background: linear-gradient(90deg,#1877F2,#0FBE86); }

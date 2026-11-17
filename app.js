@@ -251,10 +251,14 @@
     { id: "rec-compose", title: "Send a recommendation alert", sub: "Paste a Facebook post link" },
     { id: "rec-alert", title: "Alert card", sub: "Open post, comment ideas, mark done" },
     { id: "promo-queue", title: "Facebook promotion queue", sub: "Free turns, or jump the queue later" },
+    { id: "fb-recommend", title: "Facebook — Recommend", sub: "Admin-posted group links to vouch on" },
+    { id: "fb-recommend-open", title: "Facebook — Recommend (open card)", sub: "Copy a unique recommendation" },
+    { id: "fb-recommend-mine", title: "Facebook — This one is for you", sub: "A post recommending you" },
+    { id: "fb-recommend-done", title: "Facebook — Recommend done", sub: "Posts you have already vouched on" },
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue"]);
+  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue", "fb-recommend", "fb-recommend-open", "fb-recommend-mine", "fb-recommend-done"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -831,7 +835,7 @@
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<div class="group-label">Your areas</div>' + regionPicker(d.regions || [], "edit") +
+      '<div class="group-label">My areas</div>' + regionPicker(d.regions || [], "edit") +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
 
@@ -975,7 +979,7 @@
       } else if (tab === "reviews") {
         on = id === "reviews" || id === "reviews-back" || id === "review-ideas";
       } else if (tab === "members") {
-        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member" || id === "promo-queue";
+        on = id === "members" || id === "members-all" || id === "members-filter" || id === "members-search" || id === "member" || id === "promo-queue" || id === "fb-recommend" || id === "fb-recommend-open" || id === "fb-recommend-mine" || id === "fb-recommend-done";
       } else if (tab === "more") {
         on = !!moreScreens[id];
       }
@@ -1519,6 +1523,11 @@
     state.regionBackup = state.regionBackup || {};
     state.regionBackup.create = ["hills", "north"];
     state.stepRegions = allRegionIds();
+  }
+  if (start === "fb-recommend" || start === "fb-recommend-open" || start === "fb-recommend-mine" || start === "fb-recommend-done") {
+    state.recFilter = start === "fb-recommend-done" ? "done" : "todo";
+    state.recOpen = start === "fb-recommend-open" ? "r1" : (start === "fb-recommend-mine" ? "r2" : "");
+    state.tipDismissed = true;
   }
   if (start === "my-regions-all") {
     state.regionBackup = state.regionBackup || {};

@@ -2,13 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.8-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.9-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.8) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.9) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -48,6 +48,10 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - **Super admin** web dashboard, including approval of new members
 
 ---
+
+## What’s new in v1.5.9
+
+Profiles now have a **full-width trade cover photo** behind the avatar (pest control, carpenter, electrician, plumber, air conditioning, landscaper and other trades, plus a generic tradie fallback), so you can tell the business at a glance. A **small trade icon** sits after every trade label — on member cards, review-back cards, profiles, filter chips and the sign-up trade picker. **Your areas / Change** moved from the Facebook Circle screen onto **My profile**. The Facebook tab now has three segments: **Circle**, **Recommend** and **Queue**. Recommend lists Facebook group post links shared by admin; members open the post, copy a unique recommendation idea, and mark it as done when they have vouched. A post for your own business shows **This one is for you** instead of vouch actions. Super admin has a **Facebook recommendations** page to paste a group link, choose the member, and track completion. Cover photo credits are in [`TRADE-COVER-CREDITS.md`](TRADE-COVER-CREDITS.md).
 
 ## What’s new in v1.5.8
 
@@ -175,7 +179,8 @@ More stills are in [`screens/`](screens/), including the polished v1.5.1 admin p
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
-| **v1.5.8 (current)** | 18 Nov 2026, about 6:45 am | Basic multi-step sign-up (Facebook, email or phone, then name, then business and regions) and send for approval. After approval, a fill-or-skip Complete your profile step, with a Finish your profile card if skipped. Shared queue wait days (place #4 is about 6 days). |
+| **v1.5.9 (current)** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
+| **v1.5.8** | 18 Nov 2026, about 6:45 am | Basic multi-step sign-up (Facebook, email or phone, then name, then business and regions) and send for approval. After approval, a fill-or-skip Complete your profile step, with a Finish your profile card if skipped. Shared queue wait days (place #4 is about 6 days). |
 | **v1.5.7** | 17 Nov 2026, about 8:45 pm | Facebook and Queue tabs combined into one Facebook tab (f icon) with a Circle / Promotion queue switch; four-tab bottom bar (Home, Reviews, Facebook, More). |
 | **v1.5.6** | 17 Nov 2026, about 8:40 pm | Colourful gradient stat tiles restored inside the separated Home sections, with tinted section headers. |
 | **v1.5.5** | 17 Nov 2026, about 8:35 pm | Home dashboard split into separate Google reviews, Facebook, Messages and Friends overview cards (soft tints, no mixed gradient tiles); chats-list preview overflow tightened. |
@@ -240,4 +245,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.5.8 · 18 November 2026, Australia/Perth*
+*Prototype v1.5.9 · 18 November 2026, Australia/Perth*

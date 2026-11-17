@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.8 */
+/* TradeCircle Perth — prototype v1.5.9 */
 (function () {
   "use strict";
 
@@ -246,13 +246,20 @@ function googleG(size, mono) {
     var p = myQueuePlace();
     var place = p.mine ? ("Your place #" + p.mine) : "Request a turn";
     var circleOn = which === "circle";
+    var recOn = which === "recommend";
     var queueOn = which === "queue";
+    var pending = (window.TC159 && TC159.pendingCount) ? TC159.pendingCount() : 2;
+    var recSub = pending
+      ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span> to do</span>"
+      : '<span class="fb-seg-place">All done</span>';
     return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections">' +
-      '<div class="fb-seg">' +
+      '<div class="fb-seg fb-seg-3">' +
       '<button type="button" role="tab" class="fb-seg-btn' + (circleOn ? " active" : "") + '" data-go="members" aria-selected="' + (circleOn ? "true" : "false") + '">' +
       '<span class="fb-seg-lab">Circle</span></button>' +
+      '<button type="button" role="tab" class="fb-seg-btn' + (recOn ? " active" : "") + '" data-go="fb-recommend" aria-selected="' + (recOn ? "true" : "false") + '">' +
+      '<span class="fb-seg-lab">Recommend</span>' + recSub + "</button>" +
       '<button type="button" role="tab" class="fb-seg-btn' + (queueOn ? " active" : "") + '" data-go="promo-queue" aria-selected="' + (queueOn ? "true" : "false") + '">' +
-      '<span class="fb-seg-lab">Promotion queue</span>' +
+      '<span class="fb-seg-lab">Queue</span>' +
       '<span class="fb-seg-place">' + esc(place) + "</span></button>" +
       "</div></div>";
   }
@@ -261,6 +268,7 @@ function googleG(size, mono) {
     html = html.replace('class="screen has-tabs has-header"', 'class="screen has-tabs has-header has-fb-seg"');
     html = html.replace('<div class="ht">Members</div>', '<div class="ht">Facebook</div>');
     html = html.replace('<div class="ht">Facebook promotion queue</div>', '<div class="ht">Facebook</div>');
+    html = html.replace('<div class="ht">Recommend</div>', '<div class="ht">Facebook</div>');
     if (html.indexOf("fb-seg-bar") === -1) {
       html = html.replace('<div class="scroll">', fbSegment(which) + '<div class="scroll">');
     }
@@ -868,6 +876,9 @@ function googleG(size, mono) {
     if (id === "rec-compose") return renderRecCompose();
     if (id === "rec-alert") return renderRecAlert();
     if (id === "promo-queue") return renderQueue();
+    if (id === "fb-recommend" || id === "fb-recommend-open" || id === "fb-recommend-mine" || id === "fb-recommend-done") {
+      return window.TC159 && TC159.render ? TC159.render(id) : null;
+    }
     if (id === "more" || id === "drawer") return renderMore();
     if (id === "home") return renderHome();
     if (id === "reviews" || id === "reviews-back") return renderReviews();

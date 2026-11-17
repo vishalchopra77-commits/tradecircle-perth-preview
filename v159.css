@@ -1,0 +1,175 @@
+/* TradeCircle Perth v1.5.9 — Facebook recommendations + My areas on profile */
+.rec-hero { margin: 0 0 14px; }
+.rec-hero h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.03em; }
+.rec-hero p { margin: 0; color: #5B6B7C; font-size: 14px; line-height: 1.45; }
+.rec-filters { display: flex; gap: 8px; margin: 0 0 14px; }
+.rec-filters button {
+  flex: 1; border: 1.5px solid #D3DCE6; background: #fff; color: #14314C;
+  border-radius: 999px; padding: 9px 12px; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.rec-filters button.active { background: #1877F2; border-color: #1877F2; color: #fff; }
+.rec-filters button .n {
+  display: inline-flex; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 6px;
+  border-radius: 99px; background: rgba(255,255,255,.25); font-size: 11px; line-height: 18px;
+  justify-content: center;
+}
+.rec-filters button:not(.active) .n { background: #E8F1FD; color: #166FE5; }
+
+.rec-card {
+  background: #fff;
+  border: 1px solid #E3E8EE;
+  border-radius: 18px;
+  padding: 14px 14px 14px 16px;
+  margin: 0 0 12px;
+  box-shadow: 0 6px 16px rgba(11,31,51,.06);
+  position: relative;
+  overflow: hidden;
+}
+.rec-card:before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: #1877F2;
+}
+.rec-card.is-mine:before { background: linear-gradient(180deg, #F5B942, #0FBE86); }
+.rec-card.is-done:before { background: #0FBE86; }
+.rec-card.is-expired:before { background: #8AA0B2; }
+.rec-card.is-mine { background: linear-gradient(180deg, #FFF9EC, #F3FBF7 48%, #fff); }
+.rec-card.is-done { background: linear-gradient(180deg, #F3FBF7, #fff 36%); }
+
+.rec-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.rec-gmark {
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
+  background: #1877F2; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.rec-group { flex: 1; min-width: 0; }
+.rec-group .g { font-size: 13px; font-weight: 800; color: #0B1F33; line-height: 1.25; }
+.rec-group .t { font-size: 11px; font-weight: 700; color: #5B6B7C; margin-top: 1px; }
+.rec-status {
+  flex: none; font-size: 11px; font-weight: 800; letter-spacing: .02em;
+  border-radius: 999px; padding: 4px 8px;
+}
+.rec-status.new { background: #E8F1FD; color: #166FE5; }
+.rec-status.done { background: #E7F8F1; color: #066B4C; }
+.rec-status.expired { background: #EEF2F6; color: #5B6B7C; }
+
+.rec-ask {
+  margin: 0 0 10px; font-size: 15px; font-weight: 700; line-height: 1.4; color: #122033;
+  background: #F5F8FC; border-radius: 12px; padding: 10px 12px;
+}
+.rec-ask:before { content: "“"; }
+.rec-ask:after { content: "”"; }
+
+.rec-who { display: flex; gap: 10px; align-items: center; margin: 0 0 10px; }
+.rec-who .meta { min-width: 0; }
+.rec-who .nm { font-size: 14px; font-weight: 800; }
+.rec-who .biz { font-size: 12px; font-weight: 650; color: #5B6B7C; }
+.rec-who .pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+
+.rec-progress { margin: 0 0 12px; }
+.rec-progress .bar { height: 7px; border-radius: 99px; background: #E4EAF0; overflow: hidden; }
+.rec-progress .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #1877F2, #0FBE86); border-radius: inherit; }
+.rec-progress .lab { margin-top: 5px; font-size: 12px; font-weight: 700; color: #5B6B7C; }
+
+.rec-mine-banner {
+  background: #fff; border: 1px solid #F0E0B8; border-radius: 12px;
+  padding: 10px 12px; margin: 0 0 12px;
+  font-size: 13px; font-weight: 700; color: #8A5A00; line-height: 1.4;
+}
+
+.rec-copy {
+  background: #F7F9FC; border: 1px dashed #C9D6E5; border-radius: 14px;
+  padding: 10px 12px; margin: 0 0 10px;
+}
+.rec-copy p { margin: 0 0 10px; font-size: 13.5px; font-weight: 650; line-height: 1.45; color: #1A2B3C; }
+.rec-copy .row { display: flex; gap: 8px; }
+.rec-copy .row .btn { flex: 1; padding: 8px 10px; font-size: 13px; }
+
+.rec-card .btn-fb { width: 100%; margin: 0 0 8px; }
+.rec-card .btn-done { width: 100%; }
+.rec-card.is-done .btn-done { pointer-events: none; }
+
+.rec-empty { text-align: center; padding: 28px 12px; color: #5B6B7C; }
+.rec-empty h3 { margin: 0 0 6px; color: #0B1F33; }
+
+.my-areas-block { margin: 0 0 14px; }
+.my-areas-block .areas-card { margin: 0; }
+.edit-areas-note { margin: 0 0 8px; }
+
+/* admin recommendation form (also used if any classes leak) */
+.admin-chip-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-chip-pick label {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid #D3DCE6; border-radius: 999px; padding: 6px 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer; background: #fff;
+}
+.admin-chip-pick label.on { background: #E8F1FD; border-color: #1877F2; color: #166FE5; }
+
+/* Trade covers + trade icons */
+.screen.has-trade-cover .scroll { padding-top: 0; }
+.trade-cover {
+  position: relative;
+  height: calc(var(--safe-top) + 52px + 118px);
+  margin: 0 -20px 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a2b3c;
+}
+.trade-cover::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8,18,30,.62) 0%, rgba(8,18,30,.28) 42%, rgba(8,18,30,.12) 70%, rgba(8,18,30,.2) 100%);
+  pointer-events: none;
+}
+.screen.has-trade-cover .app-header {
+  background: transparent;
+  color: #fff;
+}
+.screen.has-trade-cover .app-header .ht,
+.screen.has-trade-cover .app-header .header-link { color: #fff; }
+.screen.has-trade-cover .app-header .icon-btn,
+.screen.has-trade-cover .app-header .icon-btn svg { color: #fff; }
+.screen.has-trade-cover .profile-hero {
+  margin-top: -52px;
+  position: relative;
+  z-index: 2;
+}
+.screen.has-trade-cover .profile-hero .av,
+.screen.has-trade-cover .profile-hero .avatar,
+.screen.has-trade-cover .profile-hero [class^="av"] {
+  box-shadow: 0 0 0 4px #fff, 0 8px 18px rgba(11,31,51,.22);
+}
+
+.trade-ico {
+  display: inline-flex;
+  width: 15px; height: 15px;
+  margin-left: 5px;
+  vertical-align: -2px;
+  flex: none;
+}
+.trade-ico svg { width: 15px; height: 15px; display: block; }
+.t-pill, .chip[data-trade], .trade-with-ico {
+  display: inline-flex;
+  align-items: center;
+}
+
+.member-card { position: relative; overflow: hidden; }
+.member-card .card-cover-strip {
+  position: absolute; left: 0; top: 0; right: 0; height: 6px;
+  background-size: cover;
+  background-position: center;
+}
+.member-card.has-cover-strip { padding-top: 16px; }
+
+.admin-mem-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-mem-chips label {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #D3DCE6; border-radius: 999px; padding: 6px 12px;
+  font-size: 13px; font-weight: 700; cursor: pointer; background: #fff;
+}
+.admin-mem-chips label.on { background: #E8F1FD; border-color: #1877F2; color: #166FE5; }
+.admin-toggle { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.prog-mini { height: 6px; border-radius: 99px; background: #E4EAF0; overflow: hidden; width: 88px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.prog-mini > i { display: block; height: 100%; background: linear-gradient(90deg,#1877F2,#0FBE86); }
+
+.rec-card { scroll-margin-top: 148px; }
