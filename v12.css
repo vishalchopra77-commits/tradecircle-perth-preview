@@ -435,3 +435,30 @@
   opacity: 0.55;
   pointer-events: none;
 }
+
+
+/* chat-row overflow harden */
+[data-screen="chats"] .scroll { overflow-x: hidden; }
+.chat-row {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.chat-row .meta { min-width: 0; overflow: hidden; }
+.chat-row .nm {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+.chat-row .prev {
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-row .when { flex: 0 0 auto; max-width: 72px; }

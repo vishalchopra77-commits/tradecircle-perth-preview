@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.4 */
+/* TradeCircle Perth — prototype v1.5.6 */
 (function () {
   "use strict";
 
@@ -311,43 +311,133 @@ function googleG(size, mono) {
   function renderHome() {
     bootRel();
     var g = greetName();
+    var me = (T().me && T().me()) || { id: "jamie" };
     var friends = 0;
-    Object.keys(rel || {}).forEach(function (id) { if (rel[id] === "friends") friends++; });
+    var pending = [];
+    Object.keys(rel || {}).forEach(function (id) {
+      if (rel[id] === "friends") friends++;
+      if (rel[id] === "pending") pending.push(id);
+    });
     var recd = Object.keys(they || {}).filter(function (id) { return they[id]; }).length;
     var gave = Object.keys(given || {}).filter(function (id) { return given[id]; }).length;
     var place = myQueuePlace();
-    function tile(mod, ico, num, lab) {
-      return '<div class="dash-tile ' + mod + '"><div class="dash-tile-ico">' + ico + '</div><div class="n">' + num + '</div><div class="l">' + lab + "</div></div>";
-    }
-    var attn = [];
-    // Incoming friend requests (fictional, matches the prototype seed)
-    [["jack", "Jack Thompson", "sent you a friend request", "Today 7:12 am", "member", "Open"],
-     ["tom", "Tom Reeves", "sent you a friend request", "Yesterday", "member", "Open"]].forEach(function (row) {
-      attn.push(row);
-    });
-    // Review backs outstanding
+    var cap = (window.TCReviews && TCReviews.limit) ? TCReviews.limit() : 3;
+    var today = (window.TCReviews && TCReviews.countFor) ? TCReviews.countFor(me.id) : 0;
+    var locked = (window.TCReviews && TCReviews.atLimit) ? TCReviews.atLimit(me.id) : false;
+
+    var backs = [];
     Object.keys(they || {}).forEach(function (id) {
       if (they[id] && !reviewedBack({ id: id })) {
-        var m = member(id);
-        attn.push([id, fn(m), "left you a Google review", "Review back", "reviews-back", "Review back"]);
+        var mm = member(id);
+        if (mm) backs.push(mm);
       }
     });
+
     var openAlert = (alerts() || []).find(function (a) { return a.status === "open"; });
-    if (openAlert) {
-      attn.push(["__alert__", "Recommendation alert", "Someone’s asking for " + tradeAsk(openAlert.trade), "Open", "rec-alert", "Open alert", openAlert.id]);
+    var unread = (window.TC12 && TC12.unreadTotal) ? TC12.unreadTotal() : 0;
+    var recents = (window.TC12 && TC12.recentChats) ? TC12.recentChats(3) : [];
+
+    function ovStat(label, value, color, icon) {
+      return '<div class="dash-tile ov-tile ' + color + '">' +
+        '<div class="dash-tile-ico">' + icon + "</div>" +
+        '<div class="n">' + value + "</div>" +
+        '<div class="l">' + label + "</div></div>";
     }
-    var attnHtml = attn.length ? attn.map(function (row) {
-      var m = member(row[0]);
-      var goTo = row[4];
-      var extra = "";
-      if (goTo === "member") extra = " data-id=\"" + row[0] + "\"";
-      if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
-      var btn = goTo === "rec-alert"
-        ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
-        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '" data-id="' + row[0] + '">' + row[5] + "</button>";
-      var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
-      return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
-    }).join("") : '<p class="hint">You’re all caught up.</p>';
+
+    var googleBody = '<div class="ov-stats">' +
+      ovStat("Received", String(recd), "amber", googleG(16)) +
+      ovStat("Given", String(gave), "navy", googleG(16)) +
+      "</div>";
+    if (locked) {
+      googleBody += '<div class="ov-lock">' +
+        '<strong>Daily limit reached: ' + today + " of " + cap + " today</strong>" +
+        '<span>Opens tomorrow' + (window.TCReviews && TCReviews.opensInLabel ? " · " + TCReviews.opensInLabel() : "") + "</span></div>";
+    } else {
+      googleBody += '<div class="ov-cap">Reviews on your listing today: <strong>' + today + " of " + cap + "</strong></div>";
+    }
+    if (backs.length) {
+      googleBody += '<p class="ov-subhead">Review back</p>' + backs.map(function (mm) {
+        var atCap = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(mm.id);
+        var btn = atCap
+          ? '<span class="ov-pill locked">Locked today</span>'
+          : '<button type="button" class="dash-attn-btn" data-action="review-back" data-id="' + mm.id + '">Review back</button>';
+        return '<div class="dash-attn ov-attn">' + av(mm, 36) +
+          '<div class="dash-attn-body"><strong>' + esc(fn(mm)) + '</strong><span>left you a Google review</span></div>' +
+          btn + "</div>";
+      }).join("");
+    } else {
+      googleBody += '<p class="ov-empty">No review-backs waiting.</p>';
+    }
+
+    var nextTurn = place.mine
+      ? ("Your turn is in about " + ((place.mine - 1) * 2) + " days, at one post every couple of days.")
+      : "Request a free turn when you are ready.";
+    var fbBody = '<div class="ov-stats">' +
+      ovStat("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "—", "fb", facebookF(16)) +
+      ovStat("Circle in queue", String(place.total), "navy", facebookF(16)) +
+      "</div>" +
+      '<div class="ov-note-line">' + esc(nextTurn) + "</div>";
+    if (openAlert) {
+      fbBody += '<button type="button" class="ov-item" data-action="open-alert" data-id="' + openAlert.id + '">' +
+        '<span class="ov-item-ico amber">' + I.bell + "</span>" +
+        '<span class="ov-item-body"><strong>Pending comment</strong><span>Someone’s asking for ' + esc(tradeAsk(openAlert.trade)) + ". Comment in your own words when you can.</span></span></button>";
+    } else {
+      fbBody += '<div class="ov-note-line">No recommendation alerts waiting for a comment.</div>';
+    }
+    fbBody += '<div class="ov-note-line faint">Last promotion: 14 comments on your business post.</div>';
+
+    function clip(t, n) {
+      t = String(t || "").replace(/\s+/g, " ").trim();
+      if (t.length <= n) return t;
+      return t.slice(0, n - 1) + "…";
+    }
+    var chatN = (window.TC12 && TC12.chatCount) ? TC12.chatCount() : recents.length;
+    var msgBody = '<div class="ov-stats">' +
+      ovStat("Unread", String(unread), "teal", I.chat) +
+      ovStat("Chats", String(chatN), "teal-deep", I.chat) +
+      "</div>";
+    if (!unread) msgBody += '<div class="ov-note-line faint">You’re up to date on messages.</div>';
+    if (recents.length) {
+      msgBody += recents.map(function (c) {
+        var isGroup = c.type === "group";
+        var mm = isGroup ? null : member(c.memberId);
+        var name = isGroup ? (c.name || "Group") : (mm ? fn(mm) : "Member");
+        var avHtml = isGroup
+          ? '<div class="ov-av-g">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
+          : av(mm, 36);
+        var prev = clip(c.preview, 48);
+        return '<button type="button" class="ov-msg" data-action="open-thread" data-chat="' + c.id + '">' +
+          avHtml +
+          '<div class="ov-msg-meta"><div class="nm">' + esc(name) + "</div>" +
+          '<div class="prev">' + esc(prev) + "</div></div>" +
+          '<div class="when">' + esc(c.when || "") + (c.unread ? '<span class="ub">' + c.unread + "</span>" : "") + "</div></button>";
+      }).join("");
+    } else {
+      msgBody += '<p class="ov-empty">No conversations yet.</p>';
+    }
+
+    var frBody = '<div class="ov-stats">' +
+      ovStat("Friends", String(friends), "teal", I.user) +
+      ovStat("Pending", String(pending.length), "green-deep", I.user) +
+      "</div>";
+    if (pending.length) {
+      frBody += '<p class="ov-subhead">Pending requests</p>' + pending.map(function (id) {
+        var mm = member(id);
+        if (!mm) return "";
+        return '<button type="button" class="ov-item" data-go="member" data-id="' + mm.id + '">' +
+          av(mm, 36) +
+          '<span class="ov-item-body"><strong>' + esc(fn(mm)) + '</strong><span>Friend request pending</span></span></button>';
+      }).join("");
+    } else {
+      frBody += '<p class="ov-empty">No pending friend requests.</p>';
+    }
+
+    function card(mod, icon, title, body, goTo, cta) {
+      return '<section class="ov-card ov-' + mod + '">' +
+        '<div class="ov-head"><span class="ov-ico">' + icon + "</span><h2>" + title + "</h2></div>" +
+        body +
+        '<button type="button" class="ov-cta" data-go="' + goTo + '">' + cta + "</button></section>";
+    }
 
     var actions = [
       ["rec-compose", I.send, "teal", "Send alert"],
@@ -375,14 +465,10 @@ function googleG(size, mono) {
       '<div class="scroll"><div class="dash-hello">' +
       (g.m ? av(g.m, 56) : "") +
       "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
-      '<div class="dash-stats">' +
-      tile("teal", I.user, String(friends), "Friends") +
-      tile("amber", googleG(18), String(recd), "Reviews received") +
-      tile("navy", googleG(18), String(gave), "Reviews given") +
-      tile("moss", facebookF(18), place.mine ? "#" + place.mine : "—", "Queue place") +
-      "</div>" +
-      '<p class="group-label">Needs your attention</p>' +
-      '<div class="dash-attn-list">' + attnHtml + "</div>" +
+      card("google", googleG(18), "Google reviews", googleBody, "reviews", "Open Reviews") +
+      card("facebook", facebookF(18), "Facebook", fbBody, "promo-queue", "View the queue") +
+      card("messages", I.chat, "Messages", msgBody, "chats", "Open chats") +
+      card("friends", I.user, "Friends", frBody, "members", "Open Facebook") +
       '<p class="group-label">Quick actions</p>' + actHtml +
       '<p class="group-label">Recent activity</p>' +
       '<div class="dash-feed">' + feedHtml + "</div></div></section>";

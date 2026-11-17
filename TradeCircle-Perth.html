@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.4</title>
+  <title>TradeCircle Perth — UI prototype v1.5.6</title>
   <style>
 /* styles.css */
 /* TradeCircle Perth UI v1 */
@@ -1330,6 +1330,33 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   pointer-events: none;
 }
 
+
+/* chat-row overflow harden */
+[data-screen="chats"] .scroll { overflow-x: hidden; }
+.chat-row {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.chat-row .meta { min-width: 0; overflow: hidden; }
+.chat-row .nm {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+.chat-row .prev {
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-row .when { flex: 0 0 auto; max-width: 72px; }
+
 </style>
   <style>
 /* v15.css */
@@ -1640,7 +1667,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 4px 0 16px;
+  margin: 4px 0 18px;
 }
 .dash-greet {
   margin: 0;
@@ -1694,6 +1721,9 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .dash-tile.navy { background: linear-gradient(135deg, #2A5E8A, #0B1F33); }
 .dash-tile.amber { background: linear-gradient(135deg, #FFD56A, #E08A00); color: #3A2800; }
 .dash-tile.moss { background: linear-gradient(135deg, #1C4B73 0%, #0B1F33 60%, #0A7A58 140%); }
+.dash-tile.fb { background: linear-gradient(135deg, #5BA3FF, #166FE5); color: #fff; }
+.dash-tile.teal-deep { background: linear-gradient(135deg, #0FBE86, #086B4C); color: #fff; }
+.dash-tile.green-deep { background: linear-gradient(135deg, #22C55E, #0A7A58); color: #fff; }
 
 .dash-attn-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
 .dash-attn {
@@ -2022,6 +2052,280 @@ input.invalid { border-color: #E24B4A; }
 
 .profile-h, .profile-edit, [data-profile-edit] { scroll-margin-top: 72px; }
 
+
+/* v1.5.5 — separated Home overviews */
+/* v1.5.6 — colourful gradient stat tiles inside those sections */
+.ov-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  margin: 0 0 16px;
+  box-shadow: 0 4px 14px rgba(11, 31, 51, 0.04);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.ov-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+.ov-card::before { z-index: 2; }
+.ov-google { background: #FFFBF3; }
+.ov-google::before { background: #E08A00; }
+.ov-facebook { background: #F5F9FF; }
+.ov-facebook::before { background: #1877F2; }
+.ov-messages { background: #F3FBF8; }
+.ov-messages::before { background: #0FBE86; }
+.ov-friends { background: #F3FBF7; }
+.ov-friends::before { background: #0A8F66; }
+
+.ov-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -16px -16px 14px;
+  padding: 12px 16px 12px 18px;
+  position: relative;
+}
+.ov-google .ov-head { background: linear-gradient(180deg, #FFE7B8, #FFF3DC); }
+.ov-facebook .ov-head { background: linear-gradient(180deg, #D6E6FF, #E8F1FF); }
+.ov-messages .ov-head { background: linear-gradient(180deg, #CFF3E4, #E5F8F0); }
+.ov-friends .ov-head { background: linear-gradient(180deg, #C8F3DC, #E3F8EE); }
+.ov-head h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0B1F33;
+}
+.ov-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(11, 31, 51, 0.08);
+  flex: none;
+}
+.ov-ico svg { width: 18px; height: 18px; }
+
+.ov-tile {
+  min-height: 96px;
+}
+.ov-tile .n {
+  font-size: 22px;
+  position: relative;
+  z-index: 1;
+}
+.ov-tile .l, .ov-tile .dash-tile-ico { position: relative; z-index: 1; }
+
+.ov-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ov-stat {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.ov-k {
+  display: block;
+  font-size: 11px;
+  font-weight: 750;
+  color: var(--muted);
+}
+.ov-v {
+  display: block;
+  margin-top: 2px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0B1F33;
+}
+
+.ov-cap {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+.ov-lock {
+  background: #FFF4E5;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  color: #7A3E00;
+}
+.ov-lock strong { display: block; font-size: 13px; }
+.ov-lock span { display: block; margin-top: 2px; font-size: 12px; font-weight: 650; }
+
+.ov-subhead {
+  margin: 10px 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.ov-empty {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.ov-note-line {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 0 8px;
+}
+.ov-note-line.faint { color: var(--muted); }
+
+.ov-cta {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.ov-google .ov-cta { border-color: #C5D8F5; color: #1557B0; }
+.ov-facebook .ov-cta { border-color: #C5D6F5; color: #1666D8; }
+.ov-messages .ov-cta { border-color: #B7E7D4; color: #066B4C; }
+.ov-friends .ov-cta { border-color: #B7E7D4; color: #066B4C; }
+
+.ov-attn {
+  background: rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
+}
+.ov-pill.locked {
+  flex: 0 0 auto;
+  background: #EEF2F6;
+  color: #5B6B7A;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ov-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 0 0 8px;
+  color: inherit;
+  box-sizing: border-box;
+}
+.ov-item-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: grid; place-items: center;
+  flex: none;
+}
+.ov-item-ico.amber { background: #FFF4E5; color: #C06A00; }
+.ov-item-body { flex: 1; min-width: 0; }
+.ov-item-body strong { display: block; font-size: 13px; letter-spacing: -0.02em; }
+.ov-item-body span {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.ov-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 0 0 8px;
+  color: inherit;
+}
+.ov-msg-meta { flex: 1; min-width: 0; overflow: hidden; }
+.ov-msg .nm {
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov-msg .prev {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+  max-width: 100%;
+}
+.ov-msg .when {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+  text-align: right;
+  max-width: 72px;
+}
+.ov-msg .ub {
+  display: block;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin: 4px 0 0 auto;
+  border-radius: 99px;
+  background: var(--accent);
+  color: #06281C;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+.ov-av-g {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 13px;
+  background: #0B1F33;
+  color: #8BE0C3;
+}
+
+.ov-card + .group-label { margin-top: 8px; }
+.dash-attn-wrap { margin-bottom: 8px; }
+
 </style>
 </head>
 <body>
@@ -2031,7 +2335,7 @@ input.invalid { border-color: #E24B4A; }
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.4</span>
+        <span class="version-pill">Prototype v1.5.6</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -2058,12 +2362,12 @@ input.invalid { border-color: #E24B4A; }
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard with separate Google, Facebook and Messages sections; Chat in the top bar next to notifications; a Facebook promotion queue on the bottom menu and profile (paid jump later, price to be set); Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
           <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.4 · 17 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.6 · 17 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -5060,7 +5364,7 @@ window.TC_TRADES = [
 </script>
   <script>
 /* v12.js */
-/* TradeCircle Perth — prototype v1.5.4 */
+/* TradeCircle Perth — prototype v1.5.6 */
 (function () {
   "use strict";
 
@@ -5236,6 +5540,12 @@ window.TC_TRADES = [
   }
   function unreadTotal() {
     return (chats || []).reduce(function (n, c) { return n + (c.unread || 0); }, 0);
+  }
+  function chatCount() { return (chats || []).length; }
+  function recentChats(n) {
+    var list = (chats || []).slice();
+    list.sort(function (a, b) { return (b.unread || 0) - (a.unread || 0); });
+    return list.slice(0, n || 3);
   }
   function notifUnread() {
     return NOTIFS.filter(function (n) { return n.unread; }).length;
@@ -5529,7 +5839,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.4 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.6 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -6014,7 +6324,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.4</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.6</div>';
     return html;
   }
 
@@ -6445,6 +6755,8 @@ function facebookF(size, color) {
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     unreadTotal: unreadTotal,
+    chatCount: chatCount,
+    recentChats: recentChats,
     notifUnread: notifUnread,
     notifTile: notifTile
   };
@@ -6457,7 +6769,7 @@ function facebookF(size, color) {
 </script>
   <script>
 /* v15.js */
-/* TradeCircle Perth — prototype v1.5.4 */
+/* TradeCircle Perth — prototype v1.5.6 */
 (function () {
   "use strict";
 
@@ -6770,43 +7082,133 @@ function googleG(size, mono) {
   function renderHome() {
     bootRel();
     var g = greetName();
+    var me = (T().me && T().me()) || { id: "jamie" };
     var friends = 0;
-    Object.keys(rel || {}).forEach(function (id) { if (rel[id] === "friends") friends++; });
+    var pending = [];
+    Object.keys(rel || {}).forEach(function (id) {
+      if (rel[id] === "friends") friends++;
+      if (rel[id] === "pending") pending.push(id);
+    });
     var recd = Object.keys(they || {}).filter(function (id) { return they[id]; }).length;
     var gave = Object.keys(given || {}).filter(function (id) { return given[id]; }).length;
     var place = myQueuePlace();
-    function tile(mod, ico, num, lab) {
-      return '<div class="dash-tile ' + mod + '"><div class="dash-tile-ico">' + ico + '</div><div class="n">' + num + '</div><div class="l">' + lab + "</div></div>";
-    }
-    var attn = [];
-    // Incoming friend requests (fictional, matches the prototype seed)
-    [["jack", "Jack Thompson", "sent you a friend request", "Today 7:12 am", "member", "Open"],
-     ["tom", "Tom Reeves", "sent you a friend request", "Yesterday", "member", "Open"]].forEach(function (row) {
-      attn.push(row);
-    });
-    // Review backs outstanding
+    var cap = (window.TCReviews && TCReviews.limit) ? TCReviews.limit() : 3;
+    var today = (window.TCReviews && TCReviews.countFor) ? TCReviews.countFor(me.id) : 0;
+    var locked = (window.TCReviews && TCReviews.atLimit) ? TCReviews.atLimit(me.id) : false;
+
+    var backs = [];
     Object.keys(they || {}).forEach(function (id) {
       if (they[id] && !reviewedBack({ id: id })) {
-        var m = member(id);
-        attn.push([id, fn(m), "left you a Google review", "Review back", "reviews-back", "Review back"]);
+        var mm = member(id);
+        if (mm) backs.push(mm);
       }
     });
+
     var openAlert = (alerts() || []).find(function (a) { return a.status === "open"; });
-    if (openAlert) {
-      attn.push(["__alert__", "Recommendation alert", "Someone’s asking for " + tradeAsk(openAlert.trade), "Open", "rec-alert", "Open alert", openAlert.id]);
+    var unread = (window.TC12 && TC12.unreadTotal) ? TC12.unreadTotal() : 0;
+    var recents = (window.TC12 && TC12.recentChats) ? TC12.recentChats(3) : [];
+
+    function ovStat(label, value, color, icon) {
+      return '<div class="dash-tile ov-tile ' + color + '">' +
+        '<div class="dash-tile-ico">' + icon + "</div>" +
+        '<div class="n">' + value + "</div>" +
+        '<div class="l">' + label + "</div></div>";
     }
-    var attnHtml = attn.length ? attn.map(function (row) {
-      var m = member(row[0]);
-      var goTo = row[4];
-      var extra = "";
-      if (goTo === "member") extra = " data-id=\"" + row[0] + "\"";
-      if (goTo === "rec-alert") extra = " data-action=\"open-alert\" data-id=\"" + row[0] + "\"";
-      var btn = goTo === "rec-alert"
-        ? '<button type="button" class="dash-attn-btn" data-action="open-alert" data-id="' + (row[6] || row[0]) + '">' + row[5] + "</button>"
-        : '<button type="button" class="dash-attn-btn" data-go="' + goTo + '" data-id="' + row[0] + '">' + row[5] + "</button>";
-      var avHtml = (row[0] !== "__alert__" && m && m.id) ? av(m, 40) : '<div class="av" style="background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C;width:40px;height:40px;border-radius:50%;display:grid;place-items:center">' + I.bell + "</div>";
-      return '<div class="dash-attn">' + avHtml + '<div class="dash-attn-body"><strong>' + esc(row[1]) + "</strong><span>" + esc(row[2]) + "</span></div>" + btn + "</div>";
-    }).join("") : '<p class="hint">You’re all caught up.</p>';
+
+    var googleBody = '<div class="ov-stats">' +
+      ovStat("Received", String(recd), "amber", googleG(16)) +
+      ovStat("Given", String(gave), "navy", googleG(16)) +
+      "</div>";
+    if (locked) {
+      googleBody += '<div class="ov-lock">' +
+        '<strong>Daily limit reached: ' + today + " of " + cap + " today</strong>" +
+        '<span>Opens tomorrow' + (window.TCReviews && TCReviews.opensInLabel ? " · " + TCReviews.opensInLabel() : "") + "</span></div>";
+    } else {
+      googleBody += '<div class="ov-cap">Reviews on your listing today: <strong>' + today + " of " + cap + "</strong></div>";
+    }
+    if (backs.length) {
+      googleBody += '<p class="ov-subhead">Review back</p>' + backs.map(function (mm) {
+        var atCap = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(mm.id);
+        var btn = atCap
+          ? '<span class="ov-pill locked">Locked today</span>'
+          : '<button type="button" class="dash-attn-btn" data-action="review-back" data-id="' + mm.id + '">Review back</button>';
+        return '<div class="dash-attn ov-attn">' + av(mm, 36) +
+          '<div class="dash-attn-body"><strong>' + esc(fn(mm)) + '</strong><span>left you a Google review</span></div>' +
+          btn + "</div>";
+      }).join("");
+    } else {
+      googleBody += '<p class="ov-empty">No review-backs waiting.</p>';
+    }
+
+    var nextTurn = place.mine
+      ? ("Your turn is in about " + ((place.mine - 1) * 2) + " days, at one post every couple of days.")
+      : "Request a free turn when you are ready.";
+    var fbBody = '<div class="ov-stats">' +
+      ovStat("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "—", "fb", facebookF(16)) +
+      ovStat("Circle in queue", String(place.total), "navy", facebookF(16)) +
+      "</div>" +
+      '<div class="ov-note-line">' + esc(nextTurn) + "</div>";
+    if (openAlert) {
+      fbBody += '<button type="button" class="ov-item" data-action="open-alert" data-id="' + openAlert.id + '">' +
+        '<span class="ov-item-ico amber">' + I.bell + "</span>" +
+        '<span class="ov-item-body"><strong>Pending comment</strong><span>Someone’s asking for ' + esc(tradeAsk(openAlert.trade)) + ". Comment in your own words when you can.</span></span></button>";
+    } else {
+      fbBody += '<div class="ov-note-line">No recommendation alerts waiting for a comment.</div>';
+    }
+    fbBody += '<div class="ov-note-line faint">Last promotion: 14 comments on your business post.</div>';
+
+    function clip(t, n) {
+      t = String(t || "").replace(/\s+/g, " ").trim();
+      if (t.length <= n) return t;
+      return t.slice(0, n - 1) + "…";
+    }
+    var chatN = (window.TC12 && TC12.chatCount) ? TC12.chatCount() : recents.length;
+    var msgBody = '<div class="ov-stats">' +
+      ovStat("Unread", String(unread), "teal", I.chat) +
+      ovStat("Chats", String(chatN), "teal-deep", I.chat) +
+      "</div>";
+    if (!unread) msgBody += '<div class="ov-note-line faint">You’re up to date on messages.</div>';
+    if (recents.length) {
+      msgBody += recents.map(function (c) {
+        var isGroup = c.type === "group";
+        var mm = isGroup ? null : member(c.memberId);
+        var name = isGroup ? (c.name || "Group") : (mm ? fn(mm) : "Member");
+        var avHtml = isGroup
+          ? '<div class="ov-av-g">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
+          : av(mm, 36);
+        var prev = clip(c.preview, 48);
+        return '<button type="button" class="ov-msg" data-action="open-thread" data-chat="' + c.id + '">' +
+          avHtml +
+          '<div class="ov-msg-meta"><div class="nm">' + esc(name) + "</div>" +
+          '<div class="prev">' + esc(prev) + "</div></div>" +
+          '<div class="when">' + esc(c.when || "") + (c.unread ? '<span class="ub">' + c.unread + "</span>" : "") + "</div></button>";
+      }).join("");
+    } else {
+      msgBody += '<p class="ov-empty">No conversations yet.</p>';
+    }
+
+    var frBody = '<div class="ov-stats">' +
+      ovStat("Friends", String(friends), "teal", I.user) +
+      ovStat("Pending", String(pending.length), "green-deep", I.user) +
+      "</div>";
+    if (pending.length) {
+      frBody += '<p class="ov-subhead">Pending requests</p>' + pending.map(function (id) {
+        var mm = member(id);
+        if (!mm) return "";
+        return '<button type="button" class="ov-item" data-go="member" data-id="' + mm.id + '">' +
+          av(mm, 36) +
+          '<span class="ov-item-body"><strong>' + esc(fn(mm)) + '</strong><span>Friend request pending</span></span></button>';
+      }).join("");
+    } else {
+      frBody += '<p class="ov-empty">No pending friend requests.</p>';
+    }
+
+    function card(mod, icon, title, body, goTo, cta) {
+      return '<section class="ov-card ov-' + mod + '">' +
+        '<div class="ov-head"><span class="ov-ico">' + icon + "</span><h2>" + title + "</h2></div>" +
+        body +
+        '<button type="button" class="ov-cta" data-go="' + goTo + '">' + cta + "</button></section>";
+    }
 
     var actions = [
       ["rec-compose", I.send, "teal", "Send alert"],
@@ -6834,14 +7236,10 @@ function googleG(size, mono) {
       '<div class="scroll"><div class="dash-hello">' +
       (g.m ? av(g.m, 56) : "") +
       "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
-      '<div class="dash-stats">' +
-      tile("teal", I.user, String(friends), "Friends") +
-      tile("amber", googleG(18), String(recd), "Reviews received") +
-      tile("navy", googleG(18), String(gave), "Reviews given") +
-      tile("moss", facebookF(18), place.mine ? "#" + place.mine : "—", "Queue place") +
-      "</div>" +
-      '<p class="group-label">Needs your attention</p>' +
-      '<div class="dash-attn-list">' + attnHtml + "</div>" +
+      card("google", googleG(18), "Google reviews", googleBody, "reviews", "Open Reviews") +
+      card("facebook", facebookF(18), "Facebook", fbBody, "promo-queue", "View the queue") +
+      card("messages", I.chat, "Messages", msgBody, "chats", "Open chats") +
+      card("friends", I.user, "Friends", frBody, "members", "Open Facebook") +
       '<p class="group-label">Quick actions</p>' + actHtml +
       '<p class="group-label">Recent activity</p>' +
       '<div class="dash-feed">' + feedHtml + "</div></div></section>";

@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.4 */
+/* TradeCircle Perth — prototype v1.5.6 */
 (function () {
   "use strict";
 
@@ -174,6 +174,12 @@
   }
   function unreadTotal() {
     return (chats || []).reduce(function (n, c) { return n + (c.unread || 0); }, 0);
+  }
+  function chatCount() { return (chats || []).length; }
+  function recentChats(n) {
+    var list = (chats || []).slice();
+    list.sort(function (a, b) { return (b.unread || 0) - (a.unread || 0); });
+    return list.slice(0, n || 3);
   }
   function notifUnread() {
     return NOTIFS.filter(function (n) { return n.unread; }).length;
@@ -467,7 +473,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.4 \u00b7 17 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.6 \u00b7 17 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -952,7 +958,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.4</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.6</div>';
     return html;
   }
 
@@ -1383,6 +1389,8 @@ function facebookF(size, color) {
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     unreadTotal: unreadTotal,
+    chatCount: chatCount,
+    recentChats: recentChats,
     notifUnread: notifUnread,
     notifTile: notifTile
   };

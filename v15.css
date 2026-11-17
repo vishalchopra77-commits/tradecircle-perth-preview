@@ -305,7 +305,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 4px 0 16px;
+  margin: 4px 0 18px;
 }
 .dash-greet {
   margin: 0;
@@ -359,6 +359,9 @@
 .dash-tile.navy { background: linear-gradient(135deg, #2A5E8A, #0B1F33); }
 .dash-tile.amber { background: linear-gradient(135deg, #FFD56A, #E08A00); color: #3A2800; }
 .dash-tile.moss { background: linear-gradient(135deg, #1C4B73 0%, #0B1F33 60%, #0A7A58 140%); }
+.dash-tile.fb { background: linear-gradient(135deg, #5BA3FF, #166FE5); color: #fff; }
+.dash-tile.teal-deep { background: linear-gradient(135deg, #0FBE86, #086B4C); color: #fff; }
+.dash-tile.green-deep { background: linear-gradient(135deg, #22C55E, #0A7A58); color: #fff; }
 
 .dash-attn-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
 .dash-attn {
@@ -686,3 +689,277 @@ input.invalid { border-color: #E24B4A; }
 .goal-nums input { width: 72px; }
 
 .profile-h, .profile-edit, [data-profile-edit] { scroll-margin-top: 72px; }
+
+
+/* v1.5.5 — separated Home overviews */
+/* v1.5.6 — colourful gradient stat tiles inside those sections */
+.ov-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  margin: 0 0 16px;
+  box-shadow: 0 4px 14px rgba(11, 31, 51, 0.04);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.ov-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+.ov-card::before { z-index: 2; }
+.ov-google { background: #FFFBF3; }
+.ov-google::before { background: #E08A00; }
+.ov-facebook { background: #F5F9FF; }
+.ov-facebook::before { background: #1877F2; }
+.ov-messages { background: #F3FBF8; }
+.ov-messages::before { background: #0FBE86; }
+.ov-friends { background: #F3FBF7; }
+.ov-friends::before { background: #0A8F66; }
+
+.ov-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -16px -16px 14px;
+  padding: 12px 16px 12px 18px;
+  position: relative;
+}
+.ov-google .ov-head { background: linear-gradient(180deg, #FFE7B8, #FFF3DC); }
+.ov-facebook .ov-head { background: linear-gradient(180deg, #D6E6FF, #E8F1FF); }
+.ov-messages .ov-head { background: linear-gradient(180deg, #CFF3E4, #E5F8F0); }
+.ov-friends .ov-head { background: linear-gradient(180deg, #C8F3DC, #E3F8EE); }
+.ov-head h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0B1F33;
+}
+.ov-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(11, 31, 51, 0.08);
+  flex: none;
+}
+.ov-ico svg { width: 18px; height: 18px; }
+
+.ov-tile {
+  min-height: 96px;
+}
+.ov-tile .n {
+  font-size: 22px;
+  position: relative;
+  z-index: 1;
+}
+.ov-tile .l, .ov-tile .dash-tile-ico { position: relative; z-index: 1; }
+
+.ov-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ov-stat {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.ov-k {
+  display: block;
+  font-size: 11px;
+  font-weight: 750;
+  color: var(--muted);
+}
+.ov-v {
+  display: block;
+  margin-top: 2px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0B1F33;
+}
+
+.ov-cap {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+.ov-lock {
+  background: #FFF4E5;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  color: #7A3E00;
+}
+.ov-lock strong { display: block; font-size: 13px; }
+.ov-lock span { display: block; margin-top: 2px; font-size: 12px; font-weight: 650; }
+
+.ov-subhead {
+  margin: 10px 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.ov-empty {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.ov-note-line {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0 0 8px;
+}
+.ov-note-line.faint { color: var(--muted); }
+
+.ov-cta {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.ov-google .ov-cta { border-color: #C5D8F5; color: #1557B0; }
+.ov-facebook .ov-cta { border-color: #C5D6F5; color: #1666D8; }
+.ov-messages .ov-cta { border-color: #B7E7D4; color: #066B4C; }
+.ov-friends .ov-cta { border-color: #B7E7D4; color: #066B4C; }
+
+.ov-attn {
+  background: rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
+}
+.ov-pill.locked {
+  flex: 0 0 auto;
+  background: #EEF2F6;
+  color: #5B6B7A;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ov-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 0 0 8px;
+  color: inherit;
+  box-sizing: border-box;
+}
+.ov-item-ico {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: grid; place-items: center;
+  flex: none;
+}
+.ov-item-ico.amber { background: #FFF4E5; color: #C06A00; }
+.ov-item-body { flex: 1; min-width: 0; }
+.ov-item-body strong { display: block; font-size: 13px; letter-spacing: -0.02em; }
+.ov-item-body span {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.ov-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 0 0 8px;
+  color: inherit;
+}
+.ov-msg-meta { flex: 1; min-width: 0; overflow: hidden; }
+.ov-msg .nm {
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ov-msg .prev {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+  max-width: 100%;
+}
+.ov-msg .when {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+  text-align: right;
+  max-width: 72px;
+}
+.ov-msg .ub {
+  display: block;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin: 4px 0 0 auto;
+  border-radius: 99px;
+  background: var(--accent);
+  color: #06281C;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+.ov-av-g {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 13px;
+  background: #0B1F33;
+  color: #8BE0C3;
+}
+
+.ov-card + .group-label { margin-top: 8px; }
+.dash-attn-wrap { margin-bottom: 8px; }

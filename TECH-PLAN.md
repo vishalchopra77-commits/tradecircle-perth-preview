@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 17 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.4.
+**Current design:** clickable prototype v1.5.6.
 
 ---
 
@@ -199,3 +199,10 @@ To reduce the risk of Google treating a burst of circle reviews as spam, any one
 
 The **server must enforce** this cap per reviewee per Perth day. The app should show a clear lock banner (“Daily limit reached: 3 of 3 Google reviews today”, “Opens tomorrow”, and an optional countdown) and disable Review / Review back for that business until the next Perth midnight.
 
+## 8d. Added in the v1.5.5 prototype
+
+The Home dashboard now shows **separate overviews** for Google reviews, Facebook (including the promotion queue), Messages and Friends, instead of mixing those numbers in one grid of gradient tiles. This is a layout change in the prototype only; the real app should keep the same separation so members can scan one topic at a time.
+
+## 8e. Added in the v1.5.6 prototype
+
+The separated Home overviews from v1.5.5 now use **colourful gradient stat tiles** again (icon, large number, label, decorative corner circle), in a distinct colour family per section, so the layout stays easy to scan without looking plain.
