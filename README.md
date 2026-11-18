@@ -2,13 +2,13 @@
 
 **Placeholder app name — not final.**
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.5.9-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.6.2-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.5.9) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.6.2, built on unpushed v1.6.1) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -48,6 +48,18 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - **Super admin** web dashboard, including approval of new members
 
 ---
+
+## What’s new in v1.6.2
+
+After you pick a state, metro and regional areas open as drop-down sections on the same screen (Metro is open first). A short tip explains that Google local search favours reviews from nearby customers, so it is better not to tick areas outside your working zone. A gentle nudge appears if you select a lot of areas.
+
+## What’s new in v1.6.1
+
+The area picker is now Australia-wide. Members choose a state or territory first, then Metro or Regional, then the regions they work in. The ten existing Perth metro regions are unchanged. Sign-up, My areas, Edit profile and the admin regions list all use this flow. Suburbs are not shown in the app.
+
+## What’s new in v1.6.0
+
+The sign-up and profile picker is now **Trade or business type**, not trades only. Suggestions appear as you type from a researched list of **456** Australian trades and local businesses (hairdressers, barbers, cafes, shops, clinics, mechanics and the rest), including every existing trade. Aliases such as “hair salon” or “coffee shop” are included in autofill. **See all** opens a grouped list. New types get a small icon and a trade-style cover photo. A fictional Fremantle barber, Noah Barrett of Barrett Barbers, is in the demo circle.
 
 ## What’s new in v1.5.9
 
@@ -179,7 +191,10 @@ More stills are in [`screens/`](screens/), including the polished v1.5.1 admin p
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
-| **v1.5.9 (current)** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
+| **v1.6.2 (current)** | 19 Nov 2026, about 7:50 am | Area picker: after the state, Metro and Regional are accordions on one screen (Metro open first). Tip about nearby Google reviews and working zones. |
+| **v1.6.1** | 19 Nov 2026, about 7:30 am | Australia-wide area picker: state, then metro or regional, then multi-select regions. Perth’s ten metro regions stay exactly as they were. Summary of chosen areas on sign-up and My profile. |
+| **v1.6.0** | 19 Nov 2026, about 6:20 am | Trade or business type picker for all physical / local businesses as well as trades; 456 types in 16 groups, with aliases in autofill and a grouped See all list; icons and cover fallbacks for new types; fictional barber added to the demo. |
+| **v1.5.9** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
 | **v1.5.8** | 18 Nov 2026, about 6:45 am | Basic multi-step sign-up (Facebook, email or phone, then name, then business and regions) and send for approval. After approval, a fill-or-skip Complete your profile step, with a Finish your profile card if skipped. Shared queue wait days (place #4 is about 6 days). |
 | **v1.5.7** | 17 Nov 2026, about 8:45 pm | Facebook and Queue tabs combined into one Facebook tab (f icon) with a Circle / Promotion queue switch; four-tab bottom bar (Home, Reviews, Facebook, More). |
 | **v1.5.6** | 17 Nov 2026, about 8:40 pm | Colourful gradient stat tiles restored inside the separated Home sections, with tinted section headers. |
@@ -245,4 +260,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.5.9 · 18 November 2026, Australia/Perth*
+*Prototype v1.6.2 · 19 November 2026, Australia/Perth*

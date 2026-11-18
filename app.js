@@ -203,6 +203,26 @@
       facebook: "https://www.facebook.com/demo.patellocksmiths",
       page: "https://www.facebook.com/demo.patellocksmiths.biz",
       color: "steel"
+    },
+    {
+      id: "noah", first: "Noah", last: "Barrett",
+      business: "Barrett Barbers", trade: "Barber",
+      regions: ["fremantle", "south"],
+      bio: "A small Fremantle barber shop for classic cuts, fades and a proper shave. Walk-ins and bookings welcome.",
+      phone: "0412 000 113",
+      facebook: "https://www.facebook.com/demo.barrettbarbers",
+      page: "https://www.facebook.com/demo.barrettbarbers.biz",
+      links: {
+        website: "https://www.barrettbarbers.example.au",
+        facebook: "https://www.facebook.com/demo.barrettbarbers.biz",
+        instagram: "https://www.instagram.com/demo.barrettbarbers",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "",
+        other: ""
+      },
+      color: "rust"
     }
   ];
 
@@ -216,8 +236,9 @@
     { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
     { id: "create-profile", title: "Sign up — business and areas", sub: "Business details, trade, regions, then send for approval" },
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
-    { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
-    { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
+    { id: "choose-areas", title: "Choose areas — state", sub: "State, then metro and regional accordions" },
+    { id: "create-regions", title: "Choose areas — WA regions", sub: "Metro accordion open, regional collapsed" },
+    { id: "create-regions-all", title: "Choose areas — all Perth metro", sub: "WA metro with Select all on" },
     { id: "pending", title: "Awaiting approval", sub: "Waiting for a super admin, with a demo approve button" },
     { id: "complete-profile", title: "Complete your profile", sub: "After approval: fill or skip the extra profile details" },
     { id: "home", title: "Home — member dashboard", sub: "Greeting, stats, things that need you, quick actions" },
@@ -243,7 +264,7 @@
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
-    { id: "my-regions", title: "Your areas", sub: "All of your areas in one list" },
+    { id: "my-regions", title: "Your areas", sub: "State, then metro or regional, then regions" },
     { id: "my-regions-all", title: "Your areas — all metro", sub: "Join all Perth metro turned on" },
     { id: "ai-assistant", title: "AI assistant", sub: "Connect Grok, ChatGPT or Claude" },
     { id: "ai-voice", title: "AI voice command", sub: "Hands-free mock conversation" },
@@ -277,7 +298,8 @@
     fbNext: "create-profile",
     relFilter: "all",
     googleConnected: true,
-    regionBackup: {}
+    regionBackup: {},
+    areaPick: null
   };
 
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -288,9 +310,313 @@
   const toastEl = $("#toast");
 
   function regionName(id) {
-    const r = REGIONS.find(function (x) { return x.id === id; });
-    return r ? r.name : id;
+    var hit = auRegionById(id);
+    return hit ? hit.region.name : id;
   }
+
+  function auStates() {
+    return (window.TC_LOCATIONS && TC_LOCATIONS.states) || [];
+  }
+  function auState(id) {
+    if (!id) return null;
+    var key = String(id).toLowerCase();
+    return auStates().find(function (s) { return s.id === key || s.abbrev.toLowerCase() === key; }) || null;
+  }
+  function auRegionById(id) {
+    var i, j, s, list = auStates();
+    for (i = 0; i < list.length; i++) {
+      s = list[i];
+      for (j = 0; j < s.regions.length; j++) {
+        if (s.regions[j].id === id) return { region: s.regions[j], state: s };
+      }
+    }
+    var p = REGIONS.find(function (x) { return x.id === id; });
+    if (p) {
+      return { region: { id: p.id, name: p.name, type: "metro" }, state: auState("wa") || { id: "wa", name: "Western Australia", abbrev: "WA", regions: [] } };
+    }
+    return null;
+  }
+  function formatRegionPill(id) {
+    var hit = auRegionById(id);
+    if (!hit) return id;
+    if (hit.state && hit.state.abbrev !== "WA") return hit.region.name + " · " + hit.state.abbrev;
+    return hit.region.name;
+  }
+  function capitalLabel(st) {
+    var map = {
+      wa: "Perth",
+      nsw: "Sydney",
+      vic: "Melbourne",
+      qld: "Brisbane, the Gold Coast and the Sunshine Coast",
+      sa: "Adelaide",
+      tas: "Hobart",
+      nt: "Darwin",
+      act: "Canberra"
+    };
+    return (st && map[st.id]) || (st ? st.name : "");
+  }
+  function capitalShort(st) {
+    var map = { wa: "Perth", nsw: "Sydney", vic: "Melbourne", qld: "SEQ", sa: "Adelaide", tas: "Hobart", nt: "Darwin", act: "Canberra" };
+    return (st && map[st.id]) || (st ? st.name : "");
+  }
+  function kindCount(st, kind) {
+    return (st.regions || []).filter(function (r) { return r.type === kind; }).length;
+  }
+  function selectAllLabel(st, kind) {
+    if (!st) return "Select all";
+    if (kind === "metro") return "Select all " + capitalShort(st) + " metro";
+    return "Select all regional " + st.abbrev;
+  }
+  function kindCardTitle(st, kind) {
+    if (kind === "metro") return "Metro: " + capitalLabel(st) + " city areas";
+    return "Regional: country " + st.abbrev;
+  }
+  function allPerthMetroIds() {
+    return REGIONS.map(function (r) { return r.id; });
+  }
+  function currentListRegions(kind) {
+    var pick = state.areaPick || {};
+    var st = auState(pick.stateId || "wa");
+    kind = kind || pick.kind || "metro";
+    if (!st) return [];
+    return (st.regions || []).filter(function (r) { return r.type === kind; });
+  }
+  function currentListIds(kind) {
+    return currentListRegions(kind).map(function (r) { return r.id; });
+  }
+  function isAccOpen(kind) {
+    var pick = state.areaPick || {};
+    if (pick.open && typeof pick.open[kind] === "boolean") return pick.open[kind];
+    return kind === "metro";
+  }
+  function ensureAccOpen(pick) {
+    pick = pick || ensureAreaPick();
+    if (!pick.open) pick.open = { metro: true, regional: false };
+    return pick.open;
+  }
+  function groupSelectedAreas(ids) {
+    var groups = [];
+    var index = {};
+    (ids || []).forEach(function (id) {
+      var hit = auRegionById(id);
+      if (!hit) return;
+      var key = hit.state.id + ":" + hit.region.type;
+      if (!index[key]) {
+        index[key] = { state: hit.state, kind: hit.region.type, regions: [] };
+        groups.push(index[key]);
+      }
+      index[key].regions.push(hit.region);
+    });
+    return groups;
+  }
+  function areasSummaryLines(ids) {
+    return groupSelectedAreas(ids).map(function (g) {
+      var kindLab = g.kind === "metro" ? "Metro" : "Regional";
+      var allIds = g.state.regions.filter(function (r) { return r.type === g.kind; }).map(function (r) { return r.id; });
+      var bit;
+      if (allIds.length && allIds.every(function (id) { return (ids || []).indexOf(id) !== -1; })) {
+        bit = g.kind === "metro" ? ("All " + capitalShort(g.state) + " metro") : ("All regional " + g.state.abbrev);
+      } else {
+        bit = g.regions.map(function (r) { return r.name; }).join(", ");
+      }
+      return g.state.abbrev + " · " + kindLab + " · " + bit;
+    });
+  }
+  function areasSummaryHTML(ids) {
+    var lines = areasSummaryLines(ids);
+    if (!lines.length) return "";
+    return '<div class="area-lines">' + lines.map(function (line) {
+      return '<div class="area-line">' + escapeText(line) + "</div>";
+    }).join("") + "</div>";
+  }
+  function wizardScreen() {
+    var prefix = (state.areaPick && state.areaPick.prefix) || "create";
+    if (prefix === "me-regions") return state.screen === "my-regions-all" ? "my-regions-all" : "my-regions";
+    if (state.screen === "create-regions-all") return "create-regions-all";
+    if (state.screen === "create-regions") return "create-regions";
+    return "choose-areas";
+  }
+  function ensureAreaPick(prefix, returnTo) {
+    if (!state.areaPick) {
+      state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix || "create", returnTo: returnTo || "create-profile" };
+    }
+    if (prefix) state.areaPick.prefix = prefix;
+    if (returnTo) state.areaPick.returnTo = returnTo;
+    return state.areaPick;
+  }
+  function openAreaWizard(prefix, returnTo) {
+    state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix, returnTo: returnTo };
+    go(prefix === "me-regions" ? "my-regions" : "choose-areas");
+  }
+  function rememberListManual(prefix, ids, kind) {
+    var pick = state.areaPick || {};
+    rememberManual(prefix + ":" + (pick.stateId || "") + ":" + (kind || pick.kind || ""), ids);
+  }
+  function restoreListManual(prefix, fallback, kind) {
+    var pick = state.areaPick || {};
+    var key = prefix + ":" + (pick.stateId || "") + ":" + (kind || pick.kind || "");
+    var bak = state.regionBackup && state.regionBackup[key];
+    return (bak && bak.length) ? bak.slice() : (fallback || []).slice();
+  }
+  function areasBreadcrumb() {
+    var pick = state.areaPick || {};
+    var st = auState(pick.stateId);
+    var html = '<div class="crumb">';
+    if (pick.step === "state") {
+      html += '<span class="now">State</span>';
+    } else {
+      html += '<button type="button" data-area-step="state">' + escapeText(st ? st.abbrev : "State") + "</button>";
+    }
+    html += "</div>";
+    return html;
+  }
+  function areaStepTitle(step) {
+    if (step === "list" || step === "kind") return "Choose your regions";
+    return "Choose your state";
+  }
+  function areaStepHero(step) {
+    if (step === "list" || step === "kind") return '<div class="auth-hero"><h2>Choose your regions</h2></div>';
+    return '<div class="auth-hero"><h2>Choose your state or territory</h2><p>Western Australia is highlighted because this circle began in Perth — tap any state.</p></div>';
+  }
+  function areaGoogleG() {
+    return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  function areaTipHTML(prefix) {
+    var ids = getPickedRegions(prefix);
+    var groups = groupSelectedAreas(ids);
+    var stateIds = {};
+    groups.forEach(function (g) { stateIds[g.state.id] = true; });
+    var tip = '<div class="area-tip"><span class="ic" aria-hidden="true">' + areaGoogleG() + "</span><p>Only pick the areas you really work in. Google rewards reviews from nearby customers in local search, so picking areas outside your working zone can hurt your reputation and rankings.</p></div>";
+    var nudge = (ids.length >= 6 || Object.keys(stateIds).length >= 2)
+      ? '<div class="area-nudge">That’s a lot of areas. Are you sure you work in all of them?</div>'
+      : "";
+    return tip + nudge;
+  }
+  function alreadyChosenHTML(prefix) {
+    var ids = getPickedRegions(prefix);
+    if (!ids.length) return "";
+    return '<div class="areas-card" style="margin-bottom:14px"><div class="areas-card-top"><div class="areas-card-h">Already chosen</div></div>' +
+      areasSummaryHTML(ids) + "</div>";
+  }
+  function stateStepHTML(prefix) {
+    var pick = ensureAreaPick(prefix);
+    var selected = pick.stateId || "wa";
+    var rows = auStates().map(function (st) {
+      var metro = kindCount(st, "metro");
+      var regional = kindCount(st, "regional");
+      var sub = regional ? (metro + " metro · " + regional + " regional") : (metro + " metro areas");
+      var cls = "state-row";
+      if (st.id === selected) cls += " on";
+      else if (st.id === "wa") cls += " hinted";
+      return '<button type="button" class="' + cls + '" data-area-state="' + st.id + '">' +
+        '<span class="abbr">' + escapeText(st.abbrev) + "</span>" +
+        '<span><div class="nm">' + escapeText(st.name) + '</div><div class="sub">' + escapeText(sub) + "</div></span>" +
+        '<span class="chev">' + icon("chev") + "</span></button>";
+    }).join("");
+    return alreadyChosenHTML(prefix) + '<div class="state-list">' + rows + "</div>" +
+      '<button type="button" class="btn btn-primary" style="margin-top:16px" data-action="area-next">Continue</button>';
+  }
+  function kindStepHTML(prefix) {
+    /* v1.6.2: Metro/Regional is an accordion on the regions screen, not a step. */
+    return regionListPicker(getPickedRegions(prefix), prefix);
+  }
+  function kindSectionHTML(st, kind, selectedIds, prefix) {
+    var list = (st.regions || []).filter(function (r) { return r.type === kind; });
+    if (!list.length) return "";
+    var open = isAccOpen(kind);
+    var n = list.length;
+    var title = kindCardTitle(st, kind) + " (" + n + ")";
+    var ids = list.map(function (r) { return r.id; });
+    var allOn = ids.length && ids.every(function (id) { return selectedIds.indexOf(id) !== -1; });
+    var nSel = ids.filter(function (id) { return selectedIds.indexOf(id) !== -1; }).length;
+    var label = selectAllLabel(st, kind);
+    var subOn = allOn ? "Every area in this list is selected. Turn this off to go back to your own picks." : "Select every area in this list at once.";
+    var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-kind="' + kind + '" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
+      '<span class="join-all-txt"><strong>' + escapeText(label) + '</strong><span class="join-all-sub">' + subOn +
+      "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
+    var sug = {};
+    REGIONS.forEach(function (r) { if (r.suggested) sug[r.id] = true; });
+    var grid = '<div class="region-sec"><div class="region-grid">' + list.map(function (r) {
+      var on = selectedIds.indexOf(r.id) !== -1;
+      return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
+        "<span><span class=\"n\">" + escapeText(r.name) + "</span>" + (sug[r.id] ? '<span class="sug">Suggested</span>' : "") + "</span>" +
+        '<span class="tick">' + icon("check") + "</span></button>";
+    }).join("") + "</div></div>";
+    var sel = nSel ? (nSel + " selected") : "";
+    return '<div class="acc ' + kind + (open ? " open" : "") + '">' +
+      '<button type="button" class="acc-h ' + kind + '" data-area-acc="' + kind + '" aria-expanded="' + (open ? "true" : "false") + '">' +
+        '<span class="acc-lab">' + (kind === "metro" ? "Metro" : "Regional") + "</span>" +
+        '<span><span class="nm">' + escapeText(title) + "</span>" + (sel ? '<span class="acc-sel">' + sel + "</span>" : "") + "</span>" +
+        '<span class="acc-chev">' + icon("chev") + "</span></button>" +
+      (open ? ('<div class="acc-body">' + toggle + grid + "</div>") : "") +
+      "</div>";
+  }
+  function regionListPicker(selectedIds, prefix) {
+    selectedIds = selectedIds || [];
+    var pick = ensureAreaPick(prefix);
+    if (pick.step === "kind") pick.step = "list";
+    ensureAccOpen(pick);
+    var st = auState(pick.stateId || "wa");
+    if (!st) return stateStepHTML(prefix);
+    var kinds = ["metro", "regional"].filter(function (k) { return kindCount(st, k); });
+    var sections = kinds.map(function (k) { return kindSectionHTML(st, k, selectedIds, prefix); }).join("");
+    var addMore = '<button type="button" class="btn btn-ghost ink" style="margin-top:8px" data-area-step="state">Add areas in another state</button>';
+    return areaTipHTML(prefix) + alreadyChosenHTML(prefix) + sections + addMore;
+  }
+  function areaWizardHTML(prefix) {
+    prefix = prefix || ((state.areaPick && state.areaPick.prefix) || "create");
+    var pick = ensureAreaPick(prefix);
+    var step = pick.step || "state";
+    var body = (step === "list" || step === "kind") ? regionListPicker(getPickedRegions(prefix), prefix) : stateStepHTML(prefix);
+    return areasBreadcrumb() + areaStepHero(step) + body;
+  }
+  function renderChooseAreas() {
+    var pick = ensureAreaPick();
+    var prefix = pick.prefix || "create";
+    var title = areaStepTitle(pick.step || "state");
+    var right = '<span class="header-spacer"></span>';
+    if ((pick.step || "state") === "state") {
+      right = '<button type="button" class="header-link" data-action="area-next">Continue</button>';
+    } else if (pick.step === "list" || pick.step === "kind") {
+      right = '<button type="button" class="header-link" data-action="area-done">Done</button>';
+    }
+    return '<section class="screen has-header" data-screen="choose-areas">' +
+      '<div class="app-header"><button class="icon-btn" data-action="area-back" aria-label="Back">' + icon("back") + '</button><div class="ht">' + title + "</div>" + right + "</div>" +
+      '<div class="scroll">' + areaWizardHTML(prefix) + "</div></section>";
+  }
+  function areaAdvanceFromState() {
+    var pick = ensureAreaPick();
+    var st = auState(pick.stateId || "wa");
+    if (!st) { pick.stateId = "wa"; st = auState("wa"); }
+    pick.step = "list";
+    pick.kind = (st && st.id === "act") ? "metro" : null;
+    ensureAccOpen(pick);
+    pick.open.metro = true;
+    pick.open.regional = false;
+  }
+  function handleAreaBack() {
+    var pick = ensureAreaPick();
+    if (pick.step === "list" || pick.step === "kind") {
+      pick.step = "state";
+      go(wizardScreen());
+      return;
+    }
+    go(pick.returnTo || "create-profile");
+  }
+  function handleAreaDone() {
+    var pick = ensureAreaPick();
+    var prefix = pick.prefix || "create";
+    var ids = getPickedRegions(prefix);
+    if (!ids.length) { toast("Select at least one region."); return; }
+    setPickedRegions(prefix, ids);
+    if (prefix === "create") {
+      state.stepRegions = ids.slice();
+      if (state.draft) state.draft.regions = ids.slice();
+    }
+    if (prefix === "me-regions") toast("My areas were saved.");
+    go(pick.returnTo || "create-profile");
+  }
+
   function me() {
     return MEMBERS.find(function (m) { return m.id === state.meId; });
   }
@@ -371,7 +697,7 @@
       '<div class="meta"><div class="nm">' + escapeText(fullName(m)) + '</div>' +
       '<div class="biz">' + escapeText(m.business) + '</div>' +
       '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       '</div></div></button>' +
       '<a class="friend-btn" href="' + escapeAttr(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
       icon("addfriend") + "<span>Add friend</span></a></div>";
@@ -379,10 +705,77 @@
 
 
 
-  function matchTrades(q) {
+  function businessGroups() {
+    return (window.TC_BUSINESS_CATEGORIES && TC_BUSINESS_CATEGORIES.groups) || [];
+  }
+  function canonicalTrade(name) {
+    var key = String(name || "").toLowerCase().trim();
+    var map = window.TC_TRADE_ALIASES || {};
+    var a;
+    for (a in map) if (a.toLowerCase() === key) return map[a];
+    return String(name || "").trim();
+  }
+  function tradeTextScore(text, q) {
+    text = String(text || "").toLowerCase();
+    if (!q) return 1;
+    var words, i, w, best = 0;
+    if (text === q) best = 100;
+    else if (text.indexOf(q) === 0) best = 90;
+    else {
+      words = text.split(/[^a-z0-9&+]+/).filter(Boolean);
+      for (i = 0; i < words.length; i++) {
+        w = words[i];
+        if (w === q) best = Math.max(best, 80);
+        else if (w.indexOf(q) === 0) best = Math.max(best, 70);
+        else if (q.length >= 4 && w.length >= q.length + 3 && w.slice(-q.length) === q) best = Math.max(best, 50); /* bookstore */
+      }
+    }
+    if (best && text.length) best += Math.round(10 * Math.min(1, q.length / text.length));
+    return best;
+  }
+  function matchTradeSuggestions(q) {
     q = String(q || "").toLowerCase().trim();
-    if (!q) return TRADES.slice();
-    return TRADES.filter(function (tr) { return tr.toLowerCase().indexOf(q) !== -1; });
+    var out = [];
+    var seen = {};
+    function add(label, value, score) {
+      var k = String(label || "").toLowerCase();
+      if (!k || seen[k]) return;
+      seen[k] = true;
+      out.push({ label: label, value: value || label, score: score || 0 });
+    }
+    var groups = businessGroups();
+    if (groups.length) {
+      groups.forEach(function (g) {
+        (g.items || []).forEach(function (it) {
+          var name = it.name;
+          var aliases = it.aliases || [];
+          if (!q) { add(name, name, 1); return; }
+          var nameScore = tradeTextScore(name, q);
+          var bestAlias = 0, bestAliasText = "";
+          aliases.forEach(function (a) {
+            var sc = tradeTextScore(a, q);
+            if (sc > bestAlias) { bestAlias = sc; bestAliasText = a; }
+          });
+          if (nameScore) add(name, name, nameScore);
+          if (bestAlias && bestAliasText.toLowerCase() !== name.toLowerCase()) add(bestAliasText, name, bestAlias);
+        });
+      });
+      out.sort(function (a, b) { return (b.score - a.score) || String(a.label).localeCompare(String(b.label)); });
+      return out;
+    }
+    var list = TRADES.slice();
+    if (!q) return list.map(function (tr) { return { label: tr, value: tr }; });
+    return list.filter(function (tr) { return tr.toLowerCase().indexOf(q) !== -1; })
+      .map(function (tr) { return { label: tr, value: tr }; });
+  }
+  function matchTrades(q) {
+    var seen = {};
+    return matchTradeSuggestions(q).map(function (s) { return s.value; }).filter(function (n) {
+      var k = n.toLowerCase();
+      if (seen[k]) return false;
+      seen[k] = true;
+      return true;
+    });
   }
   function matchPeople(q) {
     q = String(q || "").toLowerCase().trim();
@@ -394,23 +787,27 @@
     });
   }
   function acHTML(q, withMembers) {
-    var trades = matchTrades(q);
     var people = withMembers ? matchPeople(q) : [];
     if (!String(q || "").trim()) {
       if (!withMembers) {
-        var starter = trades.slice(0, 12);
-        return '<div class="ac-group">Trades</div>' + starter.map(function (tr) {
-          return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span></button>';
-        }).join("") + (trades.length > 12 ? '<div class="ac-empty">Type to search all ' + trades.length + ' trades</div>' : "");
+        var popular = ["Hairdresser", "Barber", "Cafe", "Plumber", "Electrician", "Mechanic", "Dentist", "Beauty Salon", "Cleaner", "Personal Trainer", "Carpenter", "Restaurant"];
+        var starter = popular.filter(function (n) { return TRADES.indexOf(n) !== -1; }).slice(0, 12);
+        if (starter.length < 8) starter = TRADES.slice(0, 12);
+        return '<div class="ac-group">Trades &amp; businesses</div>' + starter.map(function (tr) {
+          return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + "</span></button>";
+        }).join("") + (TRADES.length > 12 ? '<div class="ac-empty">Type to search all ' + TRADES.length + " trades and businesses</div>" : "");
       }
       return "";
     }
-    trades = trades.slice(0, 12);
-    if (!trades.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
+    var sugg = matchTradeSuggestions(q).slice(0, 12);
+    if (!sugg.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
     var html = "";
-    if (trades.length) {
-      html += '<div class="ac-group">Trades</div>' + trades.map(function (tr) {
-        return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span><span class="ac-kind">Trade</span></button>';
+    if (sugg.length) {
+      html += '<div class="ac-group">Trades &amp; businesses</div>' + sugg.map(function (tr) {
+        var label = tr.label || tr;
+        var value = tr.value || tr;
+        var kind = label === value ? "Type" : "Also called";
+        return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(value) + '"><span>' + escapeText(label) + (label !== value ? '<span class="sub"> · ' + escapeText(value) + "</span>" : "") + '</span><span class="ac-kind">' + kind + "</span></button>";
       }).join("");
     }
     if (people.length) {
@@ -421,6 +818,7 @@
     }
     return html;
   }
+
   function paintSearchAc() {
     var box = document.getElementById("searchAc");
     if (!box) return;
@@ -440,24 +838,20 @@
   }
 
   function allRegionIds() {
-    return REGIONS.map(function (r) { return r.id; });
+    return allPerthMetroIds();
   }
   function isAllMetro(ids) {
-    var all = allRegionIds();
+    var all = allPerthMetroIds();
     if (!ids || ids.length !== all.length) return false;
-    var set = {};
-    ids.forEach(function (id) { set[id] = true; });
-    return all.every(function (id) { return set[id]; });
+    return all.every(function (id) { return ids.indexOf(id) !== -1; });
   }
-  function rememberManual(prefix, ids) {
+  function rememberManual(key, ids) {
     if (!state.regionBackup) state.regionBackup = {};
-    if (ids && ids.length && !isAllMetro(ids)) state.regionBackup[prefix] = ids.slice();
+    state.regionBackup[key] = (ids || []).slice();
   }
-  function restoreManual(prefix) {
-    if (!state.regionBackup) state.regionBackup = {};
-    var backup = state.regionBackup[prefix];
-    if (backup && backup.length && !isAllMetro(backup)) return backup.slice();
-    return ["hills", "north"];
+  function restoreManual(key) {
+    var ids = state.regionBackup && state.regionBackup[key];
+    return ids && ids.length ? ids.slice() : ["hills", "north"];
   }
   function getPickedRegions(prefix) {
     if (prefix === "create") return (state.stepRegions || []).slice();
@@ -467,8 +861,11 @@
   }
   function setPickedRegions(prefix, ids) {
     ids = (ids || []).slice();
+    var onWizard = state.screen === "choose-areas" || state.screen === "create-regions" || state.screen === "create-regions-all" || state.screen === "my-regions" || state.screen === "my-regions-all";
     if (prefix === "create") {
       state.stepRegions = ids;
+      if (state.draft) state.draft.regions = ids.slice();
+      if (onWizard) return wizardScreen();
       if (state.screen === "create-profile" || state.screen === "create-profile-connected" || state.screen === "signup-business") {
         return state.screen;
       }
@@ -477,11 +874,13 @@
     if (prefix === "me-regions") {
       me().regions = ids;
       if (state.draft) state.draft.regions = ids.slice();
+      if (onWizard) return wizardScreen();
       return isAllMetro(ids) && state.screen === "my-regions-all" ? "my-regions-all" : "my-regions";
     }
     var d = draftFromMe();
     d.regions = ids;
     state.draft = d;
+    if (onWizard) return wizardScreen();
     return "edit-profile";
   }
   function toggleRegionId(prefix, rid, allowEmpty) {
@@ -494,10 +893,34 @@
       cur.push(rid);
     }
     rememberManual(prefix, cur);
+    if (state.areaPick && (state.areaPick.step === "list" || state.areaPick.step === "kind")) {
+      var hitT = auRegionById(rid);
+      var kindT = hitT ? hitT.region.type : "metro";
+      rememberListManual(prefix, cur.filter(function (id) { return currentListIds(kindT).indexOf(id) !== -1; }), kindT);
+    }
     return cur;
   }
-  function joinAllMetro(prefix) {
+  function joinAllMetro(prefix, kind) {
     var cur = getPickedRegions(prefix);
+    var onWizard = state.screen === "choose-areas" || state.screen === "create-regions" || state.screen === "create-regions-all" || state.screen === "my-regions" || state.screen === "my-regions-all";
+    if (onWizard && state.areaPick && (state.areaPick.step === "list" || state.areaPick.step === "kind")) {
+      kind = kind || state.areaPick.kind || "metro";
+      var list = currentListIds(kind);
+      var allOn = list.length && list.every(function (id) { return cur.indexOf(id) !== -1; });
+      if (allOn) {
+        var restored = restoreListManual(prefix, [], kind);
+        var next = cur.filter(function (id) { return list.indexOf(id) === -1; });
+        restored.forEach(function (id) { if (next.indexOf(id) === -1 && list.indexOf(id) !== -1) next.push(id); });
+        if (!next.length) {
+          var kept = cur.filter(function (id) { return list.indexOf(id) !== -1; }).slice(0, 1);
+          return cur.filter(function (id) { return list.indexOf(id) === -1; }).concat(kept);
+        }
+        return next;
+      }
+      rememberListManual(prefix, cur.filter(function (id) { return list.indexOf(id) !== -1; }), kind);
+      list.forEach(function (id) { if (cur.indexOf(id) === -1) cur.push(id); });
+      return cur;
+    }
     if (isAllMetro(cur)) return restoreManual(prefix);
     rememberManual(prefix, cur);
     return allRegionIds();
@@ -507,35 +930,34 @@
     var title = opts.title || "Your areas";
     var all = isAllMetro(ids);
     var chips = (ids || []).map(function (id) {
-      return '<span class="pill r-pill">' + regionName(id) + "</span>";
+      return '<span class="pill r-pill">' + escapeText(formatRegionPill(id)) + "</span>";
     }).join("");
     var badge = all ? '<span class="areas-all-badge">All Perth metro</span>' : "";
     var empty = !(ids && ids.length) ? '<p class="hint" style="margin:0">No areas selected yet.</p>' : "";
-    var change = opts.changeTo
-      ? '<button type="button" class="link areas-change" data-go="' + opts.changeTo + '">' + (opts.changeLabel || "Change") + "</button>"
-      : "";
+    var change = "";
+    if (opts.openAreas) {
+      change = '<button type="button" class="link areas-change" data-action="open-areas" data-prefix="' + (opts.prefix || "create") + '" data-return="' + (opts.returnTo || "") + '">' + (opts.changeLabel || (ids && ids.length ? "Change" : "Choose areas")) + "</button>";
+    } else if (opts.changeTo) {
+      change = '<button type="button" class="link areas-change" data-go="' + opts.changeTo + '">' + (opts.changeLabel || "Change") + "</button>";
+    }
     var sub = opts.sub ? '<p class="hint" style="margin:8px 0 0">' + opts.sub + "</p>" : "";
+    var summary = (ids && ids.length) ? areasSummaryHTML(ids) : "";
     return '<div class="areas-card">' +
       '<div class="areas-card-top"><div class="areas-card-h">' + title + "</div>" + badge + change + "</div>" +
-      (empty || '<div class="tags">' + chips + "</div>") +
+      (empty || (summary + '<div class="tags" style="margin-top:8px">' + chips + "</div>")) +
       sub + "</div>";
   }
   function regionPicker(selectedIds, prefix) {
-    selectedIds = selectedIds || [];
-    var allOn = isAllMetro(selectedIds);
-    var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
-      '<span class="join-all-txt"><strong>Join all Perth metro</strong><span class="join-all-sub">' +
-      (allOn ? "You’re in every Perth area. Turn this off to go back to your own picks." : "Select every Perth region at once.") +
-      "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
-    var card = selectedAreasCard(selectedIds, { title: "Your areas" });
-    var grid = '<div class="region-sec"><h3>Perth metro areas</h3><p>All areas in one list. Tick the ones you work in, or join all of Perth metro above.</p>' +
-      '<div class="region-grid">' + REGIONS.map(function (r) {
-        var on = selectedIds.indexOf(r.id) !== -1;
-        return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
-          "<span><span class=\"n\">" + r.name + "</span>" + (r.suggested ? '<span class="sug">Suggested</span>' : "") + "</span>" +
-          '<span class="tick">' + icon("check") + "</span></button>";
-      }).join("") + "</div></div>";
-    return toggle + card + grid;
+    prefix = prefix || "create";
+    var ret = prefix === "me-regions" ? "me" : (prefix === "edit" ? "edit-profile" : "create-profile");
+    return selectedAreasCard(selectedIds || [], {
+      title: "Your areas",
+      openAreas: true,
+      prefix: prefix,
+      returnTo: ret,
+      changeLabel: (selectedIds && selectedIds.length) ? "Change" : "Choose areas",
+      sub: "Choose a state, then the metro or regional areas you work in."
+    });
   }
 
   function draftFromMe() {
@@ -718,18 +1140,18 @@
       '<div class="auth-hero"><h2>Business details and areas</h2><p>Tell the circle what you do and where you work, then send your profile for approval.</p></div>' +
       '<form data-form="signup-business">' +
       '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '" required></div>' +
-      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full Australian trades list. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
       '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="12 345 678 901" value="' + escapeAttr(d.abn || "") + '"></div>' +
       '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
-      '<p class="group-label">Your Perth areas</p>' +
-      regionPicker(selected, "create") +
+      '<p class="group-label">Your areas</p>' +
+      selectedAreasCard(selected, { title: "Your areas", openAreas: true, prefix: "create", returnTo: "create-profile", changeLabel: selected.length ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<p class="selected-count">' + count + "</p>" +
       '<button class="btn btn-primary has-ico" type="button" data-action="finish-create">' + icon("check") + "<span>Send for approval</span></button>" +
       '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the circle. You can add a bio, links and more after you are approved.</p></form></div></section>';
   }
 
   function renderCreateRegions() {
-    return renderCreateProfile();
+    return renderChooseAreas();
   }
 
   function renderPending() {
@@ -786,7 +1208,7 @@
       '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
       '<div class="nm">' + escapeText(fullName(m)) + '</div><div class="biz">' + escapeText(m.business) + "</div>" +
       '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
       '<div class="action-stack"><a class="btn btn-fb btn-lg" href="' + m.facebook + '" target="_blank" rel="noopener noreferrer">' +
       '<span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + icon("fb") + " Open Facebook profile</span><small>Send a friend request</small></a>" +
@@ -808,7 +1230,7 @@
       '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
       '<div class="nm">' + escapeText(fullName(m)) + ' <span class="you-badge">You</span></div>' +
       '<div class="biz">' + escapeText(m.business) + '</div><div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They will use your Facebook profile link to send a friend request.</div>' +
       '<div class="info-rows">' + phoneRow +
@@ -829,13 +1251,13 @@
       '<div class="name-row"><div class="field"><label>First name</label><input name="first" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
       '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
-      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
       '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<div class="group-label">My areas</div>' + regionPicker(d.regions || [], "edit") +
+      '<div class="group-label">My areas</div>' + selectedAreasCard(d.regions || [], { title: "My areas", openAreas: true, prefix: "edit", returnTo: "edit-profile", changeLabel: (d.regions && d.regions.length) ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
 
@@ -880,9 +1302,10 @@
         return (window.TC158 && TC158.renderComplete) ? TC158.renderComplete() : renderPending();
       case "fb-consent":
         return renderWelcome();
+      case "choose-areas":
       case "create-regions":
       case "create-regions-all":
-        return renderCreateRegions();
+        return renderChooseAreas();
       case "pending": return renderPending();
       case "members":
       case "members-all":
@@ -912,8 +1335,9 @@
     opts = opts || {};
     if (opts.memberId) state.selectedMember = opts.memberId;
     if (id === "create-profile" && !state.draft) {
-      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: [] };
-      state.stepRegions = [];
+      var kept = (state.stepRegions || []).slice();
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: kept };
+      state.stepRegions = kept;
     }
     if (id === "edit-profile") state.draft = draftFromMe();
     if (id === "create-regions" && !state.stepRegions) {
@@ -933,6 +1357,39 @@
       }
       me().regions = allRegionIds();
       if (state.draft) state.draft.regions = allRegionIds();
+    }
+    if (id === "choose-areas" || id === "create-regions" || id === "create-regions-all") {
+      if (!state.areaPick) {
+        var pref = state.screen === "edit-profile" ? "edit" : "create";
+        var ret = pref === "edit" ? "edit-profile" : "create-profile";
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: pref, returnTo: ret };
+      }
+      if (state.areaPick && state.areaPick.step === "kind") state.areaPick.step = "list";
+      if (id === "create-regions") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+        state.areaPick.prefix = state.areaPick.prefix || "create";
+      }
+      if (id === "create-regions-all") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+        state.areaPick.prefix = "create";
+      }
+    }
+    if (id === "my-regions" || id === "my-regions-all") {
+      if (!state.areaPick || state.areaPick.prefix !== "me-regions") {
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: "me-regions", returnTo: "me", open: { metro: true, regional: false } };
+      }
+      if (id === "my-regions-all") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+      }
     }
 
     state.screen = id;
@@ -1047,26 +1504,48 @@
   function closeSheet() {
     if (sheetEl) { sheetEl.remove(); sheetEl = null; }
   }
+  function tradeSheetListHTML(q, current) {
+    q = String(q || "").toLowerCase().trim();
+    var groups = businessGroups();
+    var ico = function (name) {
+      return (window.TC159 && TC159.tradeIcon) ? TC159.tradeIcon(name) : "";
+    };
+    function matches(it) {
+      if (!q) return true;
+      if (tradeTextScore(it.name, q)) return true;
+      return (it.aliases || []).some(function (a) { return tradeTextScore(a, q) > 0; });
+    }
+    function opt(tr) {
+      return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span class="trade-opt-lab">' + ico(tr) + "<span>" + escapeText(tr) + "</span></span><span class=\"ck\">" + icon("check") + "</span></button>";
+    }
+    if (groups.length) {
+      var html = "";
+      var any = false;
+      groups.forEach(function (g) {
+        var items = (g.items || []).filter(matches);
+        if (!items.length) return;
+        any = true;
+        html += '<div class="trade-group-lab">' + escapeText(g.name) + ' <span>' + items.length + "</span></div>";
+        html += items.map(function (it) { return opt(it.name); }).join("");
+      });
+      return any ? html : '<div class="ac-empty">No types match “' + escapeText(q) + '”</div>';
+    }
+    var list = matchTrades(q);
+    return list.length ? list.map(opt).join("") : '<div class="ac-empty">No types match “' + escapeText(q) + '”</div>';
+  }
   function openTradeSheet() {
     closeSheet();
     var current = draftFromMe().trade;
     sheetEl = document.createElement("div");
     sheetEl.className = "overlay show";
-    sheetEl.innerHTML = '<div class="sheet"><div class="sheet-handle"></div><h3>Choose your trade</h3>' +
-      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Type a trade, e.g. plumber" autocomplete="off"></div>' +
-      '<div id="sheetTradeList">' +
-      TRADES.map(function (tr) {
-        return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
-      }).join("") + "</div></div>";
+    sheetEl.innerHTML = '<div class="sheet sheet-trades"><div class="sheet-handle"></div><h3>Choose your trade or business type</h3>' +
+      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Search, e.g. hairdresser or cafe" autocomplete="off"></div>' +
+      '<div id="sheetTradeList">' + tradeSheetListHTML("", current) + "</div></div>";
     var sheetSearch = sheetEl.querySelector("#sheetTradeSearch");
     if (sheetSearch) {
       sheetSearch.addEventListener("input", function (e) {
-        var q = e.target.value;
-        var list = matchTrades(q);
         var box = sheetEl.querySelector("#sheetTradeList");
-        box.innerHTML = list.length ? list.map(function (tr) {
-          return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
-        }).join("") : '<div class="ac-empty">No trades match “' + escapeText(q) + '”</div>';
+        box.innerHTML = tradeSheetListHTML(e.target.value, current);
       });
     }
     $("#phone").appendChild(sheetEl);
@@ -1155,19 +1634,25 @@
         state.fbConnected = true;
         me().facebook = me().facebook || demoFbLink();
       }
-      if (id === "create-regions") {
+      if (id === "choose-areas" || id === "create-regions") {
         state.stepRegions = ["hills", "north"];
         if (!state.regionBackup) state.regionBackup = {};
         state.regionBackup.create = ["hills", "north"];
+        state.areaPick = { step: id === "create-regions" ? "list" : "state", stateId: "wa", kind: null, prefix: "create", returnTo: "create-profile", open: { metro: true, regional: false } };
+        var m3 = me();
+        state.draft = state.draft || { first: m3.first, last: m3.last, business: m3.business, trade: m3.trade, bio: m3.bio, phone: m3.phone, facebook: "", page: m3.page, regions: ["hills", "north"] };
+        state.draft.regions = ["hills", "north"];
       }
       if (id === "create-regions-all") {
         if (!state.regionBackup) state.regionBackup = {};
         state.regionBackup.create = ["hills", "north"];
         state.stepRegions = allRegionIds();
+        state.areaPick = { step: "list", stateId: "wa", kind: null, prefix: "create", returnTo: "create-profile", open: { metro: true, regional: false } };
       }
       if (id === "my-regions") {
         if (!state.regionBackup) state.regionBackup = {};
         if (!me().regions || !me().regions.length) me().regions = ["hills", "north"];
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: "me-regions", returnTo: "me" };
       }
       if (id === "my-regions-all") {
         if (!state.regionBackup) state.regionBackup = {};
@@ -1239,6 +1724,16 @@
       var dest = goBtn.dataset.go;
       if (goBtn.dataset.id) state.selectedMember = goBtn.dataset.id;
       if (dest === "welcome") { state.draft = null; state.fbConnected = false; }
+      if (dest === "create-regions" || dest === "choose-areas") {
+        var formGo = goBtn.closest("form");
+        if (formGo) captureDraft(formGo);
+        openAreaWizard("create", "create-profile");
+        return;
+      }
+      if (dest === "my-regions") {
+        openAreaWizard("me-regions", "me");
+        return;
+      }
       go(dest);
       return;
     }
@@ -1302,12 +1797,75 @@
       return;
     }
 
+    var openAreas = e.target.closest("[data-action='open-areas']");
+    if (openAreas) {
+      var formA = openAreas.closest("form");
+      if (formA) captureDraft(formA);
+      var tinA = document.getElementById("tradeType");
+      if (tinA) {
+        var dA = draftFromMe();
+        if (tinA.value.trim()) dA.trade = tinA.value.trim();
+        state.draft = dA;
+      }
+      var prefixA = openAreas.getAttribute("data-prefix") || "create";
+      var retA = openAreas.getAttribute("data-return") || (prefixA === "me-regions" ? "me" : (prefixA === "edit" ? "edit-profile" : "create-profile"));
+      if (prefixA === "create") state.stepRegions = (state.stepRegions || (state.draft && state.draft.regions) || []).slice();
+      openAreaWizard(prefixA, retA);
+      return;
+    }
+    var areaState = e.target.closest("[data-area-state]");
+    if (areaState) {
+      ensureAreaPick().stateId = areaState.getAttribute("data-area-state");
+      areaAdvanceFromState();
+      go(wizardScreen());
+      return;
+    }
+    var accBtn = e.target.closest("[data-area-acc]");
+    if (accBtn) {
+      var accKind = accBtn.getAttribute("data-area-acc");
+      var pickA = ensureAreaPick();
+      ensureAccOpen(pickA);
+      pickA.open[accKind] = !isAccOpen(accKind);
+      go(wizardScreen());
+      return;
+    }
+    var areaKind = e.target.closest("[data-area-kind]");
+    if (areaKind) {
+      var pickK = ensureAreaPick();
+      pickK.step = "list";
+      ensureAccOpen(pickK);
+      pickK.open[areaKind.getAttribute("data-area-kind")] = true;
+      go(wizardScreen());
+      return;
+    }
+    var areaStep = e.target.closest("[data-area-step]");
+    if (areaStep) {
+      ensureAreaPick().step = areaStep.getAttribute("data-area-step");
+      go(wizardScreen());
+      return;
+    }
+    if (e.target.closest("[data-action='area-back']")) {
+      handleAreaBack();
+      return;
+    }
+    if (e.target.closest("[data-action='area-next']")) {
+      var pickN = ensureAreaPick();
+      if (!pickN.stateId) pickN.stateId = "wa";
+      areaAdvanceFromState();
+      go(wizardScreen());
+      return;
+    }
+    if (e.target.closest("[data-action='area-done']")) {
+      handleAreaDone();
+      return;
+    }
+
     var joinAllBtn = e.target.closest("[data-action='join-all-metro']");
     if (joinAllBtn) {
       var prefixJ = joinAllBtn.getAttribute("data-prefix") || "edit";
       var formJ = e.target.closest("form");
       if (formJ) captureDraft(formJ);
-      go(setPickedRegions(prefixJ, joinAllMetro(prefixJ)));
+      go(setPickedRegions(prefixJ, joinAllMetro(prefixJ, joinAllBtn.getAttribute("data-kind"))));
       return;
     }
 
@@ -1335,7 +1893,7 @@
       }
       var d3 = draftFromMe();
       if (!(d3.business || "").trim()) { toast("Please add your business name."); return; }
-      if (!(d3.trade || "").trim()) { toast("Please choose your trade."); return; }
+      if (!(d3.trade || "").trim()) { toast("Please choose your trade or business type."); return; }
       if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
       d3.regions = state.stepRegions.slice();
       state.draft = d3;
@@ -1438,7 +1996,7 @@
         state.draft = dB;
       }
       if (!state.draft.business) { toast("Please add your business name."); return; }
-      if (!state.draft.trade) { toast("Please choose your trade."); return; }
+      if (!state.draft.trade) { toast("Please choose your trade or business type."); return; }
       if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
       var dF = draftFromMe();
       dF.regions = state.stepRegions.slice();
@@ -1540,10 +2098,12 @@
     go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
     TRADES: TRADES, filteredMembers: filteredMembers,
     icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,
-    fullName: fullName, me: me, regionName: regionName, toast: toast,
+    fullName: fullName, me: me, regionName: regionName, formatRegionPill: formatRegionPill, toast: toast,
     closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
     captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
     allRegionIds: allRegionIds, isAllMetro: isAllMetro, selectedAreasCard: selectedAreasCard,
+    areaWizardHTML: areaWizardHTML, openAreaWizard: openAreaWizard, areasSummaryHTML: areasSummaryHTML,
+    auStates: auStates, renderChooseAreas: renderChooseAreas,
     buildChooser: buildChooser, paintSearchAc: paintSearchAc, updateTabs: updateTabs
   };
 })();

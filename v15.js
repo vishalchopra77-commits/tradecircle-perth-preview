@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.5.9 */
+/* TradeCircle Perth — prototype v1.6.2 */
 (function () {
   "use strict";
 
@@ -87,7 +87,7 @@ function googleG(size, mono) {
     they = S()._they || they;
   }
   /* Seed from the same demo relationships v12 uses */
-  var SEED_REL = { sarah: "friends", liam: "pending", priya: "friends", jack: "friends", mei: "none", daniel: "pending", emma: "friends", marcus: "none", tom: "friends", hannah: "none", chris: "friends" };
+  var SEED_REL = { sarah: "friends", liam: "pending", priya: "friends", jack: "friends", mei: "none", daniel: "pending", emma: "friends", marcus: "none", tom: "friends", hannah: "none", chris: "friends", noah: "friends" };
   var SEED_GIVEN = { sarah: 1, priya: 1, chris: 1 };
   var SEED_THEY = { sarah: 1, jack: 1, chris: 1, tom: 1 };
   if (!S()._rel) S()._rel = Object.assign({}, SEED_REL);
@@ -597,8 +597,8 @@ function googleG(size, mono) {
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Send alert</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-hero"><h2>Share a Facebook post</h2><p>Paste the link, pick the trade they asked for, and send it to the circle.</p></div>' +
       '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.homeowners.demo/posts/840211"></div>' +
-      '<div class="field"><label>Trade they’re asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
-      '<input id="tradeType" type="text" placeholder="Type a trade, e.g. pest control" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
+      '<div class="field"><label>Trade or business type they are asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
+      '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
       '<button class="btn btn-primary has-ico" data-action="send-alert">' + I.bell + "<span>Send to circle</span></button>" +
       '<p class="hint" style="text-align:center">Members get a push alert. Comment ideas are suggestions only. Each person writes their own words on Facebook.</p></div></section>';
   }

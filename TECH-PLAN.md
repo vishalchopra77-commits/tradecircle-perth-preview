@@ -4,7 +4,7 @@ This note is for Vishal and for any assistant (Claude, ChatGPT or similar) conti
 
 **Date:** 18 November 2026, Australia/Perth.  
 **App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.5.9.
+**Current design:** clickable prototype v1.6.2.
 
 ---
 
@@ -218,3 +218,15 @@ Sign-up is a short, basic flow (Facebook, email or phone, then name, then busine
 ## 8h. Added in the v1.5.9 prototype
 
 Member and own profiles show a **trade cover photo** at the top (local images, no hotlinking), with the avatar overlapping the bottom edge. A **small line icon** is shown after every trade label. **Your areas** is edited from My profile, not from the Facebook Circle list. The Facebook tab has three segments — **Circle | Recommend | Queue**. Recommend is a feed of admin-posted Facebook group links where members can open the post, copy a unique vouch suggestion, and mark the task done. Members cannot vouch for their own business on that feed. Super admin can paste a Facebook post link, choose the member, notify the circle, and see completion stats. This remains a prototype: nothing is posted to Facebook automatically.
+
+## 8i. Added in the v1.6.0 prototype
+
+The member trade picker now covers **all physical and local businesses**, not only trades. The in-app list is a researched, deduplicated set of Australian business types (with search aliases), grouped for the See all sheet. Existing trade names are kept. This remains a prototype.
+
+## 8j. Added in the v1.6.1 prototype
+
+Australia-wide area wizard (state → metro or regional → region chips) on sign-up step 3, My areas, Edit profile, and the admin regions list. Data is `locations.js` (states and regions only, no suburbs), generated from the Australia locations research. The ten Perth metro region ids are unchanged so existing demo members still match. Member pills show the state only when the region is outside WA.
+
+## 8k. Added in the v1.6.2 prototype
+
+The Metro or Regional step is now an accordion on the regions screen (Metro open by default, Regional collapsed). Each section has its own Select all. A compact Google tip on sign-up and My areas explains that nearby reviews help local search, and that ticking areas outside the working zone can hurt reputation and rankings. A nudge appears at six or more regions, or when more than one state is selected.

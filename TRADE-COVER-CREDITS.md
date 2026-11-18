@@ -17,3 +17,22 @@ These photos are bundled in `covers/` and used as trade-themed profile banners i
 | `tradie.jpg` | Generic fallback | Unsplash | [photo-1504148455328-c376907d081c](https://unsplash.com/photos/1504148455328-c376907d081c) — cordless drill |
 
 Images were cropped and compressed for the 390px phone prototype (about 1000×420 px, typically under 100 KB).
+
+
+## Added in v1.6.0 (group fallback covers)
+
+All are free Pexels License photos, saved locally as compressed JPEGs (no hotlinking), checked 19 November 2026, Australia/Perth.
+
+- `beauty.jpg` — Pexels photo 3993449, hair salon wash (used for hair, barber and beauty types)
+- `cafe.jpg` — Pexels photo 302899, coffee being poured (food & drink)
+- `retail.jpg` — Pexels photo 1884581, shop interior (shops & retail)
+- `auto.jpg` — Pexels photo 3807517, mechanic in a workshop (automotive)
+- `health.jpg` — Pexels photo 3757942, wellness / massage setting (health & wellness)
+- `fitness.jpg` — Pexels photo 1954524, gym (fitness & sport)
+- `pets.jpg` — Pexels photo 1108099, dogs (pets & animals)
+- `kids.jpg` — Pexels photo 8613089, children / learning (kids, education & lessons)
+- `events.jpg` — Pexels photo 212372, camera (events, creative & photography)
+- `professional.jpg` — Pexels photo 3756679, desk / professional setting
+- `property.jpg` — Pexels photo 106399, house exterior (property & real estate)
+
+Pexels License: https://www.pexels.com/license/

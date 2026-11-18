@@ -5,7 +5,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
 **App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.5.9 (18 November 2026, Australia/Perth).  
+**Current prototype version:** v1.6.2 (19 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
 
 ---
@@ -139,7 +139,10 @@ All earlier versions were archived, not deleted.
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
-| **v1.5.9 (current)** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
+| **v1.6.2 (current)** | 19 Nov 2026, about 7:50 am | After the state, Metro and Regional are accordions on one screen. Tip about nearby Google reviews. |
+| **v1.6.1** | 19 Nov 2026, about 7:30 am | Australia-wide area picker: state, then metro or regional, then multi-select regions. Perth’s ten metro regions stay exactly as they were. |
+| **v1.6.0** | 19 Nov 2026, about 6:20 am | Trade or business type picker for all physical / local businesses as well as trades; 456 types in 16 groups, with aliases in autofill and a grouped See all list; icons and cover fallbacks for new types; fictional barber added to the demo. |
+| **v1.5.9** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
 | **v1.5.8** | 18 Nov 2026, about 6:45 am | Basic multi-step sign-up (Facebook, email or phone, then first and last name, then business and regions) ending in Send for approval. After approval, a fill-or-skip Complete your profile step; a Finish your profile card if skipped. Shared queue wait of about 6 days for place #4. |
 | **v1.5.7** | 17 Nov 2026, about 8:45 pm | Facebook and Queue bottom tabs combined into one Facebook tab (f icon) with a Circle / Promotion queue switch (Your place #4 on the queue segment). Bottom bar is now Home, Reviews, Facebook, More. |
 | **v1.5.6** | 17 Nov 2026, about 8:40 pm | Colourful gradient stat tiles restored inside the separated Home sections (Google amber/navy, Facebook blue/navy, Messages teal, Friends green), with tinted section headers. |

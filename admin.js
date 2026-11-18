@@ -1,4 +1,4 @@
-/* TradeCircle Perth — super admin prototype v1.5.9 */
+/* TradeCircle Perth — super admin prototype v1.6.2 */
 (function () {
   "use strict";
   function svg(inner) {
@@ -141,7 +141,7 @@
     ["requests", "Profile requests", "requests", "People"],
     ["members", "Members", "members"],
     ["regions", "Regions", "regions", "Lists"],
-    ["trades", "Trades", "trades"],
+    ["trades", "Trades &amp; businesses", "trades"],
     ["alerts", "Recommendation alerts", "alerts", "Circle"],
     ["fb-posts", "Facebook recommendations", "alerts"],
     ["queue", "Promotion queue", "queue"],
@@ -158,7 +158,7 @@
     requests: ["People", "Profile requests"],
     members: ["People", "Members"],
     regions: ["Lists", "Regions"],
-    trades: ["Lists", "Trades"],
+    trades: ["Lists", "Trades and business types"],
     alerts: ["Circle", "Recommendation alerts"],
     "fb-posts": ["Circle", "Facebook recommendations"],
     "fb-posts-list": ["Circle", "Facebook recommendations"],
@@ -319,16 +319,44 @@
           }).join("") + "</tbody></table>" : empty("No members match", "Try a different name, trade or area.")));
     }
     if (page === "regions") {
-      return panel("Service regions", "Used in the app’s area picker", '<button class="btn btn-primary btn-sm" data-action="add-region">' + I.plus + "<span>Add a region</span></button>",
-        '<div class="chips">' + regions.map(function (r, i) {
-          return '<span class="chip">' + esc(r) + ' <button type="button" data-action="del-region" data-id="' + i + '" aria-label="Remove">×</button></span>';
-        }).join("") + "</div>");
+      var locStates = (window.TC_LOCATIONS && TC_LOCATIONS.states) || [];
+      var official = "";
+      if (locStates.length) {
+        official = locStates.map(function (st) {
+          var metro = st.regions.filter(function (r) { return r.type === "metro"; });
+          var regional = st.regions.filter(function (r) { return r.type === "regional"; });
+          function chips(list) {
+            return '<div class="chips">' + list.map(function (r) { return '<span class="chip">' + esc(r.name) + "</span>"; }).join("") + "</div>";
+          }
+          var body = '<details class="acc metro" open><summary>Metro · ' + metro.length + "</summary>" + chips(metro) + "</details>";
+          if (regional.length) body += '<details class="acc regional"><summary>Regional · ' + regional.length + "</summary>" + chips(regional) + "</details>";
+          return '<div style="margin-bottom:18px"><h3 style="margin:0 0 4px;font-size:16px">' + esc(st.name) + " <span style=\"font-weight:650;color:var(--muted, #5B6B7C)\">" + esc(st.abbrev) + "</span></h3>" + body + "</div>";
+        }).join("");
+      }
+      var extras = regions.filter(function (r) {
+        return !locStates.some(function (st) { return st.regions.some(function (x) { return x.name === r; }); });
+      });
+      var extraHtml = extras.length ? ('<p class="group-label" style="margin:16px 0 8px">Custom additions</p><div class="chips">' + extras.map(function (r) {
+        var i = regions.indexOf(r);
+        return '<span class="chip">' + esc(r) + ' <button type="button" data-action="del-region" data-id="' + i + '" aria-label="Remove">×</button></span>';
+      }).join("") + "</div>") : "";
+      var count = locStates.reduce(function (n, st) { return n + st.regions.length; }, 0);
+      return panel("Service regions", count ? (count + " regions across Australia, grouped by state then metro or regional. Used in the app’s area picker. Perth metro names are unchanged.") : "Used in the app’s area picker",
+        '<button class="btn btn-primary btn-sm" data-action="add-region">' + I.plus + "<span>Add a region</span></button>",
+        official + extraHtml);
     }
     if (page === "trades") {
-      var shown = trades.slice(0, 80);
-      return panel("Trade list", trades.length + " trades from Australian directories", '<button class="btn btn-primary btn-sm" data-action="add-trade">' + I.plus + "<span>Add a trade</span></button>",
-        '<div class="chips">' + shown.map(function (t) { return '<span class="chip">' + esc(t) + "</span>"; }).join("") + "</div>" +
-        (trades.length > 80 ? '<p class="panel-sub" style="margin-top:12px">Showing the first 80. The full list is in the app trade picker.</p>' : ""));
+      var groups = (window.TC_BUSINESS_CATEGORIES && TC_BUSINESS_CATEGORIES.groups) || [];
+      var body;
+      if (groups.length) {
+        body = groups.map(function (g) {
+          return '<p class="group-label" style="margin:16px 0 8px">' + esc(g.name) + " · " + g.items.length + '</p><div class="chips">' +
+            g.items.map(function (it) { return '<span class="chip">' + esc(it.name) + "</span>"; }).join("") + "</div>";
+        }).join("");
+      } else {
+        body = '<div class="chips">' + trades.map(function (t) { return '<span class="chip">' + esc(t) + "</span>"; }).join("") + "</div>";
+      }
+      return panel("Trades and business types", trades.length + " types from Australian directories (every existing trade, plus shops, salons, cafes and other local businesses)", '<button class="btn btn-primary btn-sm" data-action="add-trade">' + I.plus + "<span>Add a type</span></button>", body);
     }
     if (page === "alerts") {
       return panel("Recommendation alerts", "Posts the circle was asked to comment on", "",
@@ -418,7 +446,7 @@
       return panel("Member", esc(m.name) + " · " + esc(m.business), '<button class="btn btn-ghost btn-sm" data-page="members">Back to members</button>',
         '<div class="field"><label>Name</label><input value="' + esc(m.name) + '" readonly></div>' +
         '<div class="field"><label>Business</label><input value="' + esc(m.business) + '" readonly></div>' +
-        '<div class="field"><label>Trade</label><input value="' + esc(m.trade) + '" readonly></div>' +
+        '<div class="field"><label>Trade or business type</label><input value="' + esc(m.trade) + '" readonly></div>' +
         '<p class="panel-sub" style="margin:12px 0 8px"><strong>Links</strong> — website and social profiles. Only filled links show in the app.</p>' +
         linkField("website", "Website", m.website) +
         linkField("facebook", "Facebook page", m.facebook) +

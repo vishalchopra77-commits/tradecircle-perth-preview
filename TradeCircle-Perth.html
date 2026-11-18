@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1F33" />
-  <title>TradeCircle Perth — UI prototype v1.5.9</title>
+  <title>TradeCircle Perth — UI prototype v1.6.2</title>
   <style>
 /* styles.css */
 /* TradeCircle Perth UI v1 */
@@ -888,6 +888,18 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 .btn.has-ico svg { flex: none; }
+
+.sheet-trades { max-height: 88%; }
+.trade-group-lab {
+  position: sticky; top: 0; z-index: 1;
+  background: #F7FAFC; color: var(--muted);
+  font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 8px 4px 6px; margin-top: 8px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between;
+}
+.trade-group-lab span { color: var(--accent-ink); letter-spacing: 0; text-transform: none; font-size: 11px; }
+.trade-opt-lab { display: inline-flex; align-items: center; gap: 8px; }
+.trade-opt-lab .trade-ico { display: inline-flex; }
 
 </style>
   <style>
@@ -2618,6 +2630,229 @@ input.invalid { border-color: #E24B4A; }
 .rec-card { scroll-margin-top: 148px; }
 
 </style>
+  <style>
+/* v161.css */
+/* TradeCircle Perth — v1.6.2 area picker (state → metro/regional accordions) */
+
+.crumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.crumb button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 800;
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.crumb .sep { color: var(--faint); font-weight: 700; }
+.crumb .now { color: var(--ink); }
+
+.state-list { display: flex; flex-direction: column; gap: 8px; }
+.state-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 14px;
+  cursor: pointer;
+}
+.state-row .abbr {
+  flex: 0 0 52px;
+  height: 40px;
+  border-radius: 12px;
+  background: #EEF2F6;
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.02em;
+}
+.state-row .nm { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+.state-row .sub { font-size: 12px; font-weight: 650; color: var(--muted); margin-top: 1px; }
+.state-row .chev { margin-left: auto; color: var(--faint); }
+.state-row.hinted {
+  border-color: #9FE1C8;
+  background: #F7FCF9;
+}
+.state-row.hinted .abbr { background: var(--accent-soft); color: var(--accent-ink); }
+.state-row.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.state-row.on .abbr { background: var(--accent); color: #06281C; }
+
+.kind-list { display: flex; flex-direction: column; gap: 10px; }
+.kind-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+  cursor: pointer;
+}
+.kind-card .k-lab {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.kind-card.metro .k-lab { color: var(--accent-ink); }
+.kind-card.regional .k-lab { color: #1D5FA8; }
+.kind-card .nm { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+.kind-card .sub { font-size: 13px; font-weight: 650; color: var(--muted); margin-top: 4px; }
+.kind-card.on.metro { border-color: var(--accent); background: var(--accent-soft); }
+.kind-card.on.regional { border-color: #8BB8E8; background: #F4F8FD; }
+
+.area-lines { display: flex; flex-direction: column; gap: 8px; }
+.area-line {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.area-line .st { color: var(--ink); }
+.area-line .bits { font-weight: 650; color: var(--text); }
+
+.areas-open {
+  margin-top: 4px;
+}
+
+.screen[data-screen="choose-areas"] .scroll,
+.screen[data-screen="my-regions"] .scroll {
+  padding-bottom: 36px;
+}
+.screen[data-screen="choose-areas"] .state-row { padding: 11px 14px; }
+
+.acc {
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.acc-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: #fff;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+.acc-h .acc-lab {
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 8px;
+}
+.acc.metro .acc-lab, .acc-h.metro .acc-lab { background: var(--accent-soft); color: var(--accent-ink); }
+.acc.regional .acc-lab, .acc-h.regional .acc-lab { background: #E8F1FD; color: #1D5FA8; }
+.acc-h .nm {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.acc-h .acc-sel {
+  display: block;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.acc-chev {
+  margin-left: auto;
+  color: var(--faint);
+  flex: none;
+  transition: transform 0.15s ease;
+}
+.acc.open .acc-chev { transform: rotate(90deg); }
+.acc-body { padding: 0 12px 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+.acc-body .join-all { margin: 0 0 10px; }
+.acc-body .region-sec { margin: 0; }
+.acc-body .region-sec h3, .acc-body .region-sec > p { display: none; }
+
+.area-tip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #E8F1FD;
+  color: #14314C;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin: 0 0 12px;
+}
+.area-tip .ic {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px rgba(26,115,232,0.12);
+}
+.area-tip p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: #14314C;
+}
+.area-nudge {
+  background: #FFF6E0;
+  color: #6A4700;
+  border-radius: 14px;
+  padding: 9px 12px;
+  margin: -4px 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* admin regions use native details */
+details.acc { margin-bottom: 8px; }
+details.acc > summary {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px 12px;
+}
+details.acc > summary::-webkit-details-marker { display: none; }
+details.acc .chips { padding: 0 12px 12px; }
+
+.screen[data-screen="choose-areas"] .auth-hero,
+.screen[data-screen="my-regions"] .auth-hero { margin-bottom: 10px; }
+.screen[data-screen="choose-areas"] .auth-hero h2,
+.screen[data-screen="my-regions"] .auth-hero h2 { margin-bottom: 0; }
+
+</style>
 </head>
 <body>
   <div class="studio" id="studio">
@@ -2626,7 +2861,7 @@ input.invalid { border-color: #E24B4A; }
       <h1>TradeCircle Perth</h1>
       <div class="hero-meta">
         <span class="name-badge">Placeholder name — not final</span>
-        <span class="version-pill">Prototype v1.5.9</span>
+        <span class="version-pill">Prototype v1.6.2</span>
       </div>
       <p class="studio-lead">A simple app for local tradies to join their Perth areas, browse members, send a Facebook friend request, and share genuine Google review ideas. Weekly meet-ups stay offline.</p>
       <div class="hero-actions">
@@ -2654,12 +2889,12 @@ input.invalid { border-color: #E24B4A; }
       </nav>
       <div class="studio-notes">
         <ul>
-          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian trades list; recommendation alerts; a member Home dashboard with separate Google, Facebook and Messages sections; Chat in the top bar next to notifications; a Facebook tab with Circle, Recommend (admin-posted Facebook group links to open, copy a unique vouch idea, and mark as done) and Promotion queue (queue stays easy to find) and a queue row on profile (paid jump later, price to be set); trade cover photos and a small trade icon after each trade name; Your areas on My profile; Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
+          <li><strong>Confirmed:</strong> review ideas have a Copy button and are unique per member (daily Google review cap of 3 per business, Perth midnight reset); website and social links on profiles; richer profile sections (about, expertise, gallery, ideal referral partner, goals); first and last name are separate; new members wait for admin approval; AI assistant (mock) with voice commands that open pages for you to tap; chat photos, files and emoji; a long Australian list of trades and local business types (hairdressers, barbers, cafes, shops and clinics as well as plumbers and electricians); recommendation alerts; a member Home dashboard with separate Google, Facebook and Messages sections; Chat in the top bar next to notifications; a Facebook tab with Circle, Recommend (admin-posted Facebook group links to open, copy a unique vouch idea, and mark as done) and Promotion queue (queue stays easy to find) and a queue row on profile (paid jump later, price to be set); trade cover photos and a small trade icon after each trade name; Your areas on My profile; Facebook-style friend buttons; Instagram-style Review back; and a polished, mobile-friendly admin dashboard with icons, charts and approve buttons on the home screen.</li>
           <li><strong>Open questions:</strong> the real app name, and the price and features of a paid plan or queue jump (shown as Price to be set).</li>
-          <li><strong>Data:</strong> 12 fictional members only. No real people or businesses.</li>
+          <li><strong>Data:</strong> 13 fictional members only. No real people or businesses.</li>
         </ul>
       </div>
-      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.5.9 · 18 Nov 2026, Perth time.</p>
+      <p class="studio-foot">Click a screen on the right, or a link above, to preview it in the phone. On a real phone this page opens the app full screen. Prototype v1.6.2 · 19 Nov 2026, Perth time.</p>
     </header>
 
     <div class="device-col">
@@ -2713,251 +2948,4711 @@ input.invalid { border-color: #E24B4A; }
     </div>
   </div>
   <script>
+/* locations.js */
+/* TradeCircle Australia locations (states and regions only, no suburbs) — v1.6.2 */
+window.TC_LOCATIONS = {
+  "version": "v1.6.2",
+  "hierarchy": [
+    "State/Territory",
+    "Metro or Regional",
+    "Region"
+  ],
+  "states": [
+    {
+      "id": "nsw",
+      "name": "New South Wales",
+      "abbrev": "NSW",
+      "regions": [
+        {
+          "id": "nsw-blacktown",
+          "name": "Blacktown",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-blue-mountains",
+          "name": "Blue Mountains",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-canterbury-bankstown",
+          "name": "Canterbury-Bankstown",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-eastern-suburbs",
+          "name": "Eastern Suburbs",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-hawkesbury",
+          "name": "Hawkesbury",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-hills-district",
+          "name": "Hills District",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-inner-west",
+          "name": "Inner West",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-liverpool-fairfield",
+          "name": "Liverpool & Fairfield",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-macarthur",
+          "name": "Macarthur",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-north-shore",
+          "name": "North Shore",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-northern-beaches",
+          "name": "Northern Beaches",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-parramatta",
+          "name": "Parramatta",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-penrith",
+          "name": "Penrith",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-ryde",
+          "name": "Ryde",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-st-george",
+          "name": "St George",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-sutherland-shire",
+          "name": "Sutherland Shire",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-sydney-city-inner-south",
+          "name": "Sydney City & Inner South",
+          "type": "metro"
+        },
+        {
+          "id": "nsw-capital-country",
+          "name": "Capital Country",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-central-coast",
+          "name": "Central Coast",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-central-west",
+          "name": "Central West",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-coffs-harbour-clarence",
+          "name": "Coffs Harbour & Clarence",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-far-west",
+          "name": "Far West",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-hunter-valley",
+          "name": "Hunter Valley",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-illawarra",
+          "name": "Illawarra",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-lord-howe-island",
+          "name": "Lord Howe Island",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-mid-north-coast",
+          "name": "Mid North Coast",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-murray",
+          "name": "Murray",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-new-england-north-west",
+          "name": "New England & North West",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-newcastle-lake-macquarie",
+          "name": "Newcastle & Lake Macquarie",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-northern-rivers",
+          "name": "Northern Rivers",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-orana",
+          "name": "Orana",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-riverina",
+          "name": "Riverina",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-shoalhaven",
+          "name": "Shoalhaven",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-snowy-mountains",
+          "name": "Snowy Mountains",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-south-coast",
+          "name": "South Coast",
+          "type": "regional"
+        },
+        {
+          "id": "nsw-southern-highlands",
+          "name": "Southern Highlands",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "vic",
+      "name": "Victoria",
+      "abbrev": "VIC",
+      "regions": [
+        {
+          "id": "vic-melbourne-city-inner",
+          "name": "Melbourne City & Inner",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-inner-east",
+          "name": "Melbourne Inner East",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-inner-south-bayside",
+          "name": "Melbourne Inner South & Bayside",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-north-east",
+          "name": "Melbourne North East",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-north-west",
+          "name": "Melbourne North West",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-outer-east",
+          "name": "Melbourne Outer East",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-south-east",
+          "name": "Melbourne South East",
+          "type": "metro"
+        },
+        {
+          "id": "vic-melbourne-west",
+          "name": "Melbourne West",
+          "type": "metro"
+        },
+        {
+          "id": "vic-mornington-peninsula",
+          "name": "Mornington Peninsula",
+          "type": "metro"
+        },
+        {
+          "id": "vic-ballarat",
+          "name": "Ballarat",
+          "type": "regional"
+        },
+        {
+          "id": "vic-bendigo",
+          "name": "Bendigo",
+          "type": "regional"
+        },
+        {
+          "id": "vic-geelong-bellarine-surf-coast",
+          "name": "Geelong, Bellarine & Surf Coast",
+          "type": "regional"
+        },
+        {
+          "id": "vic-gippsland",
+          "name": "Gippsland",
+          "type": "regional"
+        },
+        {
+          "id": "vic-high-country-hume",
+          "name": "High Country & Hume",
+          "type": "regional"
+        },
+        {
+          "id": "vic-latrobe-valley",
+          "name": "Latrobe Valley",
+          "type": "regional"
+        },
+        {
+          "id": "vic-mildura-the-mallee",
+          "name": "Mildura & The Mallee",
+          "type": "regional"
+        },
+        {
+          "id": "vic-shepparton-goulburn-valley",
+          "name": "Shepparton & Goulburn Valley",
+          "type": "regional"
+        },
+        {
+          "id": "vic-warrnambool-south-west",
+          "name": "Warrnambool & South West",
+          "type": "regional"
+        },
+        {
+          "id": "vic-wimmera-grampians",
+          "name": "Wimmera & Grampians",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "qld",
+      "name": "Queensland",
+      "abbrev": "QLD",
+      "regions": [
+        {
+          "id": "qld-brisbane-east",
+          "name": "Brisbane East",
+          "type": "metro"
+        },
+        {
+          "id": "qld-brisbane-inner-city",
+          "name": "Brisbane Inner City",
+          "type": "metro"
+        },
+        {
+          "id": "qld-brisbane-north",
+          "name": "Brisbane North",
+          "type": "metro"
+        },
+        {
+          "id": "qld-brisbane-south",
+          "name": "Brisbane South",
+          "type": "metro"
+        },
+        {
+          "id": "qld-brisbane-west",
+          "name": "Brisbane West",
+          "type": "metro"
+        },
+        {
+          "id": "qld-gold-coast",
+          "name": "Gold Coast",
+          "type": "metro"
+        },
+        {
+          "id": "qld-ipswich",
+          "name": "Ipswich",
+          "type": "metro"
+        },
+        {
+          "id": "qld-logan-beaudesert",
+          "name": "Logan & Beaudesert",
+          "type": "metro"
+        },
+        {
+          "id": "qld-moreton-bay-north",
+          "name": "Moreton Bay North",
+          "type": "metro"
+        },
+        {
+          "id": "qld-moreton-bay-south",
+          "name": "Moreton Bay South",
+          "type": "metro"
+        },
+        {
+          "id": "qld-sunshine-coast",
+          "name": "Sunshine Coast",
+          "type": "metro"
+        },
+        {
+          "id": "qld-cairns-far-north",
+          "name": "Cairns & Far North",
+          "type": "regional"
+        },
+        {
+          "id": "qld-darling-downs-maranoa",
+          "name": "Darling Downs & Maranoa",
+          "type": "regional"
+        },
+        {
+          "id": "qld-mackay-whitsundays",
+          "name": "Mackay & Whitsundays",
+          "type": "regional"
+        },
+        {
+          "id": "qld-outback-queensland",
+          "name": "Outback Queensland",
+          "type": "regional"
+        },
+        {
+          "id": "qld-rockhampton-gladstone-capricorn",
+          "name": "Rockhampton, Gladstone & Capricorn",
+          "type": "regional"
+        },
+        {
+          "id": "qld-toowoomba",
+          "name": "Toowoomba",
+          "type": "regional"
+        },
+        {
+          "id": "qld-townsville",
+          "name": "Townsville",
+          "type": "regional"
+        },
+        {
+          "id": "qld-wide-bay",
+          "name": "Wide Bay",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "sa",
+      "name": "South Australia",
+      "abbrev": "SA",
+      "regions": [
+        {
+          "id": "sa-adelaide-city-central",
+          "name": "Adelaide City & Central",
+          "type": "metro"
+        },
+        {
+          "id": "sa-adelaide-hills",
+          "name": "Adelaide Hills",
+          "type": "metro"
+        },
+        {
+          "id": "sa-adelaide-north",
+          "name": "Adelaide North",
+          "type": "metro"
+        },
+        {
+          "id": "sa-adelaide-south",
+          "name": "Adelaide South",
+          "type": "metro"
+        },
+        {
+          "id": "sa-adelaide-west",
+          "name": "Adelaide West",
+          "type": "metro"
+        },
+        {
+          "id": "sa-barossa",
+          "name": "Barossa",
+          "type": "regional"
+        },
+        {
+          "id": "sa-eyre-peninsula",
+          "name": "Eyre Peninsula",
+          "type": "regional"
+        },
+        {
+          "id": "sa-fleurieu-peninsula-kangaroo-island",
+          "name": "Fleurieu Peninsula & Kangaroo Island",
+          "type": "regional"
+        },
+        {
+          "id": "sa-flinders-outback",
+          "name": "Flinders & Outback",
+          "type": "regional"
+        },
+        {
+          "id": "sa-limestone-coast",
+          "name": "Limestone Coast",
+          "type": "regional"
+        },
+        {
+          "id": "sa-mid-north",
+          "name": "Mid North",
+          "type": "regional"
+        },
+        {
+          "id": "sa-murraylands-riverland",
+          "name": "Murraylands & Riverland",
+          "type": "regional"
+        },
+        {
+          "id": "sa-yorke-peninsula",
+          "name": "Yorke Peninsula",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "wa",
+      "name": "Western Australia",
+      "abbrev": "WA",
+      "regions": [
+        {
+          "id": "hills",
+          "name": "Hills",
+          "type": "metro"
+        },
+        {
+          "id": "kwinana",
+          "name": "Kwinana",
+          "type": "metro"
+        },
+        {
+          "id": "north",
+          "name": "North",
+          "type": "metro"
+        },
+        {
+          "id": "south",
+          "name": "South",
+          "type": "metro"
+        },
+        {
+          "id": "east",
+          "name": "East",
+          "type": "metro"
+        },
+        {
+          "id": "central",
+          "name": "Central / CBD",
+          "type": "metro"
+        },
+        {
+          "id": "fremantle",
+          "name": "Fremantle",
+          "type": "metro"
+        },
+        {
+          "id": "rockingham",
+          "name": "Rockingham",
+          "type": "metro"
+        },
+        {
+          "id": "joondalup",
+          "name": "Joondalup",
+          "type": "metro"
+        },
+        {
+          "id": "armadale",
+          "name": "Armadale",
+          "type": "metro"
+        },
+        {
+          "id": "wa-peel",
+          "name": "Peel",
+          "type": "regional"
+        },
+        {
+          "id": "wa-south-west",
+          "name": "South West",
+          "type": "regional"
+        },
+        {
+          "id": "wa-great-southern",
+          "name": "Great Southern",
+          "type": "regional"
+        },
+        {
+          "id": "wa-wheatbelt",
+          "name": "Wheatbelt",
+          "type": "regional"
+        },
+        {
+          "id": "wa-goldfields-esperance",
+          "name": "Goldfields-Esperance",
+          "type": "regional"
+        },
+        {
+          "id": "wa-mid-west",
+          "name": "Mid West",
+          "type": "regional"
+        },
+        {
+          "id": "wa-gascoyne",
+          "name": "Gascoyne",
+          "type": "regional"
+        },
+        {
+          "id": "wa-pilbara",
+          "name": "Pilbara",
+          "type": "regional"
+        },
+        {
+          "id": "wa-kimberley",
+          "name": "Kimberley",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "tas",
+      "name": "Tasmania",
+      "abbrev": "TAS",
+      "regions": [
+        {
+          "id": "tas-hobart",
+          "name": "Hobart",
+          "type": "metro"
+        },
+        {
+          "id": "tas-central-highlands",
+          "name": "Central Highlands",
+          "type": "regional"
+        },
+        {
+          "id": "tas-east-coast",
+          "name": "East Coast",
+          "type": "regional"
+        },
+        {
+          "id": "tas-huon-bruny-island",
+          "name": "Huon & Bruny Island",
+          "type": "regional"
+        },
+        {
+          "id": "tas-launceston-north-east",
+          "name": "Launceston & North East",
+          "type": "regional"
+        },
+        {
+          "id": "tas-north-west",
+          "name": "North West",
+          "type": "regional"
+        },
+        {
+          "id": "tas-west-coast",
+          "name": "West Coast",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "nt",
+      "name": "Northern Territory",
+      "abbrev": "NT",
+      "regions": [
+        {
+          "id": "nt-darwin",
+          "name": "Darwin",
+          "type": "metro"
+        },
+        {
+          "id": "nt-litchfield",
+          "name": "Litchfield",
+          "type": "metro"
+        },
+        {
+          "id": "nt-palmerston",
+          "name": "Palmerston",
+          "type": "metro"
+        },
+        {
+          "id": "nt-alice-springs-central-australia",
+          "name": "Alice Springs & Central Australia",
+          "type": "regional"
+        },
+        {
+          "id": "nt-barkly",
+          "name": "Barkly",
+          "type": "regional"
+        },
+        {
+          "id": "nt-east-arnhem",
+          "name": "East Arnhem",
+          "type": "regional"
+        },
+        {
+          "id": "nt-katherine",
+          "name": "Katherine",
+          "type": "regional"
+        }
+      ]
+    },
+    {
+      "id": "act",
+      "name": "Australian Capital Territory",
+      "abbrev": "ACT",
+      "regions": [
+        {
+          "id": "act-belconnen",
+          "name": "Belconnen",
+          "type": "metro"
+        },
+        {
+          "id": "act-gungahlin",
+          "name": "Gungahlin",
+          "type": "metro"
+        },
+        {
+          "id": "act-north-canberra",
+          "name": "North Canberra",
+          "type": "metro"
+        },
+        {
+          "id": "act-south-canberra",
+          "name": "South Canberra",
+          "type": "metro"
+        },
+        {
+          "id": "act-tuggeranong",
+          "name": "Tuggeranong",
+          "type": "metro"
+        },
+        {
+          "id": "act-weston-creek-molonglo",
+          "name": "Weston Creek & Molonglo",
+          "type": "metro"
+        },
+        {
+          "id": "act-woden-valley",
+          "name": "Woden Valley",
+          "type": "metro"
+        }
+      ]
+    }
+  ]
+};
+
+</script>
+  <script>
 /* trades.js */
-/* TradeCircle Perth — Australian trades list (see TRADES-SOURCES.md) */
+/* TradeCircle Perth — trades and local business types v1.6.0 (see ../business-categories/SOURCES.md) */
 window.TC_TRADES = [
   "Air Conditioning",
-  "Appliance Installer",
-  "Appliance Repair",
-  "Arborist",
+  "Architect",
   "Asbestos Removal",
-  "Auto Electrician",
   "Awning Installer",
+  "Awning Repairer",
   "Balustrade Installer",
   "Bathroom Renovator",
-  "Blinds Installer",
-  "Bricklayer",
-  "Builder",
-  "Building Designer",
-  "Building Inspector",
-  "Cabinet Maker",
-  "Carpenter",
-  "Carpet Cleaner",
-  "Carpet Layer",
-  "Ceiling Installer",
-  "Cladding Installer",
-  "Cleaner",
-  "Colour Consultant",
-  "Concrete Cutter",
-  "Concreter",
-  "Decking Builder",
-  "Demolition",
-  "Door Installer",
-  "Drafter",
-  "Drainer",
-  "Driveway Contractor",
-  "Drywall Installer",
-  "Electrician",
-  "Energy Assessor",
-  "EV Charger Installer",
-  "Excavator",
-  "Fence Builder",
-  "Floor Sander",
-  "Flooring Installer",
-  "Flyscreen Installer",
-  "Garage Door Installer",
-  "Garden Designer",
-  "Gardener",
-  "Gas Fitter",
-  "Gate Installer",
-  "Glazier",
-  "Gutter Cleaner",
-  "Guttering",
-  "Gyprock Installer",
-  "Handyman",
-  "Heating Technician",
-  "Home Automation",
-  "Home Builder",
-  "Home Maintenance",
-  "Insulation Installer",
-  "Interior Designer",
-  "Irrigation Technician",
-  "Joiner",
-  "Kitchen Designer",
-  "Kitchen Installer",
-  "Kitchen Renovator",
-  "Landscaper",
-  "Lawn Mowing",
-  "Locksmith",
-  "Mason",
-  "Moisture Technician",
-  "Mould Remediation",
-  "Painter",
-  "Paving Contractor",
-  "Pest Control",
-  "Plasterer",
-  "Plumber",
-  "Pool Builder",
-  "Pool Cleaner",
-  "Pool Technician",
-  "Rainwater Tank Installer",
-  "Renderer",
-  "Removalist",
-  "Retaining Wall Builder",
-  "Roller Door Installer",
-  "Roof Plumber",
-  "Roof Restorer",
-  "Roofer",
-  "Rubbish Removal",
-  "Scaffolding",
-  "Security Installer",
-  "Security Screens",
-  "Shed Builder",
-  "Shade Sail Installer",
-  "Shower Screen Installer",
-  "Skip Bin Hire",
-  "Skylight Installer",
-  "Solar Installer",
-  "Solar Panel Cleaner",
-  "Splashback Installer",
-  "Stonemason",
-  "Structural Engineer",
-  "Surveyor",
-  "Tiler",
-  "Tree Lopper",
-  "Underpinning",
-  "Upholsterer",
-  "Ventilation Technician",
-  "Wallpaper Installer",
-  "Waterproofing",
-  "Welder",
-  "Window Cleaner",
-  "Window Installer",
-  "Window Tinting",
-  "Wardrobe Installer",
-  "After Builders Cleaner",
-  "Antenna Installer",
-  "Architect",
-  "Awning Repairer",
-  "BBQ Repairer",
   "Bathroom Tiler",
   "Bathtub Repairer",
   "Blind Repairer",
-  "Bobcat Operator",
-  "Brick Cleaner",
+  "Blinds Installer",
+  "Bricklayer",
+  "Builder",
   "Builder Renovation",
+  "Building Designer",
+  "Building Inspector",
   "Cabinet Installer",
-  "Carport Builder",
+  "Cabinet Maker",
+  "Carpenter",
+  "Carpet Layer",
   "Carpet Repairer",
+  "Ceiling Installer",
   "Ceiling Repairer",
-  "Chimney Sweep",
-  "Commercial Cleaner",
+  "Cladding Installer",
   "Commercial Electrician",
   "Commercial Plumber",
   "Composting Toilet Installer",
+  "Concrete Cutter",
   "Concrete Repairer",
+  "Concreter",
   "Conservatory Installer",
   "Cool Room Installer",
   "Curtain Installer",
-  "Damp Specialist",
-  "Deck Repairer",
+  "Demolition",
+  "Door Installer",
   "Downpipe Installer",
+  "Drafter",
   "Drainage Camera Inspection",
+  "Drainer",
+  "Drywall Installer",
   "Ducted Heating",
-  "Ducted Vacuum Installer",
-  "Earthmoving",
-  "End of Lease Cleaner",
+  "Electrician",
+  "Energy Assessor",
   "Epoxy Flooring",
+  "EV Charger Installer",
   "Extension Builder",
   "External Rendering",
   "Facade Restorer",
   "Fire Alarm Technician",
   "Fireplace Installer",
-  "Flood Restoration",
+  "Floor Sander",
+  "Flooring Installer",
+  "Flyscreen Installer",
   "Flyscreen Repairer",
   "French Drainer",
-  "Furniture Assembler",
   "Garage Builder",
-  "Garden Maintenance",
-  "Gazebo Builder",
+  "Garage Door Installer",
+  "Gas Fitter",
   "Glass Repairer",
+  "Glazier",
   "Granite Installer",
-  "Grout Cleaner",
   "Gutter Repairer",
+  "Guttering",
+  "Gyprock Installer",
   "Heat Pump Installer",
+  "Heating Technician",
   "Heritage Restorer",
-  "High Pressure Cleaner",
-  "Home Stager",
+  "Home Builder",
   "Hot Water Installer",
   "House Extension Builder",
-  "House Relocator",
-  "House Washer",
   "HVAC Technician",
-  "Hydro Cleaning",
   "Insulation Assessor",
-  "Intercom Installer",
+  "Insulation Installer",
   "Internal Painting",
-  "Jacuzzi Technician",
+  "Joiner",
   "Kit Home Builder",
+  "Kitchen Installer",
+  "Kitchen Renovator",
   "Laminate Flooring",
-  "Landscape Architect",
-  "Lawn Care",
   "Leadlight Restorer",
   "Light Fitting Installer",
   "Line Marker",
-  "Lock Repairer",
-  "Lounge Upholsterer",
   "Marble Restoration",
+  "Mason",
   "Metal Fabricator",
   "Mezzanine Installer",
-  "Office Cleaner",
-  "Oven Repairer",
+  "Painter",
   "Partition Installer",
-  "Patio Builder",
-  "Pergola Builder",
-  "Phone Technician",
-  "Piano Mover",
   "Plaster Repairer",
-  "Playground Installer",
+  "Plasterer",
+  "Plumber",
   "Pointing Specialist",
-  "Pond Builder",
-  "Pool Fencing",
-  "Pressure Cleaner",
-  "Property Maintenance",
   "Rainwater Specialist",
+  "Rainwater Tank Installer",
   "Rangehood Installer",
+  "Renderer",
   "Renovation Manager",
-  "Retaining Wall Repairer",
+  "Roller Door Installer",
   "Roof Inspector",
+  "Roof Plumber",
+  "Roof Restorer",
   "Roof Tiler",
+  "Roofer",
   "Safety Inspector",
-  "Sauna Installer",
+  "Scaffolding",
   "Screen Door Installer",
   "Septic Technician",
+  "Shed Builder",
   "Shed Installer",
   "Shower Repairer",
+  "Shower Screen Installer",
   "Shutter Installer",
   "Siding Installer",
-  "Site Cleaner",
   "Skirting Installer",
-  "Smart Home Installer",
+  "Skylight Installer",
   "Solar Hot Water",
+  "Solar Installer",
+  "Splashback Installer",
   "Staircase Builder",
   "Steel Fixer",
+  "Stonemason",
   "Storm Damage Repairer",
   "Stove Installer",
-  "Strip and Polish Floors",
+  "Structural Engineer",
   "Stud Finder / Wall Scan",
   "Sump Pump Installer",
-  "Swimming Pool Repairer",
-  "Termite Inspector",
+  "Surveyor",
   "Tile and Grout Repairer",
+  "Tiler",
   "Timber Floor Installer",
   "Town Planner",
-  "TV Antenna Installer",
-  "Verandah Builder",
+  "Underpinning",
+  "Ventilation Technician",
   "Vinyl Flooring",
   "Wall and Floor Tiler",
-  "Water Damage Restoration",
+  "Wallpaper Installer",
+  "Wardrobe Installer",
   "Water Pump Technician",
   "Water Tanks",
-  "Weed Control",
-  "Whitegoods Installer",
+  "Waterproofing",
+  "Welder",
   "Whirlybird Installer",
+  "Window Installer",
+  "Window Tinting",
   "Wood Floor Refinisher",
   "Workshop Builder",
-  "Wrought Iron Worker"
+  "Wrought Iron Worker",
+  "Antenna Installer",
+  "Appliance Installer",
+  "Appliance Repair",
+  "BBQ Repairer",
+  "Colour Consultant",
+  "Damp Specialist",
+  "Ducted Vacuum Installer",
+  "Flood Restoration",
+  "Furniture Assembler",
+  "Handyman",
+  "Home Automation",
+  "Home Maintenance",
+  "Home Stager",
+  "House Relocator",
+  "Intercom Installer",
+  "Interior Designer",
+  "Kitchen Designer",
+  "Lock Repairer",
+  "Locksmith",
+  "Lounge Upholsterer",
+  "Moisture Technician",
+  "Mould Remediation",
+  "Oven Repairer",
+  "Pest Control",
+  "Piano Mover",
+  "Property Maintenance",
+  "Removalist",
+  "Rubbish Removal",
+  "Security Installer",
+  "Security Screens",
+  "Skip Bin Hire",
+  "Smart Home Installer",
+  "Termite Inspector",
+  "TV Antenna Installer",
+  "Upholsterer",
+  "Water Damage Restoration",
+  "Whitegoods Installer",
+  "Arborist",
+  "Bobcat Operator",
+  "Carport Builder",
+  "Deck Repairer",
+  "Decking Builder",
+  "Driveway Contractor",
+  "Earthmoving",
+  "Excavator",
+  "Fence Builder",
+  "Fencer",
+  "Garden Designer",
+  "Garden Maintenance",
+  "Gardener",
+  "Gate Installer",
+  "Gazebo Builder",
+  "Irrigation Technician",
+  "Jacuzzi Technician",
+  "Landscape Architect",
+  "Landscaper",
+  "Lawn Care",
+  "Lawn Mowing",
+  "Patio Builder",
+  "Paving Contractor",
+  "Pergola Builder",
+  "Playground Installer",
+  "Pond Builder",
+  "Pool Builder",
+  "Pool Fencing",
+  "Pool Technician",
+  "Retaining Wall Builder",
+  "Retaining Wall Repairer",
+  "Sauna Installer",
+  "Shade Sail Installer",
+  "Swimming Pool Repairer",
+  "Tree Lopper",
+  "Verandah Builder",
+  "Weed Control",
+  "After Builders Cleaner",
+  "Brick Cleaner",
+  "Carpet Cleaner",
+  "Chimney Sweep",
+  "Cleaner",
+  "Commercial Cleaner",
+  "End of Lease Cleaner",
+  "Grout Cleaner",
+  "Gutter Cleaner",
+  "High Pressure Cleaner",
+  "House Washer",
+  "Hydro Cleaning",
+  "Office Cleaner",
+  "Pool Cleaner",
+  "Pressure Cleaner",
+  "Site Cleaner",
+  "Solar Panel Cleaner",
+  "Strip and Polish Floors",
+  "Window Cleaner",
+  "Barber",
+  "Beauty Salon",
+  "Cosmetic Tattoo",
+  "Day Spa",
+  "Hair Extension Specialist",
+  "Hairdresser",
+  "Lash & Brow Bar",
+  "Makeup Artist",
+  "Nail Salon",
+  "Piercing Studio",
+  "Skin Clinic",
+  "Tanning Salon",
+  "Tattoo Studio",
+  "Waxing & Laser Clinic",
+  "Acupuncturist",
+  "Allied Health Clinic",
+  "Audiologist",
+  "Chiropractor",
+  "Counsellor",
+  "Dentist",
+  "Denture Clinic",
+  "Dietitian",
+  "Disability & NDIS Support",
+  "GP Clinic",
+  "Health Coach",
+  "Home Care Provider",
+  "Hypnotherapist",
+  "Massage Therapist",
+  "Medical Imaging Clinic",
+  "Mobility & Medical Supplies",
+  "Naturopath",
+  "Occupational Therapist",
+  "Optometrist",
+  "Orthodontist",
+  "Osteopath",
+  "Pathology Collection Centre",
+  "Pharmacy",
+  "Physiotherapist",
+  "Podiatrist",
+  "Psychologist",
+  "Speech Pathologist",
+  "Wellness Centre",
+  "Women's Health Clinic",
+  "Boxing Gym",
+  "Climbing Gym",
+  "Cycle Studio",
+  "Golf Coach",
+  "Group Fitness Studio",
+  "Gym",
+  "Martial Arts School",
+  "Personal Trainer",
+  "Pilates Studio",
+  "Sports Coach",
+  "Swim School",
+  "Tennis Coach",
+  "Yoga Studio",
+  "Bakery",
+  "Bar & Pub",
+  "Bottle Shop",
+  "Brewery",
+  "Bubble Tea Shop",
+  "Burger Shop",
+  "Butcher",
+  "Cafe",
+  "Cake Maker",
+  "Caterer",
+  "Coffee Roaster",
+  "Delicatessen",
+  "Dessert Shop",
+  "Fish & Chips",
+  "Fishmonger",
+  "Food Truck",
+  "Ice Cream Shop",
+  "Juice Bar",
+  "Kebab Shop",
+  "Pizza Shop",
+  "Restaurant",
+  "Sandwich Bar",
+  "Takeaway",
+  "Baby & Kids Store",
+  "Beauty Supply Store",
+  "Bike Shop",
+  "Bookshop",
+  "Clothing Store",
+  "Convenience Store",
+  "Electrical Supplier",
+  "Electronics Store",
+  "Flooring Store",
+  "Florist",
+  "Furniture Store",
+  "General Store",
+  "Gift Shop",
+  "Grocer",
+  "Hardware Store",
+  "Health Food Store",
+  "Homewares Store",
+  "Jewellery Store",
+  "Kitchen & Bathroom Showroom",
+  "Lighting Store",
+  "Mower Shop",
+  "Musical Instrument Store",
+  "Newsagency",
+  "Office Supplies Store",
+  "Op Shop",
+  "Paint Store",
+  "Pawnbroker",
+  "Phone & Accessories Store",
+  "Picture Framer",
+  "Plant Nursery",
+  "Pool Shop",
+  "Shoe Shop",
+  "Sporting Goods Store",
+  "Tobacconist",
+  "Toy & Hobby Shop",
+  "Workwear Store",
+  "Auto Electrician",
+  "Auto Parts Store",
+  "Auto Wrecker",
+  "Boat Repairer",
+  "Car Battery Shop",
+  "Car Dealer",
+  "Car Detailing",
+  "Car Wash",
+  "Caravan Repairer",
+  "Chauffeur",
+  "Exhaust & Brake Specialist",
+  "Mechanic",
+  "Mobile Mechanic",
+  "Motorcycle Dealer",
+  "Motorcycle Mechanic",
+  "Panel Beater",
+  "Roadworthy Inspection",
+  "Towing",
+  "Trailer Hire",
+  "Truck Mechanic",
+  "Tyre Shop",
+  "Vehicle Wrap",
+  "Windscreen Repair",
+  "Dog Daycare",
+  "Dog Groomer",
+  "Dog Trainer",
+  "Dog Walker",
+  "Pet Boarding",
+  "Pet Shop",
+  "Pet Sitter",
+  "Vet",
+  "After School Care",
+  "Art School",
+  "Childcare Centre",
+  "Dance School",
+  "Driving School",
+  "Family Day Care",
+  "Language School",
+  "Music Teacher",
+  "Preschool",
+  "Tutor",
+  "Bridal Shop",
+  "Celebrant",
+  "DJ",
+  "Event Planner",
+  "Function Venue",
+  "Live Musician",
+  "Party Hire",
+  "Photo Booth Hire",
+  "Photographer",
+  "Videographer",
+  "Wedding Planner",
+  "Accountant",
+  "Bookkeeper",
+  "Business Consultant",
+  "Finance Broker",
+  "Financial Planner",
+  "Graphic Designer",
+  "HR Consultant",
+  "Insurance Broker",
+  "Lawyer",
+  "Marketing Agency",
+  "Migration Agent",
+  "Mortgage Broker",
+  "Notary",
+  "Recruitment Agency",
+  "Tax Agent",
+  "Web Designer",
+  "Buyer's Agent",
+  "Commercial Real Estate Agent",
+  "Conveyancer",
+  "Property Manager",
+  "Property Valuer",
+  "Real Estate Agent",
+  "Strata Manager",
+  "Bed & Breakfast",
+  "Community Club",
+  "Computer Repair",
+  "Courier",
+  "Coworking Space",
+  "Dry Cleaner",
+  "Equipment Hire",
+  "Fire Protection Service",
+  "Funeral Director",
+  "Holiday Accommodation",
+  "IT Support",
+  "Key Cutting",
+  "Laundry",
+  "Motel",
+  "Phone Repair",
+  "Phone Technician",
+  "Printer",
+  "Recording Studio",
+  "Security Guard Service",
+  "Self Storage",
+  "Shoe Repair",
+  "Signwriter",
+  "Tailor",
+  "Tour Operator",
+  "Travel Agent",
+  "Watch Repair"
 ];
+window.TC_TRADE_ALIASES = {
+  "Fencing contractor": "Fencer",
+  "Fencing": "Fencer",
+  "Hair salon": "Hairdresser",
+  "Hair dresser": "Hairdresser",
+  "Hair stylist": "Hairdresser",
+  "Salon": "Hairdresser",
+  "Barber shop": "Barber",
+  "Men's barber": "Barber",
+  "Barbershop": "Barber",
+  "Haircut": "Barber",
+  "Hair cuts": "Barber",
+  "Men's hairdresser": "Barber",
+  "Beautician": "Beauty Salon",
+  "Beauty therapist": "Beauty Salon",
+  "Nail technician": "Nail Salon",
+  "Manicurist": "Nail Salon",
+  "Lash technician": "Lash & Brow Bar",
+  "Brow bar": "Lash & Brow Bar",
+  "Eyelash salon": "Lash & Brow Bar",
+  "Skin care clinic": "Skin Clinic",
+  "Dermal clinic": "Skin Clinic",
+  "Facial salon": "Skin Clinic",
+  "Make-up artist": "Makeup Artist",
+  "MUA": "Makeup Artist",
+  "Tattoo artist": "Tattoo Studio",
+  "Tattooist": "Tattoo Studio",
+  "Microblading": "Cosmetic Tattoo",
+  "Cosmetic tattoo studio": "Cosmetic Tattoo",
+  "Body piercing": "Piercing Studio",
+  "Ear piercing": "Piercing Studio",
+  "Laser hair removal": "Waxing & Laser Clinic",
+  "Waxing salon": "Waxing & Laser Clinic",
+  "Laser clinic": "Waxing & Laser Clinic",
+  "Spray tan": "Tanning Salon",
+  "Solarium": "Tanning Salon",
+  "Spa": "Day Spa",
+  "Day spa salon": "Day Spa",
+  "Hair extensions": "Hair Extension Specialist",
+  "Hair loss clinic": "Hair Extension Specialist",
+  "Remedial massage": "Massage Therapist",
+  "Massage": "Massage Therapist",
+  "Physio": "Physiotherapist",
+  "Physiotherapy clinic": "Physiotherapist",
+  "Chiropractic clinic": "Chiropractor",
+  "Dental clinic": "Dentist",
+  "Dental surgery": "Dentist",
+  "Braces clinic": "Orthodontist",
+  "Optician": "Optometrist",
+  "Eye clinic": "Optometrist",
+  "Glasses shop": "Optometrist",
+  "Chemist": "Pharmacy",
+  "Community pharmacy": "Pharmacy",
+  "Medical clinic": "GP Clinic",
+  "Doctor": "GP Clinic",
+  "General practitioner": "GP Clinic",
+  "Bulk billing clinic": "GP Clinic",
+  "Naturopathic clinic": "Naturopath",
+  "Acupuncture clinic": "Acupuncturist",
+  "Chinese medicine clinic": "Acupuncturist",
+  "Nutritionist": "Dietitian",
+  "Dietitian & nutritionist": "Dietitian",
+  "Psychology clinic": "Psychologist",
+  "Psychotherapist": "Counsellor",
+  "Counselling": "Counsellor",
+  "Podiatry clinic": "Podiatrist",
+  "Foot clinic": "Podiatrist",
+  "Osteopathy clinic": "Osteopath",
+  "OT clinic": "Occupational Therapist",
+  "Speech therapist": "Speech Pathologist",
+  "Speech therapy": "Speech Pathologist",
+  "Hearing clinic": "Audiologist",
+  "Hearing aids": "Audiologist",
+  "Denturist": "Denture Clinic",
+  "Dental prosthetist": "Denture Clinic",
+  "Blood test centre": "Pathology Collection Centre",
+  "Pathology": "Pathology Collection Centre",
+  "Allied health": "Allied Health Clinic",
+  "In-home care": "Home Care Provider",
+  "Home care": "Home Care Provider",
+  "Aged care in-home support": "Home Care Provider",
+  "NDIS provider": "Disability & NDIS Support",
+  "Disability support": "Disability & NDIS Support",
+  "Fertility clinic": "Women's Health Clinic",
+  "Women's health": "Women's Health Clinic",
+  "Hypnotherapy": "Hypnotherapist",
+  "Weight loss coach": "Health Coach",
+  "Wellness coach": "Health Coach",
+  "Wellness clinic": "Wellness Centre",
+  "Ultrasound clinic": "Medical Imaging Clinic",
+  "X-ray clinic": "Medical Imaging Clinic",
+  "Medical supply store": "Mobility & Medical Supplies",
+  "Mobility shop": "Mobility & Medical Supplies",
+  "Fitness centre": "Gym",
+  "Health club": "Gym",
+  "PT": "Personal Trainer",
+  "Mobile personal trainer": "Personal Trainer",
+  "Yoga teacher": "Yoga Studio",
+  "Yoga classes": "Yoga Studio",
+  "Reformer pilates": "Pilates Studio",
+  "Pilates": "Pilates Studio",
+  "Karate school": "Martial Arts School",
+  "Taekwondo school": "Martial Arts School",
+  "Jiu-jitsu": "Martial Arts School",
+  "Kung fu school": "Martial Arts School",
+  "Kickboxing gym": "Boxing Gym",
+  "Boxing studio": "Boxing Gym",
+  "Swimming lessons": "Swim School",
+  "Swim teacher": "Swim School",
+  "Sports club coach": "Sports Coach",
+  "Spin class": "Cycle Studio",
+  "Indoor cycling": "Cycle Studio",
+  "Indoor climbing": "Climbing Gym",
+  "Bouldering gym": "Climbing Gym",
+  "Tennis club": "Tennis Coach",
+  "Golf lessons": "Golf Coach",
+  "Golf pro": "Golf Coach",
+  "F45": "Group Fitness Studio",
+  "Bootcamp": "Group Fitness Studio",
+  "HIIT studio": "Group Fitness Studio",
+  "Café": "Cafe",
+  "Coffee shop": "Cafe",
+  "Coffee house": "Cafe",
+  "Diner": "Restaurant",
+  "Eatery": "Restaurant",
+  "Chinese restaurant": "Restaurant",
+  "Thai restaurant": "Restaurant",
+  "Indian restaurant": "Restaurant",
+  "Japanese restaurant": "Restaurant",
+  "Italian restaurant": "Restaurant",
+  "Vietnamese restaurant": "Restaurant",
+  "Korean restaurant": "Restaurant",
+  "Mexican restaurant": "Restaurant",
+  "Greek restaurant": "Restaurant",
+  "Seafood restaurant": "Restaurant",
+  "Steakhouse": "Restaurant",
+  "Vegetarian restaurant": "Restaurant",
+  "Vegan restaurant": "Restaurant",
+  "Bread shop": "Bakery",
+  "Patisserie": "Bakery",
+  "Take away": "Takeaway",
+  "Fast food": "Takeaway",
+  "Chicken shop": "Takeaway",
+  "Pizzeria": "Pizza Shop",
+  "Pizza restaurant": "Pizza Shop",
+  "Butcher shop": "Butcher",
+  "Fish and chips": "Fish & Chips",
+  "Fish & chip shop": "Fish & Chips",
+  "Dessert bar": "Dessert Shop",
+  "Gelato shop": "Dessert Shop",
+  "Ice creamery": "Ice Cream Shop",
+  "Gelato": "Ice Cream Shop",
+  "Boba tea": "Bubble Tea Shop",
+  "Bubble tea": "Bubble Tea Shop",
+  "Food van": "Food Truck",
+  "Mobile food": "Food Truck",
+  "Catering": "Caterer",
+  "Cake shop": "Cake Maker",
+  "Wedding cakes": "Cake Maker",
+  "Cake designer": "Cake Maker",
+  "Liquor store": "Bottle Shop",
+  "Bottle-o": "Bottle Shop",
+  "Dan Murphy's style liquor": "Bottle Shop",
+  "Pub": "Bar & Pub",
+  "Bar": "Bar & Pub",
+  "Tavern": "Bar & Pub",
+  "Wine bar": "Bar & Pub",
+  "Smoothie bar": "Juice Bar",
+  "Lunch bar": "Sandwich Bar",
+  "Sandwich shop": "Sandwich Bar",
+  "Salad bar": "Sandwich Bar",
+  "Roastery": "Coffee Roaster",
+  "Microbrewery": "Brewery",
+  "Distillery": "Brewery",
+  "Brewpub": "Brewery",
+  "Seafood shop": "Fishmonger",
+  "Seafood market": "Fishmonger",
+  "Deli": "Delicatessen",
+  "Kebab": "Kebab Shop",
+  "Halal snack pack shop": "Kebab Shop",
+  "Burger restaurant": "Burger Shop",
+  "Burger bar": "Burger Shop",
+  "Store": "General Store",
+  "Shop": "General Store",
+  "Local store": "General Store",
+  "Corner store": "General Store",
+  "Variety store": "General Store",
+  "Milk bar": "Convenience Store",
+  "Deli store": "Convenience Store",
+  "Servo shop": "Convenience Store",
+  "Greengrocer": "Grocer",
+  "Fruit and veg": "Grocer",
+  "Independent supermarket": "Grocer",
+  "Supermarket": "Grocer",
+  "Fashion boutique": "Clothing Store",
+  "Fashion store": "Clothing Store",
+  "Clothes shop": "Clothing Store",
+  "Jeweller": "Jewellery Store",
+  "Jewelry store": "Jewellery Store",
+  "Jewellery": "Jewellery Store",
+  "Flower shop": "Florist",
+  "Florists & gifts": "Florist",
+  "Giftware": "Gift Shop",
+  "Souvenir shop": "Gift Shop",
+  "Bedding store": "Furniture Store",
+  "Mattress store": "Furniture Store",
+  "Hardware": "Hardware Store",
+  "Timber and hardware": "Hardware Store",
+  "Electrical retail": "Electronics Store",
+  "Computer store": "Electronics Store",
+  "Opportunity shop": "Op Shop",
+  "Second-hand store": "Op Shop",
+  "Thrift shop": "Op Shop",
+  "Charity shop": "Op Shop",
+  "Bookstore": "Bookshop",
+  "Book shop": "Bookshop",
+  "Newsagent": "Newsagency",
+  "Footwear store": "Shoe Shop",
+  "Toy store": "Toy & Hobby Shop",
+  "Hobby shop": "Toy & Hobby Shop",
+  "Craft shop": "Toy & Hobby Shop",
+  "Outdoor store": "Sporting Goods Store",
+  "Camping store": "Sporting Goods Store",
+  "Bicycle shop": "Bike Shop",
+  "Cycle shop": "Bike Shop",
+  "Kitchenware store": "Homewares Store",
+  "Homewares": "Homewares Store",
+  "Paint shop": "Paint Store",
+  "Carpet store": "Flooring Store",
+  "Rug store": "Flooring Store",
+  "Lighting shop": "Lighting Store",
+  "Supplement store": "Health Food Store",
+  "Vitamin shop": "Health Food Store",
+  "Health food": "Health Food Store",
+  "Music shop": "Musical Instrument Store",
+  "Stationery store": "Office Supplies Store",
+  "Picture framing": "Picture Framer",
+  "Safety equipment store": "Workwear Store",
+  "Work boots shop": "Workwear Store",
+  "Baby shop": "Baby & Kids Store",
+  "Kids store": "Baby & Kids Store",
+  "Cosmetics store": "Beauty Supply Store",
+  "Mobile phone store": "Phone & Accessories Store",
+  "Phone shop": "Phone & Accessories Store",
+  "Car mechanic": "Mechanic",
+  "Auto mechanic": "Mechanic",
+  "Workshop": "Mechanic",
+  "Mobile car mechanic": "Mobile Mechanic",
+  "Carwash": "Car Wash",
+  "Car detailer": "Car Detailing",
+  "Auto detailing": "Car Detailing",
+  "Tyres": "Tyre Shop",
+  "Tire shop": "Tyre Shop",
+  "Tyre dealer": "Tyre Shop",
+  "Smash repair": "Panel Beater",
+  "Panel beating": "Panel Beater",
+  "Body shop": "Panel Beater",
+  "Used car dealer": "Car Dealer",
+  "Car yard": "Car Dealer",
+  "Motor dealer": "Car Dealer",
+  "Tow truck": "Towing",
+  "Towing service": "Towing",
+  "Auto parts": "Auto Parts Store",
+  "Spare parts": "Auto Parts Store",
+  "Motorbike repair": "Motorcycle Mechanic",
+  "Motorcycle repair": "Motorcycle Mechanic",
+  "Auto glass": "Windscreen Repair",
+  "Windscreen replacement": "Windscreen Repair",
+  "Vehicle inspection": "Roadworthy Inspection",
+  "Safety check": "Roadworthy Inspection",
+  "Roadworthy": "Roadworthy Inspection",
+  "Battery store": "Car Battery Shop",
+  "Brake shop": "Exhaust & Brake Specialist",
+  "Exhaust specialist": "Exhaust & Brake Specialist",
+  "Muffler shop": "Exhaust & Brake Specialist",
+  "Diesel mechanic": "Truck Mechanic",
+  "Truck and diesel mechanic": "Truck Mechanic",
+  "Caravan service": "Caravan Repairer",
+  "Trailer repairer": "Caravan Repairer",
+  "Marine mechanic": "Boat Repairer",
+  "Boat builder": "Boat Repairer",
+  "Car wrapping": "Vehicle Wrap",
+  "Vehicle signage": "Vehicle Wrap",
+  "Airport transfer": "Chauffeur",
+  "Limousine": "Chauffeur",
+  "Hire car": "Chauffeur",
+  "Trailer rental": "Trailer Hire",
+  "Motorbike shop": "Motorcycle Dealer",
+  "Motorcycle shop": "Motorcycle Dealer",
+  "Car wrecker": "Auto Wrecker",
+  "Cash for cars": "Auto Wrecker",
+  "Pet groomer": "Dog Groomer",
+  "Dog grooming": "Dog Groomer",
+  "Puppy school": "Dog Trainer",
+  "Dog training": "Dog Trainer",
+  "Veterinary clinic": "Vet",
+  "Veterinarian": "Vet",
+  "Animal hospital": "Vet",
+  "Pet sitting": "Pet Sitter",
+  "Dog walking": "Dog Walker",
+  "Pet store": "Pet Shop",
+  "Pet supplies": "Pet Shop",
+  "Kennel": "Pet Boarding",
+  "Cattery": "Pet Boarding",
+  "Pet boarding & kennels": "Pet Boarding",
+  "Doggy daycare": "Dog Daycare",
+  "Dog day care": "Dog Daycare",
+  "Day care": "Childcare Centre",
+  "Child care": "Childcare Centre",
+  "Long day care": "Childcare Centre",
+  "Family daycare": "Family Day Care",
+  "Tutoring": "Tutor",
+  "Private tutor": "Tutor",
+  "Tutoring centre": "Tutor",
+  "Music school": "Music Teacher",
+  "Piano teacher": "Music Teacher",
+  "Music lessons": "Music Teacher",
+  "Dance studio": "Dance School",
+  "Dance lessons": "Dance School",
+  "Driving instructor": "Driving School",
+  "Learn to drive": "Driving School",
+  "Language classes": "Language School",
+  "English tutor": "Language School",
+  "OSHC": "After School Care",
+  "Holiday care": "After School Care",
+  "Art classes": "Art School",
+  "Art teacher": "Art School",
+  "Kindergarten": "Preschool",
+  "Early learning centre": "Preschool",
+  "Photography studio": "Photographer",
+  "Portrait photographer": "Photographer",
+  "Video production": "Videographer",
+  "Videography": "Videographer",
+  "Event manager": "Event Planner",
+  "Event organiser": "Event Planner",
+  "Wedding coordinator": "Wedding Planner",
+  "Mobile DJ": "DJ",
+  "Wedding DJ": "DJ",
+  "Marriage celebrant": "Celebrant",
+  "Funeral celebrant": "Celebrant",
+  "Party supplies": "Party Hire",
+  "Event hire": "Party Hire",
+  "Wedding venue": "Function Venue",
+  "Event venue": "Function Venue",
+  "Reception centre": "Function Venue",
+  "Photo booth": "Photo Booth Hire",
+  "Wedding band": "Live Musician",
+  "Entertainer": "Live Musician",
+  "Singer": "Live Musician",
+  "Bridal wear": "Bridal Shop",
+  "Formal wear": "Bridal Shop",
+  "Wedding dress shop": "Bridal Shop",
+  "Accounting firm": "Accountant",
+  "Tax accountant": "Accountant",
+  "Bookkeeping": "Bookkeeper",
+  "Home loan broker": "Mortgage Broker",
+  "Solicitor": "Lawyer",
+  "Law firm": "Lawyer",
+  "Legal services": "Lawyer",
+  "Attorney": "Lawyer",
+  "Insurance agency": "Insurance Broker",
+  "Insurance adviser": "Insurance Broker",
+  "Financial adviser": "Financial Planner",
+  "Wealth adviser": "Financial Planner",
+  "Digital marketing": "Marketing Agency",
+  "SEO agency": "Marketing Agency",
+  "Advertising agency": "Marketing Agency",
+  "Graphic design": "Graphic Designer",
+  "Web developer": "Web Designer",
+  "Website designer": "Web Designer",
+  "Labour hire": "Recruitment Agency",
+  "Recruiter": "Recruitment Agency",
+  "Business coach": "Business Consultant",
+  "Consultant": "Business Consultant",
+  "Visa agent": "Migration Agent",
+  "Migration lawyer": "Migration Agent",
+  "Tax return service": "Tax Agent",
+  "BAS agent": "Tax Agent",
+  "Notary public": "Notary",
+  "Commercial finance broker": "Finance Broker",
+  "Human resources": "HR Consultant",
+  "Real estate": "Real Estate Agent",
+  "Sales agent": "Real Estate Agent",
+  "Realtor": "Real Estate Agent",
+  "Property management": "Property Manager",
+  "Leasing agent": "Property Manager",
+  "Buyers agent": "Buyer's Agent",
+  "Property buyer": "Buyer's Agent",
+  "Conveyancing": "Conveyancer",
+  "Settlement agent": "Conveyancer",
+  "Strata management": "Strata Manager",
+  "Body corporate manager": "Strata Manager",
+  "Valuer": "Property Valuer",
+  "Commercial agent": "Commercial Real Estate Agent",
+  "Dry cleaning": "Dry Cleaner",
+  "Laundromat": "Laundry",
+  "Laundry service": "Laundry",
+  "Alterations": "Tailor",
+  "Clothing alterations": "Tailor",
+  "Dressmaker": "Tailor",
+  "Print shop": "Printer",
+  "Copy and print": "Printer",
+  "Digital printing": "Printer",
+  "Signage": "Signwriter",
+  "Sign writer": "Signwriter",
+  "Sign maker": "Signwriter",
+  "Computer repairs": "Computer Repair",
+  "Laptop repair": "Computer Repair",
+  "Mobile phone repair": "Phone Repair",
+  "Phone repairs": "Phone Repair",
+  "Screen repair": "Phone Repair",
+  "IT services": "IT Support",
+  "Managed IT": "IT Support",
+  "Computer support": "IT Support",
+  "Storage facility": "Self Storage",
+  "Storage unit": "Self Storage",
+  "Delivery service": "Courier",
+  "Courier service": "Courier",
+  "Travel agency": "Travel Agent",
+  "Tours": "Tour Operator",
+  "Local tours": "Tour Operator",
+  "Motor inn": "Motel",
+  "B&B": "Bed & Breakfast",
+  "Bed and breakfast": "Bed & Breakfast",
+  "Guest house": "Bed & Breakfast",
+  "Holiday home": "Holiday Accommodation",
+  "Airbnb host": "Holiday Accommodation",
+  "Short stay": "Holiday Accommodation",
+  "Security patrol": "Security Guard Service",
+  "Security guards": "Security Guard Service",
+  "Plant hire": "Equipment Hire",
+  "Tool hire": "Equipment Hire",
+  "Cobbler": "Shoe Repair",
+  "Key cutter": "Key Cutting",
+  "Jewellery repair": "Watch Repair",
+  "Watchmaker": "Watch Repair",
+  "Music studio": "Recording Studio",
+  "Rehearsal studio": "Recording Studio",
+  "Funeral home": "Funeral Director",
+  "Undertaker": "Funeral Director",
+  "Garden centre": "Plant Nursery",
+  "Nursery": "Plant Nursery",
+  "Pool supplies": "Pool Shop",
+  "RSL club": "Community Club",
+  "Sports club bar": "Community Club",
+  "Serviced office": "Coworking Space",
+  "Fire equipment": "Fire Protection Service",
+  "Fire extinguisher service": "Fire Protection Service",
+  "Kitchen showroom": "Kitchen & Bathroom Showroom",
+  "Bathroom showroom": "Kitchen & Bathroom Showroom",
+  "Outdoor power equipment": "Mower Shop",
+  "Mower repairs": "Mower Shop",
+  "Gold buyer": "Pawnbroker",
+  "Tobacconist shop": "Tobacconist",
+  "Electrical wholesaler": "Electrical Supplier"
+};
+window.TC_BUSINESS_CATEGORIES = {
+  "version": "v1.6.0",
+  "total": 456,
+  "groups": [
+    {
+      "id": "building",
+      "name": "Building & construction trades",
+      "icon": "hat",
+      "cover": "covers/builder.jpg",
+      "items": [
+        {
+          "name": "Air Conditioning",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Architect",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Asbestos Removal",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Awning Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Awning Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Balustrade Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Bathroom Renovator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Bathroom Tiler",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Bathtub Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Blind Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Blinds Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Bricklayer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Builder Renovation",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Building Designer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Building Inspector",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Cabinet Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Cabinet Maker",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Carpenter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Carpet Layer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Carpet Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Ceiling Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Ceiling Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Cladding Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Commercial Electrician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Commercial Plumber",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Composting Toilet Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Concrete Cutter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Concrete Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Concreter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Conservatory Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Cool Room Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Curtain Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Demolition",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Door Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Downpipe Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Drafter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Drainage Camera Inspection",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Drainer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Drywall Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Ducted Heating",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Electrician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Energy Assessor",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Epoxy Flooring",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "EV Charger Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Extension Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "External Rendering",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Facade Restorer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Fire Alarm Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Fireplace Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Floor Sander",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Flooring Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Flyscreen Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Flyscreen Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "French Drainer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Garage Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Garage Door Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gas Fitter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Glass Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Glazier",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Granite Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gutter Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Guttering",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gyprock Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Heat Pump Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Heating Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Heritage Restorer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Home Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Hot Water Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "House Extension Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "HVAC Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Insulation Assessor",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Insulation Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Internal Painting",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Joiner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Kit Home Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Kitchen Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Kitchen Renovator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Laminate Flooring",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Leadlight Restorer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Light Fitting Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Line Marker",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Marble Restoration",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Mason",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Metal Fabricator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Mezzanine Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Painter",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Partition Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Plaster Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Plasterer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Plumber",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pointing Specialist",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Rainwater Specialist",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Rainwater Tank Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Rangehood Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Renderer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Renovation Manager",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roller Door Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roof Inspector",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roof Plumber",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roof Restorer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roof Tiler",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Roofer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Safety Inspector",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Scaffolding",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Screen Door Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Septic Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shed Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shed Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shower Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shower Screen Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shutter Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Siding Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Skirting Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Skylight Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Solar Hot Water",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Solar Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Splashback Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Staircase Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Steel Fixer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Stonemason",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Storm Damage Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Stove Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Structural Engineer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Stud Finder / Wall Scan",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Sump Pump Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Surveyor",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Tile and Grout Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Tiler",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Timber Floor Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Town Planner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Underpinning",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Ventilation Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Vinyl Flooring",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Wall and Floor Tiler",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Wallpaper Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Wardrobe Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Water Pump Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Water Tanks",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Waterproofing",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Welder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Whirlybird Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Window Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Window Tinting",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Wood Floor Refinisher",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Workshop Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Wrought Iron Worker",
+          "aliases": [],
+          "existing": true
+        }
+      ]
+    },
+    {
+      "id": "home",
+      "name": "Home services & maintenance",
+      "icon": "wrench",
+      "cover": "covers/tradie.jpg",
+      "items": [
+        {
+          "name": "Antenna Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Appliance Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Appliance Repair",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "BBQ Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Colour Consultant",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Damp Specialist",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Ducted Vacuum Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Flood Restoration",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Furniture Assembler",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Handyman",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Home Automation",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Home Maintenance",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Home Stager",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "House Relocator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Intercom Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Interior Designer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Kitchen Designer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Lock Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Locksmith",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Lounge Upholsterer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Moisture Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Mould Remediation",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Oven Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pest Control",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Piano Mover",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Property Maintenance",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Removalist",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Rubbish Removal",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Security Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Security Screens",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Skip Bin Hire",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Smart Home Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Termite Inspector",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "TV Antenna Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Upholsterer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Water Damage Restoration",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Whitegoods Installer",
+          "aliases": [],
+          "existing": true
+        }
+      ]
+    },
+    {
+      "id": "outdoor",
+      "name": "Outdoor & garden",
+      "icon": "leaf",
+      "cover": "covers/landscaper.jpg",
+      "items": [
+        {
+          "name": "Arborist",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Bobcat Operator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Carport Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Deck Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Decking Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Driveway Contractor",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Earthmoving",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Excavator",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Fence Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Fencer",
+          "aliases": [
+            "Fencing contractor",
+            "Fencing"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Garden Designer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Garden Maintenance",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gardener",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gate Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gazebo Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Irrigation Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Jacuzzi Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Landscape Architect",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Landscaper",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Lawn Care",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Lawn Mowing",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Patio Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Paving Contractor",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pergola Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Playground Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pond Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pool Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pool Fencing",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pool Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Retaining Wall Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Retaining Wall Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Sauna Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Shade Sail Installer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Swimming Pool Repairer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Tree Lopper",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Verandah Builder",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Weed Control",
+          "aliases": [],
+          "existing": true
+        }
+      ]
+    },
+    {
+      "id": "cleaning",
+      "name": "Cleaning",
+      "icon": "sparkle",
+      "cover": "covers/cleaner.jpg",
+      "items": [
+        {
+          "name": "After Builders Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Brick Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Carpet Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Chimney Sweep",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Commercial Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "End of Lease Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Grout Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Gutter Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "High Pressure Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "House Washer",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Hydro Cleaning",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Office Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pool Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Pressure Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Site Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Solar Panel Cleaner",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Strip and Polish Floors",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Window Cleaner",
+          "aliases": [],
+          "existing": true
+        }
+      ]
+    },
+    {
+      "id": "beauty",
+      "name": "Hair & beauty",
+      "icon": "scissors",
+      "cover": "covers/beauty.jpg",
+      "items": [
+        {
+          "name": "Barber",
+          "aliases": [
+            "Barber shop",
+            "Men's barber",
+            "Barbershop",
+            "Haircut",
+            "Hair cuts",
+            "Men's hairdresser"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Beauty Salon",
+          "aliases": [
+            "Beautician",
+            "Beauty therapist"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Cosmetic Tattoo",
+          "aliases": [
+            "Microblading",
+            "Cosmetic tattoo studio"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Day Spa",
+          "aliases": [
+            "Spa",
+            "Day spa salon"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Hair Extension Specialist",
+          "aliases": [
+            "Hair extensions",
+            "Hair loss clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Hairdresser",
+          "aliases": [
+            "Hair salon",
+            "Hair dresser",
+            "Hair stylist",
+            "Salon"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Lash & Brow Bar",
+          "aliases": [
+            "Lash technician",
+            "Brow bar",
+            "Eyelash salon"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Makeup Artist",
+          "aliases": [
+            "Make-up artist",
+            "MUA"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Nail Salon",
+          "aliases": [
+            "Nail technician",
+            "Manicurist"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Piercing Studio",
+          "aliases": [
+            "Body piercing",
+            "Ear piercing"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Skin Clinic",
+          "aliases": [
+            "Skin care clinic",
+            "Dermal clinic",
+            "Facial salon"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tanning Salon",
+          "aliases": [
+            "Spray tan",
+            "Solarium"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tattoo Studio",
+          "aliases": [
+            "Tattoo artist",
+            "Tattooist"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Waxing & Laser Clinic",
+          "aliases": [
+            "Laser hair removal",
+            "Waxing salon",
+            "Laser clinic"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "health",
+      "name": "Health & wellness",
+      "icon": "plus",
+      "cover": "covers/health.jpg",
+      "items": [
+        {
+          "name": "Acupuncturist",
+          "aliases": [
+            "Acupuncture clinic",
+            "Chinese medicine clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Allied Health Clinic",
+          "aliases": [
+            "Allied health"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Audiologist",
+          "aliases": [
+            "Hearing clinic",
+            "Hearing aids"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Chiropractor",
+          "aliases": [
+            "Chiropractic clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Counsellor",
+          "aliases": [
+            "Psychotherapist",
+            "Counselling"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dentist",
+          "aliases": [
+            "Dental clinic",
+            "Dental surgery"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Denture Clinic",
+          "aliases": [
+            "Denturist",
+            "Dental prosthetist"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dietitian",
+          "aliases": [
+            "Nutritionist",
+            "Dietitian & nutritionist"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Disability & NDIS Support",
+          "aliases": [
+            "NDIS provider",
+            "Disability support"
+          ],
+          "existing": false
+        },
+        {
+          "name": "GP Clinic",
+          "aliases": [
+            "Medical clinic",
+            "Doctor",
+            "General practitioner",
+            "Bulk billing clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Health Coach",
+          "aliases": [
+            "Weight loss coach",
+            "Wellness coach"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Home Care Provider",
+          "aliases": [
+            "In-home care",
+            "Home care",
+            "Aged care in-home support"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Hypnotherapist",
+          "aliases": [
+            "Hypnotherapy"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Massage Therapist",
+          "aliases": [
+            "Remedial massage",
+            "Massage"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Medical Imaging Clinic",
+          "aliases": [
+            "Ultrasound clinic",
+            "X-ray clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Mobility & Medical Supplies",
+          "aliases": [
+            "Medical supply store",
+            "Mobility shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Naturopath",
+          "aliases": [
+            "Naturopathic clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Occupational Therapist",
+          "aliases": [
+            "OT clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Optometrist",
+          "aliases": [
+            "Optician",
+            "Eye clinic",
+            "Glasses shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Orthodontist",
+          "aliases": [
+            "Braces clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Osteopath",
+          "aliases": [
+            "Osteopathy clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pathology Collection Centre",
+          "aliases": [
+            "Blood test centre",
+            "Pathology"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pharmacy",
+          "aliases": [
+            "Chemist",
+            "Community pharmacy"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Physiotherapist",
+          "aliases": [
+            "Physio",
+            "Physiotherapy clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Podiatrist",
+          "aliases": [
+            "Podiatry clinic",
+            "Foot clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Psychologist",
+          "aliases": [
+            "Psychology clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Speech Pathologist",
+          "aliases": [
+            "Speech therapist",
+            "Speech therapy"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Wellness Centre",
+          "aliases": [
+            "Wellness clinic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Women's Health Clinic",
+          "aliases": [
+            "Fertility clinic",
+            "Women's health"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "fitness",
+      "name": "Fitness & sport",
+      "icon": "dumbbell",
+      "cover": "covers/fitness.jpg",
+      "items": [
+        {
+          "name": "Boxing Gym",
+          "aliases": [
+            "Kickboxing gym",
+            "Boxing studio"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Climbing Gym",
+          "aliases": [
+            "Indoor climbing",
+            "Bouldering gym"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Cycle Studio",
+          "aliases": [
+            "Spin class",
+            "Indoor cycling"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Golf Coach",
+          "aliases": [
+            "Golf lessons",
+            "Golf pro"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Group Fitness Studio",
+          "aliases": [
+            "F45",
+            "Bootcamp",
+            "HIIT studio"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Gym",
+          "aliases": [
+            "Fitness centre",
+            "Health club"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Martial Arts School",
+          "aliases": [
+            "Karate school",
+            "Taekwondo school",
+            "Jiu-jitsu",
+            "Kung fu school"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Personal Trainer",
+          "aliases": [
+            "PT",
+            "Mobile personal trainer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pilates Studio",
+          "aliases": [
+            "Reformer pilates",
+            "Pilates"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Sports Coach",
+          "aliases": [
+            "Sports club coach"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Swim School",
+          "aliases": [
+            "Swimming lessons",
+            "Swim teacher"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tennis Coach",
+          "aliases": [
+            "Tennis club"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Yoga Studio",
+          "aliases": [
+            "Yoga teacher",
+            "Yoga classes"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "food",
+      "name": "Food & drink",
+      "icon": "utensils",
+      "cover": "covers/cafe.jpg",
+      "items": [
+        {
+          "name": "Bakery",
+          "aliases": [
+            "Bread shop",
+            "Patisserie"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bar & Pub",
+          "aliases": [
+            "Pub",
+            "Bar",
+            "Tavern",
+            "Wine bar"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bottle Shop",
+          "aliases": [
+            "Liquor store",
+            "Bottle-o",
+            "Dan Murphy's style liquor"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Brewery",
+          "aliases": [
+            "Microbrewery",
+            "Distillery",
+            "Brewpub"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bubble Tea Shop",
+          "aliases": [
+            "Boba tea",
+            "Bubble tea"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Burger Shop",
+          "aliases": [
+            "Burger restaurant",
+            "Burger bar"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Butcher",
+          "aliases": [
+            "Butcher shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Cafe",
+          "aliases": [
+            "Café",
+            "Coffee shop",
+            "Coffee house"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Cake Maker",
+          "aliases": [
+            "Cake shop",
+            "Wedding cakes",
+            "Cake designer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Caterer",
+          "aliases": [
+            "Catering"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Coffee Roaster",
+          "aliases": [
+            "Roastery"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Delicatessen",
+          "aliases": [
+            "Deli"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dessert Shop",
+          "aliases": [
+            "Dessert bar",
+            "Gelato shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Fish & Chips",
+          "aliases": [
+            "Fish and chips",
+            "Fish & chip shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Fishmonger",
+          "aliases": [
+            "Seafood shop",
+            "Seafood market"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Food Truck",
+          "aliases": [
+            "Food van",
+            "Mobile food"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Ice Cream Shop",
+          "aliases": [
+            "Ice creamery",
+            "Gelato"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Juice Bar",
+          "aliases": [
+            "Smoothie bar"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Kebab Shop",
+          "aliases": [
+            "Kebab",
+            "Halal snack pack shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pizza Shop",
+          "aliases": [
+            "Pizzeria",
+            "Pizza restaurant"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Restaurant",
+          "aliases": [
+            "Diner",
+            "Eatery",
+            "Chinese restaurant",
+            "Thai restaurant",
+            "Indian restaurant",
+            "Japanese restaurant",
+            "Italian restaurant",
+            "Vietnamese restaurant",
+            "Korean restaurant",
+            "Mexican restaurant",
+            "Greek restaurant",
+            "Seafood restaurant",
+            "Steakhouse",
+            "Vegetarian restaurant",
+            "Vegan restaurant"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Sandwich Bar",
+          "aliases": [
+            "Lunch bar",
+            "Sandwich shop",
+            "Salad bar"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Takeaway",
+          "aliases": [
+            "Take away",
+            "Fast food",
+            "Chicken shop"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "retail",
+      "name": "Shops & retail",
+      "icon": "bag",
+      "cover": "covers/retail.jpg",
+      "items": [
+        {
+          "name": "Baby & Kids Store",
+          "aliases": [
+            "Baby shop",
+            "Kids store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Beauty Supply Store",
+          "aliases": [
+            "Cosmetics store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bike Shop",
+          "aliases": [
+            "Bicycle shop",
+            "Cycle shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bookshop",
+          "aliases": [
+            "Bookstore",
+            "Book shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Clothing Store",
+          "aliases": [
+            "Fashion boutique",
+            "Fashion store",
+            "Clothes shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Convenience Store",
+          "aliases": [
+            "Milk bar",
+            "Deli store",
+            "Servo shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Electrical Supplier",
+          "aliases": [
+            "Electrical wholesaler"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Electronics Store",
+          "aliases": [
+            "Electrical retail",
+            "Computer store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Flooring Store",
+          "aliases": [
+            "Carpet store",
+            "Rug store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Florist",
+          "aliases": [
+            "Flower shop",
+            "Florists & gifts"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Furniture Store",
+          "aliases": [
+            "Bedding store",
+            "Mattress store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "General Store",
+          "aliases": [
+            "Store",
+            "Shop",
+            "Local store",
+            "Corner store",
+            "Variety store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Gift Shop",
+          "aliases": [
+            "Giftware",
+            "Souvenir shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Grocer",
+          "aliases": [
+            "Greengrocer",
+            "Fruit and veg",
+            "Independent supermarket",
+            "Supermarket"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Hardware Store",
+          "aliases": [
+            "Hardware",
+            "Timber and hardware"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Health Food Store",
+          "aliases": [
+            "Supplement store",
+            "Vitamin shop",
+            "Health food"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Homewares Store",
+          "aliases": [
+            "Kitchenware store",
+            "Homewares"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Jewellery Store",
+          "aliases": [
+            "Jeweller",
+            "Jewelry store",
+            "Jewellery"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Kitchen & Bathroom Showroom",
+          "aliases": [
+            "Kitchen showroom",
+            "Bathroom showroom"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Lighting Store",
+          "aliases": [
+            "Lighting shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Mower Shop",
+          "aliases": [
+            "Outdoor power equipment",
+            "Mower repairs"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Musical Instrument Store",
+          "aliases": [
+            "Music shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Newsagency",
+          "aliases": [
+            "Newsagent"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Office Supplies Store",
+          "aliases": [
+            "Stationery store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Op Shop",
+          "aliases": [
+            "Opportunity shop",
+            "Second-hand store",
+            "Thrift shop",
+            "Charity shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Paint Store",
+          "aliases": [
+            "Paint shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pawnbroker",
+          "aliases": [
+            "Gold buyer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Phone & Accessories Store",
+          "aliases": [
+            "Mobile phone store",
+            "Phone shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Picture Framer",
+          "aliases": [
+            "Picture framing"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Plant Nursery",
+          "aliases": [
+            "Garden centre",
+            "Nursery"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pool Shop",
+          "aliases": [
+            "Pool supplies"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Shoe Shop",
+          "aliases": [
+            "Footwear store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Sporting Goods Store",
+          "aliases": [
+            "Outdoor store",
+            "Camping store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tobacconist",
+          "aliases": [
+            "Tobacconist shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Toy & Hobby Shop",
+          "aliases": [
+            "Toy store",
+            "Hobby shop",
+            "Craft shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Workwear Store",
+          "aliases": [
+            "Safety equipment store",
+            "Work boots shop"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "auto",
+      "name": "Automotive & transport",
+      "icon": "car",
+      "cover": "covers/auto.jpg",
+      "items": [
+        {
+          "name": "Auto Electrician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Auto Parts Store",
+          "aliases": [
+            "Auto parts",
+            "Spare parts"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Auto Wrecker",
+          "aliases": [
+            "Car wrecker",
+            "Cash for cars"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Boat Repairer",
+          "aliases": [
+            "Marine mechanic",
+            "Boat builder"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Car Battery Shop",
+          "aliases": [
+            "Battery store"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Car Dealer",
+          "aliases": [
+            "Used car dealer",
+            "Car yard",
+            "Motor dealer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Car Detailing",
+          "aliases": [
+            "Car detailer",
+            "Auto detailing"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Car Wash",
+          "aliases": [
+            "Carwash"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Caravan Repairer",
+          "aliases": [
+            "Caravan service",
+            "Trailer repairer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Chauffeur",
+          "aliases": [
+            "Airport transfer",
+            "Limousine",
+            "Hire car"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Exhaust & Brake Specialist",
+          "aliases": [
+            "Brake shop",
+            "Exhaust specialist",
+            "Muffler shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Mechanic",
+          "aliases": [
+            "Car mechanic",
+            "Auto mechanic",
+            "Workshop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Mobile Mechanic",
+          "aliases": [
+            "Mobile car mechanic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Motorcycle Dealer",
+          "aliases": [
+            "Motorbike shop",
+            "Motorcycle shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Motorcycle Mechanic",
+          "aliases": [
+            "Motorbike repair",
+            "Motorcycle repair"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Panel Beater",
+          "aliases": [
+            "Smash repair",
+            "Panel beating",
+            "Body shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Roadworthy Inspection",
+          "aliases": [
+            "Vehicle inspection",
+            "Safety check",
+            "Roadworthy"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Towing",
+          "aliases": [
+            "Tow truck",
+            "Towing service"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Trailer Hire",
+          "aliases": [
+            "Trailer rental"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Truck Mechanic",
+          "aliases": [
+            "Diesel mechanic",
+            "Truck and diesel mechanic"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tyre Shop",
+          "aliases": [
+            "Tyres",
+            "Tire shop",
+            "Tyre dealer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Vehicle Wrap",
+          "aliases": [
+            "Car wrapping",
+            "Vehicle signage"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Windscreen Repair",
+          "aliases": [
+            "Auto glass",
+            "Windscreen replacement"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "pets",
+      "name": "Pets & animals",
+      "icon": "paw",
+      "cover": "covers/pets.jpg",
+      "items": [
+        {
+          "name": "Dog Daycare",
+          "aliases": [
+            "Doggy daycare",
+            "Dog day care"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dog Groomer",
+          "aliases": [
+            "Pet groomer",
+            "Dog grooming"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dog Trainer",
+          "aliases": [
+            "Puppy school",
+            "Dog training"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dog Walker",
+          "aliases": [
+            "Dog walking"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pet Boarding",
+          "aliases": [
+            "Kennel",
+            "Cattery",
+            "Pet boarding & kennels"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pet Shop",
+          "aliases": [
+            "Pet store",
+            "Pet supplies"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Pet Sitter",
+          "aliases": [
+            "Pet sitting"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Vet",
+          "aliases": [
+            "Veterinary clinic",
+            "Veterinarian",
+            "Animal hospital"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "kids",
+      "name": "Kids, education & lessons",
+      "icon": "book",
+      "cover": "covers/kids.jpg",
+      "items": [
+        {
+          "name": "After School Care",
+          "aliases": [
+            "OSHC",
+            "Holiday care"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Art School",
+          "aliases": [
+            "Art classes",
+            "Art teacher"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Childcare Centre",
+          "aliases": [
+            "Day care",
+            "Child care",
+            "Long day care"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dance School",
+          "aliases": [
+            "Dance studio",
+            "Dance lessons"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Driving School",
+          "aliases": [
+            "Driving instructor",
+            "Learn to drive"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Family Day Care",
+          "aliases": [
+            "Family daycare"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Language School",
+          "aliases": [
+            "Language classes",
+            "English tutor"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Music Teacher",
+          "aliases": [
+            "Music school",
+            "Piano teacher",
+            "Music lessons"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Preschool",
+          "aliases": [
+            "Kindergarten",
+            "Early learning centre"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tutor",
+          "aliases": [
+            "Tutoring",
+            "Private tutor",
+            "Tutoring centre"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "name": "Events, creative & photography",
+      "icon": "camera",
+      "cover": "covers/events.jpg",
+      "items": [
+        {
+          "name": "Bridal Shop",
+          "aliases": [
+            "Bridal wear",
+            "Formal wear",
+            "Wedding dress shop"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Celebrant",
+          "aliases": [
+            "Marriage celebrant",
+            "Funeral celebrant"
+          ],
+          "existing": false
+        },
+        {
+          "name": "DJ",
+          "aliases": [
+            "Mobile DJ",
+            "Wedding DJ"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Event Planner",
+          "aliases": [
+            "Event manager",
+            "Event organiser"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Function Venue",
+          "aliases": [
+            "Wedding venue",
+            "Event venue",
+            "Reception centre"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Live Musician",
+          "aliases": [
+            "Wedding band",
+            "Entertainer",
+            "Singer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Party Hire",
+          "aliases": [
+            "Party supplies",
+            "Event hire"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Photo Booth Hire",
+          "aliases": [
+            "Photo booth"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Photographer",
+          "aliases": [
+            "Photography studio",
+            "Portrait photographer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Videographer",
+          "aliases": [
+            "Video production",
+            "Videography"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Wedding Planner",
+          "aliases": [
+            "Wedding coordinator"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "professional",
+      "name": "Professional & business services",
+      "icon": "briefcase",
+      "cover": "covers/professional.jpg",
+      "items": [
+        {
+          "name": "Accountant",
+          "aliases": [
+            "Accounting firm",
+            "Tax accountant"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Bookkeeper",
+          "aliases": [
+            "Bookkeeping"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Business Consultant",
+          "aliases": [
+            "Business coach",
+            "Consultant"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Finance Broker",
+          "aliases": [
+            "Commercial finance broker"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Financial Planner",
+          "aliases": [
+            "Financial adviser",
+            "Wealth adviser"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Graphic Designer",
+          "aliases": [
+            "Graphic design"
+          ],
+          "existing": false
+        },
+        {
+          "name": "HR Consultant",
+          "aliases": [
+            "Human resources"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Insurance Broker",
+          "aliases": [
+            "Insurance agency",
+            "Insurance adviser"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Lawyer",
+          "aliases": [
+            "Solicitor",
+            "Law firm",
+            "Legal services",
+            "Attorney"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Marketing Agency",
+          "aliases": [
+            "Digital marketing",
+            "SEO agency",
+            "Advertising agency"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Migration Agent",
+          "aliases": [
+            "Visa agent",
+            "Migration lawyer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Mortgage Broker",
+          "aliases": [
+            "Home loan broker"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Notary",
+          "aliases": [
+            "Notary public"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Recruitment Agency",
+          "aliases": [
+            "Labour hire",
+            "Recruiter"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tax Agent",
+          "aliases": [
+            "Tax return service",
+            "BAS agent"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Web Designer",
+          "aliases": [
+            "Web developer",
+            "Website designer"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "property",
+      "name": "Property & real estate",
+      "icon": "house",
+      "cover": "covers/property.jpg",
+      "items": [
+        {
+          "name": "Buyer's Agent",
+          "aliases": [
+            "Buyers agent",
+            "Property buyer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Commercial Real Estate Agent",
+          "aliases": [
+            "Commercial agent"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Conveyancer",
+          "aliases": [
+            "Conveyancing",
+            "Settlement agent"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Property Manager",
+          "aliases": [
+            "Property management",
+            "Leasing agent"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Property Valuer",
+          "aliases": [
+            "Valuer"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Real Estate Agent",
+          "aliases": [
+            "Real estate",
+            "Sales agent",
+            "Realtor"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Strata Manager",
+          "aliases": [
+            "Strata management",
+            "Body corporate manager"
+          ],
+          "existing": false
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Other local services",
+      "icon": "pin",
+      "cover": "covers/tradie.jpg",
+      "items": [
+        {
+          "name": "Bed & Breakfast",
+          "aliases": [
+            "B&B",
+            "Bed and breakfast",
+            "Guest house"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Community Club",
+          "aliases": [
+            "RSL club",
+            "Sports club bar"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Computer Repair",
+          "aliases": [
+            "Computer repairs",
+            "Laptop repair"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Courier",
+          "aliases": [
+            "Delivery service",
+            "Courier service"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Coworking Space",
+          "aliases": [
+            "Serviced office"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Dry Cleaner",
+          "aliases": [
+            "Dry cleaning"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Equipment Hire",
+          "aliases": [
+            "Plant hire",
+            "Tool hire"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Fire Protection Service",
+          "aliases": [
+            "Fire equipment",
+            "Fire extinguisher service"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Funeral Director",
+          "aliases": [
+            "Funeral home",
+            "Undertaker"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Holiday Accommodation",
+          "aliases": [
+            "Holiday home",
+            "Airbnb host",
+            "Short stay"
+          ],
+          "existing": false
+        },
+        {
+          "name": "IT Support",
+          "aliases": [
+            "IT services",
+            "Managed IT",
+            "Computer support"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Key Cutting",
+          "aliases": [
+            "Key cutter"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Laundry",
+          "aliases": [
+            "Laundromat",
+            "Laundry service"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Motel",
+          "aliases": [
+            "Motor inn"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Phone Repair",
+          "aliases": [
+            "Mobile phone repair",
+            "Phone repairs",
+            "Screen repair"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Phone Technician",
+          "aliases": [],
+          "existing": true
+        },
+        {
+          "name": "Printer",
+          "aliases": [
+            "Print shop",
+            "Copy and print",
+            "Digital printing"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Recording Studio",
+          "aliases": [
+            "Music studio",
+            "Rehearsal studio"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Security Guard Service",
+          "aliases": [
+            "Security patrol",
+            "Security guards"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Self Storage",
+          "aliases": [
+            "Storage facility",
+            "Storage unit"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Shoe Repair",
+          "aliases": [
+            "Cobbler"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Signwriter",
+          "aliases": [
+            "Signage",
+            "Sign writer",
+            "Sign maker"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tailor",
+          "aliases": [
+            "Alterations",
+            "Clothing alterations",
+            "Dressmaker"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Tour Operator",
+          "aliases": [
+            "Tours",
+            "Local tours"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Travel Agent",
+          "aliases": [
+            "Travel agency"
+          ],
+          "existing": false
+        },
+        {
+          "name": "Watch Repair",
+          "aliases": [
+            "Jewellery repair",
+            "Watchmaker"
+          ],
+          "existing": false
+        }
+      ]
+    }
+  ]
+};
 
 </script>
   <script>
@@ -4454,6 +9149,26 @@ window.TC_TRADES = [
       facebook: "https://www.facebook.com/demo.patellocksmiths",
       page: "https://www.facebook.com/demo.patellocksmiths.biz",
       color: "steel"
+    },
+    {
+      id: "noah", first: "Noah", last: "Barrett",
+      business: "Barrett Barbers", trade: "Barber",
+      regions: ["fremantle", "south"],
+      bio: "A small Fremantle barber shop for classic cuts, fades and a proper shave. Walk-ins and bookings welcome.",
+      phone: "0412 000 113",
+      facebook: "https://www.facebook.com/demo.barrettbarbers",
+      page: "https://www.facebook.com/demo.barrettbarbers.biz",
+      links: {
+        website: "https://www.barrettbarbers.example.au",
+        facebook: "https://www.facebook.com/demo.barrettbarbers.biz",
+        instagram: "https://www.instagram.com/demo.barrettbarbers",
+        linkedin: "",
+        tiktok: "",
+        youtube: "",
+        google: "",
+        other: ""
+      },
+      color: "rust"
     }
   ];
 
@@ -4467,8 +9182,9 @@ window.TC_TRADES = [
     { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
     { id: "create-profile", title: "Sign up — business and areas", sub: "Business details, trade, regions, then send for approval" },
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
-    { id: "create-regions", title: "Choose regions", sub: "All areas in one list, plus join all Perth metro" },
-    { id: "create-regions-all", title: "Choose regions — all metro", sub: "Join all Perth metro turned on" },
+    { id: "choose-areas", title: "Choose areas — state", sub: "State, then metro and regional accordions" },
+    { id: "create-regions", title: "Choose areas — WA regions", sub: "Metro accordion open, regional collapsed" },
+    { id: "create-regions-all", title: "Choose areas — all Perth metro", sub: "WA metro with Select all on" },
     { id: "pending", title: "Awaiting approval", sub: "Waiting for a super admin, with a demo approve button" },
     { id: "complete-profile", title: "Complete your profile", sub: "After approval: fill or skip the extra profile details" },
     { id: "home", title: "Home — member dashboard", sub: "Greeting, stats, things that need you, quick actions" },
@@ -4494,7 +9210,7 @@ window.TC_TRADES = [
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
-    { id: "my-regions", title: "Your areas", sub: "All of your areas in one list" },
+    { id: "my-regions", title: "Your areas", sub: "State, then metro or regional, then regions" },
     { id: "my-regions-all", title: "Your areas — all metro", sub: "Join all Perth metro turned on" },
     { id: "ai-assistant", title: "AI assistant", sub: "Connect Grok, ChatGPT or Claude" },
     { id: "ai-voice", title: "AI voice command", sub: "Hands-free mock conversation" },
@@ -4528,7 +9244,8 @@ window.TC_TRADES = [
     fbNext: "create-profile",
     relFilter: "all",
     googleConnected: true,
-    regionBackup: {}
+    regionBackup: {},
+    areaPick: null
   };
 
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -4539,9 +9256,313 @@ window.TC_TRADES = [
   const toastEl = $("#toast");
 
   function regionName(id) {
-    const r = REGIONS.find(function (x) { return x.id === id; });
-    return r ? r.name : id;
+    var hit = auRegionById(id);
+    return hit ? hit.region.name : id;
   }
+
+  function auStates() {
+    return (window.TC_LOCATIONS && TC_LOCATIONS.states) || [];
+  }
+  function auState(id) {
+    if (!id) return null;
+    var key = String(id).toLowerCase();
+    return auStates().find(function (s) { return s.id === key || s.abbrev.toLowerCase() === key; }) || null;
+  }
+  function auRegionById(id) {
+    var i, j, s, list = auStates();
+    for (i = 0; i < list.length; i++) {
+      s = list[i];
+      for (j = 0; j < s.regions.length; j++) {
+        if (s.regions[j].id === id) return { region: s.regions[j], state: s };
+      }
+    }
+    var p = REGIONS.find(function (x) { return x.id === id; });
+    if (p) {
+      return { region: { id: p.id, name: p.name, type: "metro" }, state: auState("wa") || { id: "wa", name: "Western Australia", abbrev: "WA", regions: [] } };
+    }
+    return null;
+  }
+  function formatRegionPill(id) {
+    var hit = auRegionById(id);
+    if (!hit) return id;
+    if (hit.state && hit.state.abbrev !== "WA") return hit.region.name + " · " + hit.state.abbrev;
+    return hit.region.name;
+  }
+  function capitalLabel(st) {
+    var map = {
+      wa: "Perth",
+      nsw: "Sydney",
+      vic: "Melbourne",
+      qld: "Brisbane, the Gold Coast and the Sunshine Coast",
+      sa: "Adelaide",
+      tas: "Hobart",
+      nt: "Darwin",
+      act: "Canberra"
+    };
+    return (st && map[st.id]) || (st ? st.name : "");
+  }
+  function capitalShort(st) {
+    var map = { wa: "Perth", nsw: "Sydney", vic: "Melbourne", qld: "SEQ", sa: "Adelaide", tas: "Hobart", nt: "Darwin", act: "Canberra" };
+    return (st && map[st.id]) || (st ? st.name : "");
+  }
+  function kindCount(st, kind) {
+    return (st.regions || []).filter(function (r) { return r.type === kind; }).length;
+  }
+  function selectAllLabel(st, kind) {
+    if (!st) return "Select all";
+    if (kind === "metro") return "Select all " + capitalShort(st) + " metro";
+    return "Select all regional " + st.abbrev;
+  }
+  function kindCardTitle(st, kind) {
+    if (kind === "metro") return "Metro: " + capitalLabel(st) + " city areas";
+    return "Regional: country " + st.abbrev;
+  }
+  function allPerthMetroIds() {
+    return REGIONS.map(function (r) { return r.id; });
+  }
+  function currentListRegions(kind) {
+    var pick = state.areaPick || {};
+    var st = auState(pick.stateId || "wa");
+    kind = kind || pick.kind || "metro";
+    if (!st) return [];
+    return (st.regions || []).filter(function (r) { return r.type === kind; });
+  }
+  function currentListIds(kind) {
+    return currentListRegions(kind).map(function (r) { return r.id; });
+  }
+  function isAccOpen(kind) {
+    var pick = state.areaPick || {};
+    if (pick.open && typeof pick.open[kind] === "boolean") return pick.open[kind];
+    return kind === "metro";
+  }
+  function ensureAccOpen(pick) {
+    pick = pick || ensureAreaPick();
+    if (!pick.open) pick.open = { metro: true, regional: false };
+    return pick.open;
+  }
+  function groupSelectedAreas(ids) {
+    var groups = [];
+    var index = {};
+    (ids || []).forEach(function (id) {
+      var hit = auRegionById(id);
+      if (!hit) return;
+      var key = hit.state.id + ":" + hit.region.type;
+      if (!index[key]) {
+        index[key] = { state: hit.state, kind: hit.region.type, regions: [] };
+        groups.push(index[key]);
+      }
+      index[key].regions.push(hit.region);
+    });
+    return groups;
+  }
+  function areasSummaryLines(ids) {
+    return groupSelectedAreas(ids).map(function (g) {
+      var kindLab = g.kind === "metro" ? "Metro" : "Regional";
+      var allIds = g.state.regions.filter(function (r) { return r.type === g.kind; }).map(function (r) { return r.id; });
+      var bit;
+      if (allIds.length && allIds.every(function (id) { return (ids || []).indexOf(id) !== -1; })) {
+        bit = g.kind === "metro" ? ("All " + capitalShort(g.state) + " metro") : ("All regional " + g.state.abbrev);
+      } else {
+        bit = g.regions.map(function (r) { return r.name; }).join(", ");
+      }
+      return g.state.abbrev + " · " + kindLab + " · " + bit;
+    });
+  }
+  function areasSummaryHTML(ids) {
+    var lines = areasSummaryLines(ids);
+    if (!lines.length) return "";
+    return '<div class="area-lines">' + lines.map(function (line) {
+      return '<div class="area-line">' + escapeText(line) + "</div>";
+    }).join("") + "</div>";
+  }
+  function wizardScreen() {
+    var prefix = (state.areaPick && state.areaPick.prefix) || "create";
+    if (prefix === "me-regions") return state.screen === "my-regions-all" ? "my-regions-all" : "my-regions";
+    if (state.screen === "create-regions-all") return "create-regions-all";
+    if (state.screen === "create-regions") return "create-regions";
+    return "choose-areas";
+  }
+  function ensureAreaPick(prefix, returnTo) {
+    if (!state.areaPick) {
+      state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix || "create", returnTo: returnTo || "create-profile" };
+    }
+    if (prefix) state.areaPick.prefix = prefix;
+    if (returnTo) state.areaPick.returnTo = returnTo;
+    return state.areaPick;
+  }
+  function openAreaWizard(prefix, returnTo) {
+    state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix, returnTo: returnTo };
+    go(prefix === "me-regions" ? "my-regions" : "choose-areas");
+  }
+  function rememberListManual(prefix, ids, kind) {
+    var pick = state.areaPick || {};
+    rememberManual(prefix + ":" + (pick.stateId || "") + ":" + (kind || pick.kind || ""), ids);
+  }
+  function restoreListManual(prefix, fallback, kind) {
+    var pick = state.areaPick || {};
+    var key = prefix + ":" + (pick.stateId || "") + ":" + (kind || pick.kind || "");
+    var bak = state.regionBackup && state.regionBackup[key];
+    return (bak && bak.length) ? bak.slice() : (fallback || []).slice();
+  }
+  function areasBreadcrumb() {
+    var pick = state.areaPick || {};
+    var st = auState(pick.stateId);
+    var html = '<div class="crumb">';
+    if (pick.step === "state") {
+      html += '<span class="now">State</span>';
+    } else {
+      html += '<button type="button" data-area-step="state">' + escapeText(st ? st.abbrev : "State") + "</button>";
+    }
+    html += "</div>";
+    return html;
+  }
+  function areaStepTitle(step) {
+    if (step === "list" || step === "kind") return "Choose your regions";
+    return "Choose your state";
+  }
+  function areaStepHero(step) {
+    if (step === "list" || step === "kind") return '<div class="auth-hero"><h2>Choose your regions</h2></div>';
+    return '<div class="auth-hero"><h2>Choose your state or territory</h2><p>Western Australia is highlighted because this circle began in Perth — tap any state.</p></div>';
+  }
+  function areaGoogleG() {
+    return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
+  }
+  function areaTipHTML(prefix) {
+    var ids = getPickedRegions(prefix);
+    var groups = groupSelectedAreas(ids);
+    var stateIds = {};
+    groups.forEach(function (g) { stateIds[g.state.id] = true; });
+    var tip = '<div class="area-tip"><span class="ic" aria-hidden="true">' + areaGoogleG() + "</span><p>Only pick the areas you really work in. Google rewards reviews from nearby customers in local search, so picking areas outside your working zone can hurt your reputation and rankings.</p></div>";
+    var nudge = (ids.length >= 6 || Object.keys(stateIds).length >= 2)
+      ? '<div class="area-nudge">That’s a lot of areas. Are you sure you work in all of them?</div>'
+      : "";
+    return tip + nudge;
+  }
+  function alreadyChosenHTML(prefix) {
+    var ids = getPickedRegions(prefix);
+    if (!ids.length) return "";
+    return '<div class="areas-card" style="margin-bottom:14px"><div class="areas-card-top"><div class="areas-card-h">Already chosen</div></div>' +
+      areasSummaryHTML(ids) + "</div>";
+  }
+  function stateStepHTML(prefix) {
+    var pick = ensureAreaPick(prefix);
+    var selected = pick.stateId || "wa";
+    var rows = auStates().map(function (st) {
+      var metro = kindCount(st, "metro");
+      var regional = kindCount(st, "regional");
+      var sub = regional ? (metro + " metro · " + regional + " regional") : (metro + " metro areas");
+      var cls = "state-row";
+      if (st.id === selected) cls += " on";
+      else if (st.id === "wa") cls += " hinted";
+      return '<button type="button" class="' + cls + '" data-area-state="' + st.id + '">' +
+        '<span class="abbr">' + escapeText(st.abbrev) + "</span>" +
+        '<span><div class="nm">' + escapeText(st.name) + '</div><div class="sub">' + escapeText(sub) + "</div></span>" +
+        '<span class="chev">' + icon("chev") + "</span></button>";
+    }).join("");
+    return alreadyChosenHTML(prefix) + '<div class="state-list">' + rows + "</div>" +
+      '<button type="button" class="btn btn-primary" style="margin-top:16px" data-action="area-next">Continue</button>';
+  }
+  function kindStepHTML(prefix) {
+    /* v1.6.2: Metro/Regional is an accordion on the regions screen, not a step. */
+    return regionListPicker(getPickedRegions(prefix), prefix);
+  }
+  function kindSectionHTML(st, kind, selectedIds, prefix) {
+    var list = (st.regions || []).filter(function (r) { return r.type === kind; });
+    if (!list.length) return "";
+    var open = isAccOpen(kind);
+    var n = list.length;
+    var title = kindCardTitle(st, kind) + " (" + n + ")";
+    var ids = list.map(function (r) { return r.id; });
+    var allOn = ids.length && ids.every(function (id) { return selectedIds.indexOf(id) !== -1; });
+    var nSel = ids.filter(function (id) { return selectedIds.indexOf(id) !== -1; }).length;
+    var label = selectAllLabel(st, kind);
+    var subOn = allOn ? "Every area in this list is selected. Turn this off to go back to your own picks." : "Select every area in this list at once.";
+    var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-kind="' + kind + '" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
+      '<span class="join-all-txt"><strong>' + escapeText(label) + '</strong><span class="join-all-sub">' + subOn +
+      "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
+    var sug = {};
+    REGIONS.forEach(function (r) { if (r.suggested) sug[r.id] = true; });
+    var grid = '<div class="region-sec"><div class="region-grid">' + list.map(function (r) {
+      var on = selectedIds.indexOf(r.id) !== -1;
+      return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
+        "<span><span class=\"n\">" + escapeText(r.name) + "</span>" + (sug[r.id] ? '<span class="sug">Suggested</span>' : "") + "</span>" +
+        '<span class="tick">' + icon("check") + "</span></button>";
+    }).join("") + "</div></div>";
+    var sel = nSel ? (nSel + " selected") : "";
+    return '<div class="acc ' + kind + (open ? " open" : "") + '">' +
+      '<button type="button" class="acc-h ' + kind + '" data-area-acc="' + kind + '" aria-expanded="' + (open ? "true" : "false") + '">' +
+        '<span class="acc-lab">' + (kind === "metro" ? "Metro" : "Regional") + "</span>" +
+        '<span><span class="nm">' + escapeText(title) + "</span>" + (sel ? '<span class="acc-sel">' + sel + "</span>" : "") + "</span>" +
+        '<span class="acc-chev">' + icon("chev") + "</span></button>" +
+      (open ? ('<div class="acc-body">' + toggle + grid + "</div>") : "") +
+      "</div>";
+  }
+  function regionListPicker(selectedIds, prefix) {
+    selectedIds = selectedIds || [];
+    var pick = ensureAreaPick(prefix);
+    if (pick.step === "kind") pick.step = "list";
+    ensureAccOpen(pick);
+    var st = auState(pick.stateId || "wa");
+    if (!st) return stateStepHTML(prefix);
+    var kinds = ["metro", "regional"].filter(function (k) { return kindCount(st, k); });
+    var sections = kinds.map(function (k) { return kindSectionHTML(st, k, selectedIds, prefix); }).join("");
+    var addMore = '<button type="button" class="btn btn-ghost ink" style="margin-top:8px" data-area-step="state">Add areas in another state</button>';
+    return areaTipHTML(prefix) + alreadyChosenHTML(prefix) + sections + addMore;
+  }
+  function areaWizardHTML(prefix) {
+    prefix = prefix || ((state.areaPick && state.areaPick.prefix) || "create");
+    var pick = ensureAreaPick(prefix);
+    var step = pick.step || "state";
+    var body = (step === "list" || step === "kind") ? regionListPicker(getPickedRegions(prefix), prefix) : stateStepHTML(prefix);
+    return areasBreadcrumb() + areaStepHero(step) + body;
+  }
+  function renderChooseAreas() {
+    var pick = ensureAreaPick();
+    var prefix = pick.prefix || "create";
+    var title = areaStepTitle(pick.step || "state");
+    var right = '<span class="header-spacer"></span>';
+    if ((pick.step || "state") === "state") {
+      right = '<button type="button" class="header-link" data-action="area-next">Continue</button>';
+    } else if (pick.step === "list" || pick.step === "kind") {
+      right = '<button type="button" class="header-link" data-action="area-done">Done</button>';
+    }
+    return '<section class="screen has-header" data-screen="choose-areas">' +
+      '<div class="app-header"><button class="icon-btn" data-action="area-back" aria-label="Back">' + icon("back") + '</button><div class="ht">' + title + "</div>" + right + "</div>" +
+      '<div class="scroll">' + areaWizardHTML(prefix) + "</div></section>";
+  }
+  function areaAdvanceFromState() {
+    var pick = ensureAreaPick();
+    var st = auState(pick.stateId || "wa");
+    if (!st) { pick.stateId = "wa"; st = auState("wa"); }
+    pick.step = "list";
+    pick.kind = (st && st.id === "act") ? "metro" : null;
+    ensureAccOpen(pick);
+    pick.open.metro = true;
+    pick.open.regional = false;
+  }
+  function handleAreaBack() {
+    var pick = ensureAreaPick();
+    if (pick.step === "list" || pick.step === "kind") {
+      pick.step = "state";
+      go(wizardScreen());
+      return;
+    }
+    go(pick.returnTo || "create-profile");
+  }
+  function handleAreaDone() {
+    var pick = ensureAreaPick();
+    var prefix = pick.prefix || "create";
+    var ids = getPickedRegions(prefix);
+    if (!ids.length) { toast("Select at least one region."); return; }
+    setPickedRegions(prefix, ids);
+    if (prefix === "create") {
+      state.stepRegions = ids.slice();
+      if (state.draft) state.draft.regions = ids.slice();
+    }
+    if (prefix === "me-regions") toast("My areas were saved.");
+    go(pick.returnTo || "create-profile");
+  }
+
   function me() {
     return MEMBERS.find(function (m) { return m.id === state.meId; });
   }
@@ -4622,7 +9643,7 @@ window.TC_TRADES = [
       '<div class="meta"><div class="nm">' + escapeText(fullName(m)) + '</div>' +
       '<div class="biz">' + escapeText(m.business) + '</div>' +
       '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       '</div></div></button>' +
       '<a class="friend-btn" href="' + escapeAttr(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
       icon("addfriend") + "<span>Add friend</span></a></div>";
@@ -4630,10 +9651,77 @@ window.TC_TRADES = [
 
 
 
-  function matchTrades(q) {
+  function businessGroups() {
+    return (window.TC_BUSINESS_CATEGORIES && TC_BUSINESS_CATEGORIES.groups) || [];
+  }
+  function canonicalTrade(name) {
+    var key = String(name || "").toLowerCase().trim();
+    var map = window.TC_TRADE_ALIASES || {};
+    var a;
+    for (a in map) if (a.toLowerCase() === key) return map[a];
+    return String(name || "").trim();
+  }
+  function tradeTextScore(text, q) {
+    text = String(text || "").toLowerCase();
+    if (!q) return 1;
+    var words, i, w, best = 0;
+    if (text === q) best = 100;
+    else if (text.indexOf(q) === 0) best = 90;
+    else {
+      words = text.split(/[^a-z0-9&+]+/).filter(Boolean);
+      for (i = 0; i < words.length; i++) {
+        w = words[i];
+        if (w === q) best = Math.max(best, 80);
+        else if (w.indexOf(q) === 0) best = Math.max(best, 70);
+        else if (q.length >= 4 && w.length >= q.length + 3 && w.slice(-q.length) === q) best = Math.max(best, 50); /* bookstore */
+      }
+    }
+    if (best && text.length) best += Math.round(10 * Math.min(1, q.length / text.length));
+    return best;
+  }
+  function matchTradeSuggestions(q) {
     q = String(q || "").toLowerCase().trim();
-    if (!q) return TRADES.slice();
-    return TRADES.filter(function (tr) { return tr.toLowerCase().indexOf(q) !== -1; });
+    var out = [];
+    var seen = {};
+    function add(label, value, score) {
+      var k = String(label || "").toLowerCase();
+      if (!k || seen[k]) return;
+      seen[k] = true;
+      out.push({ label: label, value: value || label, score: score || 0 });
+    }
+    var groups = businessGroups();
+    if (groups.length) {
+      groups.forEach(function (g) {
+        (g.items || []).forEach(function (it) {
+          var name = it.name;
+          var aliases = it.aliases || [];
+          if (!q) { add(name, name, 1); return; }
+          var nameScore = tradeTextScore(name, q);
+          var bestAlias = 0, bestAliasText = "";
+          aliases.forEach(function (a) {
+            var sc = tradeTextScore(a, q);
+            if (sc > bestAlias) { bestAlias = sc; bestAliasText = a; }
+          });
+          if (nameScore) add(name, name, nameScore);
+          if (bestAlias && bestAliasText.toLowerCase() !== name.toLowerCase()) add(bestAliasText, name, bestAlias);
+        });
+      });
+      out.sort(function (a, b) { return (b.score - a.score) || String(a.label).localeCompare(String(b.label)); });
+      return out;
+    }
+    var list = TRADES.slice();
+    if (!q) return list.map(function (tr) { return { label: tr, value: tr }; });
+    return list.filter(function (tr) { return tr.toLowerCase().indexOf(q) !== -1; })
+      .map(function (tr) { return { label: tr, value: tr }; });
+  }
+  function matchTrades(q) {
+    var seen = {};
+    return matchTradeSuggestions(q).map(function (s) { return s.value; }).filter(function (n) {
+      var k = n.toLowerCase();
+      if (seen[k]) return false;
+      seen[k] = true;
+      return true;
+    });
   }
   function matchPeople(q) {
     q = String(q || "").toLowerCase().trim();
@@ -4645,23 +9733,27 @@ window.TC_TRADES = [
     });
   }
   function acHTML(q, withMembers) {
-    var trades = matchTrades(q);
     var people = withMembers ? matchPeople(q) : [];
     if (!String(q || "").trim()) {
       if (!withMembers) {
-        var starter = trades.slice(0, 12);
-        return '<div class="ac-group">Trades</div>' + starter.map(function (tr) {
-          return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span></button>';
-        }).join("") + (trades.length > 12 ? '<div class="ac-empty">Type to search all ' + trades.length + ' trades</div>' : "");
+        var popular = ["Hairdresser", "Barber", "Cafe", "Plumber", "Electrician", "Mechanic", "Dentist", "Beauty Salon", "Cleaner", "Personal Trainer", "Carpenter", "Restaurant"];
+        var starter = popular.filter(function (n) { return TRADES.indexOf(n) !== -1; }).slice(0, 12);
+        if (starter.length < 8) starter = TRADES.slice(0, 12);
+        return '<div class="ac-group">Trades &amp; businesses</div>' + starter.map(function (tr) {
+          return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + "</span></button>";
+        }).join("") + (TRADES.length > 12 ? '<div class="ac-empty">Type to search all ' + TRADES.length + " trades and businesses</div>" : "");
       }
       return "";
     }
-    trades = trades.slice(0, 12);
-    if (!trades.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
+    var sugg = matchTradeSuggestions(q).slice(0, 12);
+    if (!sugg.length && !people.length) return '<div class="ac-empty">No matches for “' + escapeText(q) + '”</div>';
     var html = "";
-    if (trades.length) {
-      html += '<div class="ac-group">Trades</div>' + trades.map(function (tr) {
-        return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(tr) + '"><span>' + escapeText(tr) + '</span><span class="ac-kind">Trade</span></button>';
+    if (sugg.length) {
+      html += '<div class="ac-group">Trades &amp; businesses</div>' + sugg.map(function (tr) {
+        var label = tr.label || tr;
+        var value = tr.value || tr;
+        var kind = label === value ? "Type" : "Also called";
+        return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(value) + '"><span>' + escapeText(label) + (label !== value ? '<span class="sub"> · ' + escapeText(value) + "</span>" : "") + '</span><span class="ac-kind">' + kind + "</span></button>";
       }).join("");
     }
     if (people.length) {
@@ -4672,6 +9764,7 @@ window.TC_TRADES = [
     }
     return html;
   }
+
   function paintSearchAc() {
     var box = document.getElementById("searchAc");
     if (!box) return;
@@ -4691,24 +9784,20 @@ window.TC_TRADES = [
   }
 
   function allRegionIds() {
-    return REGIONS.map(function (r) { return r.id; });
+    return allPerthMetroIds();
   }
   function isAllMetro(ids) {
-    var all = allRegionIds();
+    var all = allPerthMetroIds();
     if (!ids || ids.length !== all.length) return false;
-    var set = {};
-    ids.forEach(function (id) { set[id] = true; });
-    return all.every(function (id) { return set[id]; });
+    return all.every(function (id) { return ids.indexOf(id) !== -1; });
   }
-  function rememberManual(prefix, ids) {
+  function rememberManual(key, ids) {
     if (!state.regionBackup) state.regionBackup = {};
-    if (ids && ids.length && !isAllMetro(ids)) state.regionBackup[prefix] = ids.slice();
+    state.regionBackup[key] = (ids || []).slice();
   }
-  function restoreManual(prefix) {
-    if (!state.regionBackup) state.regionBackup = {};
-    var backup = state.regionBackup[prefix];
-    if (backup && backup.length && !isAllMetro(backup)) return backup.slice();
-    return ["hills", "north"];
+  function restoreManual(key) {
+    var ids = state.regionBackup && state.regionBackup[key];
+    return ids && ids.length ? ids.slice() : ["hills", "north"];
   }
   function getPickedRegions(prefix) {
     if (prefix === "create") return (state.stepRegions || []).slice();
@@ -4718,8 +9807,11 @@ window.TC_TRADES = [
   }
   function setPickedRegions(prefix, ids) {
     ids = (ids || []).slice();
+    var onWizard = state.screen === "choose-areas" || state.screen === "create-regions" || state.screen === "create-regions-all" || state.screen === "my-regions" || state.screen === "my-regions-all";
     if (prefix === "create") {
       state.stepRegions = ids;
+      if (state.draft) state.draft.regions = ids.slice();
+      if (onWizard) return wizardScreen();
       if (state.screen === "create-profile" || state.screen === "create-profile-connected" || state.screen === "signup-business") {
         return state.screen;
       }
@@ -4728,11 +9820,13 @@ window.TC_TRADES = [
     if (prefix === "me-regions") {
       me().regions = ids;
       if (state.draft) state.draft.regions = ids.slice();
+      if (onWizard) return wizardScreen();
       return isAllMetro(ids) && state.screen === "my-regions-all" ? "my-regions-all" : "my-regions";
     }
     var d = draftFromMe();
     d.regions = ids;
     state.draft = d;
+    if (onWizard) return wizardScreen();
     return "edit-profile";
   }
   function toggleRegionId(prefix, rid, allowEmpty) {
@@ -4745,10 +9839,34 @@ window.TC_TRADES = [
       cur.push(rid);
     }
     rememberManual(prefix, cur);
+    if (state.areaPick && (state.areaPick.step === "list" || state.areaPick.step === "kind")) {
+      var hitT = auRegionById(rid);
+      var kindT = hitT ? hitT.region.type : "metro";
+      rememberListManual(prefix, cur.filter(function (id) { return currentListIds(kindT).indexOf(id) !== -1; }), kindT);
+    }
     return cur;
   }
-  function joinAllMetro(prefix) {
+  function joinAllMetro(prefix, kind) {
     var cur = getPickedRegions(prefix);
+    var onWizard = state.screen === "choose-areas" || state.screen === "create-regions" || state.screen === "create-regions-all" || state.screen === "my-regions" || state.screen === "my-regions-all";
+    if (onWizard && state.areaPick && (state.areaPick.step === "list" || state.areaPick.step === "kind")) {
+      kind = kind || state.areaPick.kind || "metro";
+      var list = currentListIds(kind);
+      var allOn = list.length && list.every(function (id) { return cur.indexOf(id) !== -1; });
+      if (allOn) {
+        var restored = restoreListManual(prefix, [], kind);
+        var next = cur.filter(function (id) { return list.indexOf(id) === -1; });
+        restored.forEach(function (id) { if (next.indexOf(id) === -1 && list.indexOf(id) !== -1) next.push(id); });
+        if (!next.length) {
+          var kept = cur.filter(function (id) { return list.indexOf(id) !== -1; }).slice(0, 1);
+          return cur.filter(function (id) { return list.indexOf(id) === -1; }).concat(kept);
+        }
+        return next;
+      }
+      rememberListManual(prefix, cur.filter(function (id) { return list.indexOf(id) !== -1; }), kind);
+      list.forEach(function (id) { if (cur.indexOf(id) === -1) cur.push(id); });
+      return cur;
+    }
     if (isAllMetro(cur)) return restoreManual(prefix);
     rememberManual(prefix, cur);
     return allRegionIds();
@@ -4758,35 +9876,34 @@ window.TC_TRADES = [
     var title = opts.title || "Your areas";
     var all = isAllMetro(ids);
     var chips = (ids || []).map(function (id) {
-      return '<span class="pill r-pill">' + regionName(id) + "</span>";
+      return '<span class="pill r-pill">' + escapeText(formatRegionPill(id)) + "</span>";
     }).join("");
     var badge = all ? '<span class="areas-all-badge">All Perth metro</span>' : "";
     var empty = !(ids && ids.length) ? '<p class="hint" style="margin:0">No areas selected yet.</p>' : "";
-    var change = opts.changeTo
-      ? '<button type="button" class="link areas-change" data-go="' + opts.changeTo + '">' + (opts.changeLabel || "Change") + "</button>"
-      : "";
+    var change = "";
+    if (opts.openAreas) {
+      change = '<button type="button" class="link areas-change" data-action="open-areas" data-prefix="' + (opts.prefix || "create") + '" data-return="' + (opts.returnTo || "") + '">' + (opts.changeLabel || (ids && ids.length ? "Change" : "Choose areas")) + "</button>";
+    } else if (opts.changeTo) {
+      change = '<button type="button" class="link areas-change" data-go="' + opts.changeTo + '">' + (opts.changeLabel || "Change") + "</button>";
+    }
     var sub = opts.sub ? '<p class="hint" style="margin:8px 0 0">' + opts.sub + "</p>" : "";
+    var summary = (ids && ids.length) ? areasSummaryHTML(ids) : "";
     return '<div class="areas-card">' +
       '<div class="areas-card-top"><div class="areas-card-h">' + title + "</div>" + badge + change + "</div>" +
-      (empty || '<div class="tags">' + chips + "</div>") +
+      (empty || (summary + '<div class="tags" style="margin-top:8px">' + chips + "</div>")) +
       sub + "</div>";
   }
   function regionPicker(selectedIds, prefix) {
-    selectedIds = selectedIds || [];
-    var allOn = isAllMetro(selectedIds);
-    var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
-      '<span class="join-all-txt"><strong>Join all Perth metro</strong><span class="join-all-sub">' +
-      (allOn ? "You’re in every Perth area. Turn this off to go back to your own picks." : "Select every Perth region at once.") +
-      "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
-    var card = selectedAreasCard(selectedIds, { title: "Your areas" });
-    var grid = '<div class="region-sec"><h3>Perth metro areas</h3><p>All areas in one list. Tick the ones you work in, or join all of Perth metro above.</p>' +
-      '<div class="region-grid">' + REGIONS.map(function (r) {
-        var on = selectedIds.indexOf(r.id) !== -1;
-        return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
-          "<span><span class=\"n\">" + r.name + "</span>" + (r.suggested ? '<span class="sug">Suggested</span>' : "") + "</span>" +
-          '<span class="tick">' + icon("check") + "</span></button>";
-      }).join("") + "</div></div>";
-    return toggle + card + grid;
+    prefix = prefix || "create";
+    var ret = prefix === "me-regions" ? "me" : (prefix === "edit" ? "edit-profile" : "create-profile");
+    return selectedAreasCard(selectedIds || [], {
+      title: "Your areas",
+      openAreas: true,
+      prefix: prefix,
+      returnTo: ret,
+      changeLabel: (selectedIds && selectedIds.length) ? "Change" : "Choose areas",
+      sub: "Choose a state, then the metro or regional areas you work in."
+    });
   }
 
   function draftFromMe() {
@@ -4969,18 +10086,18 @@ window.TC_TRADES = [
       '<div class="auth-hero"><h2>Business details and areas</h2><p>Tell the circle what you do and where you work, then send your profile for approval.</p></div>' +
       '<form data-form="signup-business">' +
       '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '" required></div>' +
-      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full Australian trades list. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
       '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="12 345 678 901" value="' + escapeAttr(d.abn || "") + '"></div>' +
       '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
-      '<p class="group-label">Your Perth areas</p>' +
-      regionPicker(selected, "create") +
+      '<p class="group-label">Your areas</p>' +
+      selectedAreasCard(selected, { title: "Your areas", openAreas: true, prefix: "create", returnTo: "create-profile", changeLabel: selected.length ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<p class="selected-count">' + count + "</p>" +
       '<button class="btn btn-primary has-ico" type="button" data-action="finish-create">' + icon("check") + "<span>Send for approval</span></button>" +
       '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the circle. You can add a bio, links and more after you are approved.</p></form></div></section>';
   }
 
   function renderCreateRegions() {
-    return renderCreateProfile();
+    return renderChooseAreas();
   }
 
   function renderPending() {
@@ -5037,7 +10154,7 @@ window.TC_TRADES = [
       '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
       '<div class="nm">' + escapeText(fullName(m)) + '</div><div class="biz">' + escapeText(m.business) + "</div>" +
       '<div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
       '<div class="action-stack"><a class="btn btn-fb btn-lg" href="' + m.facebook + '" target="_blank" rel="noopener noreferrer">' +
       '<span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + icon("fb") + " Open Facebook profile</span><small>Send a friend request</small></a>" +
@@ -5059,7 +10176,7 @@ window.TC_TRADES = [
       '<div class="scroll"><div class="profile-hero">' + avatarHTML(m, 96) +
       '<div class="nm">' + escapeText(fullName(m)) + ' <span class="you-badge">You</span></div>' +
       '<div class="biz">' + escapeText(m.business) + '</div><div class="tags"><span class="pill t-pill">' + escapeText(m.trade) + "</span>" +
-      m.regions.map(function (r) { return '<span class="pill r-pill">' + regionName(r) + "</span>"; }).join("") +
+      m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       "</div></div><p class=\"bio\">" + escapeText(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They will use your Facebook profile link to send a friend request.</div>' +
       '<div class="info-rows">' + phoneRow +
@@ -5080,13 +10197,13 @@ window.TC_TRADES = [
       '<div class="name-row"><div class="field"><label>First name</label><input name="first" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
       '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
-      '<div class="field"><label>Trade</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Type a trade, e.g. plumber" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type. <button type="button" class="link" data-open-trades="1">See all trades</button></p></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
       '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
       '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
-      '<div class="group-label">My areas</div>' + regionPicker(d.regions || [], "edit") +
+      '<div class="group-label">My areas</div>' + selectedAreasCard(d.regions || [], { title: "My areas", openAreas: true, prefix: "edit", returnTo: "edit-profile", changeLabel: (d.regions && d.regions.length) ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
 
@@ -5131,9 +10248,10 @@ window.TC_TRADES = [
         return (window.TC158 && TC158.renderComplete) ? TC158.renderComplete() : renderPending();
       case "fb-consent":
         return renderWelcome();
+      case "choose-areas":
       case "create-regions":
       case "create-regions-all":
-        return renderCreateRegions();
+        return renderChooseAreas();
       case "pending": return renderPending();
       case "members":
       case "members-all":
@@ -5163,8 +10281,9 @@ window.TC_TRADES = [
     opts = opts || {};
     if (opts.memberId) state.selectedMember = opts.memberId;
     if (id === "create-profile" && !state.draft) {
-      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: [] };
-      state.stepRegions = [];
+      var kept = (state.stepRegions || []).slice();
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: kept };
+      state.stepRegions = kept;
     }
     if (id === "edit-profile") state.draft = draftFromMe();
     if (id === "create-regions" && !state.stepRegions) {
@@ -5184,6 +10303,39 @@ window.TC_TRADES = [
       }
       me().regions = allRegionIds();
       if (state.draft) state.draft.regions = allRegionIds();
+    }
+    if (id === "choose-areas" || id === "create-regions" || id === "create-regions-all") {
+      if (!state.areaPick) {
+        var pref = state.screen === "edit-profile" ? "edit" : "create";
+        var ret = pref === "edit" ? "edit-profile" : "create-profile";
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: pref, returnTo: ret };
+      }
+      if (state.areaPick && state.areaPick.step === "kind") state.areaPick.step = "list";
+      if (id === "create-regions") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+        state.areaPick.prefix = state.areaPick.prefix || "create";
+      }
+      if (id === "create-regions-all") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+        state.areaPick.prefix = "create";
+      }
+    }
+    if (id === "my-regions" || id === "my-regions-all") {
+      if (!state.areaPick || state.areaPick.prefix !== "me-regions") {
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: "me-regions", returnTo: "me", open: { metro: true, regional: false } };
+      }
+      if (id === "my-regions-all") {
+        state.areaPick.step = "list";
+        state.areaPick.stateId = "wa";
+        state.areaPick.kind = null;
+        state.areaPick.open = { metro: true, regional: false };
+      }
     }
 
     state.screen = id;
@@ -5298,26 +10450,48 @@ window.TC_TRADES = [
   function closeSheet() {
     if (sheetEl) { sheetEl.remove(); sheetEl = null; }
   }
+  function tradeSheetListHTML(q, current) {
+    q = String(q || "").toLowerCase().trim();
+    var groups = businessGroups();
+    var ico = function (name) {
+      return (window.TC159 && TC159.tradeIcon) ? TC159.tradeIcon(name) : "";
+    };
+    function matches(it) {
+      if (!q) return true;
+      if (tradeTextScore(it.name, q)) return true;
+      return (it.aliases || []).some(function (a) { return tradeTextScore(a, q) > 0; });
+    }
+    function opt(tr) {
+      return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span class="trade-opt-lab">' + ico(tr) + "<span>" + escapeText(tr) + "</span></span><span class=\"ck\">" + icon("check") + "</span></button>";
+    }
+    if (groups.length) {
+      var html = "";
+      var any = false;
+      groups.forEach(function (g) {
+        var items = (g.items || []).filter(matches);
+        if (!items.length) return;
+        any = true;
+        html += '<div class="trade-group-lab">' + escapeText(g.name) + ' <span>' + items.length + "</span></div>";
+        html += items.map(function (it) { return opt(it.name); }).join("");
+      });
+      return any ? html : '<div class="ac-empty">No types match “' + escapeText(q) + '”</div>';
+    }
+    var list = matchTrades(q);
+    return list.length ? list.map(opt).join("") : '<div class="ac-empty">No types match “' + escapeText(q) + '”</div>';
+  }
   function openTradeSheet() {
     closeSheet();
     var current = draftFromMe().trade;
     sheetEl = document.createElement("div");
     sheetEl.className = "overlay show";
-    sheetEl.innerHTML = '<div class="sheet"><div class="sheet-handle"></div><h3>Choose your trade</h3>' +
-      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Type a trade, e.g. plumber" autocomplete="off"></div>' +
-      '<div id="sheetTradeList">' +
-      TRADES.map(function (tr) {
-        return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
-      }).join("") + "</div></div>";
+    sheetEl.innerHTML = '<div class="sheet sheet-trades"><div class="sheet-handle"></div><h3>Choose your trade or business type</h3>' +
+      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Search, e.g. hairdresser or cafe" autocomplete="off"></div>' +
+      '<div id="sheetTradeList">' + tradeSheetListHTML("", current) + "</div></div>";
     var sheetSearch = sheetEl.querySelector("#sheetTradeSearch");
     if (sheetSearch) {
       sheetSearch.addEventListener("input", function (e) {
-        var q = e.target.value;
-        var list = matchTrades(q);
         var box = sheetEl.querySelector("#sheetTradeList");
-        box.innerHTML = list.length ? list.map(function (tr) {
-          return '<button class="trade-opt' + (tr === current ? " on" : "") + '" data-trade-pick="' + escapeAttr(tr) + '"><span>' + tr + '</span><span class="ck">' + icon("check") + "</span></button>";
-        }).join("") : '<div class="ac-empty">No trades match “' + escapeText(q) + '”</div>';
+        box.innerHTML = tradeSheetListHTML(e.target.value, current);
       });
     }
     $("#phone").appendChild(sheetEl);
@@ -5406,19 +10580,25 @@ window.TC_TRADES = [
         state.fbConnected = true;
         me().facebook = me().facebook || demoFbLink();
       }
-      if (id === "create-regions") {
+      if (id === "choose-areas" || id === "create-regions") {
         state.stepRegions = ["hills", "north"];
         if (!state.regionBackup) state.regionBackup = {};
         state.regionBackup.create = ["hills", "north"];
+        state.areaPick = { step: id === "create-regions" ? "list" : "state", stateId: "wa", kind: null, prefix: "create", returnTo: "create-profile", open: { metro: true, regional: false } };
+        var m3 = me();
+        state.draft = state.draft || { first: m3.first, last: m3.last, business: m3.business, trade: m3.trade, bio: m3.bio, phone: m3.phone, facebook: "", page: m3.page, regions: ["hills", "north"] };
+        state.draft.regions = ["hills", "north"];
       }
       if (id === "create-regions-all") {
         if (!state.regionBackup) state.regionBackup = {};
         state.regionBackup.create = ["hills", "north"];
         state.stepRegions = allRegionIds();
+        state.areaPick = { step: "list", stateId: "wa", kind: null, prefix: "create", returnTo: "create-profile", open: { metro: true, regional: false } };
       }
       if (id === "my-regions") {
         if (!state.regionBackup) state.regionBackup = {};
         if (!me().regions || !me().regions.length) me().regions = ["hills", "north"];
+        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: "me-regions", returnTo: "me" };
       }
       if (id === "my-regions-all") {
         if (!state.regionBackup) state.regionBackup = {};
@@ -5490,6 +10670,16 @@ window.TC_TRADES = [
       var dest = goBtn.dataset.go;
       if (goBtn.dataset.id) state.selectedMember = goBtn.dataset.id;
       if (dest === "welcome") { state.draft = null; state.fbConnected = false; }
+      if (dest === "create-regions" || dest === "choose-areas") {
+        var formGo = goBtn.closest("form");
+        if (formGo) captureDraft(formGo);
+        openAreaWizard("create", "create-profile");
+        return;
+      }
+      if (dest === "my-regions") {
+        openAreaWizard("me-regions", "me");
+        return;
+      }
       go(dest);
       return;
     }
@@ -5553,12 +10743,75 @@ window.TC_TRADES = [
       return;
     }
 
+    var openAreas = e.target.closest("[data-action='open-areas']");
+    if (openAreas) {
+      var formA = openAreas.closest("form");
+      if (formA) captureDraft(formA);
+      var tinA = document.getElementById("tradeType");
+      if (tinA) {
+        var dA = draftFromMe();
+        if (tinA.value.trim()) dA.trade = tinA.value.trim();
+        state.draft = dA;
+      }
+      var prefixA = openAreas.getAttribute("data-prefix") || "create";
+      var retA = openAreas.getAttribute("data-return") || (prefixA === "me-regions" ? "me" : (prefixA === "edit" ? "edit-profile" : "create-profile"));
+      if (prefixA === "create") state.stepRegions = (state.stepRegions || (state.draft && state.draft.regions) || []).slice();
+      openAreaWizard(prefixA, retA);
+      return;
+    }
+    var areaState = e.target.closest("[data-area-state]");
+    if (areaState) {
+      ensureAreaPick().stateId = areaState.getAttribute("data-area-state");
+      areaAdvanceFromState();
+      go(wizardScreen());
+      return;
+    }
+    var accBtn = e.target.closest("[data-area-acc]");
+    if (accBtn) {
+      var accKind = accBtn.getAttribute("data-area-acc");
+      var pickA = ensureAreaPick();
+      ensureAccOpen(pickA);
+      pickA.open[accKind] = !isAccOpen(accKind);
+      go(wizardScreen());
+      return;
+    }
+    var areaKind = e.target.closest("[data-area-kind]");
+    if (areaKind) {
+      var pickK = ensureAreaPick();
+      pickK.step = "list";
+      ensureAccOpen(pickK);
+      pickK.open[areaKind.getAttribute("data-area-kind")] = true;
+      go(wizardScreen());
+      return;
+    }
+    var areaStep = e.target.closest("[data-area-step]");
+    if (areaStep) {
+      ensureAreaPick().step = areaStep.getAttribute("data-area-step");
+      go(wizardScreen());
+      return;
+    }
+    if (e.target.closest("[data-action='area-back']")) {
+      handleAreaBack();
+      return;
+    }
+    if (e.target.closest("[data-action='area-next']")) {
+      var pickN = ensureAreaPick();
+      if (!pickN.stateId) pickN.stateId = "wa";
+      areaAdvanceFromState();
+      go(wizardScreen());
+      return;
+    }
+    if (e.target.closest("[data-action='area-done']")) {
+      handleAreaDone();
+      return;
+    }
+
     var joinAllBtn = e.target.closest("[data-action='join-all-metro']");
     if (joinAllBtn) {
       var prefixJ = joinAllBtn.getAttribute("data-prefix") || "edit";
       var formJ = e.target.closest("form");
       if (formJ) captureDraft(formJ);
-      go(setPickedRegions(prefixJ, joinAllMetro(prefixJ)));
+      go(setPickedRegions(prefixJ, joinAllMetro(prefixJ, joinAllBtn.getAttribute("data-kind"))));
       return;
     }
 
@@ -5586,7 +10839,7 @@ window.TC_TRADES = [
       }
       var d3 = draftFromMe();
       if (!(d3.business || "").trim()) { toast("Please add your business name."); return; }
-      if (!(d3.trade || "").trim()) { toast("Please choose your trade."); return; }
+      if (!(d3.trade || "").trim()) { toast("Please choose your trade or business type."); return; }
       if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
       d3.regions = state.stepRegions.slice();
       state.draft = d3;
@@ -5689,7 +10942,7 @@ window.TC_TRADES = [
         state.draft = dB;
       }
       if (!state.draft.business) { toast("Please add your business name."); return; }
-      if (!state.draft.trade) { toast("Please choose your trade."); return; }
+      if (!state.draft.trade) { toast("Please choose your trade or business type."); return; }
       if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
       var dF = draftFromMe();
       dF.regions = state.stepRegions.slice();
@@ -5791,10 +11044,12 @@ window.TC_TRADES = [
     go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
     TRADES: TRADES, filteredMembers: filteredMembers,
     icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,
-    fullName: fullName, me: me, regionName: regionName, toast: toast,
+    fullName: fullName, me: me, regionName: regionName, formatRegionPill: formatRegionPill, toast: toast,
     closeSheet: closeSheet, draftFromMe: draftFromMe, demoFbLink: demoFbLink,
     captureDraft: captureDraft, fbConnectBlock: fbConnectBlock, regionPicker: regionPicker,
     allRegionIds: allRegionIds, isAllMetro: isAllMetro, selectedAreasCard: selectedAreasCard,
+    areaWizardHTML: areaWizardHTML, openAreaWizard: openAreaWizard, areasSummaryHTML: areasSummaryHTML,
+    auStates: auStates, renderChooseAreas: renderChooseAreas,
     buildChooser: buildChooser, paintSearchAc: paintSearchAc, updateTabs: updateTabs
   };
 })();
@@ -5802,7 +11057,7 @@ window.TC_TRADES = [
 </script>
   <script>
 /* v12.js */
-/* TradeCircle Perth — prototype v1.5.9 */
+/* TradeCircle Perth — prototype v1.6.2 */
 (function () {
   "use strict";
 
@@ -5813,7 +11068,7 @@ window.TC_TRADES = [
   function ico(n) { return T().icon ? T().icon(n) : ""; }
   function av(m, n) { return T().avatarHTML(m, n); }
   function fn(m) { return T().fullName(m); }
-  function rn(id) { return T().regionName(id); }
+  function rn(id) { return (T().formatRegionPill || T().regionName)(id); }
   function toast(m) { if (T().toast) T().toast(m); }
   function go(id, mid) { T().go(id, mid); }
 
@@ -6243,7 +11498,7 @@ function facebookF(size, color) {
       "</div>" + (S().googleConnected ? gBadge(m) : '<div class="g-badge" style="background:#EEF2F6;color:#5B6B7C">Google profile not connected</div>') +
       "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
       '<div class="banner info">This is how other members see you. They can friend you on Facebook, message you here, or leave a Google review after a real job.</div>' +
-      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "My areas", changeTo: "my-regions", changeLabel: "Change", sub: "These are the Perth regions on your profile. Change them here anytime." }) : "") +
+      (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "My areas", changeTo: "my-regions", changeLabel: "Change", sub: "These are the regions on your profile. Change them here anytime." }) : "") +
       '<div class="info-rows">' + phoneRow +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
       pageRow +
@@ -6270,7 +11525,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.5.9 \u00b7 18 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.6.2 \u00b7 19 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -6721,10 +11976,10 @@ function facebookF(size, color) {
 
   function renderMyRegions() {
     var m = T().me();
+    var html = (T().areaWizardHTML ? T().areaWizardHTML("me-regions") : T().regionPicker(m.regions || [], "me-regions"));
     return '<section class="screen has-tabs has-header" data-screen="my-regions">' + topbar("My areas") +
-      '<div class="scroll"><div class="auth-hero"><h2>Where you work</h2><p>All of your Perth areas are shown together in one list. Join all of Perth metro at once, or tick only the areas you work in.</p></div>' +
-      T().regionPicker(m.regions || [], "me-regions") +
-      '<button class="btn btn-primary has-ico" data-action="save-regions">' + I.regions + "<span>Save areas</span></button></div></section>";
+      '<div class="scroll">' + html +
+      '<button class="btn btn-primary has-ico" data-action="save-regions" style="margin-top:12px">' + I.regions + "<span>Save areas</span></button></div></section>";
   }
 
   function drawerInner() {
@@ -6755,7 +12010,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.5.9</div>';
+    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.6.2</div>';
     return html;
   }
 
@@ -7200,7 +12455,7 @@ function facebookF(size, color) {
 </script>
   <script>
 /* v15.js */
-/* TradeCircle Perth — prototype v1.5.9 */
+/* TradeCircle Perth — prototype v1.6.2 */
 (function () {
   "use strict";
 
@@ -7289,7 +12544,7 @@ function googleG(size, mono) {
     they = S()._they || they;
   }
   /* Seed from the same demo relationships v12 uses */
-  var SEED_REL = { sarah: "friends", liam: "pending", priya: "friends", jack: "friends", mei: "none", daniel: "pending", emma: "friends", marcus: "none", tom: "friends", hannah: "none", chris: "friends" };
+  var SEED_REL = { sarah: "friends", liam: "pending", priya: "friends", jack: "friends", mei: "none", daniel: "pending", emma: "friends", marcus: "none", tom: "friends", hannah: "none", chris: "friends", noah: "friends" };
   var SEED_GIVEN = { sarah: 1, priya: 1, chris: 1 };
   var SEED_THEY = { sarah: 1, jack: 1, chris: 1, tom: 1 };
   if (!S()._rel) S()._rel = Object.assign({}, SEED_REL);
@@ -7799,8 +13054,8 @@ function googleG(size, mono) {
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Send alert</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-hero"><h2>Share a Facebook post</h2><p>Paste the link, pick the trade they asked for, and send it to the circle.</p></div>' +
       '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.homeowners.demo/posts/840211"></div>' +
-      '<div class="field"><label>Trade they’re asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
-      '<input id="tradeType" type="text" placeholder="Type a trade, e.g. pest control" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
+      '<div class="field"><label>Trade or business type they are asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
+      '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
       '<button class="btn btn-primary has-ico" data-action="send-alert">' + I.bell + "<span>Send to circle</span></button>" +
       '<p class="hint" style="text-align:center">Members get a push alert. Comment ideas are suggestions only. Each person writes their own words on Facebook.</p></div></section>';
   }
@@ -9210,8 +14465,38 @@ function googleG(size, mono) {
     builder: "covers/builder.jpg",
     roofer: "covers/roofer.jpg",
     cleaner: "covers/cleaner.jpg",
-    tradie: "covers/tradie.jpg"
+    tradie: "covers/tradie.jpg",
+    beauty: "covers/beauty.jpg",
+    food: "covers/cafe.jpg",
+    cafe: "covers/cafe.jpg",
+    retail: "covers/retail.jpg",
+    auto: "covers/auto.jpg",
+    health: "covers/health.jpg",
+    fitness: "covers/fitness.jpg",
+    pets: "covers/pets.jpg",
+    kids: "covers/kids.jpg",
+    events: "covers/events.jpg",
+    professional: "covers/professional.jpg",
+    property: "covers/property.jpg"
   };
+  function resolveGroup(trade) {
+    var want = String(trade || "").toLowerCase().trim();
+    var map = window.TC_TRADE_ALIASES || {};
+    var canonical = want, a;
+    for (a in map) if (String(a).toLowerCase() === want) canonical = String(map[a]).toLowerCase();
+    var groups = (window.TC_BUSINESS_CATEGORIES && TC_BUSINESS_CATEGORIES.groups) || [];
+    var i, j, g, it, als;
+    for (i = 0; i < groups.length; i++) {
+      g = groups[i];
+      for (j = 0; j < (g.items || []).length; j++) {
+        it = g.items[j];
+        if (String(it.name).toLowerCase() === want || String(it.name).toLowerCase() === canonical) return g;
+        als = it.aliases || [];
+        if (als.some(function (x) { return String(x).toLowerCase() === want || String(x).toLowerCase() === canonical; })) return g;
+      }
+    }
+    return null;
+  }
   function coverKey(trade) {
     var t = String(trade || "").toLowerCase();
     if (/pest|termite|vermin|rodent|cockroach/.test(t)) return "pest";
@@ -9224,9 +14509,23 @@ function googleG(size, mono) {
     if (/clean/.test(t)) return "cleaner";
     if (/carpenter|cabinet|joiner|furniture/.test(t)) return "carpenter";
     if (/builder|building|brick|concre/.test(t)) return "builder";
+    if (/barber|hairdress|hair salon|beauty|nail salon|tattoo|lash|brow|makeup|spa|wax/.test(t)) return "beauty";
+    if (/cafe|café|restaurant|baker|takeaway|pizza|butcher|coffee/.test(t)) return "food";
+    if (/mechanic|panel beat|tyre|car wash|car detail|auto parts|towing/.test(t)) return "auto";
+    if (/dentist|physio|chiro|optometr|pharmac|chemist|massage|gp clinic|doctor/.test(t)) return "health";
+    if (/gym|pilates|yoga|personal train|martial/.test(t)) return "fitness";
+    if (/vet|groomer|dog train|pet shop|pet sit/.test(t)) return "pets";
+    var g0 = resolveGroup(trade);
+    if (g0 && (COVER[g0.id] || (g0.cover && g0.cover.indexOf("covers/") === 0))) return g0.id;
     return "tradie";
   }
-  function coverUrl(trade) { return COVER[coverKey(trade)] || COVER.tradie; }
+  function coverUrl(trade) {
+    var key = coverKey(trade);
+    if (key && key !== "tradie" && COVER[key]) return COVER[key];
+    var g = resolveGroup(trade);
+    if (g && g.cover) return g.cover;
+    return COVER[key] || COVER.tradie;
+  }
 
   function applyCover(screen, trade) {
     if (!screen || screen.querySelector(".trade-cover")) return;
@@ -9259,7 +14558,19 @@ function googleG(size, mono) {
     key: svg('<circle cx="8" cy="15" r="4"/><path d="M11.5 13.5L20 5v3M16 5v3"/>'),
     hammer: svg('<path d="M14 5l5 5-3 3-2-2-6 8-3-3 8-6-2-2z"/>'),
     hat: svg('<path d="M4 14h16v2a4 4 0 01-4 4H8a4 4 0 01-4-4v-2z"/><path d="M4 14a8 8 0 0116 0"/><path d="M12 4v3"/>'),
-    wrench: svg('<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>')
+    wrench: svg('<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>'),
+    scissors: svg('<circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 16.5L20 4M15.5 16.5L4 4"/>'),
+    plus: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
+    dumbbell: svg('<path d="M6 8v8M18 8v8M4 10v4M20 10v4M6 12h12"/>'),
+    utensils: svg('<path d="M4 3v18M4 3c2 3 2 6 0 8M8 3v7c0 2-1 3-2 3M16 3v18M16 3c3 0 5 2 5 6v3h-5"/>'),
+    bag: svg('<path d="M6 8h12l-1 13H7L6 8z"/><path d="M9 8V7a3 3 0 016 0v1"/>'),
+    car: svg('<path d="M3 13l2-5h14l2 5"/><path d="M3 13h18v5H3z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'),
+    paw: svg('<circle cx="8" cy="9" r="2"/><circle cx="16" cy="9" r="2"/><circle cx="6" cy="14" r="2"/><circle cx="18" cy="14" r="2"/><path d="M12 11c3 0 5 3 5 5 0 0-2 3-5 3s-5-3-5-3c0-2 2-5 5-5z"/>'),
+    book: svg('<path d="M4 5a2 2 0 012-2h6v16H6a2 2 0 00-2 2z"/><path d="M12 3h6a2 2 0 012 2v16a2 2 0 00-2-2h-6"/>'),
+    camera: svg('<path d="M4 8h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3"/>'),
+    briefcase: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18"/>'),
+    house: svg('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'),
+    pin: svg('<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>')
   };
   function iconKey(trade) {
     var t = String(trade || "").toLowerCase();
@@ -9277,6 +14588,19 @@ function googleG(size, mono) {
     if (/carpenter|cabinet|joiner|furniture|shopfit/.test(t)) return "hammer";
     if (/builder|building|brick|concre|scaffold|formwork|renderer|plaster/.test(t)) return "hat";
     if (/handyman/.test(t)) return "wrench";
+    if (/barber|hairdress|hair salon|beauty|nail|tattoo|lash|brow|makeup|spa|wax|pierc|tanning/.test(t)) return "scissors";
+    if (/dentist|physio|chiro|optometr|pharmac|chemist|massage|clinic|doctor|gp |podiatr|psycholog|naturopath|acupunct/.test(t)) return "plus";
+    if (/gym|pilates|yoga|personal train|martial|boxing|swim school|fitness/.test(t)) return "dumbbell";
+    if (/cafe|café|restaurant|baker|takeaway|pizza|butcher|coffee|bar & pub|bottle shop/.test(t)) return "utensils";
+    if (/store|shop|retail|grocer|florist|jeweller|boutique|op shop|bookshop/.test(t)) return "bag";
+    if (/mechanic|panel beat|tyre|car wash|car detail|auto |towing|windscreen|car dealer/.test(t)) return "car";
+    if (/vet|groomer|dog |pet /.test(t)) return "paw";
+    if (/childcare|tutor|dance school|driving school|music teacher|preschool/.test(t)) return "book";
+    if (/photograph|videograph|event plan|celebrant|wedding|dj\b/.test(t)) return "camera";
+    if (/accountant|bookkeeper|lawyer|solicitor|mortgage|insurance|financial plan|marketing/.test(t)) return "briefcase";
+    if (/real estate|property manager|conveyanc|buyer.?s agent|strata/.test(t)) return "house";
+    var g1 = resolveGroup(trade);
+    if (g1 && ICONS[g1.icon]) return g1.icon;
     return "wrench";
   }
   function tradeIcon(trade) {
@@ -9289,15 +14613,18 @@ function googleG(size, mono) {
     if (!t || t.length > 48) return false;
     if (/\b(today|yesterday|tomorrow|am|pm|ago|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(t)) return false;
     if (/\d/.test(t) && /:|\b(am|pm|h|m)\b/i.test(t)) return false;
+    var list = root.TC_TRADES || T().TRADES || [];
+    var low = t.toLowerCase();
+    var i, n;
+    for (i = 0; i < list.length; i++) {
+      n = typeof list[i] === "string" ? list[i] : (list[i] && (list[i].name || list[i].label || ""));
+      if (String(n).toLowerCase() === low) return true;
+    }
+    var map = root.TC_TRADE_ALIASES || {};
+    for (n in map) if (String(n).toLowerCase() === low || String(map[n]).toLowerCase() === low) return true;
     var k = iconKey(t);
     if (k !== "wrench") return true;
     if (/handyman/i.test(t)) return true;
-    var list = T().TRADES || root.TRADES || [];
-    t = t.toLowerCase();
-    for (var i = 0; i < list.length; i++) {
-      var n = typeof list[i] === "string" ? list[i] : (list[i] && (list[i].name || list[i].label || ""));
-      if (String(n).toLowerCase() === t) return true;
-    }
     return false;
   }
   function decorateTradeLabels(root) {

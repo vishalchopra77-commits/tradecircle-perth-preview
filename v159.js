@@ -33,8 +33,38 @@
     builder: "covers/builder.jpg",
     roofer: "covers/roofer.jpg",
     cleaner: "covers/cleaner.jpg",
-    tradie: "covers/tradie.jpg"
+    tradie: "covers/tradie.jpg",
+    beauty: "covers/beauty.jpg",
+    food: "covers/cafe.jpg",
+    cafe: "covers/cafe.jpg",
+    retail: "covers/retail.jpg",
+    auto: "covers/auto.jpg",
+    health: "covers/health.jpg",
+    fitness: "covers/fitness.jpg",
+    pets: "covers/pets.jpg",
+    kids: "covers/kids.jpg",
+    events: "covers/events.jpg",
+    professional: "covers/professional.jpg",
+    property: "covers/property.jpg"
   };
+  function resolveGroup(trade) {
+    var want = String(trade || "").toLowerCase().trim();
+    var map = window.TC_TRADE_ALIASES || {};
+    var canonical = want, a;
+    for (a in map) if (String(a).toLowerCase() === want) canonical = String(map[a]).toLowerCase();
+    var groups = (window.TC_BUSINESS_CATEGORIES && TC_BUSINESS_CATEGORIES.groups) || [];
+    var i, j, g, it, als;
+    for (i = 0; i < groups.length; i++) {
+      g = groups[i];
+      for (j = 0; j < (g.items || []).length; j++) {
+        it = g.items[j];
+        if (String(it.name).toLowerCase() === want || String(it.name).toLowerCase() === canonical) return g;
+        als = it.aliases || [];
+        if (als.some(function (x) { return String(x).toLowerCase() === want || String(x).toLowerCase() === canonical; })) return g;
+      }
+    }
+    return null;
+  }
   function coverKey(trade) {
     var t = String(trade || "").toLowerCase();
     if (/pest|termite|vermin|rodent|cockroach/.test(t)) return "pest";
@@ -47,9 +77,23 @@
     if (/clean/.test(t)) return "cleaner";
     if (/carpenter|cabinet|joiner|furniture/.test(t)) return "carpenter";
     if (/builder|building|brick|concre/.test(t)) return "builder";
+    if (/barber|hairdress|hair salon|beauty|nail salon|tattoo|lash|brow|makeup|spa|wax/.test(t)) return "beauty";
+    if (/cafe|café|restaurant|baker|takeaway|pizza|butcher|coffee/.test(t)) return "food";
+    if (/mechanic|panel beat|tyre|car wash|car detail|auto parts|towing/.test(t)) return "auto";
+    if (/dentist|physio|chiro|optometr|pharmac|chemist|massage|gp clinic|doctor/.test(t)) return "health";
+    if (/gym|pilates|yoga|personal train|martial/.test(t)) return "fitness";
+    if (/vet|groomer|dog train|pet shop|pet sit/.test(t)) return "pets";
+    var g0 = resolveGroup(trade);
+    if (g0 && (COVER[g0.id] || (g0.cover && g0.cover.indexOf("covers/") === 0))) return g0.id;
     return "tradie";
   }
-  function coverUrl(trade) { return COVER[coverKey(trade)] || COVER.tradie; }
+  function coverUrl(trade) {
+    var key = coverKey(trade);
+    if (key && key !== "tradie" && COVER[key]) return COVER[key];
+    var g = resolveGroup(trade);
+    if (g && g.cover) return g.cover;
+    return COVER[key] || COVER.tradie;
+  }
 
   function applyCover(screen, trade) {
     if (!screen || screen.querySelector(".trade-cover")) return;
@@ -82,7 +126,19 @@
     key: svg('<circle cx="8" cy="15" r="4"/><path d="M11.5 13.5L20 5v3M16 5v3"/>'),
     hammer: svg('<path d="M14 5l5 5-3 3-2-2-6 8-3-3 8-6-2-2z"/>'),
     hat: svg('<path d="M4 14h16v2a4 4 0 01-4 4H8a4 4 0 01-4-4v-2z"/><path d="M4 14a8 8 0 0116 0"/><path d="M12 4v3"/>'),
-    wrench: svg('<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>')
+    wrench: svg('<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>'),
+    scissors: svg('<circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 16.5L20 4M15.5 16.5L4 4"/>'),
+    plus: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
+    dumbbell: svg('<path d="M6 8v8M18 8v8M4 10v4M20 10v4M6 12h12"/>'),
+    utensils: svg('<path d="M4 3v18M4 3c2 3 2 6 0 8M8 3v7c0 2-1 3-2 3M16 3v18M16 3c3 0 5 2 5 6v3h-5"/>'),
+    bag: svg('<path d="M6 8h12l-1 13H7L6 8z"/><path d="M9 8V7a3 3 0 016 0v1"/>'),
+    car: svg('<path d="M3 13l2-5h14l2 5"/><path d="M3 13h18v5H3z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'),
+    paw: svg('<circle cx="8" cy="9" r="2"/><circle cx="16" cy="9" r="2"/><circle cx="6" cy="14" r="2"/><circle cx="18" cy="14" r="2"/><path d="M12 11c3 0 5 3 5 5 0 0-2 3-5 3s-5-3-5-3c0-2 2-5 5-5z"/>'),
+    book: svg('<path d="M4 5a2 2 0 012-2h6v16H6a2 2 0 00-2 2z"/><path d="M12 3h6a2 2 0 012 2v16a2 2 0 00-2-2h-6"/>'),
+    camera: svg('<path d="M4 8h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3"/>'),
+    briefcase: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18"/>'),
+    house: svg('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'),
+    pin: svg('<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>')
   };
   function iconKey(trade) {
     var t = String(trade || "").toLowerCase();
@@ -100,6 +156,19 @@
     if (/carpenter|cabinet|joiner|furniture|shopfit/.test(t)) return "hammer";
     if (/builder|building|brick|concre|scaffold|formwork|renderer|plaster/.test(t)) return "hat";
     if (/handyman/.test(t)) return "wrench";
+    if (/barber|hairdress|hair salon|beauty|nail|tattoo|lash|brow|makeup|spa|wax|pierc|tanning/.test(t)) return "scissors";
+    if (/dentist|physio|chiro|optometr|pharmac|chemist|massage|clinic|doctor|gp |podiatr|psycholog|naturopath|acupunct/.test(t)) return "plus";
+    if (/gym|pilates|yoga|personal train|martial|boxing|swim school|fitness/.test(t)) return "dumbbell";
+    if (/cafe|café|restaurant|baker|takeaway|pizza|butcher|coffee|bar & pub|bottle shop/.test(t)) return "utensils";
+    if (/store|shop|retail|grocer|florist|jeweller|boutique|op shop|bookshop/.test(t)) return "bag";
+    if (/mechanic|panel beat|tyre|car wash|car detail|auto |towing|windscreen|car dealer/.test(t)) return "car";
+    if (/vet|groomer|dog |pet /.test(t)) return "paw";
+    if (/childcare|tutor|dance school|driving school|music teacher|preschool/.test(t)) return "book";
+    if (/photograph|videograph|event plan|celebrant|wedding|dj\b/.test(t)) return "camera";
+    if (/accountant|bookkeeper|lawyer|solicitor|mortgage|insurance|financial plan|marketing/.test(t)) return "briefcase";
+    if (/real estate|property manager|conveyanc|buyer.?s agent|strata/.test(t)) return "house";
+    var g1 = resolveGroup(trade);
+    if (g1 && ICONS[g1.icon]) return g1.icon;
     return "wrench";
   }
   function tradeIcon(trade) {
@@ -112,15 +181,18 @@
     if (!t || t.length > 48) return false;
     if (/\b(today|yesterday|tomorrow|am|pm|ago|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(t)) return false;
     if (/\d/.test(t) && /:|\b(am|pm|h|m)\b/i.test(t)) return false;
+    var list = root.TC_TRADES || T().TRADES || [];
+    var low = t.toLowerCase();
+    var i, n;
+    for (i = 0; i < list.length; i++) {
+      n = typeof list[i] === "string" ? list[i] : (list[i] && (list[i].name || list[i].label || ""));
+      if (String(n).toLowerCase() === low) return true;
+    }
+    var map = root.TC_TRADE_ALIASES || {};
+    for (n in map) if (String(n).toLowerCase() === low || String(map[n]).toLowerCase() === low) return true;
     var k = iconKey(t);
     if (k !== "wrench") return true;
     if (/handyman/i.test(t)) return true;
-    var list = T().TRADES || root.TRADES || [];
-    t = t.toLowerCase();
-    for (var i = 0; i < list.length; i++) {
-      var n = typeof list[i] === "string" ? list[i] : (list[i] && (list[i].name || list[i].label || ""));
-      if (String(n).toLowerCase() === t) return true;
-    }
     return false;
   }
   function decorateTradeLabels(root) {

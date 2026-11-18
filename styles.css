@@ -879,3 +879,15 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 .btn.has-ico svg { flex: none; }
+
+.sheet-trades { max-height: 88%; }
+.trade-group-lab {
+  position: sticky; top: 0; z-index: 1;
+  background: #F7FAFC; color: var(--muted);
+  font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  padding: 8px 4px 6px; margin-top: 8px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between;
+}
+.trade-group-lab span { color: var(--accent-ink); letter-spacing: 0; text-transform: none; font-size: 11px; }
+.trade-opt-lab { display: inline-flex; align-items: center; gap: 8px; }
+.trade-opt-lab .trade-ico { display: inline-flex; }

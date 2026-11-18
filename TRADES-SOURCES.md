@@ -1,3 +1,7 @@
+# Australian trades and local business types — sources
+
+**Updated in v1.6.0 (19 November 2026, Australia/Perth):** the picker now covers all physical / local businesses, not only trades. The research master list, sources, and judgement calls are in `/workspace/fb-marketing/business-categories/` (`SOURCES.md`, `business-categories.json`). The in-app list is `trades.js` (`window.TC_TRADES`, `window.TC_BUSINESS_CATEGORIES`, `window.TC_TRADE_ALIASES`).
+
 # Australian trades list — sources
 
 This note records how the TradeCircle Perth trade list was built for prototype v1.5 (16 November 2026, Australia/Perth). The list is a **deduplicated set of occupation and service names** for the in-app trade picker and search. It is not a copy of any site’s full category tree, and it is not an official directory.
