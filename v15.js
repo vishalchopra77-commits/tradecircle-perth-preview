@@ -302,20 +302,27 @@ function googleG(size, mono) {
   }
   function renderMore() {
     var m = T().me && T().me();
-    function tile(go, icon, label) {
-      return '<button type="button" class="h21-tile" data-go="' + go + '"><span class="h21-tile-ico">' + icon + "</span><span>" + label + "</span></button>";
+    function tile(go, icon, label, tone) {
+      return '<button type="button" class="h21-tile" data-go="' + go + '"><span class="h21-tile-ico tone-' + tone + '">' + icon + "</span><span>" + label + "</span></button>";
     }
+    function g(p) { return svg(p, 24); }
     var forYou = [
-      ["me", I.user, "My profile"], ["members", svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A5 5 0 0121 19"/>', 22), "Members"],
-      ["chats", I.chat, "Chats"], ["my-regions", ico("pin") || I.queue, "Your areas"],
-      ["promo-queue", facebookF(22), "Promo queue"], ["reviews", I.star, "Reviews"],
-      ["ai-assistant", I.spark, "AI assistant"], ["tutorials", svg('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>', 22), "Tutorials"]
+      ["me", g('<circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0114 0"/>'), "My profile", "teal"],
+      ["members", g('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A5 5 0 0121 19"/>'), "Members", "indigo"],
+      ["chats", g('<path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/>'), "Chats", "green"],
+      ["my-regions", g('<path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/>'), "Your areas", "orange"],
+      ["promo-queue", facebookF(26, "#FFFFFF"), "Promo queue", "fb"],
+      ["reviews", googleG(26), "Reviews", "google"],
+      ["ai-assistant", g('<path d="M12 3l1.6 5.2L19 10l-5.4 1.8L12 17l-1.6-5.2L5 10l5.4-1.8z"/><path d="M19 15l.7 2.2L22 18l-2.3.8L19 21l-.7-2.2L16 18l2.3-.8z"/>'), "AI assistant", "purple"],
+      ["tutorials", g('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/>'), "Tutorials", "red"]
     ];
     var account = [
-      ["settings", I.gear, "Settings"], ["subscription", svg('<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/>', 22), "Subscription"],
-      ["invite", I.send, "Invite"], ["help", svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 014.6 1.3c0 1.7-2.1 2-2.1 3.4M12 17h.01"/>', 22), "Help"]
+      ["settings", I.gear, "Settings", "grey"],
+      ["subscription", g('<path d="M3 8l4 3 5-6 5 6 4-3-2 11H5z"/>'), "Subscription", "gold"],
+      ["invite", g('<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>'), "Invite", "blue"],
+      ["help", g('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 014.6 1.3c0 1.7-2.1 2-2.1 3.4M12 17h.01"/>'), "Help", "cyan"]
     ];
-    function grid(list) { return '<article class="h21-card"><div class="h21-grid">' + list.map(function (t) { return tile(t[0], t[1], t[2]); }).join("") + "</div></article>"; }
+    function grid(list) { return '<article class="h21-card"><div class="h21-grid">' + list.map(function (t) { return tile(t[0], t[1], t[2], t[3]); }).join("") + "</div></article>"; }
     return '<section class="screen has-tabs h21" data-screen="more"><div class="scroll">' + bigHead("", "More") +
       (m ? '<button type="button" class="h21-card h21-me" data-go="me">' + av(m, 52) +
         '<div class="h21-who-t"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">' + esc(m.business || "") + " · View your profile</div></div>" +
