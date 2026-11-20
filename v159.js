@@ -377,12 +377,12 @@
       var place = (root.TCQueueWait && T().state) ? "" : "Your place #4";
       try {
         /* myQueuePlace isn't exported; default #4 matches the prototype. */
-        place = "Your place #4";
+        place = "#4";
       } catch (e) {}
       var pending = pendingCount();
       var recSub = pending
-        ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span> to do</span>"
-        : '<span class="fb-seg-place">All done</span>';
+        ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span></span>"
+        : "";
       return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections"><div class="fb-seg fb-seg-3">' +
         '<button type="button" role="tab" class="fb-seg-btn" data-go="members"><span class="fb-seg-lab">Circle</span></button>' +
         '<button type="button" role="tab" class="fb-seg-btn active" data-go="fb-recommend" aria-selected="true"><span class="fb-seg-lab">Recommend</span>' + recSub + "</button>" +

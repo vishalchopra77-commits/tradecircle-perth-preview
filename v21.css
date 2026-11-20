@@ -319,3 +319,55 @@ body, button, input, textarea, select {
 .h21-star{color:#F4B400;font-size:18px;line-height:1}
 .h21-cta{margin-top:14px;width:100%;height:48px;border-radius:999px;border:0;background:#252222;color:#FFF;font:inherit;font-size:16px;font-weight:500}
 .h21-link{display:block;margin:12px auto 0;border:0;background:none;font:inherit;font-size:15px;font-weight:500;color:#1C1C1E;text-decoration:underline;padding:0}
+
+/* ===== v2.1 shared pieces for all rebuilt screens ===== */
+.screen.h21 .scroll{padding:calc(env(safe-area-inset-top,0px) + 18px) 16px 120px;display:flex;flex-direction:column;gap:14px;background:#FFF}
+.screen.h21 .fb-seg-bar{margin:0}
+.h21-head{flex-shrink:0}
+.h21-label{padding:0 4px;margin-top:2px;font-size:13px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:#55555A}
+.h21-label.in{padding:0;margin:0 0 6px}
+.h21-info{padding:12px 14px;border-radius:16px;background:#F2F2F2;display:flex;align-items:flex-start;gap:10px;font-size:15px;line-height:1.35;color:#1C1C1E}
+.h21-info svg{flex-shrink:0;margin-top:1px}
+.h21-note .grow{flex:1}
+.h21-mini{font-size:13px;color:#55555A;white-space:nowrap}
+.h21-ok{display:flex;color:#1C1C1E}
+.h21-meta{margin-top:8px;padding:0 4px;font-size:13px;line-height:1.4;color:#55555A}
+.h21-locked{margin-top:12px;height:48px;border-radius:999px;border:1px solid #DCDCDF;color:#55555A;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:500}
+.h21-ghost{margin-top:14px;width:100%;height:48px;border-radius:999px;border:1px solid #DCDCDF;background:#FFF;color:#1C1C1E;font:inherit;font-size:16px;font-weight:500}
+.screen.h21 .scroll > .h21-ghost{margin-top:2px;flex-shrink:0}
+.h21-card{flex-shrink:0}
+.h21-place{display:flex;align-items:baseline;gap:8px}
+.h21-place .n{font-size:48px;line-height:1;font-weight:700;letter-spacing:-1px}
+.h21-place .of{font-size:15px;color:#55555A}
+.h21-bars.big span{height:6px}
+.h21-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.h21-row .nm{font-size:17px;font-weight:600}
+.h21-pill{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;background:#FFF;font-size:13px;font-weight:600}
+.h21-list{padding:6px 16px}
+.h21-qrow{display:flex;align-items:center;gap:12px;padding:10px 0}
+.h21-qrow + .h21-qrow{border-top:1px solid #DCDCDF}
+.h21-qrow .avatar{border-radius:12px !important;flex-shrink:0}
+.h21-qn{width:18px;font-size:15px;font-weight:700;color:#55555A}
+.h21-qrow.me .h21-qn{color:#1C1C1E}
+.h21-me{display:flex;align-items:center;gap:14px;text-align:left;font:inherit;color:#1C1C1E;width:100%}
+.h21-me .avatar{border-radius:16px !important;flex-shrink:0}
+.h21-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));row-gap:14px}
+.h21-tile{display:flex;flex-direction:column;align-items:center;gap:8px;border:0;background:none;padding:0;font:inherit;font-size:12px;font-weight:500;color:#1C1C1E;text-align:center}
+.h21-tile-ico{width:56px;height:56px;border-radius:18px;background:#FFF;display:flex;align-items:center;justify-content:center;color:#1C1C1E}
+.h21-tile-ico svg{width:22px;height:22px}
+/* generic: old top bars turned into the big header by v21.js */
+.h21-top .h21-round svg{width:20px;height:20px}
+.h21-head .h21-round + .h21-hello{margin-left:4px}
+.screen.h21 .fb-seg-bar{position:static !important;padding:0 !important;background:none !important;box-shadow:none !important;flex-shrink:0}
+.fb-seg-btn{flex-direction:row !important;gap:6px;align-items:center;justify-content:center}
+.fb-seg-btn .fb-seg-place{font-size:13px !important;font-weight:600}
+.screen[data-screen="more"] .group-label, .screen[data-screen="more"] .card.group{display:none !important}
+.screen.h21 .scroll > *{flex-shrink:0}
+.screen.h21-sub .scroll{padding-left:16px;padding-right:16px}
+.screen.h21-sub .h21-head{margin-bottom:2px}
+.fb-seg-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#1C1C1E;color:#FFF;font-size:12px;font-weight:700}
+.fb-seg-btn.active .fb-seg-badge{background:#FFF;color:#1C1C1E}
+.screen[data-screen^="fb-recommend"] .rec-intro, .screen[data-screen^="fb-recommend"] .auth-hero{display:none}
+.screen.h21-sub .scroll{gap:10px}
+.h21-sub .h21-hello h1{font-size:30px}
+.screen[data-screen^="fb-recommend"] .rec-hero{display:none}
