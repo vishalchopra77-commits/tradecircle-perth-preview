@@ -503,7 +503,7 @@ body, button, input, textarea, select {
   --pm-card-shadow: 0 1px 2px rgba(16,24,40,.05), 0 12px 32px rgba(16,24,40,.08);
   --pm-tint:#F5F6FC;
 }
-body, .phone, #screens, .screen{background:var(--pm-bg) !important}
+body, .phone, #screens, .screen:not(.dark){background:var(--pm-bg) !important}
 .screen.h21 .scroll{background:var(--pm-bg) !important}
 
 /* Gradient hero band behind the header on tab screens */
@@ -596,3 +596,11 @@ body, .phone, #screens, .screen{background:var(--pm-bg) !important}
 .screen[data-screen="members"] .count-line{display:none}
 html:not(.is-native) body:not(.shot) .screen.h21 .scroll{padding-top:64px !important}
 html:not(.is-native) body:not(.shot) .screen.h21.has-tabs .scroll{background-size:100% calc(var(--band,170px) + 46px), auto !important}
+/* Welcome stays dark and premium */
+.screen.dark.welcome-v20{background:radial-gradient(120% 60% at 100% 0%,rgba(236,72,153,.28),rgba(236,72,153,0) 50%),radial-gradient(90% 50% at 0% 0%,rgba(56,189,248,.22),rgba(56,189,248,0) 55%),linear-gradient(170deg,#0B1B3F 0%,#1E2A78 55%,#2E1065 100%) !important}
+.welcome-v20 .btn, .welcome-v20 .w20-next, .welcome-v20 .btn.btn-primary{
+  background:linear-gradient(180deg,#FFFFFF 0%,#F1F2F8 100%) !important;color:#1E1B4B !important;border:0 !important;
+  box-shadow:inset 0 1px 0 #FFF,0 10px 28px rgba(0,0,0,.35) !important}
+.welcome-v20 .btn::after{display:none !important}
+.welcome-v20 .btn.btn-ghost, .welcome-v20 #welcomeActions .btn + .btn{background:rgba(255,255,255,.12) !important;color:#FFF !important;border:1px solid rgba(255,255,255,.3) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3) !important}
+html:not(.is-native) body:not(.shot) .phone .status-bar.light{background:transparent}
