@@ -559,9 +559,11 @@ function googleG(size, mono) {
 
     return '<section class="screen has-tabs h21" data-screen="home">' +
       '<div class="scroll">' +
-      '<header class="h21-head"><div class="h21-hello"><div class="h21-date">' + dateLine + '</div><h1>Hi, ' + esc(g.first) + "</h1></div>" +
+      '<header class="h21-head h21-home-head">' +
       '<button type="button" class="h21-round" data-go="chats" aria-label="Chats">' + I.chat + (unread ? '<span class="h21-badge">' + unread + "</span>" : "") + "</button>" +
+      '<div class="h21-home-logo"><img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt=""><div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div></div>' +
       '<button type="button" class="h21-round" data-go="notifications" aria-label="Notifications">' + I.bell + (nb ? '<span class="h21-badge">' + nb + "</span>" : "") + "</button></header>" +
+      '<div class="h21-hello h21-home-hello"><div class="h21-date">' + dateLine + '</div><h1>Hi, ' + esc(g.first) + "</h1></div>" +
       '<div class="h21-stats">' +
       '<button type="button" class="h21-stat" data-go="reviews"><div class="h21-stat-h"><span class="h21-logo">' + googleG(20) + "</span>Google</div>" +
       '<div class="h21-big">' + recd + '</div><div class="h21-sub">received · <b>' + gave + "</b> given</div>" +
