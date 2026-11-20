@@ -38,28 +38,45 @@ jobs:
           bash scripts/prepare-www.sh
           npx cap sync android
 
+      - name: Set the version number (goes up by 1 every build)
+        id: ver
+        run: |
+          # Builds 1-4 happened before numbering started, so the next build is v1.
+          N=$(( ${{ github.run_number }} - 4 ))
+          if [ "$N" -lt 1 ]; then N=1; fi
+          sed -i -E "s/versionCode [0-9]+/versionCode $N/; s/versionName \"[^\"]*\"/versionName \"$N\"/" android/app/build.gradle
+          grep -E "versionCode|versionName" android/app/build.gradle
+          echo "n=$N" >> "$GITHUB_OUTPUT"
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
         working-directory: android
 
+      - name: Name the APK RateBuddies-vN
+        id: apkname
+        run: |
+          N=${{ steps.ver.outputs.n }}
+          cp android/app/build/outputs/apk/debug/app-debug.apk "RateBuddies-v$N.apk"
+          echo "n=$N" >> "$GITHUB_OUTPUT"
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rate-buddies-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: RateBuddies-v${{ steps.apkname.outputs.n }}
+          path: RateBuddies-v${{ steps.apkname.outputs.n }}.apk
           if-no-files-found: error
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: apk-latest
-          name: Rate Buddies test build v1.9.0
+          tag_name: v${{ steps.apkname.outputs.n }}
+          name: Rate Buddies v${{ steps.apkname.outputs.n }}
           body: |
-            Debug APK for sideloading on your phone (v1.9.0 test build).
+            Rate Buddies v${{ steps.apkname.outputs.n }} test build (debug APK for sideloading on your phone).
             On Android, allow installing from this browser or “unknown apps”, then open the APK.
             Sign-in details are in the private test-logins file, not in this repo.
             The web admin is at the GitHub Pages admin.html URL after this version is published, and shares the same test data.
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: RateBuddies-v${{ steps.apkname.outputs.n }}.apk
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
