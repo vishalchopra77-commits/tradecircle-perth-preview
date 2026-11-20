@@ -612,3 +612,69 @@ html:not(.is-native) body:not(.shot) .phone .status-bar.light{background:transpa
 .welcome-v20 .brand-wordmark .w-buddies{background-image:linear-gradient(90deg,#5AB4FF 0%,#8B8BF5 100%) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important}
 .auth-lockup .brand-mark{filter:saturate(1.1)}
 .auth-lockup .brand-wordmark .w-buddies{background:linear-gradient(90deg,#3FA0FF,#7C7CF0);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* =====================================================================
+   v2.4 PREMIUM EVERYWHERE — every screen, not just the tabs
+   (refs: IKEA colour band + white sheet, TradingView/Lightyear colourful rows, indigo selection)
+   ===================================================================== */
+:root{
+  --navy:#4F46E5; --navy-2:#4338CA; --accent:#4F46E5; --accent-2:#4338CA;
+  --accent-soft:#EEF0FF; --accent-ink:#3730A3; --accent-deep:#312E81;
+  --line:#E6E8F0; --muted:#5B6172; --faint:#7A8094;
+}
+/* gradient band + white header on every redesigned screen */
+.screen.h21:not(.dark) .scroll{
+  background: var(--pm-hero) top / 100% var(--band,150px) no-repeat, var(--pm-bg) !important;
+}
+html:not(.is-native) body:not(.shot) .screen.h21:not(.dark) .scroll{background-size:100% calc(var(--band,150px) + 46px), auto !important}
+.screen.h21 .h21-head h1{color:#FFF !important}
+.screen.h21 .h21-date{color:rgba(255,255,255,.72) !important}
+.screen.h21 .h21-round{background:rgba(255,255,255,.14) !important;border:1px solid rgba(255,255,255,.22) !important;color:#FFF !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px rgba(0,0,0,.18) !important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.screen.h21-sub .scroll > .h21-head{margin-bottom:26px}
+/* intro text right under the band reads on light bg */
+.screen.h21 .auth-hero h2{color:#111827}
+.screen.h21 .auth-hero p{color:var(--muted)}
+
+/* white floating cards everywhere */
+.screen:not(.dark) .card, .screen:not(.dark) .areas-card, .screen:not(.dark) .info-rows, .screen:not(.dark) .set-group,
+.screen:not(.dark) .profile-block, .screen:not(.dark) .notif-row, .screen:not(.dark) .chat-row, .screen:not(.dark) .member-card{
+  background:#FFF !important;border:1px solid rgba(16,24,40,.05) !important;box-shadow:var(--pm-card-shadow) !important}
+
+/* State list: colourful code tiles, indigo selection */
+.state-row{background:#FFF !important;border:1px solid rgba(16,24,40,.06) !important;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 16px rgba(16,24,40,.05) !important}
+.state-row .abbr{color:#FFF !important;border:0 !important;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px rgba(16,24,40,.15)}
+.state-row:nth-child(8n+1) .abbr{background:linear-gradient(160deg,#60A5FA,#2563EB) !important}
+.state-row:nth-child(8n+2) .abbr{background:linear-gradient(160deg,#A78BFA,#6D28D9) !important}
+.state-row:nth-child(8n+3) .abbr{background:linear-gradient(160deg,#FB7185,#BE123C) !important}
+.state-row:nth-child(8n+4) .abbr{background:linear-gradient(160deg,#FBBF24,#D97706) !important}
+.state-row:nth-child(8n+5) .abbr{background:linear-gradient(160deg,#34D399,#059669) !important}
+.state-row:nth-child(8n+6) .abbr{background:linear-gradient(160deg,#22D3EE,#0E7490) !important}
+.state-row:nth-child(8n+7) .abbr{background:linear-gradient(160deg,#F472B6,#BE185D) !important}
+.state-row:nth-child(8n+8) .abbr{background:linear-gradient(160deg,#818CF8,#4338CA) !important}
+.state-row.on{background:linear-gradient(180deg,#F5F6FF,#EEF0FF) !important;border:2px solid #6366F1 !important;box-shadow:0 0 0 4px rgba(99,102,241,.12),0 10px 24px rgba(79,70,229,.15) !important}
+.state-row.on .chev{color:#4F46E5 !important}
+
+/* Settings / info rows: colourful icon tiles */
+.set-row .ic, .info-row .ic{color:#FFF !important;border-radius:10px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 3px 8px rgba(16,24,40,.12)}
+.set-row:nth-of-type(6n+1) .ic{background:linear-gradient(160deg,#60A5FA,#2563EB) !important}
+.set-row:nth-of-type(6n+2) .ic{background:linear-gradient(160deg,#A78BFA,#6D28D9) !important}
+.set-row:nth-of-type(6n+3) .ic{background:linear-gradient(160deg,#34D399,#059669) !important}
+.set-row:nth-of-type(6n+4) .ic{background:linear-gradient(160deg,#FBBF24,#D97706) !important}
+.set-row:nth-of-type(6n+5) .ic{background:linear-gradient(160deg,#FB7185,#BE123C) !important}
+.set-row:nth-of-type(6n+6) .ic{background:linear-gradient(160deg,#22D3EE,#0E7490) !important}
+
+/* Inputs: indigo focus */
+input:focus, textarea:focus, select:focus{outline:none;border-color:#6366F1 !important;box-shadow:0 0 0 4px rgba(99,102,241,.15) !important}
+/* Checkboxes / toggles / progress in brand colour */
+input[type="checkbox"], input[type="radio"]{accent-color:#4F46E5}
+.rec-progress .bar i, .rec-progress .bar > *, .goal-bar i, .intro-progress .bar i, .step-bar i, .steps .on{background:linear-gradient(90deg,#6366F1,#A855F7) !important}
+/* Ghost buttons get an indigo tint on light screens */
+.screen:not(.dark) .btn.btn-ghost{color:#3730A3 !important}
+.screen[data-screen="settings"] .scroll{--band:112px}
+.screen[data-screen="signin"] .scroll{--band:178px}
+.screen.h21 .auth-lockup{position:relative;z-index:1;margin-bottom:22px}
+.screen.h21 .auth-lockup .brand-mark{filter:brightness(1.35) saturate(1.15) drop-shadow(0 0 10px rgba(96,165,250,.55))}
+.screen.h21 .auth-lockup .brand-wordmark{color:#FFF !important}
+.screen.h21 .auth-lockup .brand-wordmark .w-buddies{background-image:linear-gradient(90deg,#5AB4FF,#8B8BF5) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important}
+.screen[data-screen^="signup"] .scroll{--band:132px}
