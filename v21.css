@@ -1,0 +1,285 @@
+/* Rate Buddies v2.1 premium light design.
+   Loaded last, after v20.css. It only changes the look: white screens,
+   soft grey bordered cards, black pill buttons, outlined inputs and a flat
+   white tab bar. No layout or behaviour changes. */
+
+:root {
+  --ink: #1C1C1E;
+  --text: #1C1C1E;
+  --muted: #55555A;
+  --faint: #6E6E73;
+  --line: #DCDCDF;
+  --line-2: #E8E8EA;
+  --bg: #FFFFFF;
+  --card: #FFFFFF;
+  --navy: #252222;
+  --navy-2: #3A3636;
+  --accent: #252222;
+  --accent-2: #000000;
+  --accent-soft: #F2F2F2;
+  --accent-ink: #1C1C1E;
+  --accent-deep: #252222;
+  --rb-card-bg: linear-gradient(170deg, #F5F5F5 0%, #EBEBEB 100%);
+  --rb-card-line: #DCDCDF;
+  --radius: 22px;
+  --shadow: none;
+  --shadow-sm: none;
+}
+
+body, button, input, textarea, select {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* ---- Screens and headers ---- */
+.screen:not(.welcome-v20):not(.dark),
+.screen:not(.welcome-v20):not(.dark) .scroll { background: #FFFFFF; }
+.app-header {
+  background: rgba(255, 255, 255, 0.94) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+.app-header .ht, .app-header h1 { color: #1C1C1E; font-weight: 700; }
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 50% !important;
+  border: 1px solid #DCDCDC !important;
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  box-shadow: none !important;
+}
+.icon-btn:empty, .header-spacer {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+.bell-dot {
+  background: #252222 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #FFFFFF !important;
+  top: -4px !important;
+  right: -4px !important;
+}
+.large-title, .auth-hero h2, .dash-greet { color: #1C1C1E !important; }
+.auth-hero p, .hint, .dash-biz, .sub, .biz, .meta .biz { color: #55555A; }
+.group-label {
+  color: #55555A !important;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Cards: soft grey with a thin border ---- */
+.card, .member-card, .req-card, .rec-card, .ov-card, .queue-card, .areas-card,
+.more-profile, .apps-section, .profile-block, .fb-card, .tut-card, .rec-share,
+.intro-lock, .rec-step, .notif-row, .chat-row, .info-rows, .group, .panel, .stat-card {
+  background: var(--rb-card-bg) !important;
+  border: 1px solid var(--rb-card-line) !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+.rec-card::before, .ov-card::before, .ov-card::after, .devi-card::before,
+.rec-card.is-devi::before { display: none !important; }
+.ov-head, .ov-subhead {
+  background: transparent !important;
+  border: 0 !important;
+}
+.ov-ico, .notif-ico, .ov-item-ico, .link-ico, .rec-gmark, .set-row .ic, .info-row .ic {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.notif-row, .chat-row { margin-bottom: 8px; }
+.notif-row.unread { border-color: #B9B9BE !important; }
+
+/* Inner notes and banners become white rows */
+.notice, .banner, .banner.info, .banner.warn, .banner.tbc, .review-back-banner,
+.limit-banner, .ov-attn, .dash-attn, .rec-help, .rec-ask, .rec-tip, .rec-warn,
+.rec-preview, .rec-mine-banner, .rec-copied-banner, .ov-note-line, .area-tip, .ideal-note {
+  background: #FFFFFF !important;
+  border: 1px solid #E8E8EA !important;
+  border-radius: 16px !important;
+  color: #1C1C1E !important;
+  box-shadow: none !important;
+}
+.notice { background: #F2F2F2 !important; border-color: #F2F2F2 !important; }
+.limit-banner { border-color: #DCDCDF !important; }
+.limit-lock {
+  background: #252222 !important;
+  color: #FFFFFF !important;
+  border-radius: 12px !important;
+}
+.limit-banner, .limit-banner *, .rev-today, .rev-today.warn, .limit-eta { color: #1C1C1E !important; }
+.limit-eta, .rev-today { color: #55555A !important; }
+.limit-banner .limit-lock, .limit-banner .limit-lock * { color: #FFFFFF !important; }
+.reviewed-tick { color: #1F9D55 !important; }
+
+/* Home stat tiles */
+.dash-tile, .ov-tile, .dash-tile.amber, .dash-tile.navy, .ov-tile.amber, .ov-tile.navy,
+.dash-tile.teal, .dash-tile.green-deep, .dash-tile.teal-deep {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  border: 1px solid #E8E8EA !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+}
+.dash-tile::before, .dash-tile::after, .ov-tile::before, .ov-tile::after { display: none !important; }
+.dash-tile .n, .dash-tile .l { color: #1C1C1E !important; }
+.dash-tile .l { color: #55555A !important; }
+.dash-tile-ico { background: #F2F2F2 !important; color: #1C1C1E !important; }
+
+/* ---- Buttons ---- */
+.btn { border-radius: 999px !important; box-shadow: none !important; font-weight: 600; }
+.btn-primary, .btn-navy, .btn-fb, .btn-review-back, .ov-cta.btn-primary, .dash-attn-btn {
+  background: #252222 !important;
+  color: #FFFFFF !important;
+  border: 0 !important;
+}
+.btn-primary:hover, .btn-navy:hover, .btn-fb:hover { background: #000000 !important; }
+.btn-fb .f-ico, .btn-fb svg { color: #FFFFFF; }
+.btn-ghost, .btn-ghost.ink, .btn-soft, .ov-cta:not(.btn-primary), .friend-btn {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  border: 1px solid #DCDCDF !important;
+  box-shadow: none !important;
+}
+.btn-locked, .btn[disabled], .btn.is-locked, .ov-pill.locked {
+  background: transparent !important;
+  color: #55555A !important;
+  border: 1px solid #DCDCDF !important;
+}
+.btn-done { background: #F2F2F2 !important; color: #1C1C1E !important; }
+.link, .header-link, a.link { color: #1C1C1E !important; text-decoration: underline; font-weight: 600; }
+.price-tbc, .plan-price { color: #1C1C1E !important; }
+
+/* ---- Inputs ---- */
+.field input, .picker-btn, .search, .search input, .rec-own, .devi-edit input {
+  border-radius: 999px !important;
+  border: 1px solid #DCDCDC !important;
+  background: #FFFFFF !important;
+  box-shadow: none !important;
+  color: #1C1C1E;
+}
+.search input { border: 0 !important; }
+.field textarea, textarea.rec-own { border-radius: 20px !important; border: 1px solid #DCDCDC !important; background: #FFFFFF !important; }
+.field input:focus, .field textarea:focus, .picker-btn:focus, .rec-own:focus { border-color: #252222 !important; outline: none; box-shadow: none !important; }
+.field label { color: #1C1C1E; font-weight: 600; }
+
+/* ---- Segments, chips and pills ---- */
+.seg, .fb-seg, .rec-filters {
+  background: #F2F2F2 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+.seg button, .fb-seg-btn, .rec-filters button {
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: #55555A !important;
+  box-shadow: none !important;
+}
+.seg button.active, .fb-seg-btn.active, .rec-filters button.active {
+  background: #252222 !important;
+  color: #FFFFFF !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+.tab.active svg, .tab.active .f-ico { color: #1C1C1E !important; fill: currentColor; }
+.fb-seg-btn:not(.active) .fb-seg-place { color: #1C1C1E !important; }
+.fb-seg-btn.active .fb-seg-place, .fb-seg-btn.active .fb-seg-lab { color: #FFFFFF !important; }
+.fb-seg-badge, .rec-filters button .n { background: #FFFFFF !important; color: #1C1C1E !important; }
+.fb-seg-bar { background: #FFFFFF !important; border: 0 !important; box-shadow: none !important; }
+.chip, .rec-chip, .region-chip, .trade-opt {
+  background: #F2F2F2 !important;
+  color: #1C1C1E !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+}
+.chip.active, .rec-chip.on, .region-chip.on {
+  background: #252222 !important;
+  color: #FFFFFF !important;
+}
+.rec-starter {
+  background: #FFFFFF !important;
+  border: 1px solid #DCDCDF !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+}
+.rec-starter.on { border: 2px solid #252222 !important; }
+.rec-starter .lab, .rec-step-h .n { color: #1C1C1E !important; }
+.rec-step-h .n { background: #252222 !important; color: #FFFFFF !important; }
+.pill, .t-pill, .r-pill, .ov-pill, .rec-status, .rec-devi-badge, .you-badge, .version-pill {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  border: 1px solid #E8E8EA !important;
+  box-shadow: none !important;
+}
+.rec-progress .bar, .goal-bar, .intro-progress .bar { background: rgba(0, 0, 0, 0.08) !important; }
+.rec-progress .bar i, .rec-progress .bar > *, .goal-bar i, .intro-progress .bar i { background: #252222 !important; }
+
+/* ---- Avatars: square with rounded corners, dark ---- */
+.avatar {
+  border-radius: 14px !important;
+  background: #252222 !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+.avatar svg.pattern { display: none !important; }
+.profile-hero .avatar { border-radius: 22px !important; }
+
+/* ---- More menu tiles ---- */
+.apps-ico, .apps-ico.teal, .apps-ico.navy, .apps-ico.amber, .apps-ico.moss, .apps-ico.steel,
+.apps-ico.rose, .apps-ico.fb {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+.apps-tile { color: #1C1C1E !important; }
+
+/* ---- Tab bar ---- */
+.tabbar {
+  background: #FFFFFF !important;
+  border-top: 0 !important;
+  border-radius: 28px 28px 0 0 !important;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06), 0 -8px 24px rgba(0, 0, 0, 0.06) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.tab {
+  color: #5E5E63 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  font-weight: 500;
+}
+.tab.active {
+  color: #1C1C1E !important;
+  background: transparent !important;
+  font-weight: 700;
+}
+.tab.active svg { stroke-width: 2.4; }
+.tab::before, .tab.active::before { display: none !important; }
+
+/* ---- Welcome stays dark with its photo; make its buttons match ---- */
+.welcome-v20 .btn-primary, .welcome-v20 .w20-next {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+}
+.welcome-v20 .btn-fb {
+  background: #FFFFFF !important;
+  color: #1C1C1E !important;
+}
+.welcome-v20 .btn-fb svg { color: #1877F2; }
+.welcome-v20 .btn-navy, .welcome-v20 .btn-ghost {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+.welcome-v20 .w20-dots .on { background: #FFFFFF !important; }
+
+/* ---- Bottom sheets and toasts ---- */
+.sheet { border-radius: 28px 28px 0 0 !important; }
+.toast { background: #252222 !important; color: #FFFFFF !important; border-radius: 999px !important; }
+.toggle.on { background: #252222 !important; }
