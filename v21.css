@@ -371,3 +371,89 @@ body, button, input, textarea, select {
 .screen.h21-sub .scroll{gap:10px}
 .h21-sub .h21-hello h1{font-size:30px}
 .screen[data-screen^="fb-recommend"] .rec-hero{display:none}
+
+/* ===== v2.2 Premium glossy + glass buttons (all screens) ===== */
+:root{
+  --gl-dark: linear-gradient(180deg,#4A4646 0%,#2B2828 48%,#1A1818 52%,#252222 100%);
+  --gl-dark-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.18), 0 8px 20px rgba(28,28,30,.22);
+  --gl-glass: linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.72) 50%,rgba(246,246,248,.78) 100%);
+  --gl-glass-shadow: inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.06), 0 6px 16px rgba(0,0,0,.07);
+}
+/* Primary: glossy black pill */
+.h21-cta, .btn.btn-primary, .btn.btn-navy, .btn.btn-fb, .btn-review-back, .dash-attn-btn:not(.btn-locked),
+.slim-cta, .friend-btn.friends, .rec-filters button.active, .fb-seg-btn.active, .seg button.active, .seg .active,
+.chip.active, .chip.on{
+  background: var(--gl-dark) !important;
+  color:#FFF !important;
+  border:0 !important;
+  box-shadow: var(--gl-dark-shadow) !important;
+  position:relative; overflow:hidden;
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.h21-cta::after, .btn.btn-primary::after, .btn.btn-navy::after, .btn.btn-fb::after, .btn-review-back::after,
+.dash-attn-btn:not(.btn-locked)::after, .slim-cta::after{
+  content:""; position:absolute; left:8%; right:8%; top:1px; height:45%;
+  border-radius:999px; pointer-events:none;
+  background: linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));
+}
+/* Secondary: frosted glass pill */
+.h21-ghost, .h21-link-btn, .btn.btn-ghost, .friend-btn:not(.friends), .ov-cta, .h21-pill,
+.rec-filters button:not(.active), .h21-locked, .btn-locked, .btn[disabled]{
+  background: var(--gl-glass) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  border:1px solid rgba(0,0,0,.08) !important;
+  box-shadow: var(--gl-glass-shadow) !important;
+  color:#1C1C1E !important;
+}
+.h21-locked, .btn-locked, .btn[disabled]{color:#6E6E73 !important}
+/* Round icon buttons: glass discs */
+.h21-round, .icon-btn:not(:empty){
+  background: var(--gl-glass) !important;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border:1px solid rgba(0,0,0,.08) !important;
+  box-shadow: var(--gl-glass-shadow) !important;
+}
+.h21-badge, .bell-dot{background:var(--gl-dark) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 6px rgba(0,0,0,.25)}
+/* Segmented controls: glass track */
+.fb-seg, .seg, .rec-filters{
+  background: linear-gradient(180deg,#EFEFF1,#E7E7EA) !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.06), inset 0 0 0 1px rgba(0,0,0,.04) !important;
+}
+.rec-filters button:not(.active){background:transparent !important;border:0 !important;box-shadow:none !important}
+/* Chips */
+.chip:not(.active):not(.on){background:var(--gl-glass) !important;border:1px solid rgba(0,0,0,.07) !important;box-shadow:var(--gl-glass-shadow) !important}
+/* Tiles and logos inside cards: glossy white */
+.h21-tile-ico, .h21-logo, .h21-note, .h21-ico{
+  background: linear-gradient(180deg,#FFFFFF 0%,#FAFAFB 100%) !important;
+  box-shadow: inset 0 1px 0 #FFF, 0 1px 2px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.05);
+}
+/* Cards: soft depth */
+.h21-card, .h21-stat{box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 1px 2px rgba(0,0,0,.04), 0 10px 24px rgba(0,0,0,.05) !important}
+/* Tab bar: frosted glass */
+.tabbar{
+  background: rgba(255,255,255,.78) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+}
+/* Inputs: glass fields */
+.input, input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="tel"], textarea, .search{
+  background: linear-gradient(180deg,#FFFFFF,#FBFBFC) !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.04) !important;
+}
+/* Press feedback */
+.h21-cta:active, .btn:active, .h21-ghost:active, .h21-round:active, .h21-tile:active .h21-tile-ico, .fb-seg-btn:active{transform:scale(.97);filter:brightness(.97)}
+/* Welcome (dark photo screen): bright glass buttons */
+.welcome-v20 .btn, .welcome-v20 .w20-next{
+  background: linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.86) 50%,rgba(240,240,242,.9) 100%) !important;
+  color:#1C1C1E !important; border:0 !important;
+  box-shadow: inset 0 1px 0 #FFF, 0 8px 24px rgba(0,0,0,.35) !important;
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.welcome-v20 .btn.btn-ghost, .welcome-v20 #welcomeActions .btn + .btn{
+  background: rgba(255,255,255,.14) !important; color:#FFF !important;
+  border:1px solid rgba(255,255,255,.35) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 8px 24px rgba(0,0,0,.25) !important;
+}
+/* softer gloss */
+:root{--gl-dark: linear-gradient(180deg,#45413F 0%,#2A2727 55%,#1E1C1C 100%)}
+.h21-cta::after, .btn.btn-primary::after, .btn.btn-navy::after, .btn.btn-fb::after, .btn-review-back::after,
+.dash-attn-btn:not(.btn-locked)::after, .slim-cta::after{left:0;right:0;top:0;height:50%;border-radius:999px 999px 40% 40%/999px 999px 100% 100%;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.02))}
