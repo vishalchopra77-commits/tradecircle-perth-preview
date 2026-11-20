@@ -28,6 +28,8 @@ jobs:
           java-version: "17"
 
       - name: Setup Android SDK
+        # The runner already has an Android SDK, so a hiccup here should not stop the build.
+        continue-on-error: true
         uses: android-actions/setup-android@v3
 
       - name: Install npm dependencies
