@@ -1,0 +1,449 @@
+/* Rate Buddies v2.0 design — compact, full-bleed on phones, no fake chrome. */
+
+html { -webkit-text-size-adjust: 100%; }
+html, body { max-width: 100%; overflow-x: hidden; }
+*, *::before, *::after { box-sizing: border-box; }
+img, video, canvas { max-width: 100%; height: auto; }
+.phone, .screens, .screen, .scroll, .sheet, .overlay, .device, .device-col {
+  max-width: 100%;
+}
+
+/* ---- Type and space ---- */
+:root {
+  --pad: 16px;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(16, 32, 51, 0.04), 0 8px 20px rgba(16, 32, 51, 0.06);
+  --shadow-sm: 0 1px 2px rgba(16, 32, 51, 0.05);
+  --tab-h: 64px;
+}
+
+body.shot, html.is-native {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (max-width: 480px) {
+  :root, body {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* Full-bleed on shot (APK, full-screen preview, PNG captures) and real phones */
+body.shot .device,
+body.shot .phone {
+  width: 100vw !important;
+  max-width: 100% !important;
+  height: 100dvh !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+body.shot .status-bar,
+body.shot .home-indicator,
+html.is-native .status-bar,
+html.is-native .home-indicator { display: none !important; }
+
+@media (max-width: 480px) {
+  .studio { display: block; padding: 0; background: #000; }
+  .studio-brand, .chooser, .device-caption, .device::before { display: none !important; }
+  .device, .phone {
+    width: 100vw !important;
+    max-width: 100% !important;
+    height: 100dvh !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .status-bar, .home-indicator { display: none !important; }
+}
+
+/* Tight type scale */
+.app-header .ht, .app-header h1 { font-size: 16px !important; font-weight: 750; letter-spacing: -0.03em; }
+.large-title { font-size: 24px !important; line-height: 1.15; letter-spacing: -0.035em; }
+.auth-hero h2 { font-size: 24px !important; line-height: 1.2; letter-spacing: -0.035em; }
+.auth-hero p { font-size: 14px !important; line-height: 1.45; }
+.brand-wordmark {
+  font-size: clamp(22px, 6.6vw, 26px) !important;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.welcome-inner h2 { font-size: clamp(22px, 6.6vw, 26px) !important; }
+.queue-pos .n { font-size: 28px !important; }
+.lock .clk { font-size: 40px !important; }
+
+.scroll {
+  padding-left: var(--pad) !important;
+  padding-right: var(--pad) !important;
+  overflow-x: hidden !important;
+}
+.screen.has-header .scroll { padding-top: calc(var(--safe-top) + 52px + 8px) !important; }
+.screen.has-header.has-fb-seg .scroll { padding-top: calc(var(--safe-top) + 52px + 88px) !important; }
+.screen.has-tabs .scroll, [data-screen='home'] .scroll, [data-screen='reviews'] .scroll, [data-screen='more'] .scroll, [data-screen='fb-recommend'] .scroll, [data-screen='promo-queue'] .scroll, [data-screen='members'] .scroll, [data-screen='chats'] .scroll, [data-screen='notifications'] .scroll {
+  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px) + 40px) !important;
+}
+.app-header { top: var(--safe-top); }
+
+.btn {
+  height: 48px;
+  font-size: 15px;
+  border-radius: 14px;
+  letter-spacing: -0.02em;
+}
+.btn.has-ico svg, .btn svg { flex: none; }
+
+.tabbar {
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+}
+.tab { font-size: 10px; }
+.scroll { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px) + 16px) !important; }
+
+/* Cards */
+.card, .member-card, .panel, .stat-card, .rec-card, article.card {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ---- Welcome carousel ---- */
+.welcome-v20 {
+  background: #070E1C;
+  color: #fff;
+  overflow: hidden;
+}
+.welcome-v20 .w20-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(var(--safe-top) + 12px) 16px 8px;
+}
+.welcome-v20 .w20-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.welcome-v20 .brand-mark {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 8px;
+}
+.welcome-v20 .brand-wordmark { color: #fff; font-size: 15px !important; letter-spacing: 0.04em; }
+.welcome-v20 .brand-wordmark .w-buddies {
+  background: linear-gradient(90deg, #7EC8FF, #3AA0FC);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.w20-skip {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.72);
+  padding: 8px 4px;
+  flex: none;
+}
+.w20-carousel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.w20-track {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+}
+.w20-track::-webkit-scrollbar { display: none; }
+.w20-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 4px 16px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.w20-hero {
+  flex: 1;
+  min-height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+  background: #12203A;
+}
+.w20-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+.w20-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent, rgba(7,14,28,0.55));
+  pointer-events: none;
+}
+.w20-slide h1 {
+  margin-top: 16px;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: #fff;
+}
+.w20-slide p {
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(232,238,244,0.78);
+  font-weight: 500;
+  max-width: 28ch;
+}
+.w20-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px 8px;
+}
+.w20-dots button {
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.28);
+  padding: 0;
+  transition: width 0.2s, background 0.2s;
+}
+.w20-dots button.on {
+  width: 18px;
+  background: #fff;
+}
+.w20-foot {
+  padding: 4px 16px calc(18px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.w20-foot .or-line { margin: 2px 0; }
+.w20-foot .btn-ghost { color: #fff; border: 1px solid rgba(255,255,255,0.16); background: transparent; }
+.welcome-v20 .w20-next { width: 100%; }
+
+/* Auth screens */
+.auth-lockup { display: flex; align-items: center; gap: 10px; margin: 8px 0 4px; }
+.auth-lockup .brand-mark { width: 36px; height: 36px; }
+.field label { font-size: 12px; font-weight: 700; letter-spacing: 0.02em; }
+.field input, .field select, .search input {
+  font-size: 15px !important;
+  min-height: 48px;
+  border-radius: 12px;
+}
+.rb-demo-toggle { font-size: 13px; }
+
+/* Home / lists polish */
+.greet h1, .greet .large-title, [data-screen="home"] .large-title { font-size: 24px !important; }
+.region-chip, .chip, .seg button { font-size: 13px; }
+.region-chip { max-width: 100%; }
+
+/* Facebook sheet stays on-canvas */
+.overlay, .sheet { max-width: 100%; }
+.sheet { padding-left: 16px; padding-right: 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+
+/* Hidden must beat .btn { display:flex } */
+[hidden], .btn[hidden], button[hidden] { display: none !important; }
+
+input::placeholder, textarea::placeholder {
+  color: #8B97AB !important;
+  font-weight: 500 !important;
+  opacity: 1;
+}
+
+/* Welcome: last-slide layout */
+.welcome-v20.is-end .w20-carousel { flex: 0 1 auto; }
+.welcome-v20.is-end .w20-hero { flex: none; height: 44vh; min-height: 260px; max-height: 380px; }
+.welcome-v20.is-end .w20-slide { flex: none; }
+.welcome-v20.is-end .w20-slide h1 { font-size: 22px; margin-top: 12px; }
+.welcome-v20.is-end .w20-foot { gap: 8px; margin-top: 4px; }
+
+/* ---- Global premium surfaces ---- */
+.card, .req-card, .rec-card, .tut-card, .member-card, .dash-tile, .ov-tile,
+.more-profile, .group.card, .notice, .empty, .panel, .set-row, .chat-row,
+.notif-row, .region-chip, .search, .field input, .field textarea, .sheet {
+  border-radius: 16px;
+}
+.card, .req-card, .rec-card, .tut-card, .member-card, .more-profile, .notice {
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--line-2);
+  background: #fff;
+}
+.notice { padding: 12px 14px; font-size: 13px; line-height: 1.45; color: var(--muted); font-weight: 550; }
+.empty h3, .empty-state h3 { font-size: 18px !important; letter-spacing: -0.03em; }
+.empty p, .empty-state p { font-size: 14px; color: var(--muted); }
+
+.group-label {
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  margin: 16px 2px 8px;
+}
+
+/* Home */
+.dash-hello { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+.dash-greet { font-size: 22px !important; font-weight: 800; letter-spacing: -0.035em; line-height: 1.15; color: var(--ink); }
+.dash-biz { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.dash-stats, .ov-stats { gap: 8px; }
+.dash-tile, .ov-tile {
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: 12px;
+}
+.dash-tile .n { font-size: 22px !important; }
+.ov-cap, .ov-note-line, .ov-subhead, .ov-empty { font-size: 13px; }
+.dash-attn, .ov-attn, .ov-item, .dash-feed-item, .dash-action, .home-short {
+  border-radius: 14px;
+}
+.dash-attn-btn, .ov-pill {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* Reviews */
+.who { font-size: 15px; font-weight: 750; letter-spacing: -0.02em; }
+.meta { font-size: 12px; color: var(--muted); font-weight: 550; }
+.req-card { padding: 14px; margin-bottom: 8px; }
+
+/* Members / profile */
+.member-card { padding: 12px; }
+.info-row .k { font-size: 11px; }
+.info-row .v { font-size: 14px; }
+
+/* More */
+.more-head h2 { font-size: 24px !important; letter-spacing: -0.035em; }
+.more-profile { padding: 12px 14px; width: 100%; display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
+.more-profile .nm { font-size: 15px; }
+
+/* Chats, notifications, settings rows */
+.chat-row, .notif-row, .set-row, .setting-row {
+  padding: 12px 14px;
+}
+.set-row .lab .a { font-size: 15px !important; font-weight: 700; }
+.set-row .lab .b { font-size: 12px; }
+
+/* Sheets and modals */
+.sheet { border-radius: 20px 20px 0 0; }
+.sheet h3 { font-size: 18px !important; }
+.overlay { backdrop-filter: blur(6px); }
+
+/* Queue / subscription / lock */
+.queue-pos .n { font-size: 28px !important; }
+.sub-card, .plan, .price { max-width: 100%; }
+.lock .clk { font-size: 40px !important; }
+
+/* Recommend */
+.rec-card { padding: 14px 14px 16px; overflow: hidden; }
+.rec-card h3, .rec-card .rec-title { font-size: 18px; letter-spacing: -0.03em; }
+.fb-seg-bar, .seg, .seg-bar { max-width: 100%; }
+.rec-tip { font-size: 12px; line-height: 1.45; color: var(--muted); }
+
+/* Tutorials / intro */
+.tut-sec h3 { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin: 18px 2px 8px; }
+.tut-card { display: flex; gap: 12px; padding: 10px; overflow: hidden; }
+.tut-card h4, .tut-card .title { font-size: 15px; font-weight: 750; letter-spacing: -0.02em; }
+.intro-done, .intro-proto { font-size: 13px; }
+[data-screen="intro-video"] .btn.is-locked { opacity: 0.45; }
+
+/* Region picker */
+.acc, .acc-h, .acc-body { max-width: 100%; }
+.acc-h { border-radius: 14px; }
+.region-chip { min-height: 52px; padding: 10px 12px; font-size: 13px; font-weight: 700; }
+.crumb { font-size: 12px; }
+
+/* Signup steps */
+.steps { margin: 4px 0 12px; }
+
+/* Toast stays on canvas */
+.toast { left: 16px; right: 16px; max-width: calc(100% - 32px); }
+
+/* Drawer is off-canvas by design — don't let it expand the page */
+.drawer { max-width: min(300px, 86vw); }
+
+/* ---- Web admin ---- */
+.admin-login, .login-card, .shell, .workspace, .side {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.login-card {
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 24px 50px rgba(0,0,0,.28);
+}
+.login-card h1 { font-size: 24px; letter-spacing: -0.035em; }
+.login-card p { font-size: 14px; }
+.login-card .field input { min-height: 48px; font-size: 15px; border-radius: 12px; }
+.login-card .btn { height: 48px; font-size: 15px; border-radius: 14px; }
+.side { box-shadow: 4px 0 24px rgba(10,19,40,0.12); }
+.brand strong { letter-spacing: -0.03em; }
+.workspace { background:
+  radial-gradient(900px 400px at 100% 0%, rgba(26,95,212,0.06), transparent 55%),
+  var(--bg, #F3F5FA);
+}
+.workspace h1, .workspace .page-title, .workspace h2 {
+  letter-spacing: -0.035em;
+}
+.kpi .n { font-size: 26px !important; }
+.card, .panel, .devi-card, table {
+  border-radius: 16px;
+}
+.btn-sm { height: 36px; padding: 0 12px; border-radius: 10px; font-size: 13px; }
+.topbar { backdrop-filter: blur(12px); }
+
+[data-screen="home"] .ov-panel, [data-screen="home"] .card, [data-screen="home"] .dash-block { margin-bottom: 10px; }
+[data-screen="home"] .ov-cap, [data-screen="home"] .ov-note-line { margin: 8px 0; }
+
+/* Member / me cover: keep photo edge-to-edge under the header, with a readable scrim */
+.screen.has-trade-cover .scroll { padding-top: 0 !important; }
+.screen.has-trade-cover .app-header {
+  background: transparent !important;
+  color: #fff;
+}
+.screen.has-trade-cover .app-header .ht,
+.screen.has-trade-cover .app-header .header-link,
+.screen.has-trade-cover .app-header .icon-btn,
+.screen.has-trade-cover .app-header .icon-btn svg {
+  color: #fff !important;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.65));
+}
+.trade-cover::after {
+  background: linear-gradient(180deg, rgba(8,18,30,.82) 0%, rgba(8,18,30,.5) 38%, rgba(8,18,30,.16) 72%, rgba(8,18,30,.22) 100%) !important;
+}
+
+/* 360px Home: keep the Facebook note above the tab bar */
+@media (max-width: 360px) {
+  .dash-hello { margin: 0 0 8px; }
+  [data-screen="home"] .ov-panel, [data-screen="home"] .card, [data-screen="home"] .dash-block { margin-bottom: 8px; }
+  .dash-tile, .ov-tile { padding: 10px; }
+  [data-screen="home"] .ov-cap, [data-screen="home"] .ov-note-line { margin: 6px 0; }
+}
+
+.trade-cover { margin-left: calc(-1 * var(--pad)); margin-right: calc(-1 * var(--pad)); }

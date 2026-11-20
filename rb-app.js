@@ -12,6 +12,11 @@
     if (/[?&]shot=/.test(location.search) || location.search.indexOf("mode=shot") >= 0) return false;
     return !!(document.querySelector(".chooser") && window.innerWidth > 480);
   }
+  function isDesignShot() {
+    var shot = "";
+    try { shot = new URLSearchParams(location.search).get("shot") || ""; } catch (e) {}
+    return !!(shot && shot !== "welcome");
+  }
 
   function demoToggleHtml(where) {
     var on = window.RB && RB.isDemo();
@@ -278,7 +283,7 @@
         RB.listen("rec_progress", function () { refresh(); });
         RB.listen("notifications", function () { refresh(); });
         if (!isPreviewStudio()) routeAfterLogin();
-      } else if (!isPreviewStudio()) {
+      } else if (!isPreviewStudio() && !isDesignShot()) {
         if (T() && T().go && T().state && T().state.screen && T().state.screen !== "welcome" && T().state.screen !== "signin" && T().state.screen !== "signup") {
           T().go("welcome");
         }

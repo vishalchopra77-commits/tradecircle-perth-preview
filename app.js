@@ -1061,24 +1061,35 @@
   }
 
   function renderWelcome() {
-    return '<section class="screen dark" id="screen-welcome" data-screen="welcome">' +
-      '<div class="welcome-bg" aria-hidden="true"><div class="ring" style="width:280px;height:280px"></div><div class="ring" style="width:400px;height:400px"></div><div class="ring" style="width:520px;height:520px"></div></div>' +
-      '<div class="welcome-inner"><div class="brand-lockup">' +
-      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
-      '<h2 class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></h2>' +
-      '</div>' +
-      '<div class="welcome-kicker">Local businesses</div>' +
-      '<p class="welcome-copy">Join your local areas, meet other trades, and send a Facebook friend request so you can recommend each other in the groups.</p>' +
-      '<ul class="welcome-points">' +
-      '<li><span class="ic">' + icon("check") + "</span> Sign up with Facebook, email or your phone number.</li>" +
-      '<li><span class="ic">' + icon("check") + "</span> Pick the areas you work in.</li>" +
-      '<li><span class="ic">' + icon("check") + "</span> Weekly meet-ups stay offline — they are not in this app.</li>" +
-      '</ul><div class="welcome-actions">' +
-      '<button class="btn btn-fb" data-action="fb-connect" data-next="signup-name">' + icon("fb") + " Continue with Facebook</button>" +
+    var slides = [
+      { img: "assets/welcome/slide-1.jpg", title: "Your local circle", copy: "Join the businesses around you." },
+      { img: "assets/welcome/slide-2.jpg", title: "Help a buddy get hired", copy: "Recommend someone you actually know." },
+      { img: "assets/welcome/slide-3.jpg", title: "Reviews that sound like you", copy: "Ideas only. You write the real words." },
+      { img: "assets/welcome/slide-4.jpg", title: "Work where you work", copy: "Pick your areas and meet nearby trades." }
+    ];
+    var slideHtml = slides.map(function (s, i) {
+      return '<article class="w20-slide" data-slide="' + i + '">' +
+        '<div class="w20-hero"><img src="' + s.img + '" alt="" draggable="false"></div>' +
+        "<h1>" + s.title + "</h1><p>" + s.copy + "</p></article>";
+    }).join("");
+    var dots = slides.map(function (_, i) {
+      return '<button type="button" data-action="welcome-dot" data-index="' + i + '" aria-label="Slide ' + (i + 1) + '"' + (i === 0 ? ' class="on"' : "") + "></button>";
+    }).join("");
+    var actions = '<button class="btn btn-fb" data-action="fb-connect" data-next="signup-name">' + icon("fb") + " Continue with Facebook</button>" +
       '<div class="or-line light"><span>or</span></div>' +
       '<button class="btn btn-navy has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
-      '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>" +
-      '</div><p class="welcome-foot">Recommendations should only be for people you actually know.</p></div></section>';
+      '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>";
+    return '<section class="screen dark welcome-v20" id="screen-welcome" data-screen="welcome">' +
+      '<div class="w20-top"><div class="w20-brand">' +
+      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
+      '<div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div></div>' +
+      '<button type="button" class="w20-skip" data-action="welcome-skip">Skip</button></div>' +
+      '<div class="w20-carousel"><div class="w20-track" id="welcomeTrack">' + slideHtml + "</div></div>" +
+      '<div class="w20-dots" id="welcomeDots">' + dots + "</div>" +
+      '<div class="w20-foot" id="welcomeFoot">' +
+      '<button type="button" class="btn btn-primary w20-next" data-action="welcome-next">Next</button>' +
+      '<div class="w20-actions" id="welcomeActions" hidden>' + actions + "</div>" +
+      "</div></section>";
   }
 
   function renderSignIn() {
@@ -1091,7 +1102,7 @@
       '<div class="auth-hero"><h2>Welcome back</h2><p>Sign in to see members in your areas.</p></div>' +
       '<form data-form="signin">' +
       '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="" autocomplete="username"></div>' +
-      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="" autocomplete="current-password"></div>' +
+      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="Your password" value="" autocomplete="current-password"></div>' +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Sign in</span></button></form>" +
       '<p class="hint" style="text-align:center;margin-top:14px">Sign in with your Rate Buddies test account. Turn on Demo (offline) to browse the sample screens without a login.</p>' +
       '<label class="rb-demo-toggle"><input type="checkbox" data-action="rb-demo"' + ((window.RB && RB.isDemo()) ? " checked" : "") + '> Demo (offline)</label>' +
@@ -1113,7 +1124,7 @@
     } else if (method === "phone") {
       body = '<div class="auth-hero"><h2>Continue with your phone</h2><p>We will send a one-time code. This is a prototype — no SMS is really sent.</p></div>' +
         '<form data-form="signup-phone">' +
-        '<div class="field"><label>Phone number</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '" required autocomplete="tel"></div>' +
+        '<div class="field"><label>Phone number</label><input name="phone" inputmode="tel" placeholder="Mobile number" value="' + escapeAttr(d.phone || "") + '" required autocomplete="tel"></div>' +
         (state.otpSent
           ? '<div class="field"><label>One-time code</label><input name="otp" inputmode="numeric" placeholder="6-digit code" value="482913" required><p class="hint">Prototype code: 482913. Use this to continue.</p></div>' +
             '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Verify and continue</span></button>"
@@ -1158,10 +1169,10 @@
       '<div class="scroll">' + signupSteps(3) +
       '<div class="auth-hero"><h2>Business details and areas</h2><p>Tell the circle what you do and where you work, then send your profile for approval.</p></div>' +
       '<form data-form="signup-business">' +
-      '<div class="field"><label>Business name</label><input name="business" placeholder="Hale Pest Control" value="' + escapeAttr(d.business || "") + '" required></div>' +
-      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
-      '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="12 345 678 901" value="' + escapeAttr(d.abn || "") + '"></div>' +
-      '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="0412 000 000" value="' + escapeAttr(d.phone || "") + '"></div>' +
+      '<div class="field"><label>Business name</label><input name="business" placeholder="Your business name" value="' + escapeAttr(d.business || "") + '" required></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
+      '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="Optional" value="' + escapeAttr(d.abn || "") + '"></div>' +
+      '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="Mobile number" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<p class="group-label">Your areas</p>' +
       selectedAreasCard(selected, { title: "Your areas", openAreas: true, prefix: "create", returnTo: "create-profile", changeLabel: selected.length ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<p class="selected-count">' + count + "</p>" +
@@ -1270,7 +1281,7 @@
       '<div class="name-row"><div class="field"><label>First name</label><input name="first" value="' + escapeAttr(d.first || "") + '" autocomplete="given-name"></div>' +
       '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
-      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
+      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
       '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<div class="group-label">Facebook profile</div>' +
@@ -1353,6 +1364,11 @@
   function go(id, opts) {
     opts = opts || {};
     if (opts.memberId) state.selectedMember = opts.memberId;
+    var signupStart = { signup: 1, "signup-email": 1, "signup-phone": 1, "signup-name": 1, "fb-consent": 1 };
+    if (signupStart[id] && !state.draft) {
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", abn: "", email: "", regions: [], links: {}, profile: {} };
+      state.stepRegions = [];
+    }
     if (id === "create-profile" && !state.draft) {
       var kept = (state.stepRegions || []).slice();
       state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: kept };
@@ -1386,16 +1402,16 @@
       if (state.areaPick && state.areaPick.step === "kind") state.areaPick.step = "list";
       if (id === "create-regions") {
         state.areaPick.step = "list";
-        state.areaPick.stateId = "wa";
+        state.areaPick.stateId = state.areaPick.stateId || "wa";
         state.areaPick.kind = null;
-        state.areaPick.open = { metro: true, regional: false };
+        if (!state.areaPick.open) state.areaPick.open = { metro: true, regional: false };
         state.areaPick.prefix = state.areaPick.prefix || "create";
       }
       if (id === "create-regions-all") {
         state.areaPick.step = "list";
-        state.areaPick.stateId = "wa";
+        state.areaPick.stateId = state.areaPick.stateId || "wa";
         state.areaPick.kind = null;
-        state.areaPick.open = { metro: true, regional: false };
+        if (!state.areaPick.open) state.areaPick.open = { metro: true, regional: false };
         state.areaPick.prefix = "create";
       }
     }
@@ -1411,10 +1427,18 @@
       }
     }
 
+    var keepScroll = (opts.keepScroll === true) || (opts.keepScroll !== false && id === state.screen);
+    var prevScroll = screensEl && screensEl.querySelector(".screen.active .scroll, .scroll");
+    var savedScroll = (keepScroll && prevScroll) ? prevScroll.scrollTop : 0;
+
     state.screen = id;
     screensEl.innerHTML = screenHTML(id);
     var sc = screensEl.querySelector(".screen");
     if (sc) sc.classList.add("active");
+    if (keepScroll && savedScroll) {
+      var nextScroll = screensEl.querySelector(".scroll");
+      if (nextScroll) nextScroll.scrollTop = savedScroll;
+    }
 
     var showTabs = TABBED.has(id);
     tabbar.classList.toggle("show", showTabs);
@@ -1429,6 +1453,7 @@
     bindScreen();
     if (id === "fb-consent") openFbSheet("create-profile");
     if (window.TC12 && TC12.afterGo) TC12.afterGo(id);
+    if (window.TC20 && TC20.afterGo) TC20.afterGo(id);
   }
 
   
@@ -1558,7 +1583,7 @@
     sheetEl = document.createElement("div");
     sheetEl.className = "overlay show";
     sheetEl.innerHTML = '<div class="sheet sheet-trades"><div class="sheet-handle"></div><h3>Choose your trade or business type</h3>' +
-      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Search, e.g. hairdresser or cafe" autocomplete="off"></div>' +
+      '<div class="search" style="margin-bottom:12px">' + icon("search") + '<input id="sheetTradeSearch" type="search" placeholder="Choose your profession" autocomplete="off"></div>' +
       '<div id="sheetTradeList">' + tradeSheetListHTML("", current) + "</div></div>";
     var sheetSearch = sheetEl.querySelector("#sheetTradeSearch");
     if (sheetSearch) {
