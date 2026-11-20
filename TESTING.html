@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testing Rate Buddies v1.9.0</title>
+<style>
+
+  :root { --ink:#0A1328; --muted:#5B6B7C; --line:#E4EAF0; --bg:#F4F6FA; --blue:#1658C7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 800px; margin: 0 auto; padding: 28px 20px 64px; }
+  h1 { font-size: 26px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17px; margin: 22px 0 8px; }
+  h4 { font-size: 16px; margin: 16px 0 6px; }
+  p, li { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  a { color: var(--blue); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; }
+  code { background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+  pre { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 0 0 16px; background: #fff; font-size: 14.5px; }
+  th, td { border: 1px solid var(--line); text-align: left; vertical-align: top; padding: 8px 10px; }
+  th { background: #EEF2F8; font-weight: 650; }
+  blockquote { margin: 0 0 14px; padding: 8px 14px; border-left: 4px solid #1A5FD4; background: #fff; color: var(--muted); }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  @media print {
+    body { background: #fff; }
+    main { max-width: none; padding: 0; }
+    a { color: var(--ink); text-decoration: none; }
+    h2 { break-after: avoid; }
+    tr, pre, table { break-inside: avoid; }
+  }
+
+</style>
+</head>
+<body>
+<main>
+<p class="sub">Rate Buddies · 20 November 2026, Australia/Perth. All example members and businesses are fictional.</p>
+<h1>Testing Rate Buddies v1.9.0</h1>
+<p>This version connects the phone app and the web admin so they share the same live test data. Everything in the test data is fictional. Nothing is sent to Facebook or Google.</p>
+<p>Test account emails and passwords are <strong>not</strong> in this repository. You’ll get a short private login file from the person who set this up. Keep that file to yourself.</p>
+<h2>1. Install the Android app (debug APK)</h2>
+<p>Once this version has been pushed, GitHub Actions builds a debug APK and attaches it to a release named <strong>Rate Buddies test build v1.9.0</strong> (tag <code>apk-latest</code>).</p>
+<ol>
+<li>On your phone, open the GitHub release for tag <code>apk-latest</code> in the <code>tradecircle-perth-preview</code> repo. You can do this in the browser — you do not need to sign in to download from a public release.</li>
+<li>Download <code>app-debug.apk</code>.</li>
+<li>If Android asks, allow this browser (or your Files app) to install unknown apps.</li>
+<li>Open the APK and install <strong>Rate Buddies</strong>.</li>
+<li>This is a test build, not a Play Store app, so Android may show a warning. That’s expected.</li>
+</ol>
+<p>If the release is not there yet, the same APK is also stored as a GitHub Actions artifact named <code>rate-buddies-debug-apk</code>. Artifacts usually need a GitHub login, which is why the release is the easier path from a phone.</p>
+<p>You can also open the app in a phone browser after this version is published, at the usual preview link, and use <strong>Full screen preview</strong>. The admin stays in the browser at <code>admin.html</code>.</p>
+<h2>2. Sign in</h2>
+<p>Turn <strong>Demo (offline)</strong> off (it should be off by default). Use the accounts in the private login file:</p>
+<ul>
+<li>The <strong>admin</strong> account is for the web admin only.</li>
+<li><strong>Jamie</strong> and <strong>Michael</strong> are approved members. Use them in the phone app.</li>
+<li>There is also a <strong>pending</strong> applicant (Nina) you can approve as a test.</li>
+</ul>
+<p>Do not type those passwords into a public chat or into this file.</p>
+<h2>3. What to try in the web admin</h2>
+<p>Open <code>admin.html</code> (on the published preview site, or locally if you have the files).</p>
+<ol>
+<li>Sign in with the admin account.</li>
+<li>Open <strong>Profile requests</strong>. You should see Nina Kaur (Kaur Tiling) waiting.</li>
+<li>Tap <strong>Approve</strong>. Nina can now sign in on the phone. The first screen she gets is the intro video, which she has to watch.</li>
+<li>Open <strong>Incoming requests</strong> (Devi). There should be a plumber request from the Joondalup Community Noticeboard, featuring Michael.</li>
+<li>Tap <strong>Approve</strong>. Members in Perth who are not plumbers (Jamie, for example) get an alert and see the request in <strong>Recommend</strong>.</li>
+<li>After someone taps <strong>I recommended Michael</strong> in the app, the progress on that request should update here.</li>
+</ol>
+<p>If you only want to click around the old sample screens, turn on <strong>Demo (offline)</strong> on the admin sign-in page. That mode does not change the shared test data.</p>
+<h2>4. What to try in the phone app</h2>
+<ol>
+<li>Sign in as Jamie (approved, intro already watched). You should land on Home.</li>
+<li>After you approve the Joondalup plumber request in the admin, open <strong>Facebook → Recommend</strong>. You should see the alert to help Michael, with suggested texts, an “Add your own words” box, Copy, and Open post.</li>
+<li>Choose a starter, add a couple of your own words, copy the text, then tap <strong>I recommended Michael</strong>. That progress should show in the admin.</li>
+<li>Open <strong>More → Video tutorials</strong>. The sections and videos come from the admin’s Video tutorials list (the intro is the first pinned section).</li>
+<li>Sign out, then sign in as Nina after you have approved her. You should be asked to watch the intro before the rest of the app.</li>
+<li>Sign in as Michael if you want to check a plumber account. He should not be asked to recommend himself (same-trade members are not alerted).</li>
+</ol>
+<h2>5. New sign-ups</h2>
+<p>From the app, create an account with a new email and password (at least 8 characters). The profile waits in <strong>Profile requests</strong> until you approve or decline it. Until you approve it, that person stays on the waiting screen.</p>
+<h2>6. If something doesn’t look connected</h2>
+<ul>
+<li>Confirm <strong>Demo (offline)</strong> is off.</li>
+<li>Confirm you are using the accounts from the private login file, not the old <code>demopass</code> sample.</li>
+<li>Pull to refresh or go back and into the screen again. Most lists also update live on their own.</li>
+<li>The APK and the web admin must both be this v1.9.0 build. An older preview on the public site will still show sample-only data until this version is published.</li>
+</ul>
+<h2>7. What this test build does not do yet</h2>
+<ul>
+<li>It does not send Facebook comments or friend requests, or Google reviews, for you.</li>
+<li>Push notifications and a real Devi webhook still come later (with AWS).</li>
+<li>The APK is a debug build for your own phone, not a Play Store release.</li>
+</ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rate Buddies — instructions for an AI or developer</title>
+<style>
+
+  :root { --ink:#0A1328; --muted:#5B6B7C; --line:#E4EAF0; --bg:#F4F6FA; --blue:#1658C7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 800px; margin: 0 auto; padding: 28px 20px 64px; }
+  h1 { font-size: 26px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17px; margin: 22px 0 8px; }
+  h4 { font-size: 16px; margin: 16px 0 6px; }
+  p, li { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  a { color: var(--blue); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; }
+  code { background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+  pre { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 0 0 16px; background: #fff; font-size: 14.5px; }
+  th, td { border: 1px solid var(--line); text-align: left; vertical-align: top; padding: 8px 10px; }
+  th { background: #EEF2F8; font-weight: 650; }
+  blockquote { margin: 0 0 14px; padding: 8px 14px; border-left: 4px solid #1A5FD4; background: #fff; color: var(--muted); }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  @media print {
+    body { background: #fff; }
+    main { max-width: none; padding: 0; }
+    a { color: var(--ink); text-decoration: none; }
+    h2 { break-after: avoid; }
+    tr, pre, table { break-inside: avoid; }
+  }
+
+</style>
+</head>
+<body>
+<main>
+<p class="sub">Rate Buddies · 20 November 2026, Australia/Perth. All example members and businesses are fictional.</p>
+<h1>Rate Buddies — instructions for an AI or developer</h1>
+<p>You are taking over <strong>Rate Buddies</strong> (v2.0) for Vishal Chopra. Read these first, in this order:</p>
+<ol>
+<li><a href="HANDOFF.md">HANDOFF.md</a> — short map of the repo, Supabase, the APK, and the rules you must not regress</li>
+<li><a href="PROJECT.md">PROJECT.md</a> — full product overview (screens, Devi, Recommend, tutorials, regions, 456 types, data model, versions, open issues)</li>
+<li>This file</li>
+<li><a href="TESTING.md">TESTING.md</a> — how to try the connected test accounts (passwords are not in the repo)</li>
+</ol>
+<p>HTML and PDF copies of these four files sit next to the Markdown. Vishal likes plain, easy-to-read HTML for reference documents.</p>
+<p>The source of truth is GitHub: https://github.com/vishalchopra77-commits/tradecircle-perth-preview (<code>main</code>, v2.0 is commit <code>162fa7f</code>). Google Drive is the backup. His Mac Projects folder is a local copy, updated when a version is finished. When copies disagree, <strong>GitHub wins</strong>, unless Vishal says a newer unpublished file is the one to use.</p>
+<p>All demo data is fictional. Nothing is sent to Facebook or Google yet.</p>
+<hr />
+<h2>1. How to run locally and preview</h2>
+<p>From the repo root:</p>
+<pre><code class="language-bash">python3 -m http.server 8767
+</code></pre>
+<p>Then open:</p>
+<ul>
+<li>App: http://127.0.0.1:8767/index.html</li>
+<li>Web admin: http://127.0.0.1:8767/admin.html</li>
+<li>Standalone app copies: <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>TradeCircle-Perth.html</code> (same product; filenames kept so live links work)</li>
+</ul>
+<p>On a phone-width viewport, or in the native APK, the UI is full-bleed. A device frame is only for the desktop preview.</p>
+<p>To use the <strong>shared test database</strong>, turn <strong>Demo (offline)</strong> off (it should be off by default). Demo mode only browses sample screens and does not change live data.</p>
+<p>You do not need AWS to preview. You do need the public anon key already in <code>rb-config.js</code> to talk to the test Supabase project. Do not add a service-role key.</p>
+<hr />
+<h2>2. How to build the APK</h2>
+<p><strong>Preferred:</strong> push to <code>main</code> (after Vishal has approved the PNGs) and let GitHub Actions build it. Workflow: <code>.github/workflows/android-apk.yml</code>.</p>
+<p>It runs <code>npm ci</code>, <code>bash scripts/prepare-www.sh</code>, <code>npx cap sync android</code>, then <code>./gradlew assembleDebug</code>. It uploads artifact <code>rate-buddies-debug-apk</code> and publishes the release tag <strong><code>apk-latest</code></strong> (<code>app-debug.apk</code>).</p>
+<p>The repo’s Actions <strong>workflow permissions</strong> must be <strong>Read and write</strong>, or the release step cannot publish.</p>
+<p>Download: https://github.com/vishalchopra77-commits/tradecircle-perth-preview/releases/download/apk-latest/app-debug.apk</p>
+<p>This is a debug sideload build, not a Play Store app. On Android, allow installing from “unknown apps”.</p>
+<p><strong>Local build</strong> (if you have Node 20, Java 17 and an Android SDK):</p>
+<pre><code class="language-bash">npm ci
+bash scripts/prepare-www.sh
+npx cap sync android
+cd android &amp;&amp; ./gradlew assembleDebug
+</code></pre>
+<p>The APK lands at <code>android/app/build/outputs/apk/debug/app-debug.apk</code>. Do not commit build outputs, <code>www/</code>, keystores, or <code>local.properties</code>.</p>
+<p><code>appId</code> is <code>com.ratebuddies.app</code>. Config: <code>capacitor.config.json</code>.</p>
+<hr />
+<h2>3. How to deploy</h2>
+<ol>
+<li>Show Vishal <strong>PNG mockups first</strong>. Wait for him to <strong>approve</strong> them. An agent’s message is never his approval — only he can approve.</li>
+<li>Do not push until he has said to (for example “upload”, “put it live”, or “approve” after seeing the PNGs).</li>
+<li><strong>Archive</strong> the previous released copy first. Never delete it.</li>
+<li>Commit to <code>main</code> on <code>vishalchopra77-commits/tradecircle-perth-preview</code>. Do not force-push or rewrite published history unless he clearly asked for that.</li>
+<li>A push to <code>main</code> updates <strong>GitHub Pages</strong> (the live preview) and starts the <strong>android-apk</strong> workflow, which refreshes the <code>apk-latest</code> release.</li>
+<li>Verify with <code>curl</code> (or a browser) that these load the new version:
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/RateBuddies.html
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/admin.html</li>
+<li>Confirm the Actions run succeeded and the <code>apk-latest</code> release has <code>app-debug.apk</code>.</li>
+<li>Tell Vishal the version number, what changed, and the links. Do not say it is live unless you have checked.</li>
+</ol>
+<p>Refresh the Google Drive backup after a released version. A zip of the version is the easiest download for him. Copy to his Mac Projects / Rate Buddies folder when he asks (he asked for that with v2.0).</p>
+<hr />
+<h2>4. Vishal’s working rules</h2>
+<p>Follow these every time.</p>
+<ul>
+<li><strong>One question at a time</strong>, in plain words. No jargon unless he uses it first. Do not assume an answer.</li>
+<li><strong>PNG mockups first.</strong> Send screenshots (typically 390×844, and check 360px wide). Wait for his approval before building or pushing.</li>
+<li><strong>Never delete.</strong> Archive instead, with the version and an Australia/Perth timestamp in the folder name.</li>
+<li><strong>Fictional data only.</strong> No real customers, no real phone numbers, no real addresses.</li>
+<li><strong>No secrets in chat or in the repo.</strong> No passwords, no service-role key, no <code>.env</code> with secrets, no keystores.</li>
+<li><strong>Premium, compact UI</strong> that fits a <strong>360px</strong>-wide phone with <strong>no horizontal overflow</strong>. No fake “9:41” status bar on a real phone or in the APK. Every screen and section (tabs, sheets, modals, empty states, admin) should feel premium — not only the first PNG set.</li>
+<li><strong>Keep the scroll position</strong> after a selection, toggle or accordion. The screen must not jump back to the top. This is the default everywhere.</li>
+<li><strong>Choose profession starts empty</strong> on a new sign-up (placeholder only).</li>
+<li><strong>Plain, easy-to-read HTML</strong> for reference lists and documentation. Also save deliverables as <strong>HTML or PDF</strong> (or both) when you give him documents.</li>
+<li>Ask <strong>one</strong> decision at a time when you are blocked. Otherwise do the work.</li>
+</ul>
+<p>Standing product rules (full detail in PROJECT.md — do not regress them): Devi city-minus-same-trade alerts; featured-member rotation; “Let’s help [Name]!” wording; cannot approve if no member of that trade is in the city; unique recommend texts and add-your-own-words; intro video pinned first in Video tutorials and unskippable after approval; daily Google cap of 3; never auto-send Facebook or Google actions; Price to be set until he names a price; WA metro ids stay exact; do not swap the barber cover; Facebook icons use the “f”; royal-blue four-buddy logo; RATE BUDDIES in all caps; filenames and <code>window.TradeCircle</code> stay TradeCircle so live links work.</p>
+<hr />
+<h2>5. Coding conventions</h2>
+<ul>
+<li>This is still a <strong>static HTML/CSS/JS</strong> prototype, not a React/Expo app, unless Vishal later asks to start that build (see TECH-PLAN.md).</li>
+<li>The app shell is <code>index.html</code>. Styles and scripts are <strong>stacked by version</strong>: <code>styles.css</code>, <code>v12.css</code> … <code>v181.css</code>, then <strong><code>v20.css</code></strong>. Same pattern for JS: <code>app.js</code>, <code>v12.js</code> … <code>v181.js</code>, then <strong><code>v20.js</code></strong>, plus <code>rb-*.js</code>. Put new design and behaviour in a new versioned file or in <code>v20.*</code> rather than rewriting history, unless you are fixing a bug in place.</li>
+<li>Public API: <code>window.TradeCircle</code> / <code>T()</code>. <code>TradeCircle.go(screenId)</code> renders a screen. When <code>go</code> re-renders the <strong>same</strong> screen (or <code>opts.keepScroll</code> is set), it must <strong>save and restore</strong> <code>.scroll</code> <code>scrollTop</code>.</li>
+<li>Keep <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>TradeCircle-Perth.html</code> and <code>TradeCircle-Admin.html</code> in step if you change the split files, or note that they are stale. Those copies exist so older links keep working.</li>
+<li><code>rb-config.js</code> holds the public Supabase URL and <strong>anon key only</strong>. Never put the service-role key there. Do not touch Supabase project <code>khhptlbzxigkzhstkatf</code>. The test project is <code>gbkammdluulczowcergu</code>.</li>
+<li>New database changes go in <code>supabase/migrations/</code> with a dated filename. Preserve RLS. Test as anon / member / admin — not as a bypassed service role.</li>
+<li>Regions live in <code>locations.js</code>. WA metro ids: <code>hills</code>, <code>kwinana</code>, <code>north</code>, <code>south</code>, <code>east</code>, <code>central</code>, <code>fremantle</code>, <code>rockingham</code>, <code>joondalup</code>, <code>armadale</code>.</li>
+<li>Business types live in <code>trades.js</code> (456 names, 16 groups).</li>
+<li>Prefer compact, accessible markup. 16px side padding, <code>box-sizing: border-box</code>, <code>viewport-fit=cover</code>, <code>env(safe-area-inset-*)</code>. Nothing should be fixed wider than <code>100vw</code>.</li>
+<li>Version labels: bump the in-app Settings version, the admin sidebar, README / START-HERE “current” line, and the APK release name when you ship. Use Australia/Perth dates. v2.0 was the visual redesign; further small design or feature work can be v2.0.1, v2.1, and so on.</li>
+<li>Comments and docs in plain English. No secrets in commit messages.</li>
+</ul>
+<hr />
+<h2>6. Where the passwords live</h2>
+<p><strong>Not in this repository, not in these docs, and not in chat.</strong></p>
+<p>Test account <strong>emails</strong> (for the shared Supabase project) are:</p>
+<ul>
+<li><code>admin@ratebuddies.test</code> — web admin only</li>
+<li><code>jamie@ratebuddies.test</code> — approved member</li>
+<li><code>michael@ratebuddies.test</code> — approved member</li>
+<li>Nina is usually the pending applicant</li>
+</ul>
+<p><strong>Ask Vishal</strong> for the passwords (or for a private login file). Do not invent new ones and paste them into GitHub. If you must create a fresh test user, use Supabase Auth or the in-app email sign-up, and give him the password privately — never in a commit, issue, or group chat.</p>
+<p>The previous private login file is held outside the repo. If you cannot find it, ask him; he can also reset passwords in the Supabase dashboard.</p>
+<hr />
+<h2>7. How to verify with screenshots</h2>
+<ol>
+<li>Archive first if you are replacing a released look.</li>
+<li>Run the app locally (<code>python3 -m http.server</code>) with <code>body.shot</code> / <code>?shot=screen-id</code> if you use the existing capture helpers, or drive the real screens with Playwright / Chrome.</li>
+<li>Capture at <strong>390×844 @2x</strong>, and also at <strong>360×800</strong> (or 360×844) for overflow checks. No fake status bar in the PNG.</li>
+<li>Look at every PNG yourself. Reject clipped text, oversized type, or content running off the left or right edge.</li>
+<li>Official overflow check at 360px: <code>document.documentElement.scrollWidth &lt;= window.innerWidth</code>. Off-screen welcome-carousel slides and the off-canvas drawer do not count as overflow.</li>
+<li>After a region tap (and other same-screen toggles), assert that <code>.scroll.scrollTop</code> is unchanged (allow a small rounding tolerance).</li>
+<li>On a new sign-up, assert the profession field is empty and the placeholder is visible.</li>
+<li>Save PNGs under <code>screens/</code> in a versioned folder (for example <code>screens/v2.1/</code>), numbered, with a one-line description each.</li>
+<li>Send the PNGs to Vishal and <strong>wait</strong>. Only then build or push.</li>
+<li>After a push, re-check the live Pages URLs and, if the APK changed, that <code>apk-latest</code> has the new file.</li>
+</ol>
+<p>A Playwright script from the v2.0 pass lived at <code>/tmp/v20-shots.py</code> on the build machine; you can write a fresh one in <code>scripts/</code> if you want it in the repo.</p>
+<hr />
+<h2>8. What not to do</h2>
+<ul>
+<li>Do not push without his approval of the PNGs (or a clear “upload / put it live”).</li>
+<li>Do not delete files or old versions.</li>
+<li>Do not put passwords or the service-role key in the repo, in HANDOFF / PROJECT / INSTRUCTIONS / TESTING, or in chat.</li>
+<li>Do not claim Facebook, Google, or AWS work is live if it is only mocked or unfinished.</li>
+<li>Do not invent a subscription price or a “Jump the queue” price.</li>
+<li>Do not auto-send Facebook comments, friend requests, or Google reviews.</li>
+<li>Do not pre-fill Choose profession on a new sign-up.</li>
+<li>Do not let a same-screen update jump the scroll to the top.</li>
+<li>Do not touch Supabase project <code>khhptlbzxigkzhstkatf</code>.</li>
+<li>Do not decide open product questions for him (prices, AWS owner email).</li>
+</ul>
+<p>If you are unsure, ask him one plain question, then stop and wait.</p>
+<p><em>Written 20 November 2026, Australia/Perth, for the v2.0 handoff.</em></p>
+</main>
+</body>
+</html>
