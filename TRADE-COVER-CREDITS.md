@@ -1,6 +1,6 @@
 # Trade cover photo credits
 
-These photos are bundled in `covers/` and used as trade-themed profile banners in the TradeCircle Perth prototype. They are saved locally (not hotlinked). All are used under the [Pexels License](https://www.pexels.com/license/) or the [Unsplash License](https://unsplash.com/license), which allow use without requiring permission. Credit is included here with thanks.
+These photos are bundled in `covers/` and used as trade-themed profile banners in the Rate Buddies prototype. They are saved locally (not hotlinked). All are used under the [Pexels License](https://www.pexels.com/license/) or the [Unsplash License](https://unsplash.com/license), which allow use without requiring permission. Credit is included here with thanks.
 
 | File | Trade | Source | Photographer / page |
 | --- | --- | --- | --- |

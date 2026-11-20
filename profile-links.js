@@ -1,4 +1,4 @@
-/* TradeCircle Perth — profile website and social links v1.5.4 */
+/* Rate Buddies — profile website and social links v1.5.4 */
 (function (root) {
   "use strict";
 

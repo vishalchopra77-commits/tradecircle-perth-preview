@@ -1,8 +1,8 @@
-/* TradeCircle Perth — prototype v1.5.4 integration */
+/* Rate Buddies — prototype v1.5.4 integration */
 (function () {
   "use strict";
 
-  function T() { return window.TradeCircle || {}; }
+  function T() { return window.RateBuddies || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }

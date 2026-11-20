@@ -1,4 +1,4 @@
-/* TradeCircle Perth — trades and local business types v1.6.0 (see ../business-categories/SOURCES.md) */
+/* Rate Buddies — trades and local business types v1.6.0 (see ../business-categories/SOURCES.md) */
 window.TC_TRADES = [
   "Air Conditioning",
   "Architect",

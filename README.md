@@ -1,12 +1,12 @@
 # Rate Buddies
 
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.9.0-1A5FD4)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
-[![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.9.0-1A5FD4)](https://vishalchopra77-commits.github.io/rate-buddies-preview/)
+[![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/rate-buddies-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
 A simple app for local businesses to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. The app is now called **Rate Buddies**. Filenames such as `TradeCircle-Perth.html` and the GitHub repo `tradecircle-perth-preview` are unchanged so existing links keep working. New files (v1.9.0) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/rate-buddies-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/rate-buddies-preview/RateBuddies.html)** on a phone. The app is now called **Rate Buddies**. The app, files and code now use the Rate Buddies name (`RateBuddies.html`, `RateBuddies-Admin.html`, `window.RateBuddies`). The old `TradeCircle-Perth.html` and `TradeCircle-Admin.html` remain as small redirect pages so old links still work. New files (v1.9.0) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -20,7 +20,7 @@ Members meet in person every week — those meet-ups stay **offline**, not in th
 
 This repository is a **clickable HTML/CSS/JavaScript UI prototype**, not a real shipped app. Facebook and Google consent screens are mocks. Chat and review drafts stay on the device. **All member names, businesses, ratings, chats and photos are fictional.**
 
-The online GitHub copy is the source of truth: [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview). [Google Drive](https://drive.google.com/drive/folders/14jfv6IgaBUlpMkdCxcK1f4gNQhL59qpX) is the backup. The Mac folder is updated later, when a version is finished.
+The online GitHub copy is the source of truth: [github.com/vishalchopra77-commits/rate-buddies-preview](https://github.com/vishalchopra77-commits/rate-buddies-preview). [Google Drive](https://drive.google.com/drive/folders/14jfv6IgaBUlpMkdCxcK1f4gNQhL59qpX) is the backup. The Mac folder is updated later, when a version is finished.
 
 ---
 
@@ -119,7 +119,7 @@ The bottom menu is now **Home, Reviews, Facebook, Queue, More**. Chat has moved 
 
 ## What’s new in v1.5.2
 
-The Facebook promotion queue is now easy to find: it has its own **Queue** tab on the bottom menu (Facebook f icon in v1.5.4), a “Your turn to promote” card at the top of the Facebook/members home, and a row on My profile. The bottom menu is now Reviews, Facebook, Chat, Queue and More. More opens a full menu with a search box and a grid of round shortcut tiles, grouped in sections. The active tab uses a TradeCircle green pill, not a copied colour scheme. The slide-out menu is still there from the header, with a proper queue icon.
+The Facebook promotion queue is now easy to find: it has its own **Queue** tab on the bottom menu (Facebook f icon in v1.5.4), a “Your turn to promote” card at the top of the Facebook/members home, and a row on My profile. The bottom menu is now Reviews, Facebook, Chat, Queue and More. More opens a full menu with a search box and a grid of round shortcut tiles, grouped in sections. The active tab uses a RateBuddies green pill, not a copied colour scheme. The slide-out menu is still there from the header, with a proper queue icon.
 
 ## What’s new in v1.5.1
 
@@ -136,7 +136,7 @@ Released 16 November 2026, Australia/Perth.
 - **AI assistant** (prototype/mock): connect Grok, ChatGPT, Claude or other; voice commands for updates, reminders and navigation. Friend requests and Google reviews are never sent automatically — the assistant opens the page, and the member taps the button
 - Chat **attach** (camera, photo, file) plus an **emoji** picker, with sample photo and file messages
 - **241 Australian trades** in the picker and search, sourced from hipages, Oneflare, Airtasker, ServiceSeeking and Yellow Pages style directories — see [TRADES-SOURCES.md](TRADES-SOURCES.md)
-- **Super admin** dashboard (`admin.html`, or the standalone `TradeCircle-Admin.html`): approve members, manage regions, trades, alerts, the promotion queue, reports, chats, plans, AI settings, broadcasts and an audit log. Demo login, mobile-friendly
+- **Super admin** dashboard (`admin.html`, or the standalone `RateBuddies-Admin.html`): approve members, manage regions, trades, alerts, the promotion queue, reports, chats, plans, AI settings, broadcasts and an audit log. Demo login, mobile-friendly
 - Facebook-style friend buttons: **Add friend** / **Request sent** / **Friends ✓**
 - Instagram-style **Review back** when someone left you a Google review, plus **Reviewed ✓**. Review helper stays **ideas only**
 - **Recommendation alerts**: paste a Facebook post, pick the trade, send to the circle; alert card with Open post, comment ideas and Copy, and “Done, I commented”
@@ -239,10 +239,10 @@ Older versions are in [`archive/v1/`](archive/v1/) and [`archive/v1.1/`](archive
 
 ## How to open the prototype
 
-1. **Online (once Pages is live):** [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+1. **Online (once Pages is live):** [vishalchopra77-commits.github.io/rate-buddies-preview](https://vishalchopra77-commits.github.io/rate-buddies-preview/)
 2. **On a computer:** open `index.html` in a browser. You get a studio view with the phone in the middle and a screen list on the right. Use **Open the app** on the left, or click a screen name.
 3. **On a phone:** the same `index.html` opens the app full screen.
-4. `TradeCircle-Perth.html` is the same prototype with CSS and JavaScript inlined. Keep the `fonts/` folder beside either file.
+4. `RateBuddies.html` is the same prototype with CSS and JavaScript inlined. Keep the `fonts/` folder beside either file.
 
 Deep links: `index.html#members`, `index.html#chats`, `index.html#reviews`, `index.html?shot=welcome`.
 

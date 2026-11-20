@@ -1,4 +1,4 @@
-/* TradeCircle Australia locations (states and regions only, no suburbs) — v1.6.2 */
+/* RateBuddies Australia locations (states and regions only, no suburbs) — v1.6.2 */
 window.TC_LOCATIONS = {
   "version": "v1.6.2",
   "hierarchy": [

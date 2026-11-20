@@ -1,4 +1,4 @@
-/* TradeCircle Perth — review and comment idea engine v1.8.1
+/* Rate Buddies — review and comment idea engine v1.8.1
    Original fragments only. Not copied from real reviews. See REVIEW-IDEAS-RESEARCH.md. */
 (function (root) {
   "use strict";

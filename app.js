@@ -2138,7 +2138,7 @@
   }
   go(start);
 
-  window.TradeCircle = {
+  window.RateBuddies = {
     go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
     TRADES: TRADES, filteredMembers: filteredMembers,
     icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,

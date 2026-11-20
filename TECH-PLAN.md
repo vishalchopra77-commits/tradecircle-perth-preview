@@ -3,7 +3,7 @@
 This note is for Vishal and for any assistant (Claude, ChatGPT or similar) continuing the work. It is written in plain words. It is a plan, not a build yet.
 
 **Date:** 18 November 2026, Australia/Perth.  
-**App name:** Rate Buddies. Filenames and the GitHub repo may still use TradeCircle Perth.  
+**App name:** Rate Buddies. Filenames and the GitHub repo may still use Rate Buddies.  
 **Current design:** clickable prototype v1.9.0, with a shared test database so the phone app and web admin stay in sync.
 
 ---
@@ -233,7 +233,7 @@ The Metro or Regional step is now an accordion on the regions screen (Metro open
 
 ## 8l. Added in the v1.7.0 prototype
 
-The on-screen product name is Rate Buddies. Wordmark, page titles, admin header, notifications, settings and related copy were updated. `TradeCircle-Perth.html` and the GitHub repository name are unchanged so existing links keep working. The internal `window.TradeCircle` API name is unchanged.
+The on-screen product name is Rate Buddies. Wordmark, page titles, admin header, notifications, settings and related copy were updated. `RateBuddies.html` and the GitHub repository name are unchanged so existing links keep working. The internal `window.RateBuddies` API name is unchanged.
 
 ## 8m. Added in the v1.7.1 prototype
 
@@ -242,7 +242,7 @@ Royal-blue Rate Buddies logo (four cheering buddy figures) with an HTML all-caps
 
 ## 8p. Added in the v1.8.2 prototype
 
-The product name is Rate Buddies. Domains in the preview are ratebuddies.com and ratebuddies.app. The wordmark is RATE BUDDIES. `RateBuddies.html` was added; `RankBuddies.html`, TradeCircle filenames, the GitHub repo name and `window.TradeCircle` are unchanged.
+The product name is Rate Buddies. Domains in the preview are ratebuddies.com and ratebuddies.app. The wordmark is RATE BUDDIES. `RateBuddies.html` was added; `RankBuddies.html`, RateBuddies filenames, the GitHub repo name and `window.RateBuddies` are unchanged.
 
 ## 8q. Added in the v1.9.0 prototype
 

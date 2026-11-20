@@ -1,8 +1,8 @@
-/* TradeCircle Perth v1.5.9 — recommendations, trade covers, trade icons, My areas */
+/* Rate Buddies v1.5.9 — recommendations, trade covers, trade icons, My areas */
 (function (root) {
   "use strict";
 
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function state() { return T().state || {}; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");

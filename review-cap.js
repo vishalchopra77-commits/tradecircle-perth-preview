@@ -1,4 +1,4 @@
-/* TradeCircle Perth — daily Google review cap per business, v1.5.4
+/* Rate Buddies — daily Google review cap per business, v1.5.4
    Cap is per reviewee, per Perth calendar day. Default 3. */
 (function (root) {
   "use strict";
@@ -45,15 +45,15 @@
   function limit() {
     var n = load(LS_LIMIT, null);
     if (typeof n === "number" && n >= 1 && n <= 20) return n;
-    if (root.TradeCircle && root.TradeCircle.state && root.TradeCircle.state.reviewDailyLimit) {
-      return Number(root.TradeCircle.state.reviewDailyLimit) || DEFAULT_LIMIT;
+    if (root.RateBuddies && root.RateBuddies.state && root.RateBuddies.state.reviewDailyLimit) {
+      return Number(root.RateBuddies.state.reviewDailyLimit) || DEFAULT_LIMIT;
     }
     return DEFAULT_LIMIT;
   }
   function setLimit(n) {
     n = Math.max(1, Math.min(20, Number(n) || DEFAULT_LIMIT));
     save(LS_LIMIT, n);
-    if (root.TradeCircle && root.TradeCircle.state) root.TradeCircle.state.reviewDailyLimit = n;
+    if (root.RateBuddies && root.RateBuddies.state) root.RateBuddies.state.reviewDailyLimit = n;
     return n;
   }
 

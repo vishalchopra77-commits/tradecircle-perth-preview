@@ -4,7 +4,7 @@
 
 # Australian trades list — sources
 
-This note records how the TradeCircle Perth trade list was built for prototype v1.5 (16 November 2026, Australia/Perth). The list is a **deduplicated set of occupation and service names** for the in-app trade picker and search. It is not a copy of any site’s full category tree, and it is not an official directory.
+This note records how the Rate Buddies trade list was built for prototype v1.5 (16 November 2026, Australia/Perth). The list is a **deduplicated set of occupation and service names** for the in-app trade picker and search. It is not a copy of any site’s full category tree, and it is not an official directory.
 
 **Count:** 241 unique names, in `trades.js` (`window.TC_TRADES`).
 

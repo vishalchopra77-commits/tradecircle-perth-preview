@@ -4,7 +4,7 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
-**App name:** Rate Buddies. Older files and the GitHub repo may still say TradeCircle Perth so existing links keep working.  
+**App name:** Rate Buddies. Older files and the GitHub repo may still say Rate Buddies so existing links keep working.  
 **Current prototype version:** v1.9.0 (20 November 2026, Australia/Perth).  
 **What this is:** a clickable HTML/CSS/JavaScript app preview, now wired to a shared test database so the phone app and web admin stay in sync. It is not a finished shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos are fictional.
 
@@ -14,8 +14,8 @@ This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or sim
 
 Vishal wants him, Claude, ChatGPT and any other assistant to work **centrally on the online versions**, not in his Mac folder. His Mac will be updated later, once a version is finished.
 
-- **Source of truth:** [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview)
-- **Live preview:** [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+- **Source of truth:** [github.com/vishalchopra77-commits/rate-buddies-preview](https://github.com/vishalchopra77-commits/rate-buddies-preview)
+- **Live preview:** [vishalchopra77-commits.github.io/rate-buddies-preview](https://vishalchopra77-commits.github.io/rate-buddies-preview/)
 - **How the real app will be built:** [TECH-PLAN.md](TECH-PLAN.md) (and the Google Doc of the same name, if present)
 - **This Google Drive folder** is a **backup copy** of the files and this hand-off pack, so work can continue if a chat hits a usage limit.
 - How to continue, the standing rules, version numbering, and how to deliver a new version are in **AI-INSTRUCTIONS.md** (and in the Google Doc of the same name, if present). Read that file before you change anything.
@@ -134,7 +134,7 @@ All earlier versions were archived, not deleted.
 
 | Version | When (Australia/Perth) | What it added |
 |---|---|---|
-| **v1** | 16 Nov 2026, about 7:39–7:56 am | First 13 clickable screens: welcome, sign in, sign up, create profile, pick regions, a pending-approval screen (not yet decided — see open questions), members list with “My areas” and “All Perth metro” filters and a trade filter, member profile with “Open Facebook profile”, my profile, edit profile, settings. Placeholder name TradeCircle Perth. All members are made up. |
+| **v1** | 16 Nov 2026, about 7:39–7:56 am | First 13 clickable screens: welcome, sign in, sign up, create profile, pick regions, a pending-approval screen (not yet decided — see open questions), members list with “My areas” and “All Perth metro” filters and a trade filter, member profile with “Open Facebook profile”, my profile, edit profile, settings. Placeholder name Rate Buddies. All members are made up. |
 | **v1.1** | 16 Nov 2026, about 8:06–8:15 am | “Sign up with Facebook” and “Continue with Facebook”, Connect Facebook (mock consent), paste-your-Facebook-link fallback, Disconnect, **Add friend** on every member card, and typing search with autocomplete for trades and members (also on the trade picker). |
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
@@ -178,7 +178,7 @@ For a real build, read [TECH-PLAN.md](TECH-PLAN.md) and the Facebook Login notes
 
 ## 5. Open questions (not decided yet)
 
-1. **App name.** Rate Buddies (registered). Older filenames may still say TradeCircle Perth.
+1. **App name.** Rate Buddies (registered). Older filenames may still say Rate Buddies.
 2. **Paid plan and queue jump prices.** Not set. Always use “Price to be set”. Do not invent a price.
 
 Decided in v1.5: new members wait for Vishal to approve them.
@@ -190,7 +190,7 @@ Other context from earlier discussion, not yet locked as product rules: the circ
 ## 6. What’s in this Google Drive folder
 
 ```
-TradeCircle App - Mac Files/
+RateBuddies App - Mac Files/
   START-HERE.md                          ← this file (plain text)
   START-HERE                             ← same content as a Google Doc, if present
   AI-INSTRUCTIONS.md                     ← rules and delivery process for assistants
@@ -201,7 +201,7 @@ TradeCircle App - Mac Files/
   ui-v1.2.tgz                            ← same v1.2 files as a .tgz bundle
   v1.2 (current)/                        ← full unpacked current prototype
     index.html
-    TradeCircle-Perth.html               ← same prototype, CSS/JS inlined
+    RateBuddies.html               ← same prototype, CSS/JS inlined
     styles.css, v12.css, app.js, v12.js
     README.md                            ← detailed v1.2 notes and policy sources
     overview.png, overview-chat.png
@@ -223,7 +223,7 @@ The `.zip` files are the easiest way to download a whole version and open it loc
 ## 7. How to open the prototype
 
 1. Download **TradeCircle-Perth-v1.2.zip** and unzip it, or download the whole **v1.2 (current)** folder and keep its subfolders together.
-2. On a computer: open `index.html` or `TradeCircle-Perth.html` in a web browser. `index.html` shows a desktop chooser with a phone frame and a list of screens on the right. `TradeCircle-Perth.html` is the same app with CSS and JavaScript inlined.
+2. On a computer: open `index.html` or `RateBuddies.html` in a web browser. `index.html` shows a desktop chooser with a phone frame and a list of screens on the right. `RateBuddies.html` is the same app with CSS and JavaScript inlined.
 3. On a phone: open the same HTML file (or the hosted page, if one is published later) and the app should go full screen.
 4. Keep the `fonts/` folder beside the HTML. `index.html` also needs `styles.css`, `v12.css`, `app.js` and `v12.js` in the same folder. Screenshots in `screens/` are previews only; they are not required to run the prototype.
 5. Useful deep links once `index.html` is open: `#members`, `#member/liam`, or `?shot=welcome` (shot mode is 390×844, no studio chrome).
@@ -236,7 +236,7 @@ To compare older versions, unzip the matching file in **Archive** and open that 
 
 - Read AI-INSTRUCTIONS.md and follow it. Work on the GitHub / Drive copies, not the Mac folder. For the real build, also read [TECH-PLAN.md](TECH-PLAN.md).
 - Stay on this project (Facebook Business Marketing / Rate Buddies). Do not invent a different product.
-- The product name is **Rate Buddies**. Keep existing filenames (`TradeCircle-Perth.html`) and the GitHub repo name unless the owner asks to change them.
+- The product name is **Rate Buddies**. Keep existing filenames (`RateBuddies.html`) and the GitHub repo name unless the owner asks to change them.
 - Keep weekly meetups offline. Do not add them as an in-app feature unless the owner asks.
 - Do not add pre-written, auto-posted, swapped, or duplicate Google reviews. Keep the ideas/suggestions helper, and keep the “write in your own words / only review businesses you have actually used” warning.
 - Keep the Facebook paste-link fallback. Do not claim that one-tap Facebook Login will always produce a working “send friend request” URL.

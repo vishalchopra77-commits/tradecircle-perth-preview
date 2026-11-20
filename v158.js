@@ -1,11 +1,11 @@
-/* TradeCircle Perth v1.5.8 — complete-profile, demo signup, finish-profile card */
+/* Rate Buddies v1.5.8 — complete-profile, demo signup, finish-profile card */
 (function (root) {
   "use strict";
 
   var SPEC_CHIPS = ["Pest Control", "Termite inspections", "General pests", "Rodent control", "Commercial", "Residential", "Emergency call-outs", "Pre-purchase inspections"];
   var IDEAL_CHIPS = ["Plumber", "Electrician", "Builder", "Carpenter", "Roofer", "Painter", "Landscaper", "Air conditioning", "Tiler", "Handyman"];
 
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function state() { return T().state || {}; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");

@@ -26,7 +26,7 @@ The current software is a **clickable HTML/CSS/JavaScript prototype** plus:
 
 The long-term plan is one real iPhone and Android app, hosted on AWS in Sydney. See [TECH-PLAN.md](TECH-PLAN.md). AWS sign-up was started but is waiting on the account-owner email. The account name is “Rate Buddies”.
 
-The GitHub repository and many filenames still say **TradeCircle** so existing preview links keep working. The in-app JavaScript API is `window.TradeCircle` / `T()`. The on-screen name is **RATE BUDDIES** (all caps), with a royal-blue four-buddy logo.
+The GitHub repository and many filenames still say **RateBuddies** so existing preview links keep working. The in-app JavaScript API is `window.RateBuddies` / `T()`. The on-screen name is **RATE BUDDIES** (all caps), with a royal-blue four-buddy logo.
 
 ---
 
@@ -34,11 +34,11 @@ The GitHub repository and many filenames still say **TradeCircle** so existing p
 
 | What | URL |
 | --- | --- |
-| GitHub (source of truth) | https://github.com/vishalchopra77-commits/tradecircle-perth-preview |
-| Live preview (GitHub Pages) | https://vishalchopra77-commits.github.io/tradecircle-perth-preview/ |
-| App | https://vishalchopra77-commits.github.io/tradecircle-perth-preview/RateBuddies.html |
-| Web admin | https://vishalchopra77-commits.github.io/tradecircle-perth-preview/admin.html |
-| Latest debug APK | https://github.com/vishalchopra77-commits/tradecircle-perth-preview/releases/download/apk-latest/app-debug.apk |
+| GitHub (source of truth) | https://github.com/vishalchopra77-commits/rate-buddies-preview |
+| Live preview (GitHub Pages) | https://vishalchopra77-commits.github.io/rate-buddies-preview/ |
+| App | https://vishalchopra77-commits.github.io/rate-buddies-preview/RateBuddies.html |
+| Web admin | https://vishalchopra77-commits.github.io/rate-buddies-preview/admin.html |
+| Latest debug APK | https://github.com/vishalchopra77-commits/rate-buddies-preview/releases/download/apk-latest/app-debug.apk |
 | v2.0 design PNGs | [`screens/v2.0/`](screens/v2.0/) |
 | v2.0 on GitHub | commit `162fa7f` on `main` (20 Nov 2026) |
 

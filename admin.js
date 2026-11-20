@@ -471,7 +471,7 @@
         linkField("other", "Other link", m.other) +
         '<button class="btn btn-primary" data-action="save-mem" data-id="' + m.id + '" style="margin-top:12px">Save links (prototype)</button>' +
         (window.TCProfile ? '<div style="margin-top:18px"><p class="panel-sub" style="margin-bottom:8px"><strong>Profile</strong> — about the business, expertise, gallery, ideal referral partner and goals. These are optional in the app.</p>' +
-          window.TCProfile.adminHTML({ id: m.id, bio: m.bio || ((window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === m.id; })[0] || {}).bio || "", profile: m.profile || (window.TCProfile.seedFor({ id: m.id })) }) +
+          window.TCProfile.adminHTML({ id: m.id, bio: m.bio || ((window.RateBuddies && RateBuddies.MEMBERS || []).filter(function (x) { return x.id === m.id; })[0] || {}).bio || "", profile: m.profile || (window.TCProfile.seedFor({ id: m.id })) }) +
           "</div>" : ""));
     }
     if (page === "settings") {

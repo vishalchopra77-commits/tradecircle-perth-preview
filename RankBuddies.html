@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <style>
 /* styles.css */
-/* TradeCircle Perth UI v1 */
+/* Rate Buddies UI v1 */
 @font-face {
   font-family: "Plus Jakarta Sans";
   src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
@@ -912,7 +912,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 </style>
   <style>
 /* v12.css */
-/* TradeCircle Perth v1.2 */
+/* Rate Buddies v1.2 */
 .tabbar {
   grid-template-columns: repeat(4, 1fr);
   padding: 8px 10px 20px;
@@ -1381,7 +1381,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 </style>
   <style>
 /* v15.css */
-/* TradeCircle Perth — prototype v1.5.1 visual polish and new screens */
+/* Rate Buddies — prototype v1.5.1 visual polish and new screens */
 
 .btn-primary {
   background: linear-gradient(180deg, #2E86F0 0%, #1658C7 100%);
@@ -1620,7 +1620,7 @@ body:has(.screen.dark.active) .home-indicator { background: #fff; opacity: 0.55;
 .home-short .ic.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
 .home-short svg { width: 15px; height: 15px; }
 
-/* More — apps grid (structure only; TradeCircle colours) */
+/* More — apps grid (structure only; RateBuddies colours) */
 .more-head {
   display: flex; align-items: center; justify-content: space-between;
   padding: 4px 2px 10px;
@@ -2428,7 +2428,7 @@ input.invalid { border-color: #E24B4A; }
 </style>
   <style>
 /* v158.css */
-/* TradeCircle Perth v1.5.8 — signup polish, complete-profile, finish-profile card */
+/* Rate Buddies v1.5.8 — signup polish, complete-profile, finish-profile card */
 .signup-steps { display: flex; gap: 6px; margin: 4px 0 6px; }
 .signup-steps span { flex: 1; height: 4px; border-radius: 99px; background: #E4EAF0; }
 .signup-steps span.on { background: var(--accent, #1A5FD4); }
@@ -2463,7 +2463,7 @@ input.invalid { border-color: #E24B4A; }
 </style>
   <style>
 /* v159.css */
-/* TradeCircle Perth v1.5.9 — Facebook recommendations + My areas on profile */
+/* Rate Buddies v1.5.9 — Facebook recommendations + My areas on profile */
 .rec-hero { margin: 0 0 14px; }
 .rec-hero h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.03em; }
 .rec-hero p { margin: 0; color: #5B6B7C; font-size: 14px; line-height: 1.45; }
@@ -2642,7 +2642,7 @@ input.invalid { border-color: #E24B4A; }
 </style>
   <style>
 /* v161.css */
-/* TradeCircle Perth — v1.6.2 area picker (state → metro/regional accordions) */
+/* Rate Buddies — v1.6.2 area picker (state → metro/regional accordions) */
 
 .crumb {
   display: flex;
@@ -3430,7 +3430,7 @@ text (Plus Jakarta Sans ExtraBold, all caps) so the lettering stays clean.
   </div>
   <script>
 /* locations.js */
-/* TradeCircle Australia locations (states and regions only, no suburbs) — v1.6.2 */
+/* RateBuddies Australia locations (states and regions only, no suburbs) — v1.6.2 */
 window.TC_LOCATIONS = {
   "version": "v1.6.2",
   "hierarchy": [
@@ -4136,7 +4136,7 @@ window.TC_LOCATIONS = {
 </script>
   <script>
 /* trades.js */
-/* TradeCircle Perth — trades and local business types v1.6.0 (see ../business-categories/SOURCES.md) */
+/* Rate Buddies — trades and local business types v1.6.0 (see ../business-categories/SOURCES.md) */
 window.TC_TRADES = [
   "Air Conditioning",
   "Architect",
@@ -8138,7 +8138,7 @@ window.TC_BUSINESS_CATEGORIES = {
 </script>
   <script>
 /* ideas-engine.js */
-/* TradeCircle Perth — review and comment idea engine v1.8.1
+/* Rate Buddies — review and comment idea engine v1.8.1
    Original fragments only. Not copied from real reviews. See REVIEW-IDEAS-RESEARCH.md. */
 (function (root) {
   "use strict";
@@ -8675,7 +8675,7 @@ window.TC_BUSINESS_CATEGORIES = {
 </script>
   <script>
 /* profile-links.js */
-/* TradeCircle Perth — profile website and social links v1.5.4 */
+/* Rate Buddies — profile website and social links v1.5.4 */
 (function (root) {
   "use strict";
 
@@ -8807,7 +8807,7 @@ window.TC_BUSINESS_CATEGORIES = {
 </script>
   <script>
 /* profile-extras.js */
-/* TradeCircle Perth — richer profile sections (v1.5.4) */
+/* Rate Buddies — richer profile sections (v1.5.4) */
 (function (root) {
   "use strict";
 
@@ -9188,7 +9188,7 @@ window.TC_BUSINESS_CATEGORIES = {
 
   function openViewer(mid, index) {
     var m = null;
-    try { m = (window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === mid; })[0]; } catch (e) {}
+    try { m = (window.RateBuddies && RateBuddies.MEMBERS || []).filter(function (x) { return x.id === mid; })[0]; } catch (e) {}
     var items = fromMember(m).gallery;
     if (!items.length) return;
     viewer.mid = mid;
@@ -9289,7 +9289,7 @@ window.TC_BUSINESS_CATEGORIES = {
 </script>
   <script>
 /* review-cap.js */
-/* TradeCircle Perth — daily Google review cap per business, v1.5.4
+/* Rate Buddies — daily Google review cap per business, v1.5.4
    Cap is per reviewee, per Perth calendar day. Default 3. */
 (function (root) {
   "use strict";
@@ -9336,15 +9336,15 @@ window.TC_BUSINESS_CATEGORIES = {
   function limit() {
     var n = load(LS_LIMIT, null);
     if (typeof n === "number" && n >= 1 && n <= 20) return n;
-    if (root.TradeCircle && root.TradeCircle.state && root.TradeCircle.state.reviewDailyLimit) {
-      return Number(root.TradeCircle.state.reviewDailyLimit) || DEFAULT_LIMIT;
+    if (root.RateBuddies && root.RateBuddies.state && root.RateBuddies.state.reviewDailyLimit) {
+      return Number(root.RateBuddies.state.reviewDailyLimit) || DEFAULT_LIMIT;
     }
     return DEFAULT_LIMIT;
   }
   function setLimit(n) {
     n = Math.max(1, Math.min(20, Number(n) || DEFAULT_LIMIT));
     save(LS_LIMIT, n);
-    if (root.TradeCircle && root.TradeCircle.state) root.TradeCircle.state.reviewDailyLimit = n;
+    if (root.RateBuddies && root.RateBuddies.state) root.RateBuddies.state.reviewDailyLimit = n;
     return n;
   }
 
@@ -11551,7 +11551,7 @@ window.TC_BUSINESS_CATEGORIES = {
   }
   go(start);
 
-  window.TradeCircle = {
+  window.RateBuddies = {
     go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
     TRADES: TRADES, filteredMembers: filteredMembers,
     icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,
@@ -11572,7 +11572,7 @@ window.TC_BUSINESS_CATEGORIES = {
 (function () {
   "use strict";
 
-  function T() { return window.TradeCircle || {}; }
+  function T() { return window.RateBuddies || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
@@ -12970,7 +12970,7 @@ function facebookF(size, color) {
 (function () {
   "use strict";
 
-  function T() { return window.TradeCircle || {}; }
+  function T() { return window.RateBuddies || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
@@ -13961,11 +13961,11 @@ function googleG(size, mono) {
 </script>
   <script>
 /* v154.js */
-/* TradeCircle Perth — prototype v1.5.4 integration */
+/* Rate Buddies — prototype v1.5.4 integration */
 (function () {
   "use strict";
 
-  function T() { return window.TradeCircle || {}; }
+  function T() { return window.RateBuddies || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
@@ -14566,14 +14566,14 @@ function googleG(size, mono) {
 </script>
   <script>
 /* v158.js */
-/* TradeCircle Perth v1.5.8 — complete-profile, demo signup, finish-profile card */
+/* Rate Buddies v1.5.8 — complete-profile, demo signup, finish-profile card */
 (function (root) {
   "use strict";
 
   var SPEC_CHIPS = ["Pest Control", "Termite inspections", "General pests", "Rodent control", "Commercial", "Residential", "Emergency call-outs", "Pre-purchase inspections"];
   var IDEAL_CHIPS = ["Plumber", "Electrician", "Builder", "Carpenter", "Roofer", "Painter", "Landscaper", "Air conditioning", "Tiler", "Handyman"];
 
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function state() { return T().state || {}; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -14941,11 +14941,11 @@ function googleG(size, mono) {
 </script>
   <script>
 /* v159.js */
-/* TradeCircle Perth v1.5.9 — recommendations, trade covers, trade icons, My areas */
+/* Rate Buddies v1.5.9 — recommendations, trade covers, trade icons, My areas */
 (function (root) {
   "use strict";
 
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function state() { return T().state || {}; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -15703,7 +15703,7 @@ function googleG(size, mono) {
 /* Rate Buddies v1.8.0 — Devi automatic recommendation requests (member app, fictional) */
 (function (root) {
   "use strict";
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function S() { return (T().state || (T().state = {})); }
   function C() { return root.TCDeviCity || null; }
   function esc(s) {
@@ -16111,7 +16111,7 @@ function googleG(size, mono) {
 /* Rate Buddies v1.8.2 — unique recommend texts, profile share, tutorials, intro video */
 (function (root) {
   "use strict";
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function S() { return (T().state || (T().state = {})); }
   function C() { return root.TCDeviCity || null; }
   function Tut() { return root.TCTutorials || null; }
@@ -16748,7 +16748,7 @@ window.RBConfig = {
     } catch (e) {}
   }
   function toast(msg) {
-    if (root.TradeCircle && TradeCircle.toast) TradeCircle.toast(msg);
+    if (root.RateBuddies && RateBuddies.toast) RateBuddies.toast(msg);
     else if (root.TCAdmin) { /* admin may not have toast */ }
   }
 
@@ -16984,7 +16984,7 @@ window.RBConfig = {
 /* Rate Buddies v1.9.0 — wire the member app to Supabase. */
 (function () {
   "use strict";
-  function T() { return window.TradeCircle; }
+  function T() { return window.RateBuddies; }
   function toast(m) { if (T() && T().toast) T().toast(m); }
   function isNative() {
     try { return !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()); }

@@ -1,7 +1,7 @@
 /* Rate Buddies v1.8.0 — Devi automatic recommendation requests (member app, fictional) */
 (function (root) {
   "use strict";
-  function T() { return root.TradeCircle || {}; }
+  function T() { return root.RateBuddies || {}; }
   function S() { return (T().state || (T().state = {})); }
   function C() { return root.TCDeviCity || null; }
   function esc(s) {
