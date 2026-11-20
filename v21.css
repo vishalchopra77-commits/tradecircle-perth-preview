@@ -594,3 +594,5 @@ body, .phone, #screens, .screen{background:var(--pm-bg) !important}
 .member-card .btn-msg, .member-card [data-action="open-chat"]{background:var(--pm-cta) !important;color:#FFF !important;border:0 !important;box-shadow:var(--pm-cta-shadow) !important}
 .chat-row .ub, .chat-row .badge, .ov-msg .ub, .unread-badge{background:linear-gradient(180deg,#FF5C8A,#E11D48) !important;color:#FFF !important}
 .screen[data-screen="members"] .count-line{display:none}
+html:not(.is-native) body:not(.shot) .screen.h21 .scroll{padding-top:64px !important}
+html:not(.is-native) body:not(.shot) .screen.h21.has-tabs .scroll{background-size:100% calc(var(--band,170px) + 46px), auto !important}
