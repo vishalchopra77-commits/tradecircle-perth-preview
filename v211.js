@@ -1,4 +1,4 @@
-/* Rate Buddies v2.1.1 — member profile actions, badges, promotion queue, vouch confirm */
+/* Rate Buddies v2.1.2 — member profile actions, badges, promotion queue, vouch confirm */
 (function (root) {
   "use strict";
 
@@ -1053,7 +1053,7 @@
   }
 
   root.TC211 = {
-    VERSION: "2.1.1",
+    VERSION: "2.1.2",
     DEFAULT_TIERS: DEFAULT_TIERS,
     tiers: tiers,
     badgeOf: badgeOf,

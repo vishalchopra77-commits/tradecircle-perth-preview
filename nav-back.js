@@ -1,4 +1,4 @@
-/* Rate Buddies v2.1.1 — unified back navigation (on-screen arrow + Android hardware/gesture). */
+/* Rate Buddies v2.1.2 — unified back navigation (on-screen arrow + Android hardware/gesture). */
 (function (root) {
   "use strict";
 
@@ -128,6 +128,14 @@
     }
     if (cur === "home" || cur === "welcome" || cur === "lockscreen") {
       return exitApp();
+    }
+    /* Known sub-screens with an empty stack: Video tutorials returns to More. */
+    var FALLBACK = { tutorials: "more", "tutorial-play": "tutorials" };
+    if (cur && FALLBACK[cur]) {
+      restoring = true;
+      try { if (T().go) T().go(FALLBACK[cur], { back: true, replace: true }); }
+      finally { restoring = false; }
+      return true;
     }
     /* Unknown sub-screen with empty stack: go to Home rather than exiting. */
     if (cur && cur !== "home") {

@@ -273,6 +273,7 @@
     { id: "notif-settings", title: "Notification settings", sub: "Toggles and quiet hours" },
     { id: "lockscreen", title: "Lock screen push", sub: "Mock notifications on the lock screen" },
     { id: "more", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
+    { id: "tutorials", title: "Video tutorials", sub: "Short guides on how to use Rate Buddies" },
     { id: "drawer", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
     { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
@@ -292,7 +293,7 @@
     { id: "reviews-back", title: "Reviews — review back", sub: "Who left you a Google review" }
   ];
 
-  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue", "fb-recommend", "fb-recommend-open", "fb-recommend-mine", "fb-recommend-done"]);
+  const TABBED = new Set(["home", "members", "members-all", "members-filter", "members-search", "me", "settings", "reviews", "reviews-back", "chats", "notifications", "notif-settings", "subscription", "invite", "help", "my-regions", "my-regions-all", "drawer", "more", "google-consent", "ai-assistant", "ai-voice", "rec-alerts", "rec-compose", "rec-alert", "promo-queue", "fb-recommend", "fb-recommend-open", "fb-recommend-mine", "fb-recommend-done", "tutorials", "tutorial-play"]);
   const DARK = new Set(["welcome"]);
 
   const state = {
@@ -1307,7 +1308,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.1 · 20 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.2 · 20 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -1466,7 +1467,7 @@
       "more": 1, "me": 1, "settings": 1, "edit-profile": 1, "my-regions": 1, "my-regions-all": 1,
       "subscription": 1, "invite": 1, "help": 1, "ai-assistant": 1, "ai-voice": 1,
       "rec-alerts": 1, "rec-compose": 1, "rec-alert": 1, "notifications": 1,
-      "notif-settings": 1, "drawer": 1, "google-consent": 1
+      "notif-settings": 1, "drawer": 1, "google-consent": 1, "tutorials": 1, "tutorial-play": 1
     };
     tabbar.querySelectorAll(".tab").forEach(function (el) {
       var tab = el.dataset.tab;

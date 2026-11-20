@@ -60,9 +60,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
-          name: Rate Buddies test build v2.1.1
+          name: Rate Buddies test build v2.1.2
           body: |
-            Debug APK for sideloading on your phone (v2.1.1 test build).
+            Debug APK for sideloading on your phone (v2.1.2 test build).
             On Android, allow installing from this browser or “unknown apps”, then open the APK.
             Sign-in details are in the private test-logins file, not in this repo.
             The web admin is at the GitHub Pages admin.html URL after this version is published, and shares the same test data.

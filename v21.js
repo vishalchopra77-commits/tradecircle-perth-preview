@@ -1,4 +1,4 @@
-/* Rate Buddies v2.1.1 — Google Reviews flow, trade-icon avatars, region UX, chrome. */
+/* Rate Buddies v2.1.2 — Google Reviews flow, trade-icon avatars, region UX, chrome. */
 (function (root) {
   "use strict";
 
@@ -532,7 +532,7 @@
       '<div class="v21-more-sec">Account</div>' +
       '<div class="v21-more-card"><div class="v21-more-grid">' + account + "</div></div>" +
       '<button type="button" class="v21-signout" data-go="welcome">Sign out</button>' +
-      '<p class="v21-ver">Rate Buddies v2.1.1</p>' +
+      '<p class="v21-ver">Rate Buddies v2.1.2</p>' +
       "</div></section>";
   }
   function facebookFMore() {
@@ -631,7 +631,7 @@
     afterGo: afterGo,
     isMeAvailable: isMeAvailable,
     notificationGap: function () { return notificationGap; },
-    VERSION: "2.1.1"
+    VERSION: "2.1.2"
   };
   install();
 })(typeof window !== "undefined" ? window : this);

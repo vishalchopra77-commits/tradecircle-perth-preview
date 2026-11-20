@@ -1,4 +1,4 @@
-/* Rate Buddies v1.8.2 — shared video tutorial + intro store (fictional demo data). */
+/* Rate Buddies v2.1.2 — shared video tutorial + intro store (fictional demo data). */
 (function (root) {
   "use strict";
   var KEY = "rb_tutorials_v181";
@@ -31,6 +31,38 @@
     return null;
   }
 
+
+  var BRAND_THUMBS = {
+    "intro-1": "assets/tutorials/welcome.png",
+    v1: "assets/tutorials/tour.png",
+    v2: "assets/tutorials/reviews.png",
+    v3: "assets/tutorials/facebook.png",
+    v4: "assets/tutorials/profile.png",
+    v5: "assets/tutorials/badges.png"
+  };
+  function migrate(data) {
+    if (!data) return data;
+    function brand(v) {
+      if (v && v.sample && BRAND_THUMBS[v.id]) v.thumb = BRAND_THUMBS[v.id];
+      return v;
+    }
+    brand(data.intro);
+    (data.videos || []).forEach(brand);
+    var hasBadgesSec = (data.sections || []).some(function (s) { return s.id === "badges-queue"; });
+    if (!hasBadgesSec) {
+      data.sections = (data.sections || []).concat([{ id: "badges-queue", title: "Badges and the queue", order: 5, hidden: false }]);
+    }
+    var hasV5 = (data.videos || []).some(function (v) { return v.id === "v5"; });
+    if (!hasV5) {
+      data.videos = (data.videos || []).concat([{ id: "v5", sectionId: "badges-queue", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/badges.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Badges, vouches and the Promotion queue", description: "How Google Reviews and Facebook vouches earn badges and move you up the queue.", duration: "3:40", durationSec: 220, order: 1, hidden: false, sample: true }]);
+    }
+    (data.videos || []).forEach(function (v) {
+      if (v.id === "v2" && v.sample && v.isNew == null) v.isNew = true;
+    });
+    try { if (root.localStorage) localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+    return data;
+  }
+
   function seed() {
     return {
       requireIntro: true,
@@ -40,7 +72,7 @@
         url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
         provider: "youtube",
         videoId: "aqz-KE-bpKQ",
-        thumb: "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        thumb: "assets/tutorials/welcome.png",
         embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1&playsinline=1",
         title: "Welcome to Rate Buddies — how to use the app",
         description: "A short welcome that explains what Rate Buddies is, how recommendations and Google Reviews work, and where to find more help.",
@@ -66,13 +98,15 @@
         { id: "getting-started", title: "Getting started", order: 1, hidden: false },
         { id: "google-reviews", title: "Leaving Google Reviews", order: 2, hidden: false },
         { id: "facebook-recs", title: "Facebook recommendations", order: 3, hidden: false },
-        { id: "your-profile", title: "Your profile", order: 4, hidden: false }
+        { id: "your-profile", title: "Your profile", order: 4, hidden: false },
+        { id: "badges-queue", title: "Badges and the queue", order: 5, hidden: false }
       ],
       videos: [
-        { id: "v1", sectionId: "getting-started", url: "https://www.youtube.com/watch?v=eRsGyueVLvQ", provider: "youtube", videoId: "eRsGyueVLvQ", thumb: "https://img.youtube.com/vi/eRsGyueVLvQ/hqdefault.jpg", embed: "https://www.youtube.com/embed/eRsGyueVLvQ?rel=0&enablejsapi=1", title: "A tour of Home, Reviews and Facebook", description: "Find your way around the app after you have watched the welcome video.", duration: "2:48", durationSec: 168, order: 1, hidden: false, sample: true },
-        { id: "v2", sectionId: "google-reviews", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", provider: "youtube", videoId: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg", embed: "https://www.youtube.com/embed/jNQXAC9IVRw?rel=0&enablejsapi=1", title: "How to leave a genuine Google Review", description: "Only after a real job, in your own words, and within the daily limit of three.", duration: "3:05", durationSec: 185, order: 1, hidden: false, sample: true },
-        { id: "v3", sectionId: "facebook-recs", url: "https://vimeo.com/1084537", provider: "vimeo", videoId: "1084537", thumb: "https://vumbnail.com/1084537.jpg", embed: "https://player.vimeo.com/video/1084537?api=1", title: "How to recommend a buddy on Facebook", description: "Pick a starter, add a few of your own words, and only vouch for someone you genuinely know.", duration: "4:12", durationSec: 252, order: 1, hidden: false, sample: true },
-        { id: "v4", sectionId: "your-profile", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Fill in your profile and recommendation details", description: "Choose which contact details other members may include when they recommend you.", duration: "2:10", durationSec: 130, order: 1, hidden: false, sample: true }
+        { id: "v1", sectionId: "getting-started", url: "https://www.youtube.com/watch?v=eRsGyueVLvQ", provider: "youtube", videoId: "eRsGyueVLvQ", thumb: "assets/tutorials/tour.png", embed: "https://www.youtube.com/embed/eRsGyueVLvQ?rel=0&enablejsapi=1", title: "A tour of Home, Reviews and Facebook", description: "Find your way around the app after you have watched the welcome video.", duration: "2:48", durationSec: 168, order: 1, hidden: false, sample: true },
+        { id: "v2", sectionId: "google-reviews", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", provider: "youtube", videoId: "jNQXAC9IVRw", thumb: "assets/tutorials/reviews.png", embed: "https://www.youtube.com/embed/jNQXAC9IVRw?rel=0&enablejsapi=1", title: "How to leave a genuine Google Review", description: "Only after a real job, in your own words, and within the daily limit of three.", duration: "3:05", durationSec: 185, order: 1, hidden: false, sample: true, isNew: true },
+        { id: "v3", sectionId: "facebook-recs", url: "https://vimeo.com/1084537", provider: "vimeo", videoId: "1084537", thumb: "assets/tutorials/facebook.png", embed: "https://player.vimeo.com/video/1084537?api=1", title: "How to recommend a buddy on Facebook", description: "Pick a starter, add a few of your own words, and only vouch for someone you genuinely know.", duration: "4:12", durationSec: 252, order: 1, hidden: false, sample: true },
+        { id: "v4", sectionId: "your-profile", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/profile.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Fill in your profile and recommendation details", description: "Choose which contact details other members may include when they recommend you.", duration: "2:10", durationSec: 130, order: 1, hidden: false, sample: true },
+        { id: "v5", sectionId: "badges-queue", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/badges.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Badges, vouches and the Promotion queue", description: "How Google Reviews and Facebook vouches earn badges and move you up the queue.", duration: "3:40", durationSec: 220, order: 1, hidden: false, sample: true }
       ]
     };
   }
@@ -82,7 +116,7 @@
       var raw = root.localStorage && localStorage.getItem(KEY);
       if (raw) {
         var data = JSON.parse(raw);
-        if (data && data.intro && data.sections) return data;
+        if (data && data.intro && data.sections) return migrate(data);
       }
     } catch (e) {}
     var s = seed();
