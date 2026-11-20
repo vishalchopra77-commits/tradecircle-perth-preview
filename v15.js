@@ -504,17 +504,69 @@ function googleG(size, mono) {
       return '<div class="dash-feed-item">' + tile + '<div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
     }).join("");
 
-    return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
-      '<div class="scroll"><div class="dash-hello">' +
-      (g.m ? av(g.m, 56) : "") +
-      "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
-      card("google", googleG(18), "Google reviews", googleBody, "reviews", "Open Reviews") +
-      card("facebook", facebookF(18), "Facebook", fbBody, "promo-queue", "View the queue") +
-      card("messages", I.chat, "Messages", msgBody, "chats", "Open chats") +
-      card("friends", I.user, "Friends", frBody, "members", "Open Facebook") +
-      '<p class="group-label">Quick actions</p>' + actHtml +
-      '<p class="group-label">Recent activity</p>' +
-      '<div class="dash-feed">' + feedHtml + "</div></div></section>";
+    /* v2.1 design: date + greeting header, two stat cards, "Up next" list */
+    var nb = (window.TC12 && TC12.notifUnread) ? TC12.notifUnread() : 0;
+    var dt = new Date();
+    var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var dateLine = DAYS[dt.getDay()] + " " + dt.getDate() + " " + MONTHS[dt.getMonth()];
+    function bars(n, on, cls) {
+      var h = "";
+      for (var i = 0; i < n; i++) h += '<span class="' + (i < on ? "on " + cls : "") + '"></span>';
+      return '<div class="h21-bars">' + h + "</div>";
+    }
+    function where(mm) {
+      var r = (mm.regions || [])[0] || "";
+      r = r ? r.charAt(0).toUpperCase() + r.slice(1) : "";
+      return esc(mm.trade || "") + (r ? " · " + esc(r) : "");
+    }
+    var qTotal = Math.max(place.total, 1);
+    var qOn = place.mine ? (qTotal - place.mine + 1) : 0;
+    var whenLabels = ["Yesterday", "2 days ago", "3 days ago", "This week"];
+    backs.sort(function (x, y) {
+      var lx = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(x.id) ? 1 : 0;
+      var ly = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(y.id) ? 1 : 0;
+      return lx - ly;
+    });
+    var upNext = backs.map(function (mm, i) {
+      var atCap = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(mm.id);
+      var first = esc(mm.first || fn(mm).split(" ")[0]);
+      var note = atCap
+        ? '<div class="h21-note">' + svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>', 18) + "<span>Daily limit reached · opens tomorrow</span></div>"
+        : '<div class="h21-note"><span class="h21-star">★</span><span>' + first + " left you a Google review</span></div>";
+      var actions = atCap ? "" :
+        '<button type="button" class="h21-cta" data-action="review-back" data-id="' + mm.id + '">Review ' + first + " back</button>" +
+        '<button type="button" class="h21-link" data-go="member" data-id="' + mm.id + '">View profile</button>';
+      return '<article class="h21-card">' +
+        '<div class="h21-who">' + av(mm, 48) +
+        '<div class="h21-who-t"><div class="nm">' + esc(fn(mm)) + '</div><div class="sub">' + where(mm) + "</div></div>" +
+        '<span class="h21-when">' + (whenLabels[i] || "Earlier") + "</span></div>" +
+        note + actions + "</article>";
+    }).join("");
+    if (openAlert) {
+      upNext += '<article class="h21-card">' +
+        '<div class="h21-who"><span class="h21-ico">' + facebookF(22) + '</span>' +
+        '<div class="h21-who-t"><div class="nm">Recommendation request</div><div class="sub">Facebook group</div></div></div>' +
+        '<div class="h21-note"><span>Someone’s asking for ' + esc(tradeAsk(openAlert.trade)) + ". Comment in your own words.</span></div>" +
+        '<button type="button" class="h21-cta" data-action="open-alert" data-id="' + openAlert.id + '">Open request</button></article>';
+    }
+    if (!upNext) upNext = '<article class="h21-card"><div class="h21-note"><span>You’re all caught up. Nothing waiting for you.</span></div></article>';
+
+    return '<section class="screen has-tabs h21" data-screen="home">' +
+      '<div class="scroll">' +
+      '<header class="h21-head"><div class="h21-hello"><div class="h21-date">' + dateLine + '</div><h1>Hi, ' + esc(g.first) + "</h1></div>" +
+      '<button type="button" class="h21-round" data-go="chats" aria-label="Chats">' + I.chat + (unread ? '<span class="h21-badge">' + unread + "</span>" : "") + "</button>" +
+      '<button type="button" class="h21-round" data-go="notifications" aria-label="Notifications">' + I.bell + (nb ? '<span class="h21-badge">' + nb + "</span>" : "") + "</button></header>" +
+      '<div class="h21-stats">' +
+      '<button type="button" class="h21-stat" data-go="reviews"><div class="h21-stat-h"><span class="h21-logo">' + googleG(20) + "</span>Google</div>" +
+      '<div class="h21-big">' + recd + '</div><div class="h21-sub">received · <b>' + gave + "</b> given</div>" +
+      bars(cap, today, "dark") + '<div class="h21-foot">' + today + " of " + cap + " today</div></button>" +
+      '<button type="button" class="h21-stat" data-go="promo-queue"><div class="h21-stat-h"><span class="h21-logo">' + facebookF(20, "#1877F2") + "</span>Facebook</div>" +
+      '<div class="h21-big">' + (place.mine ? "#" + place.mine : "—") + '</div><div class="h21-sub">' + (place.mine ? "in the promo queue" : "not in the queue") + "</div>" +
+      bars(qTotal, qOn, "blue") + '<div class="h21-foot">' + (place.mine ? (place.mine <= 1 ? "Your turn is now" : "Your turn in ~" + queueWaitDays(place.mine) + " days") : "Request a free turn") + "</div></button>" +
+      "</div>" +
+      '<h2 class="h21-h2">Up next</h2>' + upNext +
+      "</div></section>";
   }
 
   /* ---------- Screens ---------- */

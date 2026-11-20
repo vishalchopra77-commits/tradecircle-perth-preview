@@ -283,3 +283,39 @@ body, button, input, textarea, select {
 .sheet { border-radius: 28px 28px 0 0 !important; }
 .toast { background: #252222 !important; color: #FFFFFF !important; border-radius: 999px !important; }
 .toggle.on { background: #252222 !important; }
+
+/* ===== v2.1 Home layout (matches design board) ===== */
+.screen.h21 .scroll{padding:calc(env(safe-area-inset-top,0px) + 18px) 16px 120px;display:flex;flex-direction:column;gap:16px;background:#FFF}
+.h21-head{display:flex;align-items:center;gap:10px;padding:0 4px}
+.h21-hello{flex:1;min-width:0}
+.h21-date{font-size:15px;font-weight:500;color:#55555A}
+.h21-hello h1{margin:2px 0 0;font-size:34px;font-weight:700;letter-spacing:-.4px;color:#1C1C1E;line-height:1.1}
+.h21-round{position:relative;width:46px;height:46px;border-radius:50%;border:1px solid #DCDCDC;background:#FFF;color:#1C1C1E;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0}
+.h21-round svg{width:20px;height:20px}
+.h21-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#1C1C1E;color:#FFF;font-size:12px;font-weight:700;line-height:20px;text-align:center;border:2px solid #FFF}
+.h21-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.h21-stat{text-align:left;font:inherit;color:#1C1C1E;border-radius:24px;padding:14px;background:linear-gradient(170deg,#F5F5F5 0%,#EBEBEB 100%);border:1px solid #DCDCDF;display:flex;flex-direction:column;box-shadow:none}
+.h21-stat-h{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+.h21-logo{width:34px;height:34px;border-radius:10px;background:#FFF;display:flex;align-items:center;justify-content:center}
+.h21-big{font-size:40px;line-height:1;font-weight:700;letter-spacing:-1px;margin-top:14px}
+.h21-sub{font-size:14px;color:#55555A;margin-top:3px}
+.h21-sub b{color:#1C1C1E;font-weight:600}
+.h21-bars{display:flex;gap:4px;margin-top:10px}
+.h21-bars span{flex:1;height:4px;border-radius:4px;background:rgba(0,0,0,.08)}
+.h21-bars span.on.dark{background:#252222}
+.h21-bars span.on.blue{background:#1877F2}
+.h21-foot{font-size:12px;color:#55555A;margin-top:5px}
+.h21-h2{margin:4px 0 -4px;padding:0 4px;font-size:22px;font-weight:700;letter-spacing:-.2px;color:#1C1C1E}
+.h21-card{border-radius:26px;background:linear-gradient(170deg,#F5F5F5 0%,#EBEBEB 100%);border:1px solid #DCDCDF;padding:16px;box-shadow:none}
+.h21-who{display:flex;align-items:center;gap:12px}
+.h21-who .avatar{border-radius:14px !important;flex-shrink:0}
+.h21-ico{width:48px;height:48px;border-radius:14px;background:#FFF;color:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.h21-who-t{flex:1;min-width:0}
+.h21-who-t .nm{font-size:17px;font-weight:600;color:#1C1C1E}
+.h21-who-t .sub{font-size:14px;color:#55555A}
+.h21-when{font-size:13px;color:#55555A;white-space:nowrap}
+.h21-note{margin-top:14px;padding:12px 14px;border-radius:16px;background:#FFF;display:flex;align-items:center;gap:10px;font-size:15px;color:#1C1C1E}
+.h21-note svg{flex-shrink:0}
+.h21-star{color:#F4B400;font-size:18px;line-height:1}
+.h21-cta{margin-top:14px;width:100%;height:48px;border-radius:999px;border:0;background:#252222;color:#FFF;font:inherit;font-size:16px;font-weight:500}
+.h21-link{display:block;margin:12px auto 0;border:0;background:none;font:inherit;font-size:15px;font-weight:500;color:#1C1C1E;text-decoration:underline;padding:0}
