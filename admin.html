@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>TradeCircle Perth — Super admin (prototype v1.6.2)</title>
+  <title>Rate Buddies — Super admin (prototype v1.9.0)</title>
+  <meta name="theme-color" content="#0A1328" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/icon-32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="stylesheet" href="admin.css" />
   <link rel="stylesheet" href="v161.css" />
+  <link rel="stylesheet" href="v180.css" />
+  <link rel="stylesheet" href="v181.css" />
+  <link rel="stylesheet" href="v171.css" />
+  <link rel="stylesheet" href="v180.css" />
   <style>
     @font-face { font-family: "Plus Jakarta Sans"; src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
   </style>
@@ -13,14 +20,15 @@
 <body>
   <div id="loginView" class="admin-login">
     <form class="login-card" id="loginForm">
-      <div class="login-mark" aria-hidden="true">TC</div>
-      <span class="mock">Demo login — prototype only</span>
+      <img class="login-mark" src="assets/logo/icon-192.png" alt="" width="64" height="64">
+      <div class="login-wordmark">RATE <span>BUDDIES</span></div>
+      <span class="mock">Test login — shared with the phone app</span>
       <h1>Super admin</h1>
-      <p>TradeCircle Perth dashboard. This is a mock. Nothing is saved on a server.</p>
-      <div class="field"><label>Email</label><input name="email" type="email" value="vishal@tradecircle.demo" autocomplete="username"></div>
-      <div class="field"><label>Password</label><input name="password" type="password" value="demopass" autocomplete="current-password"></div>
+      <p>Approvals and requests here show up in the phone app.</p>
+      <div class="field"><label>Email</label><input name="email" type="email" value="" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input name="password" type="password" value="" autocomplete="current-password"></div>
       <button class="btn btn-primary" type="submit" id="loginBtn">Sign in to dashboard</button>
-      <p class="login-foot">Use the pre-filled demo details. <a href="index.html">Back to the app preview</a></p>
+      <p class="login-foot">Sign in with the admin test account. <a href="index.html">Back to the app</a></p>
     </form>
   </div>
 
@@ -28,8 +36,8 @@
     <div id="backdrop" class="backdrop hidden"></div>
     <aside class="side" id="side">
       <div class="brand">
-        <div class="login-mark sm" aria-hidden="true">TC</div>
-        <div><strong>TradeCircle</strong><span>Super admin · v1.6.2</span></div>
+        <img class="login-mark sm" src="assets/logo/rank-buddies-mark.png" alt="">
+        <div><strong>Rate Buddies</strong><span>Super admin · v1.9.0</span></div>
       </div>
       <nav id="nav"></nav>
     </aside>
@@ -63,6 +71,14 @@
   <script src="locations.js"></script>
   <script src="trades.js"></script>
   <script src="profile-extras.js"></script>
+  <script src="devi-city.js"></script>
+  <script src="tutorials-store.js"></script>
+  <script src="admin-v180.js"></script>
+  <script src="admin-v181.js"></script>
+  <script src="vendor/supabase.js"></script>
+  <script src="rb-config.js"></script>
+  <script src="rb-backend.js"></script>
   <script src="admin.js"></script>
+  <script src="rb-admin.js"></script>
 </body>
 </html>

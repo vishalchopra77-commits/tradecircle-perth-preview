@@ -1,4 +1,4 @@
-# AI instructions — TradeCircle Perth
+# AI instructions — Rate Buddies
 
 Read **START-HERE.md** first for the product concept, agreed features, version history, open questions and how to open the prototype. Read **TECH-PLAN.md** for how the real iPhone and Android app would be built (one app, AWS in Sydney, security, store rules, free now and a subscription later). This file is the working agreement for Claude, ChatGPT, Grok, or any other assistant continuing the work.
 
@@ -21,7 +21,7 @@ When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly sa
 ## 2. How to continue the work
 
 1. Read `START-HERE.md`, this file, and `README.md` in the current version folder.
-2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 19 November 2026, Australia/Perth, that is **v1.6.2**.
+2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 20 November 2026, Australia/Perth, that is **v1.9.0**.
 3. Only change what Vishal asked for in the current request. Do not redesign unrelated screens.
 4. Keep all demo data fictional. Do not add real customer names, phone numbers, addresses, passwords, API keys, or other secrets.
 5. Ask Vishal **one question at a time**, in plain non-technical words, when a decision is required. Do not assume an answer.
@@ -74,7 +74,7 @@ The app is **free for now**. A paid plan may come later. Until Vishal sets a pri
 The real product is **one app for both iPhone and Android**, hosted on AWS in the Sydney region. Follow [TECH-PLAN.md](TECH-PLAN.md). Do not plan two separate native apps unless Vishal changes that decision.
 
 ### Placeholder name
-“TradeCircle Perth” is a temporary name. Keep using it until Vishal chooses a real name. Do not silently rename the product.
+The product name is **Rate Buddies**. Keep existing filenames (`TradeCircle-Perth.html`, `TradeCircle-Admin.html`, `RankBuddies.html`). `RateBuddies.html` is an additional copy. Keep the GitHub repo `tradecircle-perth-preview` unless the owner asks to change them, so live links keep working. The internal JavaScript API remains `window.TradeCircle`.
 
 ### Open questions
 Do not decide these for him:
@@ -90,7 +90,7 @@ New members **do** wait for Vishal’s approval. That was decided in v1.5.
 ## 4. Version numbering
 
 - The first design was **v1**.
-- Small feature additions use a point number: **v1.1**, **v1.2**, **v1.3**, **v1.4**, **v1.5**, **v1.5.1**, **v1.5.2**, **v1.5.3**, **v1.5.4**, **v1.5.5**, **v1.5.6**, **v1.5.7**, **v1.5.8**, **v1.5.9**, **v1.6.0**, **v1.6.1**, **v1.6.2**, and so on.
+- Small feature additions use a point number: **v1.1**, **v1.2**, **v1.3**, **v1.4**, **v1.5**, **v1.5.1**, **v1.5.2**, **v1.5.3**, **v1.5.4**, **v1.5.5**, **v1.5.6**, **v1.5.7**, **v1.5.8**, **v1.5.9**, **v1.6.0**, **v1.6.1**, **v1.6.2**, **v1.7.0**, **v1.7.1**, **v1.8.0**, **v1.8.1**, **v1.8.2**, **v1.9.0**, and so on.
 - Use a new major number (**v2**) only for a large change, such as a full visual redesign or the start of a real (non-prototype) build, and only after saying so clearly.
 - Put the version in `README.md`, in the in-app settings/drawer version label, and in the delivery note to Vishal.
 - Do not skip numbers. Do not reuse a number for a different set of files.
@@ -112,7 +112,7 @@ Do these steps in order. Do not skip the archive step.
    - If GitHub Pages is enabled, confirm the preview link opens the new version.
    - Do not force-push or rewrite published history unless Vishal clearly asked for that.
 7. **Refresh the Google Drive backup:**
-   - Upload the new current unpacked files into a folder named like `v1.6.2 (current)`.
+   - Upload the new current unpacked files into a folder named like `v1.9.0 (current)`.
    - Move the previous “current” folder into **Archive** (or leave it there and clearly mark the new one as current).
    - Also upload a `.zip` (easiest download) and a `.tgz` of the new version.
    - Keep START-HERE and this instructions file at the Drive folder root, and as Google Docs if those copies already exist.

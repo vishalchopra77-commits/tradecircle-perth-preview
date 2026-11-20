@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.6.2 */
+/* Rate Buddies — prototype v1.7.1 */
 (function () {
   "use strict";
 
@@ -124,7 +124,7 @@ function googleG(size, mono) {
       return '<button type="button" class="friend-btn sent' + sm + '" data-action="mark-friends" data-id="' + m.id + '"><span>Request sent</span></button>';
     }
     return '<a class="friend-btn' + sm + '" data-action="mark-sent" data-id="' + m.id + '" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
-      ico("addfriend") + "<span>Add friend</span></a>";
+      facebookF(16) + "<span>Add friend</span></a>";
   }
 
   function memberCard(m) {
@@ -293,7 +293,7 @@ function googleG(size, mono) {
     }
     function icoWait(n) { return (T().icon ? T().icon(n) : ""); }
     return '<p class="group-label">Circle tools</p><div class="card group me-tools">' +
-      row("promo-queue", facebookF(18), "background:linear-gradient(180deg,#24E0A6,#0FBE86);color:#05281C", "Facebook promotion queue", qSub) +
+      row("promo-queue", facebookF(18), "background:linear-gradient(180deg,#2E86F0,#1658C7);color:#fff", "Facebook promotion queue", qSub) +
       row("rec-alerts", I.bell, "background:#FFF6E0;color:#8A5A00", "Recommendation alerts", "Help the circle comment on a post") +
       row("ai-assistant", I.spark, "background:#EEF2F6;color:#0B1F33", "AI assistant", "Voice commands while you drive") +
       "</div>";
@@ -309,7 +309,7 @@ function googleG(size, mono) {
         ["my-regions", I.queue, "steel", "Your areas"],
         ["reviews", googleG(18), "amber", "Reviews"],
         ["chats", I.chat, "navy", "Chat"],
-        ["members", I.fb.indexOf("<svg") === 0 ? I.user : I.user, "teal", "Facebook"]
+        ["members", facebookF(18), "fb", "Facebook"]
       ]],
       ["Account", [
         ["settings", I.gear, "steel", "Settings"],
@@ -676,9 +676,9 @@ function googleG(size, mono) {
   function renderLock() {
     return '<section class="screen" data-screen="lockscreen"><div class="lock">' +
       '<div class="clk">8:16</div><div class="dt">Monday 16 November</div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Recommendation alert</div><div class="bd">Someone’s asking for a pest controller — help Vishal!</div></div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Jack Thompson</div><div class="bd">Could you leave a Google review when you get a minute?</div></div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Sarah left you a Google review</div><div class="bd">Review back when you can.</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">Recommendation alert</div><div class="bd">Someone’s asking for a pest controller — help Vishal!</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">Jack Thompson</div><div class="bd">Could you leave a Google review when you get a minute?</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">Sarah left you a Google review</div><div class="bd">Review back when you can.</div></div>' +
       "</div></section>";
   }
 

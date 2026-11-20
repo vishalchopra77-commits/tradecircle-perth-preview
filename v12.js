@@ -1,4 +1,4 @@
-/* TradeCircle Perth — prototype v1.6.2 */
+/* Rate Buddies — prototype v1.7.1 */
 (function () {
   "use strict";
 
@@ -252,7 +252,7 @@ function facebookF(size, color) {
     review: { bg: "#E8F1FD", color: "#1A73E8", icon: "review" },
     queue: { bg: "#E8F1FD", color: "#1877F2", icon: "queue" },
     friend: { bg: "#E8F1FD", color: "#1877F2", icon: "friend" },
-    member: { bg: "#E7F8F1", color: "#066B4C", icon: "member" },
+    member: { bg: "#E8F1FD", color: "#0D3F9C", icon: "member" },
     chat: { bg: "#EEF2F6", color: "#0B1F33", icon: "chat" },
     alert: { bg: "#FFF6E0", color: "#8A5A00", icon: "alert" },
     admin: { bg: "#EEF2F6", color: "#14314C", icon: "admin" },
@@ -262,7 +262,7 @@ function facebookF(size, color) {
     size = size || 16;
     if (type === "review") return (typeof googleG === "function" ? googleG(size) : "");
     if (type === "queue") return facebookF(size);
-    if (type === "friend") return peopleIco(size);
+    if (type === "friend") return facebookF(size);
     if (type === "member") return personPlusIco(size);
     if (type === "chat") return chatIco(size);
     if (type === "alert") return megaIco(size);
@@ -328,7 +328,7 @@ function facebookF(size, color) {
     var actions = '<div class="card-actions">';
     if (r === "none") {
       actions += '<a class="friend-btn sm" data-action="mark-sent" data-id="' + m.id + '" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
-        ico("addfriend") + "<span>Add friend</span></a>";
+        ico("fb") + "<span>Add friend</span></a>";
     } else if (r === "pending") {
       actions += '<button type="button" class="friend-btn sm" style="background:#8A9BB0" data-action="mark-friends" data-id="' + m.id + '"><span>Pending</span></button>';
     }
@@ -457,7 +457,7 @@ function facebookF(size, color) {
       : '<button class="set-row" type="button" data-action="google-connect"><span class="ic" style="background:#F5F8FF;color:#1A73E8;font-weight:800">G</span><span class="lab"><span class="a">Connect Google Business Profile</span><span class="b">Add a review link for members</span></span><span class="chev">' + ico("chev") + "</span></button>";
     return '<section class="screen has-tabs has-header" data-screen="settings">' + topbar("Settings") +
       '<div class="scroll"><p class="group-label">Account</p><div class="card group">' +
-      '<button class="set-row" data-go="me"><span class="ic" style="background:#E7F8F1;color:#066B4C">' + I.user + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + esc(fn(m)) + " \u00b7 " + esc(m.trade) + '</span></span><span class="chev">' + ico("chev") + "</span></button>" +
+      '<button class="set-row" data-go="me"><span class="ic" style="background:#E8F1FD;color:#0D3F9C">' + I.user + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + esc(fn(m)) + " \u00b7 " + esc(m.trade) + '</span></span><span class="chev">' + ico("chev") + "</span></button>" +
       '<button class="set-row" data-go="edit-profile"><span class="ic" style="background:#EEF2F6;color:#14314C">' + ico("pencil") + '</span><span class="lab"><span class="a">Edit profile and regions</span><span class="b">Name, trade, links, areas</span></span><span class="chev">' + ico("chev") + "</span></button>" +
       fbRow + gRow +
       '</div><p class="group-label">Notifications</p><div class="card group">' +
@@ -465,8 +465,8 @@ function facebookF(size, color) {
       '</div><p class="group-label">How the circle works</p>' +
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
-      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth \u2014 placeholder, not final</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.6.2 \u00b7 19 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.8.2 \u00b7 20 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -715,7 +715,7 @@ function facebookF(size, color) {
       var m = c.type === "group" ? { first: c.name.split(" ")[0], last: "", color: "navy", isMe: false, trade: "Group" } : member(c.memberId);
       var name = c.type === "group" ? c.name : fn(m);
       var avHtml = c.type === "group"
-        ? '<div style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#0B1F33;color:#8BE0C3">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
+        ? '<div style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#0A1328;color:#7EC8FF">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
         : av(m, 52);
       var online = c.type === "dm" ? '<span class="' + (c.online ? "dot-on" : "dot-off") + '"></span>' : "";
       return '<button type="button" class="chat-row" data-action="open-thread" data-chat="' + c.id + '">' +
@@ -859,9 +859,9 @@ function facebookF(size, color) {
   function renderLock() {
     return '<section class="screen" data-screen="lockscreen"><div class="lock">' +
       '<div class="clk">8:16</div><div class="dt">Monday 16 November</div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Jack Thompson</div><div class="bd">Could you leave a Google review when you get a minute?</div></div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">Review request</div><div class="bd">Tom Reeves asked you to review Reeves Fencing.</div></div>' +
-      '<div class="lock-card"><div class="app">TradeCircle</div><div class="tl">New member in Hills</div><div class="bd">Mei Chen joined the Hills region.</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">Jack Thompson</div><div class="bd">Could you leave a Google review when you get a minute?</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">Review request</div><div class="bd">Tom Reeves asked you to review Reeves Fencing.</div></div>' +
+      '<div class="lock-card"><div class="app">Rate Buddies</div><div class="tl">New member in Hills</div><div class="bd">Mei Chen joined the Hills region.</div></div>' +
       "</div></section>";
   }
 
@@ -897,7 +897,7 @@ function facebookF(size, color) {
     function renderInvite() {
     return '<section class="screen has-tabs has-header" data-screen="invite">' + topbar("Invite a tradie") +
       '<div class="scroll"><div class="auth-hero"><h2>Invite someone you know</h2><p>Share a join link with a tradie you have actually met. They can make a profile and pick their Perth regions.</p></div>' +
-      '<div class="field"><label>Invite link</label><input readonly value="https://tradecircle.perth.demo/join/hale-circle"></div>' +
+      '<div class="field"><label>Invite link</label><input readonly value="https://ratebuddies.demo/join/hale-circle"></div>' +
       '<button class="btn btn-primary has-ico" data-action="copy-invite">' + I.invite + "<span>Copy invite link</span></button>" +
       '<div class="action-stack" style="margin-top:12px">' +
       '<button class="btn btn-ghost ink has-ico" data-action="share-invite" data-via="sms">' + I.send + "<span>Share by SMS</span></button>" +
@@ -926,7 +926,7 @@ function facebookF(size, color) {
   function drawerInner() {
     var m = T().me();
     var items = [
-      ["members", I.user, "Members", ""],
+      ["members", I.fb, "Facebook", ""],
       ["chats", I.chat, "Chats", ""],
       ["reviews", googleG(18), "Reviews", ""],
       ["notifications", I.bell, "Notifications", ""],
@@ -951,7 +951,7 @@ function facebookF(size, color) {
     });
     html += '<div class="drawer-sep"></div>';
     html += '<button type="button" class="drawer-item danger" data-go="welcome"><span class="ic">' + I.out + "</span>Sign out</button>";
-    html += '</nav><div class="drawer-ver">TradeCircle Perth \u00b7 Prototype v1.6.2</div>';
+    html += '</nav><div class="drawer-ver">Rate Buddies \u00b7 Prototype v1.7.1</div>';
     return html;
   }
 
@@ -1232,7 +1232,7 @@ function facebookF(size, color) {
       return true;
     }
     if (action === "copy-invite") {
-      if (window.TC154 && TC154.copyText) TC154.copyText("https://tradecircle.perth.demo/join/hale-circle"); else { try { navigator.clipboard.writeText("https://tradecircle.perth.demo/join/hale-circle"); } catch (err) {} }
+      if (window.TC154 && TC154.copyText) TC154.copyText("https://ratebuddies.demo/join/hale-circle"); else { try { navigator.clipboard.writeText("https://ratebuddies.demo/join/hale-circle"); } catch (err) {} }
       toast("Invite link copied.");
       return true;
     }

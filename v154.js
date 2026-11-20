@@ -319,7 +319,7 @@
         msg = "Copied, now paste it in Google";
         if (S().reviewFor) markUsed(S().reviewFor, text);
       } else if (action === "copy-invite") {
-        text = "https://tradecircle.perth.demo/join/hale-circle";
+        text = "https://ratebuddies.demo/join/hale-circle";
         msg = "Invite link copied.";
       } else {
         text = copyEl.getAttribute("data-text") || "";
@@ -483,7 +483,7 @@
         wrap.className = "copy-input";
         inp.parentNode.insertBefore(wrap, inp);
         wrap.appendChild(inp);
-        wrap.insertAdjacentHTML("beforeend", copyBtn("https://tradecircle.perth.demo/join/hale-circle", "Invite link copied."));
+        wrap.insertAdjacentHTML("beforeend", copyBtn("https://ratebuddies.demo/join/hale-circle", "Invite link copied."));
       }
     }
   }

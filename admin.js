@@ -1,4 +1,4 @@
-/* TradeCircle Perth — super admin prototype v1.6.2 */
+/* Rate Buddies — super admin prototype v1.8.0 */
 (function () {
   "use strict";
   function svg(inner) {
@@ -18,7 +18,7 @@
     var stroke = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
     if (type === "review") return googleG(size);
     if (type === "queue") return facebookF(size);
-    if (type === "friend") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+    if (type === "friend") return facebookF(size);
     if (type === "member") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.5"/><path d="M19 8v6M16 11h6"/></svg>';
     if (type === "chat") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/></svg>';
     if (type === "alert") return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" ' + stroke + ' aria-hidden="true"><path d="M3 10v4h4l6 4V6L7 10H3z"/><path d="M16.8 8.2a4.2 4.2 0 010 7.6"/><path d="M18.7 5.6a8 8 0 010 12.8"/></svg>';
@@ -27,7 +27,7 @@
     return facebookF(size);
   }
   function notifTile(type, size) {
-    var styles = { review: ["#E8F1FD","#1A73E8"], queue: ["#E8F1FD","#1877F2"], friend: ["#E8F1FD","#1877F2"], member: ["#E7F8F1","#066B4C"], chat: ["#EEF2F6","#0B1F33"], alert: ["#FFF6E0","#8A5A00"], admin: ["#EEF2F6","#14314C"], limit: ["#F6E8E8","#7A1F1A"] };
+    var styles = { review: ["#E8F1FD","#1A73E8"], queue: ["#E8F1FD","#1877F2"], friend: ["#E8F1FD","#1877F2"], member: ["#E8F1FD","#0D3F9C"], chat: ["#EEF2F6","#0B1F33"], alert: ["#FFF6E0","#8A5A00"], admin: ["#EEF2F6","#14314C"], limit: ["#F6E8E8","#7A1F1A"] };
     var st = styles[type] || styles.admin;
     return '<div class="notif-ico" style="background:' + st[0] + ';color:' + st[1] + '">' + notifGlyph(type, size || 16) + "</div>";
   }
@@ -80,6 +80,7 @@
     { id: "jamie", name: "Jamie Hale", business: "Hale Pest Control", trade: "Pest Control", areas: "Hills, North", status: "active", joined: "12 Jan 2026", website: "https://www.halepest.example.au", facebook: "https://www.facebook.com/demo.halepestcontrol.biz", instagram: "https://www.instagram.com/demo.halepest", linkedin: "https://www.linkedin.com/company/demo-hale-pest", tiktok: "", youtube: "", google: "https://search.google.com/local/writereview?placeid=demo-hale-pest", other: "" },
     { id: "sarah", name: "Sarah Nguyen", business: "Nguyen Carpentry", trade: "Carpenter", areas: "North, Joondalup", status: "active", joined: "18 Jan 2026", website: "https://www.nguyencarpentry.example.au", facebook: "https://www.facebook.com/demo.nguyencarpentry.biz", instagram: "https://www.instagram.com/demo.nguyencarpentry", linkedin: "", tiktok: "", youtube: "", google: "https://search.google.com/local/writereview?placeid=demo-nguyen-carpentry", other: "" },
     { id: "liam", name: "Liam O’Connor", business: "O’Connor Plumbing", trade: "Plumber", areas: "South, Fremantle", status: "active", joined: "2 Feb 2026" },
+    { id: "michael", name: "Michael Shaw", business: "Shaw Plumbing", trade: "Plumber", areas: "Joondalup, North", status: "active", joined: "15 Apr 2026" },
     { id: "priya", name: "Priya Sharma", business: "Sharma Painting Co", trade: "Painter", areas: "Hills, East", status: "active", joined: "21 Feb 2026" },
     { id: "mei", name: "Mei Chen", business: "West Coast Gardens", trade: "Landscaper", areas: "Hills, East", status: "active", joined: "4 Mar 2026" },
     { id: "marcus", name: "Marcus Adeyemi", business: "Adeyemi Electrical", trade: "Electrician", areas: "Kwinana, South", status: "suspended", joined: "9 Mar 2026" },
@@ -147,6 +148,9 @@
     ["queue", "Promotion queue", "queue"],
     ["reports", "Reports", "reports"],
     ["chats", "Chat moderation", "chats"],
+    ["devi", "Devi automation", "ai", "Automations"],
+    ["devi-inbox", "Incoming requests", "alerts"],
+    ["tutorials", "Video tutorials", "ai", "Content"],
     ["plans", "Subscriptions", "plans", "Account"],
     ["ai", "AI integrations", "ai"],
     ["broadcast", "Broadcast", "broadcast"],
@@ -165,6 +169,9 @@
     queue: ["Circle", "Promotion queue"],
     reports: ["Circle", "Reports"],
     chats: ["Circle", "Chat moderation"],
+    devi: ["Automations", "Devi automation"],
+    "devi-inbox": ["Automations", "Incoming requests"],
+    tutorials: ["Content", "Video tutorials"],
     plans: ["Account", "Subscriptions"],
     ai: ["Account", "AI integrations"],
     broadcast: ["Account", "Broadcast"],
@@ -232,7 +239,12 @@
     var lastG = "";
     NAV.forEach(function (it) {
       if (it[3] && it[3] !== lastG) { lastG = it[3]; html += '<div class="nav-group">' + it[3] + "</div>"; }
-      var count = it[0] === "requests" && pendingCount() ? '<span class="count">' + pendingCount() + "</span>" : "";
+      var count = "";
+      if (it[0] === "requests" && pendingCount()) count = '<span class="count">' + pendingCount() + "</span>";
+      if (it[0] === "devi-inbox" && window.TC180Admin && TC180Admin.pendingCount) {
+        var dc = TC180Admin.pendingCount();
+        if (dc) count = '<span class="count">' + dc + "</span>";
+      }
       html += '<button class="nav-btn' + (page === it[0] ? " active" : "") + '" data-page="' + it[0] + '">' + I[it[2]] + "<span>" + it[1] + "</span>" + count + "</button>";
     });
     $("nav").innerHTML = html;
@@ -243,7 +255,7 @@
       ["queue", "Queue", "queue"],
       ["more", "More", "menu"]
     ].map(function (it) {
-      var active = it[0] === "more" ? ["regions", "trades", "alerts", "fb-posts", "reports", "chats", "plans", "ai", "broadcast", "settings", "audit"].indexOf(page) >= 0 : page === it[0];
+      var active = it[0] === "more" ? ["regions", "trades", "alerts", "fb-posts", "reports", "chats", "devi", "devi-inbox", "tutorials", "plans", "ai", "broadcast", "settings", "audit"].indexOf(page) >= 0 : page === it[0];
       var count = it[0] === "requests" && pendingCount() ? '<span class="count">' + pendingCount() + "</span>" : "";
       return '<button class="bnav' + (active ? " active" : "") + '" data-page="' + it[0] + '">' + I[it[2]] + "<span>" + it[1] + "</span>" + count + "</button>";
     }).join("");
@@ -310,9 +322,10 @@
       });
       return panel("Members", members.length + " members in this fictional circle", "",
         '<div class="search"><input id="memSearch" type="search" placeholder="Search by name, trade or area" value="' + esc(q) + '"><select id="memFilter"><option value="">All statuses</option><option>active</option><option>suspended</option></select></div>' +
-        (list.length ? '<table><thead><tr><th>Member</th><th>Trade</th><th>Areas</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody>' +
+        (list.length ? '<table><thead><tr><th>Member</th><th>Trade</th><th>Areas</th><th>Joined</th><th>Status</th><th>Intro</th><th></th></tr></thead><tbody>' +
           list.map(function (m) {
-            return "<tr><td data-label=\"Member\">" + who(m.name, m.business) + '</td><td data-label="Trade">' + esc(m.trade) + '</td><td data-label="Areas">' + esc(m.areas) + '</td><td data-label="Joined">' + esc(m.joined) + '</td><td data-label="Status">' + badge(m.status) + '</td><td data-label=""><div class="row-actions">' +
+            var intro = (window.TCTutorials && TCTutorials.introWatched(m.id)) ? "✓" : "✗";
+            return "<tr><td data-label=\"Member\">" + who(m.name, m.business) + '</td><td data-label="Trade">' + esc(m.trade) + '</td><td data-label="Areas">' + esc(m.areas) + '</td><td data-label="Joined">' + esc(m.joined) + '</td><td data-label="Status">' + badge(m.status) + '</td><td data-label="Intro">' + intro + '</td><td data-label=""><div class="row-actions">' +
               icoBtn("edit-mem", m.id, "more", I.edit, "Edit") +
               icoBtn("suspend", m.id, m.status === "active" ? "no" : "ok", m.status === "active" ? I.x : I.check, m.status === "active" ? "Suspend" : "Reactivate") +
               "</div></td></tr>";
@@ -475,6 +488,14 @@
           return "<tr><td data-label=\"When\">" + esc(a.at) + '</td><td data-label="Who">' + who(a.who, "") + '</td><td data-label="Action">' + esc(a.action) + "</td></tr>";
         }).join("") + "</tbody></table>");
     }
+    if (window.TC181Admin && TC181Admin.pageHTML) {
+      var extra181 = TC181Admin.pageHTML(page);
+      if (extra181 != null) return extra181;
+    }
+    if (window.TC180Admin && TC180Admin.pageHTML) {
+      var extra = TC180Admin.pageHTML(page);
+      if (extra) return extra;
+    }
     return empty("Coming later", "This page is not in the prototype yet.");
   }
 
@@ -506,7 +527,8 @@
   function renderNotifs() {
     $("notifPanel").innerHTML =
       "<h3>Notifications</h3>" +
-      [["Nina Kaur applied to join.", "Today 8:10 am", "requests"],
+      [["Devi found a plumber request in Perth (Joondalup post) — 12 members will be asked to recommend Michael. Tap to approve.", "Today 7:58 am", "devi-inbox"],
+       ["Nina Kaur applied to join.", "Today 8:10 am", "requests"],
        ["A pest control alert is still open.", "Today 7:30 am", "alerts"],
        ["Tom Reeves jumped the promotion queue.", "Sat 10:12 am", "queue"]].map(function (n) {
         return '<button class="notif-item" type="button" data-page="' + n[2] + '">' + av(n[0]) + "<div><p>" + esc(n[0]) + "</p><span>" + n[1] + "</span></div></button>";
@@ -590,6 +612,13 @@
     }
     if (a === "move-up" || a === "remove-q") { window.alert("Queue change saved in this prototype only."); }
     if (a === "toggle") { btn.classList.toggle("on"); btn.setAttribute("aria-pressed", btn.classList.contains("on") ? "true" : "false"); }
+    if (window.TC181Admin && TC181Admin.handle && TC181Admin.handle(a, id, btn, e)) {
+      paint();
+      return;
+    }
+    if (window.TC180Admin && TC180Admin.handle && TC180Admin.handle(a, id, btn, e)) {
+      paint();
+    }
   });
   document.addEventListener("input", function (e) {
     if (e.target.id === "memSearch") { q = e.target.value; paint(); }
@@ -612,6 +641,10 @@
   $("loginBtn").innerHTML = I.login + "<span>Sign in to dashboard</span>";
   $("menuBtn").innerHTML = I.menu;
   $("notifBtn").insertAdjacentHTML("afterbegin", I.bell);
+
+  window.TCAdmin = { go: go, paint: paint, esc: esc, panel: panel, badge: badge, facebookF: facebookF, I: I, who: who, av: av, requests: requests, members: members, getRequests: function(){return requests;}, getMembers: function(){return members;} };
+  if (window.TC180Admin && TC180Admin.attach) TC180Admin.attach();
+  if (window.TC181Admin && TC181Admin.attach) TC181Admin.attach();
 
   if (/[?&]shot=/.test(location.search) || location.hash === "#app") {
     $("loginView").classList.add("hidden");

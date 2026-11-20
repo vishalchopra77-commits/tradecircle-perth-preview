@@ -60,7 +60,7 @@
   border-color: var(--accent);
   background: var(--accent-soft);
 }
-.state-row.on .abbr { background: var(--accent); color: #06281C; }
+.state-row.on .abbr { background: var(--accent); color: #fff; }
 
 .kind-list { display: flex; flex-direction: column; gap: 10px; }
 .kind-card {

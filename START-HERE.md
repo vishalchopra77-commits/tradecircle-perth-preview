@@ -1,12 +1,12 @@
-# START HERE — TradeCircle Perth (Facebook Business Marketing)
+# START HERE — Rate Buddies (Facebook Business Marketing)
 
 This folder is a hand-off pack for another AI assistant (Claude, ChatGPT, or similar) so work can continue from these files.
 
 **Owner:** Vishal Chopra, pest controller, Perth, Western Australia.  
 **Project folder name (working title):** Facebook Business Marketing.  
-**App placeholder name:** TradeCircle Perth — this is a temporary name only. It can be changed.  
-**Current prototype version:** v1.6.2 (19 November 2026, Australia/Perth).  
-**What this is:** a clickable HTML/CSS/JavaScript UI prototype (mock), not a real shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos in the prototype are fictional.
+**App name:** Rate Buddies. Older files and the GitHub repo may still say TradeCircle Perth so existing links keep working.  
+**Current prototype version:** v1.9.0 (20 November 2026, Australia/Perth).  
+**What this is:** a clickable HTML/CSS/JavaScript app preview, now wired to a shared test database so the phone app and web admin stay in sync. It is not a finished shipped app. Nothing is sent to Facebook or Google. All member names, businesses, ratings, chats, reviews and photos are fictional.
 
 ---
 
@@ -139,7 +139,13 @@ All earlier versions were archived, not deleted.
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Hamburger menu; Google Business Profile connection; Facebook friend and review status on every member, with filters such as “Not friends yet” and “Need my review”; Reviews tab with one-tap review requests; review **ideas** helper (not finished reviews); full in-app chat; push notification mocks and settings. |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**); [TECH-PLAN.md](TECH-PLAN.md) for one iPhone-and-Android app, AWS in Sydney, security and store rules. |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas shown together in one list; **Join all Perth metro** (turn off to return to your own picks); Members “My areas” stays a combined list with a Your areas summary card; member cards drop region labels and use small Facebook and review icons instead of crowded status text. |
-| **v1.6.2 (current)** | 19 Nov 2026, about 7:50 am | After the state, Metro and Regional are accordions on one screen. Tip about nearby Google reviews. |
+| **v1.9.0 (current)** | 20 Nov 2026, morning | Phone app and web admin share live test data. Android APK workflow. Demo (offline) toggle kept. Fictional data only; not live until pushed. |
+| **v1.8.2** | 20 Nov 2026, morning | Renamed to Rate Buddies (ratebuddies.com, ratebuddies.app). New logo pack. RateBuddies.html added; older filenames kept. Simulated only. |
+| **v1.8.1** | 20 Nov 2026, morning | Unique recommend texts with “add your own words”, Video tutorials, mandatory intro (first section in admin). Simulated only. |
+| **v1.8.0** | 20 Nov 2026, morning | Devi automation preview: one-tap Approve from Grok Bot, then a city-wide alert (same trade excluded) to recommend a featured member such as Michael. Simulated only. |
+| **v1.7.1** | 20 Nov 2026, morning | Royal-blue logo and matching colour scheme. Facebook tiles and friend-request buttons use the Facebook f. |
+| **v1.7.0** | 19 Nov 2026, about 6:40 pm | Rebranded to Rank Buddies. Filenames and the GitHub repo stay the same. |
+| **v1.6.2** | 19 Nov 2026, about 7:50 am | After the state, Metro and Regional are accordions on one screen. Tip about nearby Google reviews. |
 | **v1.6.1** | 19 Nov 2026, about 7:30 am | Australia-wide area picker: state, then metro or regional, then multi-select regions. Perth’s ten metro regions stay exactly as they were. |
 | **v1.6.0** | 19 Nov 2026, about 6:20 am | Trade or business type picker for all physical / local businesses as well as trades; 456 types in 16 groups, with aliases in autofill and a grouped See all list; icons and cover fallbacks for new types; fictional barber added to the demo. |
 | **v1.5.9** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
@@ -172,7 +178,7 @@ For a real build, read [TECH-PLAN.md](TECH-PLAN.md) and the Facebook Login notes
 
 ## 5. Open questions (not decided yet)
 
-1. **App name.** TradeCircle Perth is still a placeholder.
+1. **App name.** Rate Buddies (registered). Older filenames may still say TradeCircle Perth.
 2. **Paid plan and queue jump prices.** Not set. Always use “Price to be set”. Do not invent a price.
 
 Decided in v1.5: new members wait for Vishal to approve them.
@@ -229,8 +235,8 @@ To compare older versions, unzip the matching file in **Archive** and open that 
 ## 8. Guidance for an assistant continuing this work
 
 - Read AI-INSTRUCTIONS.md and follow it. Work on the GitHub / Drive copies, not the Mac folder. For the real build, also read [TECH-PLAN.md](TECH-PLAN.md).
-- Stay on this project (Facebook Business Marketing / TradeCircle Perth). Do not invent a different product.
-- Use “TradeCircle Perth” only as a placeholder name unless the owner chooses a new name.
+- Stay on this project (Facebook Business Marketing / Rate Buddies). Do not invent a different product.
+- The product name is **Rate Buddies**. Keep existing filenames (`TradeCircle-Perth.html`) and the GitHub repo name unless the owner asks to change them.
 - Keep weekly meetups offline. Do not add them as an in-app feature unless the owner asks.
 - Do not add pre-written, auto-posted, swapped, or duplicate Google reviews. Keep the ideas/suggestions helper, and keep the “write in your own words / only review businesses you have actually used” warning.
 - Keep the Facebook paste-link fallback. Do not claim that one-tap Facebook Login will always produce a working “send friend request” URL.

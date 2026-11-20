@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Grok Bot — Approve card</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap;}
+
+  :root { --navy:#0A1328; --accent:#1A5FD4; --sky:#3AA0FC; --line:#E4EAF0; --muted:#5B6B7C; --bg:#F4F6FA; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { margin:0; background:#fff; font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif; color:var(--navy); }
+  #phone { width:390px; height:844px; background:#F4F6FA; position:relative; overflow:hidden; }
+  .status { height:44px; display:flex; align-items:center; justify-content:space-between; padding:14px 22px 0; font-size:15px; font-weight:700; }
+  .status .icons { display:flex; gap:6px; align-items:center; opacity:.9; }
+  .head { display:flex; align-items:center; gap:10px; padding:10px 16px 12px; background:#fff; border-bottom:1px solid #EEF2F6; }
+  .back { color:#1A5FD4; font-size:28px; line-height:1; width:28px; }
+  .mark { width:36px; height:36px; border-radius:50%; background:#0A1328; display:grid; place-items:center; overflow:hidden; }
+  .mark img { width:28px; height:28px; object-fit:contain; }
+  .who .nm { font-size:16px; font-weight:800; letter-spacing:-.02em; }
+  .who .sub { font-size:12px; font-weight:650; color:var(--muted); }
+  .when { text-align:center; font-size:12px; font-weight:650; color:var(--muted); padding:16px 0 10px; }
+  .card { margin:0 16px; background:#fff; border-radius:20px; padding:16px 16px 18px; box-shadow: 0 8px 28px rgba(16,28,48,.06); border:1px solid #EEF2F6; }
+  .tag { display:inline-block; background:#E8F1FD; color:#1A5FD4; font-size:10px; font-weight:800; letter-spacing:.08em; padding:4px 8px; border-radius:99px; margin-bottom:10px; }
+  .body { font-size:15px; font-weight:800; letter-spacing:-.02em; line-height:1.35; margin:0 0 12px; }
+  .pills { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; }
+  .pill { font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; background:#F3F6FA; color:#2A3A4D; border:1px solid #E4EAF0; }
+  .pill.match { background:#E7F8EE; color:#147A3D; border-color:#C8EBD4; }
+  .pill.count { background:#EEF3FE; color:#1A5FD4; border-color:#D7E4F6; }
+  .pill.help { background:#FFF6E8; color:#9A5B00; border-color:#F3E0C0; }
+  .btns { display:flex; gap:8px; }
+  .btns span { flex:1; text-align:center; font-size:14px; font-weight:800; padding:11px 8px; border-radius:14px; }
+  .ap-approve { background: linear-gradient(180deg,#2E86F0,#1658C7); color:#fff; }
+  .ap-edit { background:#E8F1FD; color:#1A5FD4; }
+  .ap-dismiss { background:#EEF1F5; color:#5B6B7C; }
+  .hint { margin:12px 16px 0; font-size:12px; font-weight:650; color:var(--muted); }
+  .composer { position:absolute; left:16px; right:16px; bottom:22px; display:flex; gap:10px; align-items:center; }
+  .composer .box { flex:1; background:#fff; border:1.5px solid #E4EAF0; border-radius:99px; padding:12px 16px; font-size:14px; font-weight:650; color:#9AA7B5; }
+  .composer .send { width:40px; height:40px; border-radius:50%; background:linear-gradient(180deg,#2E86F0,#1658C7); }
+  .homebar { position:absolute; left:0; right:0; bottom:8px; display:flex; justify-content:center; }
+  .homebar i { width:120px; height:5px; background:#111; border-radius:99px; }
+</style>
+</head>
+<body>
+  <div id="phone">
+    <div class="status"><span>9:41</span><span class="icons">
+      <svg width="17" height="12" viewBox="0 0 17 12"><rect x="0" y="4" width="3" height="8" rx="0.6" fill="#111"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="0.6" fill="#111"/><rect x="9" y="1" width="3" height="11" rx="0.6" fill="#111"/><rect x="13.5" y="0" width="3" height="12" rx="0.6" fill="#111"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 8a8 8 0 0114 0" fill="none" stroke="#111" stroke-width="1.4"/><path d="M4 9.2a4.5 4.5 0 018 0" fill="none" stroke="#111" stroke-width="1.4"/><circle cx="8" cy="11" r="1.1" fill="#111"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="1" width="21" height="10" rx="2" stroke="#111" fill="none" stroke-width="1.2"/><rect x="2" y="3" width="15" height="6" rx="1" fill="#111"/><rect x="22" y="4" width="2" height="4" rx="0.6" fill="#111"/></svg>
+    </span></div>
+    <div class="head">
+      <div class="back">‹</div>
+      <div class="mark"><img src="http://127.0.0.1:8767/assets/logo/rank-buddies-mark.png" alt=""></div>
+      <div class="who"><div class="nm">Grok Bot</div><div class="sub">Rate Buddies assistant</div></div>
+    </div>
+    <div class="when">Today 7:58 am</div>
+    <div class="card">
+      <div class="tag">DEVI MATCH</div>
+      <p class="body">New recommendation request: Plumber wanted in Perth (Joondalup post), from Joondalup Community Noticeboard, 92% match, 12 Perth members will be alerted to recommend Michael (Plumber).</p>
+      <div class="pills">
+        <span class="pill">Plumber</span>
+        <span class="pill">Perth</span>
+        <span class="pill match">92% match</span>
+        <span class="pill count">12 members</span>
+        <span class="pill help">Let’s help Michael</span>
+      </div>
+      <div class="btns">
+        <span class="ap-approve">Approve</span>
+        <span class="ap-edit">Edit</span>
+        <span class="ap-dismiss">Dismiss</span>
+      </div>
+    </div>
+    <p class="hint">Tap Approve and the rest is automatic.</p>
+    <div class="composer"><div class="box">Message</div><div class="send"></div></div>
+    <div class="homebar"><i></i></div>
+  </div>
+</body>
+</html>

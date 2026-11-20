@@ -249,8 +249,8 @@
     var dash = circ * (c.pct / 100);
     return '<div class="finish-card" data-finish-card="1">' +
       '<svg class="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="' + r + '" fill="none" stroke="#E4EAF0" stroke-width="4"/>' +
-      '<circle cx="24" cy="24" r="' + r + '" fill="none" stroke="#0B6E4F" stroke-width="4" stroke-linecap="round" transform="rotate(-90 24 24)" stroke-dasharray="' + dash + " " + circ + '"/>' +
-      '<text x="24" y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#0B6E4F">' + c.pct + "%</text></svg>" +
+      '<circle cx="24" cy="24" r="' + r + '" fill="none" stroke="#1A5FD4" stroke-width="4" stroke-linecap="round" transform="rotate(-90 24 24)" stroke-dasharray="' + dash + " " + circ + '"/>' +
+      '<text x="24" y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#0D3F9C">' + c.pct + "%</text></svg>" +
       "<div style=\"flex:1;min-width:0\"><h3>Finish your profile</h3>" +
       "<p>" + c.pct + "% complete. Add a short bio, your goal and social links so other members can get to know you.</p>" +
       '<button type="button" class="btn btn-primary" data-go="complete-profile">Continue</button></div></div>';

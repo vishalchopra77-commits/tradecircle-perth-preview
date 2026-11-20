@@ -1,14 +1,12 @@
-# TradeCircle Perth
+# Rate Buddies
 
-**Placeholder app name — not final.**
-
-[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.6.2-0FBE86)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
+[![Status](https://img.shields.io/badge/status-UI%20prototype%20v1.9.0-1A5FD4)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Preview](https://img.shields.io/badge/live%20preview-GitHub%20Pages-0B1F33)](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)
 [![Data](https://img.shields.io/badge/data-fictional%20only-8AA0B2)](#all-data-is-fictional)
 
-A simple app for Perth tradies to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
+A simple app for local businesses to find each other, become Facebook friends, and leave genuine Google reviews for jobs they have actually done.
 
-**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. New files (v1.6.2, built on unpushed v1.6.1) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
+**[Open the live preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/)** — the front page. **[Open the full-screen app](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/TradeCircle-Perth.html)** on a phone. The app is now called **Rate Buddies**. Filenames such as `TradeCircle-Perth.html` and the GitHub repo `tradecircle-perth-preview` are unchanged so existing links keep working. New files (v1.9.0) are ready in this repo; the live site updates after they are pushed. Do not push unless Vishal asks.
 
 ![Overview of version 1.2 — member statuses, reviews, Google connect and the menu](overview.png)
 
@@ -48,6 +46,30 @@ The online GitHub copy is the source of truth: [github.com/vishalchopra77-commit
 - **Super admin** web dashboard, including approval of new members
 
 ---
+
+## What’s new in v1.9.0
+
+The phone app and the web admin now share live test data (Supabase, Sydney). Sign in, approve a member, or approve a recommendation request in the admin, and it shows up in the app. A “Demo (offline)” toggle still opens the old sample screens without a login. An Android debug APK can be built automatically on GitHub (see `.github/workflows/android-apk.yml` and [TESTING.md](TESTING.md)). Test accounts are not stored in this repo. Fictional data only. Nothing is sent to Facebook or Google. Not live on the preview site until this version is pushed.
+
+## What’s new in v1.8.2
+
+The app is now called **Rate Buddies** (ratebuddies.com and ratebuddies.app). The four-buddy royal-blue logo is unchanged. The wordmark is RATE BUDDIES, set in real text so the A has its crossbar. A new Canva logo pack is included. `RateBuddies.html` is a copy of the full-screen app; `RankBuddies.html` and the TradeCircle filenames are kept so existing links still work. Simulated only; not live.
+
+## What’s new in v1.8.1
+
+Suggested recommendation texts, with a required “Add your own words” step, unique starters per Facebook post, optional contact details, and Video tutorials. After a profile is approved, new members must watch a welcome intro (it can’t be skipped) before Complete your profile. The intro is the first pinned section in Video tutorials admin. See RECOMMEND-TEXT-RESEARCH.md and recommend-text-research.html. Simulated only; not live.
+
+## What’s new in v1.8.0
+
+Automatic recommendation requests (prototype). Devi can watch Facebook groups for posts such as “can anyone recommend a plumber in Joondalup?”. Each match is mapped to a city (Joondalup counts as Perth). A Rate Buddies member of that trade in the city is featured — for this preview, Michael from Shaw Plumbing. Vishal taps Approve in Grok Bot, the request is published, and every member in that city except people in the same trade is alerted: “Facebook recommendation alert for “Plumber” — Let’s help Michael!”. Same-trade members are skipped to avoid a conflict of interest. If no member of that trade exists in the city, the request cannot be approved. Review first is the default; auto-publish for high-confidence matches is optional. There is no live backend yet — the admin includes a Simulate Devi alert button and fictional sample matches. See AUTOMATION-PLAN.md.
+
+## What’s new in v1.7.1
+
+The royal-blue Rank Buddies logo is now in the app — four cheering buddies, with RANK BUDDIES set in real text underneath so the lettering stays clean. Buttons, headers, tabs and highlights use a matching corporate blue (sky through to deep indigo). Light and dark logo files, an app icon and a favicon are included. Success, warning and error colours, and the Google and Facebook brand colours, are unchanged. Facebook buttons, tiles and friend-request actions use the Facebook “f”, not a person icon.
+
+## What’s new in v1.7.0
+
+The app is now called Rate Buddies (the name Vishal registered). TradeCircle Perth has been removed from the wordmark, titles, admin header, notifications and other on-screen text. Filenames and the GitHub repo name are unchanged so current links still work. The ten Perth metro regions are unchanged.
 
 ## What’s new in v1.6.2
 
@@ -191,7 +213,13 @@ More stills are in [`screens/`](screens/), including the polished v1.5.1 admin p
 | v1.2 | 16 Nov 2026, about 8:26–8:28 am | Menu drawer, Google Business Profile, friend and review status, Reviews tab, review ideas helper, full chat, notification mocks |
 | v1.3 | 16 Nov 2026, about 9:47 am | Subscription screen (Free now, Pro later, **Price to be set**), [TECH-PLAN.md](TECH-PLAN.md) for the real cross-platform app on AWS in Sydney |
 | v1.4 | 16 Nov 2026, about 10:02 am | Your areas in one combined list; **Join all Perth metro**; cleaner member cards (no region labels; Facebook and review status as icons) |
-| **v1.6.2 (current)** | 19 Nov 2026, about 7:50 am | Area picker: after the state, Metro and Regional are accordions on one screen (Metro open first). Tip about nearby Google reviews and working zones. |
+| **v1.9.0 (current)** | 20 Nov 2026, morning | Phone app and web admin share live test data. Android APK workflow added. Demo (offline) toggle kept for sample screens. Fictional data only; not live until pushed. |
+| **v1.8.2** | 20 Nov 2026, morning | Renamed to Rate Buddies (ratebuddies.com, ratebuddies.app). New Canva logo pack and wordmark. RateBuddies.html added; RankBuddies.html and TradeCircle filenames kept. Simulated only; not live. |
+| **v1.8.1** | 20 Nov 2026, morning | Unique recommend starters, add-your-own-words, Video tutorials, and a mandatory intro video (first pinned admin section). Simulated only; not live. |
+| **v1.8.0** | 20 Nov 2026, morning | Devi automation preview: one-tap Approve from Grok Bot publishes a matched Facebook request, features a same-trade member (e.g. Michael), and alerts every member in that city except the same trade. Simulated only; not live. |
+| **v1.7.1** | 20 Nov 2026, morning | Royal-blue logo and matching colour scheme. The four-buddy mark is in the app, with a clean HTML wordmark. Filenames and the GitHub repo stay the same. |
+| **v1.7.0** | 19 Nov 2026, about 6:40 pm | Rebranded to Rank Buddies. On-screen name, titles and admin header updated. Filenames and the GitHub repo stay the same so live links keep working. |
+| **v1.6.2** | 19 Nov 2026, about 7:50 am | Area picker: after the state, Metro and Regional are accordions on one screen (Metro open first). Tip about nearby Google reviews and working zones. |
 | **v1.6.1** | 19 Nov 2026, about 7:30 am | Australia-wide area picker: state, then metro or regional, then multi-select regions. Perth’s ten metro regions stay exactly as they were. Summary of chosen areas on sign-up and My profile. |
 | **v1.6.0** | 19 Nov 2026, about 6:20 am | Trade or business type picker for all physical / local businesses as well as trades; 456 types in 16 groups, with aliases in autofill and a grouped See all list; icons and cover fallbacks for new types; fictional barber added to the demo. |
 | **v1.5.9** | 18 Nov 2026, about 7:10 am | Trade cover photos on profiles; a small trade icon after every trade label; Your areas moved to My profile; Facebook Recommend segment for admin-posted group links (open, copy a unique vouch idea, mark as done; “This one is for you” on your own post); admin Facebook recommendations page. |
@@ -260,4 +288,4 @@ Every member, business, rating, chat, review and photo in this preview is made u
 
 ---
 
-*Prototype v1.6.2 · 19 November 2026, Australia/Perth*
+*Prototype v1.9.0 · 20 November 2026, Australia/Perth*

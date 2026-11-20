@@ -1,0 +1,205 @@
+/* Rate Buddies v1.8.0 — Devi automatic recommendation requests */
+
+/* ===== Admin: Devi connection & inbox ===== */
+.devi-grid { display: grid; gap: 16px; }
+@media (min-width: 980px) {
+  .devi-grid.two { grid-template-columns: 1.15fr .85fr; align-items: start; }
+}
+.devi-status {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px; border-radius: 16px;
+  background: linear-gradient(180deg, #F3F8FF, #EEF3FB);
+  border: 1px solid #D7E4F6;
+}
+.devi-status .pulse {
+  width: 44px; height: 44px; border-radius: 14px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #2E86F0, #1658C7); color: #fff;
+  box-shadow: 0 8px 16px rgba(26,95,212,.28);
+  position: relative;
+}
+.devi-status .pulse:after {
+  content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%;
+  background: #22C55E; border: 2px solid #fff; right: -2px; top: -2px;
+}
+.devi-status h3 { margin: 0 0 2px; font-size: 16px; letter-spacing: -.02em; }
+.devi-status p { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted, #5B6B7C); }
+.devi-status .ok { color: #066B4C; font-weight: 800; }
+
+.devi-webhook {
+  display: flex; gap: 8px; align-items: stretch; margin-top: 4px;
+}
+.devi-webhook input {
+  flex: 1; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px; font-weight: 650; color: var(--navy, #0A1328);
+  border: 1.5px solid var(--line, #D5DDE6); border-radius: 12px; padding: 10px 12px; background: #F8FAFC;
+}
+.devi-note {
+  margin: 8px 0 0; font-size: 12px; font-weight: 650; color: var(--muted, #5B6B7C); line-height: 1.45;
+}
+.kw-block { margin: 0 0 14px; }
+.kw-block h4 { margin: 0 0 8px; font-size: 13px; }
+.kw-block .chips { margin: 0; }
+.kw-block .chip { background: #E8F1FD; border-color: #C9D9F3; color: #0D3F9C; font-size: 12px; }
+
+.channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (min-width: 720px) { .channel-grid { grid-template-columns: repeat(4, 1fr); } }
+.channel-opt {
+  appearance: none; border: 1.5px solid var(--line, #D5DDE6); background: #fff;
+  border-radius: 14px; padding: 12px 12px 10px; text-align: left; cursor: pointer;
+  font: inherit; color: inherit;
+}
+.channel-opt strong { display: block; font-size: 13px; margin-bottom: 2px; }
+.channel-opt span { display: block; font-size: 11px; font-weight: 650; color: var(--muted, #5B6B7C); line-height: 1.35; }
+.channel-opt.on {
+  border-color: #1A5FD4; background: #F3F8FF;
+  box-shadow: 0 0 0 3px rgba(26,95,212,.12);
+}
+.channel-opt .tick {
+  width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid #C5D0DC;
+  margin-bottom: 8px; display: grid; place-items: center; background: #fff;
+}
+.channel-opt.on .tick { border-color: #1658C7; background: linear-gradient(180deg, #2E86F0, #1658C7); color: #fff; }
+
+.mode-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 12px; }
+.mode-pill {
+  border: 1.5px solid var(--line, #D5DDE6); background: #fff; border-radius: 999px;
+  padding: 8px 14px; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; color: var(--navy, #0A1328);
+}
+.mode-pill.on { border-color: #1A5FD4; background: #1A5FD4; color: #fff; }
+.mode-pill .hint { font-weight: 650; opacity: .8; }
+
+.conf-row { display: flex; align-items: center; gap: 12px; }
+.conf-row input[type=range] { flex: 1; accent-color: #1A5FD4; }
+.conf-val { font-weight: 800; min-width: 48px; color: #0D3F9C; }
+
+.agent-preview {
+  border: 1px solid var(--line, #D5DDE6); border-radius: 16px; background: #F7F8FB; padding: 12px;
+}
+.agent-preview .bubble {
+  background: #fff; border-radius: 16px 16px 16px 6px; padding: 12px 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, .06); border: 1px solid #E6ECF3;
+}
+.agent-preview .from { font-size: 11px; font-weight: 800; color: #1A5FD4; letter-spacing: .02em; text-transform: uppercase; margin-bottom: 6px; }
+.agent-preview p { margin: 0 0 10px; font-size: 13px; font-weight: 650; line-height: 1.45; color: var(--ink, #102033); }
+.agent-preview .btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.agent-preview .btns button, .agent-preview .btns span {
+  border: 0; border-radius: 10px; padding: 7px 10px; font-size: 12px; font-weight: 800; cursor: default;
+}
+.ap-approve { background: linear-gradient(180deg, #2E86F0, #1658C7); color: #fff; }
+.ap-edit { background: #E8F1FD; color: #0D3F9C; }
+.ap-dismiss { background: #EEF2F6; color: #5B6B7C; }
+
+/* Inbox cards */
+.devi-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 0 0 14px; }
+.devi-card {
+  background: #fff; border: 1px solid var(--line, #D5DDE6); border-radius: 16px;
+  padding: 16px 18px; margin: 0 0 12px; box-shadow: 0 8px 20px rgba(16,32,51,.04);
+  position: relative; overflow: hidden;
+}
+.devi-card:before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, #3AA0FC, #1E38B0);
+}
+.devi-card.is-low:before { background: #F5B942; }
+.devi-card.is-none:before { background: #8AA0B2; }
+.devi-card.is-approved:before { background: #0F9F6E; }
+.devi-card.is-dismissed { opacity: .72; }
+.devi-card.is-dismissed:before { background: #C5D0DC; }
+.devi-card-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.devi-card .group { font-weight: 800; font-size: 14px; letter-spacing: -.01em; }
+.devi-card .when { font-size: 12px; font-weight: 650; color: var(--muted, #5B6B7C); margin-top: 2px; }
+.devi-card .snippet {
+  margin: 10px 0 12px; font-size: 14px; font-weight: 650; line-height: 1.45; color: var(--ink, #102033);
+  padding: 10px 12px; background: #F6F8FB; border-radius: 12px;
+}
+.devi-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
+.devi-meta .pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #F3F6FA; border: 1px solid var(--line, #D5DDE6);
+  border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 750;
+}
+.devi-meta .pill.trade { background: #E8F1FD; border-color: #C9D9F3; color: #0D3F9C; }
+.devi-meta .conf { font-weight: 800; border-radius: 999px; padding: 4px 10px; font-size: 12px; }
+.conf-hi { background: #E7F8F1; color: #066B4C; }
+.conf-mid { background: #FFF6E0; color: #8A5A00; }
+.conf-lo { background: #FDECEC; color: #9B2C2C; }
+.devi-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.devi-actions .btn { height: 36px; padding: 0 12px; font-size: 13px; }
+.devi-edit {
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line, #D5DDE6);
+  display: grid; gap: 10px; grid-template-columns: 1fr 1fr auto; align-items: end;
+}
+.devi-edit .field { margin: 0; }
+.devi-edit label { display: block; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--muted, #5B6B7C); margin: 0 0 4px; }
+.devi-edit input, .devi-edit select {
+  width: 100%; border: 1.5px solid var(--line, #D5DDE6); border-radius: 10px; padding: 8px 10px; font: inherit; font-weight: 700;
+}
+.devi-toast {
+  position: sticky; top: 0; z-index: 5; margin: 0 0 14px;
+  background: #E7F8F1; color: #066B4C; border: 1px solid #B7E4D2;
+  border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 750;
+}
+.approve-link {
+  font-size: 11px; font-weight: 650; color: var(--muted, #5B6B7C);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all; margin-top: 8px;
+}
+
+/* ===== Member: Devi recommend card, home counter, tip ===== */
+.rec-card.is-devi { background: linear-gradient(180deg, #F3F8FF, #fff 42%); }
+.rec-card.is-devi:before { background: linear-gradient(180deg, #3AA0FC, #1E38B0); }
+.rec-devi-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #E8F1FD; color: #0D3F9C; border-radius: 999px;
+  padding: 2px 8px; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+}
+.rec-tip {
+  margin: 10px 0 0; padding: 10px 12px; border-radius: 12px;
+  background: #FFF8E8; color: #6B4A00; font-size: 12.5px; font-weight: 700; line-height: 1.45;
+  border: 1px solid #F3E0B3;
+}
+.ov-req-count {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  border: 0; background: #E8F1FD; color: inherit; text-align: left;
+  border-radius: 14px; padding: 10px 12px; margin: 8px 0; cursor: pointer; font: inherit;
+}
+.ov-req-count .n {
+  min-width: 28px; height: 28px; border-radius: 9px;
+  display: grid; place-items: center;
+  background: linear-gradient(180deg, #2E86F0, #1658C7); color: #fff;
+  font-weight: 800; font-size: 13px;
+}
+.ov-req-count strong { display: block; font-size: 13px; }
+.ov-req-count span { display: block; font-size: 12px; font-weight: 650; color: var(--muted, #5B6B7C); }
+
+.devi-top-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+.devi-top-actions .btn,
+.devi-toolbar .btn,
+.devi-webhook .btn,
+.devi-actions .btn { width: auto; flex: 0 0 auto; }
+.devi-webhook { align-items: center; }
+.devi-webhook input { min-width: 0; flex: 1; height: 42px; }
+.approve-link { word-break: break-word; overflow-wrap: anywhere; }
+.ov-req-count { width: 100%; display: flex; }
+
+/* Featured member + city-wide alert */
+.devi-featured {
+  display: flex; align-items: center; gap: 10px;
+  background: #F3F8FF; border: 1px solid #D7E4F6; border-radius: 12px;
+  padding: 10px 12px; margin: 0 0 12px;
+}
+.devi-featured .feat-meta { flex: 1; min-width: 0; }
+.devi-featured .feat-meta strong { display: block; font-size: 13px; }
+.devi-featured .feat-meta span { display: block; font-size: 12px; font-weight: 650; color: var(--muted, #5B6B7C); }
+.devi-place { font-size: 12px; font-weight: 650; color: var(--muted, #5B6B7C); margin: 0 0 8px; }
+.rec-help {
+  margin: 0 0 10px; font-size: 18px; font-weight: 800; letter-spacing: -.02em; color: var(--navy, #0A1328);
+}
+.rec-card.is-devi .rec-who { margin-top: 2px; }
+.devi-card.is-none .btn-primary[disabled] {
+  opacity: .45; cursor: not-allowed; filter: grayscale(.2);
+}
+.rec-help { line-height: 1.25; }
+.rec-card.is-devi .rec-who { margin: 0 0 12px; }
+.rec-card.is-devi .t-pill .trade-ico { margin-right: 4px; vertical-align: -2px; }

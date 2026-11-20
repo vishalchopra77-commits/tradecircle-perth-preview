@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rate Buddies — how a match becomes an alert</title>
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap;}
+
+  @font-face{font-family:"Plus Jakarta Sans";src:url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F4F6FA; font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif; color: #0A1328; }
+  #art { width: 1600px; min-height: 900px; background: #F4F6FA; padding: 0 0 28px; }
+  .hero { background: #0A1328; color: #fff; padding: 22px 36px; display:flex; align-items:center; gap:16px; }
+  .hero img { height: 52px; }
+  .hero h1 { font-size: 26px; letter-spacing: -.03em; font-weight: 800; }
+  .hero p { font-size: 13px; font-weight: 650; color: #8FB4F0; margin-top: 2px; }
+  .rows { padding: 28px 32px 8px; }
+  .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; margin-bottom: 52px; }
+  .card { background: #fff; border-radius: 18px; padding: 18px 18px 16px; border: 1px solid #E4EAF0; box-shadow: 0 8px 22px rgba(16,28,48,.05); min-height: 132px; position: relative; }
+  .card.navy { background: #0A1328; color: #fff; border-color: #0A1328; }
+  .num { width: 26px; height: 26px; border-radius: 50%; background: #1A5FD4; color: #fff; font-size: 13px; font-weight: 800; display:inline-grid; place-items:center; margin-right: 8px; }
+  .card.navy .num { background: #3AA0FC; color: #0A1328; }
+  .card h3 { font-size: 16px; font-weight: 800; letter-spacing: -.02em; display:flex; align-items:center; margin-bottom: 8px; }
+  .card p { font-size: 13px; font-weight: 650; line-height: 1.4; color: #3A4A5C; }
+  .card.navy p { color: #C9D6E8; }
+  /* arrows */
+  .row { align-items: stretch; }
+  .card:not(.end)::after {
+    content: "";
+    position: absolute; right: -14px; top: 50%; width: 14px; height: 2px; background: #1A5FD4; transform: translateY(-50%);
+  }
+  .card:not(.end)::before {
+    content: "";
+    position: absolute; right: -18px; top: 50%; width: 0; height: 0;
+    border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1A5FD4;
+    transform: translateY(-50%); z-index: 1;
+  }
+  .wrap-arrow {
+    position: absolute; left: 12.5%; right: 12.5%; top: calc(100% + 2px); height: 36px; pointer-events: none;
+  }
+  .wrap-arrow i {
+    position: absolute; left: 0; right: 0; top: 0; height: 28px;
+    border: 2px solid #1A5FD4; border-top: none; border-radius: 0 0 18px 18px;
+  }
+  .wrap-arrow b {
+    position: absolute; left: -6px; top: 22px; width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #1A5FD4;
+  }
+  .notes { margin: 0 32px; background:#fff; border-radius: 18px; padding: 18px 22px; border:1px solid #E4EAF0; }
+  .notes h2 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  .notes li { font-size: 13px; font-weight: 650; color:#3A4A5C; margin: 4px 0 0 18px; line-height: 1.45; }
+  .foot { margin: 16px 36px 0; font-size: 12px; font-weight: 650; color: #5B6B7C; }
+  .foot .path { color: #1A5FD4; font-weight: 800; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div id="art">
+  <div class="hero">
+    <img src="http://127.0.0.1:8767/assets/logo/rank-buddies-mark.png" alt="">
+    <div>
+      <h1>Rate Buddies · how a match becomes an alert</h1>
+      <p>Automatic recommendation requests</p>
+    </div>
+  </div>
+  <div class="rows">
+    <div class="row" style="margin-bottom:56px">
+      <div class="card navy"><h3><span class="num">1</span> Facebook group post</h3><p>Someone asks for a plumber in Joondalup.</p></div>
+      <div class="card"><h3><span class="num">2</span> Devi</h3><p>Watches the group and sends a short alert.</p></div>
+      <div class="card"><h3><span class="num">3</span> Rate Buddies webhook</h3><p>Receives the link, group, snippet and time.</p></div>
+      <div class="card end"><h3><span class="num">4</span> City match, same trade excluded</h3><p>Joondalup maps to Perth. Michael (Plumber) is featured. Other plumbers are not alerted. 12 Perth members will be asked to recommend him.</p></div>
+      <div class="wrap-arrow"><i></i><b></b></div>
+    </div>
+    <div class="row">
+      <div class="card"><h3><span class="num">5</span> AI agent notifies you</h3><p>Grok Bot (or email, SMS, push) sends a card to recommend Michael.</p></div>
+      <div class="card navy"><h3><span class="num">6</span> You tap Approve</h3><p>The only step you take. A signed one-tap link.</p></div>
+      <div class="card"><h3><span class="num">7</span> Auto publish + alerts</h3><p>Recommend feed updates. Perth members (except plumbers) are asked to recommend Michael.</p></div>
+      <div class="card end"><h3><span class="num">8</span> Members reply, then done</h3><p>They vouch on Facebook only if they genuinely know his work, then tap “I recommended Michael”.</p></div>
+    </div>
+  </div>
+  <div class="notes">
+    <h2>What you do, and what happens on its own</h2>
+    <ul>
+      <li>Review first is the default. Auto-publish for high-confidence matches is optional and can be turned on later.</li>
+      <li>Every member in the city is alerted, except members of the same trade (conflict of interest). A same-trade member is featured so others know who to help.</li>
+      <li>If no member of that trade lives in the city, the request cannot be approved — there is no one to help.</li>
+      <li>The approve button is a signed link, so Grok Bot, email or SMS can all complete the same step.</li>
+      <li>Members open Facebook themselves and only recommend people they genuinely know. The app never posts the comment for them.</li>
+    </ul>
+  </div>
+  <div class="foot">
+    Prototype v1.8.0 · Fictional example · No live webhook yet<br>
+    <div class="path">Facebook group post → Devi → webhook → city match, same trade excluded → AI agent → you tap Approve → Recommend feed + alerts → members reply + marked done</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "appId": "com.ratebuddies.app",
+  "appName": "Rate Buddies",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": true
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

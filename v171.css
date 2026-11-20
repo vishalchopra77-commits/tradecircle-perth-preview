@@ -1,0 +1,82 @@
+/* Rate Buddies v1.7.1 — royal-blue logo lockup and wordmark.
+
+Palette sampled from the chosen royal-blue logo (sky to deep indigo):
+  --navy        #0A1328
+  --navy-2      #15244A
+  --accent      #1A5FD4
+  --accent-2    #1658C7
+  --accent-ink  #0D3F9C
+  --accent-soft #E8F1FD
+  --accent-sky  #3AA0FC
+  --accent-deep #1E38B0
+The four-buddy mark is an image. The RATE BUDDIES wordmark is real HTML
+text (Plus Jakarta Sans ExtraBold, all caps) so the lettering stays clean.
+*/
+
+.brand-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 0 4px;
+}
+.brand-lockup .brand-mark {
+  display: block;
+  width: 100%;
+  max-width: 236px;
+  height: auto;
+  margin: 0 0 14px;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25));
+}
+.brand-wordmark {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+}
+.brand-wordmark .w-buddies {
+  background: linear-gradient(90deg, #3AA0FC 0%, #6B8CFF 55%, #7B7AE8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-lockup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 18px;
+}
+.auth-lockup .brand-mark {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex: none;
+}
+.auth-lockup .brand-wordmark {
+  font-size: 18px;
+  color: var(--navy, #0A1328);
+  letter-spacing: -0.03em;
+}
+.auth-lockup .brand-wordmark .w-buddies {
+  background: linear-gradient(90deg, #1A5FD4, #1E38B0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.studio-mark {
+  display: block;
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 0 18px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+}
+
+.logo-mark:empty { display: none; }

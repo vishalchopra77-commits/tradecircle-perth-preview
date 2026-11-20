@@ -1,4 +1,4 @@
-/* TradeCircle Perth — review and comment idea engine v1.5.4
+/* TradeCircle Perth — review and comment idea engine v1.8.1
    Original fragments only. Not copied from real reviews. See REVIEW-IDEAS-RESEARCH.md. */
 (function (root) {
   "use strict";
@@ -414,7 +414,7 @@
       guard++;
     }
     var fb = 0;
-    while (out.length < 3) {
+    while (out.length < want) {
       var map = makeMap(opts);
       fb++;
       var fallback = fillTpl("Write a short note in your own words about {job} with {business} in {suburb}.", map) + " Mention what stood out, then change it so it sounds like you.";
@@ -427,17 +427,22 @@
 
   function assembleAlert(opts, index) {
     var tone = opts.tone || "casual";
+    var length = opts.length || "medium";
     var focuses = opts.focuses || ["seo", "service", "area"];
     var map = makeMap(opts);
-    var seed = hash(["alert", opts.viewerId || "jamie", opts.alertId || "", map.business, map.jobBare, tone, (opts.round || 0), index, focuses.join(",")].join("|"));
+    var seed = hash(["alert", opts.viewerId || "jamie", opts.alertId || "", map.business, map.jobBare, tone, length, (opts.round || 0), index, focuses.join(",")].join("|"));
     var bank = ALERT_OPENERS[tone] || ALERT_OPENERS.casual;
     var fitted = bank.filter(function (t) { return openerFits(t, focuses); });
     if (!fitted.length) fitted = bank;
     var text = fillTpl(pick(fitted, seed, 1)[0], map);
-    if ((seed + index) % 2 === 1) {
+    if (length !== "short") {
       var midTheme = hasFocus(focuses, "timeliness") ? "timeliness" : hasFocus(focuses, "value") ? "value" : "quality";
       var line = pick((PRAISE[midTheme][tone] || PRAISE[midTheme].casual), seed + 3, 1)[0];
       if (line) text = text.replace(/\.$/, "") + " " + line;
+    }
+    if (length === "long") {
+      var closer = pick((CLOSERS[tone] || CLOSERS.casual), seed + 7, 1)[0];
+      if (closer) text = text.replace(/\.$/, "") + " " + closer;
     }
     return ensureFocuses(text, map, focuses, tone);
   }
@@ -448,7 +453,10 @@
     var out = [];
     var i = 0, guard = 0;
     var jobs = jobsFor((opts.member && opts.member.trade) || "");
-    while (out.length < 3 && guard < 400) {
+    var tones = ["casual", "professional", "warm"];
+    var lengths = ["short", "medium", "long"];
+    var want = opts.count || 3;
+    while (out.length < want && guard < 400) {
       var local = Object.assign({}, opts);
       var seen = used.length + out.length;
       var threshold = 0.62;
@@ -457,13 +465,15 @@
       if (seen > 48 || guard > 150) threshold = 0.96;
       if (guard > 250) threshold = 1.01;
       if (guard > 20) local.job = jobs[(hash((opts.viewerId || "") + String(guard)) + i) % jobs.length];
+      local.tone = opts.tone || tones[out.length % tones.length];
+      local.length = opts.length || lengths[(out.length + (opts.round || 0)) % lengths.length];
       local.round = (opts.round || 0) * 400 + guard;
       var text = assembleAlert(local, i);
       if (!isBlocked(text, used, out, threshold)) out.push(text);
       i++; guard++;
     }
     var fb = 0;
-    while (out.length < 3) {
+    while (out.length < want) {
       var map = makeMap(opts);
       fb++;
       var fallback = fillTpl("I have used {business} in {suburb} and would recommend getting in touch, in your own words.", map);
@@ -514,6 +524,7 @@
     isBlocked: isBlocked,
     buildReviewIdeas: buildReviewIdeas,
     buildAlertIdeas: buildAlertIdeas,
+    assembleAlert: assembleAlert,
     combinationCount: combinationCount,
     OPENERS: OPENERS,
     PRAISE: PRAISE,

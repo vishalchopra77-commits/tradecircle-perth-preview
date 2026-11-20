@@ -1,10 +1,10 @@
-# TradeCircle Perth — how the real app would be built
+# Rate Buddies — how the real app would be built
 
 This note is for Vishal and for any assistant (Claude, ChatGPT or similar) continuing the work. It is written in plain words. It is a plan, not a build yet.
 
 **Date:** 18 November 2026, Australia/Perth.  
-**App name:** TradeCircle Perth (placeholder, not final).  
-**Current design:** clickable prototype v1.6.2.
+**App name:** Rate Buddies. Filenames and the GitHub repo may still use TradeCircle Perth.  
+**Current design:** clickable prototype v1.9.0, with a shared test database so the phone app and web admin stay in sync.
 
 ---
 
@@ -126,7 +126,7 @@ The app is **free for now**. Every feature in the current design is included in 
 
 Later, a **Pro** plan can be added. The price is **not set**. Until Vishal chooses a price, screens and documents must say **“Price to be set”**. Do not invent a number.
 
-When a digital subscription is sold **inside** the iPhone or Android app (for example, unlocking extra features in TradeCircle), the stores generally require you to use **their** payment systems, not a random card form in the app:
+When a digital subscription is sold **inside** the iPhone or Android app (for example, unlocking extra features in Rate Buddies), the stores generally require you to use **their** payment systems, not a random card form in the app:
 
 - **Apple:** if you unlock features or subscriptions inside the app, you must use in-app purchase. Apps may not use their own mechanism to unlock that content. Source: App Store Review Guidelines, section 3.1.1, [developer.apple.com/app-store/review/guidelines](https://developer.apple.com/app-store/review/guidelines/). Auto-renewable subscriptions also have extra rules (ongoing value, at least seven days, clear terms) in section 3.1.2 of the same guidelines, and in Apple’s [Auto-renewable Subscriptions](https://developer.apple.com/app-store/subscriptions/) page.
 - **Google Play:** Google Play’s billing system is required for in-app purchases of digital goods and services, including subscription services and extra app features, unless a stated exception applies. Source: [Understanding Google Play’s Payments policy](https://support.google.com/googleplay/android-developer/answer/10281818) and [Google Play’s billing system](https://developer.android.com/google/play/billing). Play also requires a clear way to manage or cancel, including a link to Google Play’s Subscription Center or a direct cancellation path. Source: [Subscriptions policy](https://support.google.com/googleplay/android-developer/answer/9900533).
@@ -230,3 +230,30 @@ Australia-wide area wizard (state → metro or regional → region chips) on sig
 ## 8k. Added in the v1.6.2 prototype
 
 The Metro or Regional step is now an accordion on the regions screen (Metro open by default, Regional collapsed). Each section has its own Select all. A compact Google tip on sign-up and My areas explains that nearby reviews help local search, and that ticking areas outside the working zone can hurt reputation and rankings. A nudge appears at six or more regions, or when more than one state is selected.
+
+## 8l. Added in the v1.7.0 prototype
+
+The on-screen product name is Rate Buddies. Wordmark, page titles, admin header, notifications, settings and related copy were updated. `TradeCircle-Perth.html` and the GitHub repository name are unchanged so existing links keep working. The internal `window.TradeCircle` API name is unchanged.
+
+## 8m. Added in the v1.7.1 prototype
+
+Royal-blue Rate Buddies logo (four cheering buddy figures) with an HTML all-caps wordmark. The app colour scheme now follows the logo gradient (sky blue to deep indigo): primary buttons, headers, tabs, links and highlights. Google and Facebook brand colours, and separate success / warning / error colours, are unchanged. Facebook tiles, friend-request buttons and friend notifications use the Facebook “f” rather than a person icon. Light and dark logo files, a square app icon (512 / 192 / 32) and a favicon are in `assets/logo/`.
+
+
+## 8p. Added in the v1.8.2 prototype
+
+The product name is Rate Buddies. Domains in the preview are ratebuddies.com and ratebuddies.app. The wordmark is RATE BUDDIES. `RateBuddies.html` was added; `RankBuddies.html`, TradeCircle filenames, the GitHub repo name and `window.TradeCircle` are unchanged.
+
+## 8q. Added in the v1.9.0 prototype
+
+The preview is wired to a shared test database (Supabase, Sydney region) so approvals, recommendation requests, review records, tutorials and the intro video stay in sync between the web admin and the phone app. Sign-in uses email and password. A “Demo (offline)” toggle still opens the older sample screens. An Android debug APK can be built on GitHub Actions (Capacitor, app id `com.ratebuddies.app`). Test logins are kept in a private file, not in the repo. Nothing is sent to Facebook or Google. The production plan is still AWS in Sydney; this test database is only so Vishal can try the connected loop before that setup.
+
+
+## 8o. Added in the v1.8.1 prototype
+
+Members get three unique starter texts per Facebook request, an “Add your own words” box, optional contact-detail chips (links off by default, at most one link), and Recommendation details on My profile. Video tutorials are managed in admin (YouTube/Vimeo links, sections, hide/archive — never delete). The Introduction video is the first pinned section on that admin page and is required for new members after approval, before Complete your profile. Continue stays locked until about 90% has actually been watched. See RECOMMEND-TEXT-RESEARCH.md.
+
+## 8n. Added in the v1.8.0 prototype
+
+Devi automation for recommendation requests is mocked in the admin and the member app. There is still no backend. A future server must accept a Devi webhook (post link, group name, snippet, keyword, time), map the place to a city, pick a featured member of that trade in the city (next in the promotion queue if several), notify Vishal through Grok Bot (or email, SMS or push) with a signed Approve link naming who will be featured, and on approval publish to the Recommend feed and alert every member in that city except members of the same trade. If no member of that trade exists in the city, the request cannot be approved. See AUTOMATION-PLAN.md.
+

@@ -19,7 +19,7 @@
   ];
 
   const AVATAR_COLORS = {
-    teal: ["#0FBE86", "#0A7A58"],
+    teal: ["#1A5FD4", "#1E38B0"],
     navy: ["#1C4B73", "#0B1F33"],
     coral: ["#F07A5A", "#C44B32"],
     violet: ["#7B6CFF", "#4C3EBE"],
@@ -223,6 +223,19 @@
         other: ""
       },
       color: "rust"
+    },
+    {
+      id: "michael", first: "Michael", last: "Shaw",
+      business: "Shaw Plumbing", trade: "Plumber",
+      regions: ["joondalup", "north"],
+      bio: "Hot water, leaking taps and bathroom plumbing across Joondalup and the northern suburbs.",
+      phone: "0400 000 114",
+      facebook: "https://www.facebook.com/shawplumbing.demo",
+      page: "https://www.facebook.com/shawplumbing.demo",
+      profileUrl: "https://ratebuddies.com/m/michael-shaw",
+      links: { website: "https://www.shawplumbing.example.au", facebook: "https://www.facebook.com/shawplumbing.demo" },
+      recShare: { phone: true, facebook: true, website: true, profile: true },
+      color: "navy"
     }
   ];
 
@@ -663,9 +676,9 @@
         var x = 32 + Math.cos(a) * 22;
         var y = 32 + Math.sin(a) * 22;
         var r = i === 0 ? 4.2 : 3.4;
-        return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r + '" fill="' + (i === 0 ? "#0FBE86" : "#E8EEF4") + '"/>';
+        return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r + '" fill="' + (i === 0 ? "#1A5FD4" : "#E8EEF4") + '"/>';
       }).join("");
-      return '<svg width="54" height="54" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" stroke="#0FBE86" stroke-width="2.2" opacity="0.9"/><circle cx="32" cy="32" r="3.2" fill="#0FBE86"/>' + dots + "</svg>";
+      return '<svg width="54" height="54" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" stroke="#1A5FD4" stroke-width="2.2" opacity="0.9"/><circle cx="32" cy="32" r="3.2" fill="#1A5FD4"/>' + dots + "</svg>";
     }
     return icons[name] || "";
   }
@@ -700,7 +713,7 @@
       m.regions.map(function (r) { return '<span class="pill r-pill">' + formatRegionPill(r) + "</span>"; }).join("") +
       '</div></div></button>' +
       '<a class="friend-btn" href="' + escapeAttr(m.facebook) + '" target="_blank" rel="noopener noreferrer">' +
-      icon("addfriend") + "<span>Add friend</span></a></div>";
+      icon("fb") + "<span>Add friend</span></a></div>";
   }
 
 
@@ -1050,19 +1063,20 @@
   function renderWelcome() {
     return '<section class="screen dark" id="screen-welcome" data-screen="welcome">' +
       '<div class="welcome-bg" aria-hidden="true"><div class="ring" style="width:280px;height:280px"></div><div class="ring" style="width:400px;height:400px"></div><div class="ring" style="width:520px;height:520px"></div></div>' +
-      '<div class="welcome-inner"><div class="logo-mark">' + icon("logo") + '</div>' +
-      '<div class="welcome-kicker">Perth tradies</div>' +
-      '<h2>TradeCircle<br><span>Perth</span></h2>' +
-      '<span class="name-badge placeholder-note">Placeholder name</span>' +
+      '<div class="welcome-inner"><div class="brand-lockup">' +
+      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
+      '<h2 class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></h2>' +
+      '</div>' +
+      '<div class="welcome-kicker">Local businesses</div>' +
       '<p class="welcome-copy">Join your local areas, meet other trades, and send a Facebook friend request so you can recommend each other in the groups.</p>' +
       '<ul class="welcome-points">' +
       '<li><span class="ic">' + icon("check") + "</span> Sign up with Facebook, email or your phone number.</li>" +
-      '<li><span class="ic">' + icon("check") + "</span> Pick one or more Perth regions.</li>" +
+      '<li><span class="ic">' + icon("check") + "</span> Pick the areas you work in.</li>" +
       '<li><span class="ic">' + icon("check") + "</span> Weekly meet-ups stay offline — they are not in this app.</li>" +
       '</ul><div class="welcome-actions">' +
       '<button class="btn btn-fb" data-action="fb-connect" data-next="signup-name">' + icon("fb") + " Continue with Facebook</button>" +
       '<div class="or-line light"><span>or</span></div>' +
-      '<button class="btn btn-primary has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
+      '<button class="btn btn-navy has-ico" data-go="signup">' + icon("user") + "<span>Create account</span></button>" +
       '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>" +
       '</div><p class="welcome-foot">Recommendations should only be for people you actually know.</p></div></section>';
   }
@@ -1070,12 +1084,17 @@
   function renderSignIn() {
     return '<section class="screen has-header" data-screen="signin">' +
       '<div class="app-header"><button class="icon-btn" data-go="welcome" aria-label="Back">' + icon("back") + '</button><div class="ht">Sign in</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="auth-hero"><h2>Welcome back</h2><p>Sign in to see members in your Perth areas.</p></div>' +
+      '<div class="scroll"><div class="auth-lockup">' +
+      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
+      '<div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div>' +
+      '</div>' +
+      '<div class="auth-hero"><h2>Welcome back</h2><p>Sign in to see members in your areas.</p></div>' +
       '<form data-form="signin">' +
-      '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="jamie@halepest.demo" autocomplete="username"></div>' +
-      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="demopass" autocomplete="current-password"></div>' +
+      '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="" autocomplete="username"></div>' +
+      '<div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" value="" autocomplete="current-password"></div>' +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Sign in</span></button></form>" +
-      '<p class="hint" style="text-align:center;margin-top:14px">This is a prototype — tap Sign in to continue as Jamie Hale.</p>' +
+      '<p class="hint" style="text-align:center;margin-top:14px">Sign in with your Rate Buddies test account. Turn on Demo (offline) to browse the sample screens without a login.</p>' +
+      '<label class="rb-demo-toggle"><input type="checkbox" data-action="rb-demo"' + ((window.RB && RB.isDemo()) ? " checked" : "") + '> Demo (offline)</label>' +
       '<div class="auth-bottom">New here? <a class="link" data-go="signup" href="#signup">Create an account</a></div></div></section>';
   }
 
@@ -1165,7 +1184,7 @@
       '<div class="scroll">' +
       '<div class="pending-art">' + icon("check") + "</div>" +
       '<div class="auth-hero" style="text-align:center"><h2>Thanks, ' + escapeText(d.first || "Jamie") + ". We are reviewing your profile.</h2>" +
-      "<p>Your profile stays hidden until a TradeCircle admin approves it. You will get a notification when you are in. This usually takes a day.</p></div>" +
+      "<p>Your profile stays hidden until a Rate Buddies admin approves it. You will get a notification when you are in. This usually takes a day.</p></div>" +
       '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
       '<p class="hint" style="margin:0">' + bits + "</p></div>" +
       '<button class="btn btn-primary has-ico" type="button" data-action="simulate-approval" style="margin-top:16px">' + icon("check") + "<span>Demo: simulate approval</span></button>" +
@@ -1267,7 +1286,7 @@
     return '<section class="screen has-tabs has-header" data-screen="settings">' +
       '<div class="app-header"><span class="header-spacer"></span><div class="ht">Settings</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><p class="group-label">Account</p><div class="card group">' +
-      '<button class="set-row" data-go="me"><span class="ic" style="background:#E7F8F1;color:#066B4C">' + icon("pin") + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + escapeText(fullName(m)) + " · " + escapeText(m.trade) + '</span></span><span class="chev">' + icon("chev") + "</span></button>" +
+      '<button class="set-row" data-go="me"><span class="ic" style="background:#E8F1FD;color:#0D3F9C">' + icon("pin") + '</span><span class="lab"><span class="a">View my profile</span><span class="b">' + escapeText(fullName(m)) + " · " + escapeText(m.trade) + '</span></span><span class="chev">' + icon("chev") + "</span></button>" +
       '<button class="set-row" data-go="edit-profile"><span class="ic" style="background:#EEF2F6;color:#14314C">' + icon("pencil") + '</span><span class="lab"><span class="a">Edit profile and regions</span><span class="b">Name, trade, Facebook links, areas</span></span><span class="chev">' + icon("chev") + "</span></button>" +
       (state.fbConnected
         ? '<button class="set-row" type="button" data-go="edit-profile"><span class="ic" style="background:#E8F1FD;color:#1877F2">' + icon("fb") + '</span><span class="lab"><span class="a">Facebook: Connected</span><span class="b">' + escapeText(String(m.facebook || demoFbLink()).replace("https://www.", "")) + '</span></span><span class="chev">' + icon("chev") + "</span></button>"
@@ -1277,7 +1296,7 @@
       '</div><p class="group-label">How the circle works</p>' +
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
-      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">TradeCircle Perth — placeholder, not final</span></span></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
       '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.1 · 16 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
@@ -1402,7 +1421,7 @@
     updateTabs(id);
     statusBar.classList.toggle("light", DARK.has(id) || id === "welcome");
     var item = CHOOSER.find(function (c) { return c.id === id; });
-    $("#deviceCaption").textContent = item ? item.title : "TradeCircle Perth";
+    $("#deviceCaption").textContent = item ? item.title : "Rate Buddies";
     chooserList.querySelectorAll(".chooser-item").forEach(function (b) {
       b.classList.toggle("active", b.dataset.id === id);
     });
@@ -1585,7 +1604,7 @@
     sheetEl.innerHTML = '<div class="sheet">' +
       '<div class="sheet-handle"></div>' +
       '<div class="consent-banner">Prototype mock — this is not a real Facebook login. Nothing is sent to Facebook.</div>' +
-      '<div class="consent-brand"><div class="consent-f">' + icon("fb") + '</div><div><h3>Continue with Facebook</h3><p>TradeCircle Perth is asking for access</p></div></div>' +
+      '<div class="consent-brand"><div class="consent-f">' + icon("fb") + '</div><div><h3>Continue with Facebook</h3><p>Rate Buddies is asking for access</p></div></div>' +
       '<ul class="consent-list">' +
       '<li><span class="ic">' + icon("check") + "</span><span>Your name and profile photo, so members can recognise you.</span></li>" +
       '<li><span class="ic">' + icon("link") + "</span><span>A link to your Facebook profile, so members can send you a friend request.</span></li>" +
