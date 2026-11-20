@@ -27,8 +27,7 @@
   }
   function meId() { var m = T().me && T().me(); return (m && m.id) || "jamie"; }
   function firstName(m) { return C() ? C().firstName(m) : ((m && m.first) || "them"); }
-  function websiteOf(m) { return (m && m.links && m.links.website) || ""; }
-  function pageOf(m) { return (m && (m.page || (m.links && m.links.facebook))) || ""; }
+  function facebookOf(m) { return (m && (m.facebook || (m.links && m.links.facebook))) || ""; }
   function profileOf(m) { return (m && m.profileUrl) || ("https://ratebuddies.com/m/" + (m && m.id || "member")); }
   function recShareOf(m) {
     var s = (m && m.recShare) || {};
@@ -101,8 +100,7 @@
     var bits = [];
     if (chips.phone && share.phone && feat.phone) bits.push("Phone " + feat.phone);
     var links = [];
-    if (chips.facebook && share.facebook && pageOf(feat)) links.push("Facebook " + pageOf(feat).replace(/^https?:\/\//, ""));
-    else if (chips.website && share.website && websiteOf(feat)) links.push("Website " + websiteOf(feat).replace(/^https?:\/\//, ""));
+    if (chips.facebook && share.facebook && facebookOf(feat)) links.push("Facebook " + facebookOf(feat).replace(/^https?:\/\//, ""));
     else if (chips.profile && share.profile) links.push("Rate Buddies profile " + profileOf(feat).replace(/^https?:\/\//, ""));
     bits = bits.concat(links.slice(0, 1));
     return { text: text, bits: bits };
@@ -138,11 +136,11 @@
       '<span class="rec-devi-badge">Auto-matched</span></div>' +
       '<p class="rec-help">Let’s help ' + esc(first) + "!</p>" +
       '<p class="rec-ask">' + esc(p.ask) + "</p>" +
-      '<div class="rec-who">' + avHtml +
+      '<div class="rec-who"><button type="button" class="mem-open rec-who-open" data-go="member" data-id="' + (feat.id || "") + '" aria-label="Open profile">' + avHtml +
       '<div class="meta"><div class="nm">' + esc(((feat.first || "") + " " + (feat.last || "")).trim()) + "</div>" +
       '<div class="biz">' + esc(feat.business || "") + "</div>" +
       '<div class="pills"><span class="pill t-pill">' + tradeIco + esc(feat.trade || "") + "</span>" +
-      '<span class="pill r-pill">' + esc(p.city || "Perth") + "</span></div></div></div>" +
+      '<span class="pill r-pill">' + esc(p.city || "Perth") + "</span></div></div></button></div>" +
       '<div class="rec-progress"><div class="bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="lab">' + p.vouched + " of " + of + " " + esc(p.city || "Perth") + " members have already recommended " + esc(first) +
       (p.closes ? " · " + esc(p.closes) : "") + "</div></div>";
@@ -188,8 +186,7 @@
         chip("name", "Name", true, true) +
         chip("business", "Business", true, true) +
         chip("phone", "Phone", share.phone, !!feat.phone) +
-        chip("facebook", "Facebook page", share.facebook, !!pageOf(feat)) +
-        chip("website", "Website", share.website, !!websiteOf(feat)) +
+        chip("facebook", "Facebook profile", share.facebook, !!facebookOf(feat)) +
         chip("profile", "Rate Buddies profile", share.profile, true) +
         "</div></div>";
 
@@ -237,8 +234,7 @@
       "<h3>Recommendation details</h3>" +
       '<p class="hint">When another member recommends you, they can include only the details you allow. Name and business can always be mentioned. Phone numbers and links stay off unless they turn them on.</p>' +
       row("phone", "Phone number", m.phone || "") +
-      row("facebook", "Facebook page", pageOf(m).replace(/^https?:\/\//, "")) +
-      row("website", "Website", websiteOf(m).replace(/^https?:\/\//, "")) +
+      row("facebook", "Facebook profile", facebookOf(m).replace(/^https?:\/\//, "")) +
       row("profile", "Rate Buddies profile", profileOf(m).replace(/^https?:\/\//, "")) +
       "</section>";
   }
@@ -272,9 +268,9 @@
   }
   function renderTutorials() {
     var d = Tut() ? Tut().load() : null;
-    var html = '<section class="screen has-tabs has-header" data-screen="tutorials">' +
+    var html = '<section class="screen has-header" data-screen="tutorials">' +
       '<div class="app-header"><button class="icon-btn" data-go="more" aria-label="Back">‹</button><div class="ht">Video tutorials</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><div class="auth-hero"><h2>Video tutorials</h2><p>Short guides on how to use Rate Buddies. Start with the welcome video if you are new.</p></div>';
+      '<div class="scroll"><p class="hint tut-intro">Short guides on how to use Rate Buddies. Start with the welcome video if you are new.</p>';
     if (d && d.intro) {
       html += '<div class="tut-sec"><h3>Start here</h3>' + tutCard(d.intro, { startHere: true }) + "</div>";
     }
@@ -299,7 +295,7 @@
       html += (v.thumb ? '<img src="' + esc(v.thumb) + '" alt="">' : "") +
         '<button type="button" class="play-big" data-action="tut-play" data-id="' + esc(v.id) + '" aria-label="Play">' + playIco(56) + "</button>";
     }
-    html += "</div><h2 style=\"font-size:18px;margin:0 0 8px\">" + esc(v.title) + "</h2>" +
+    html += "</div>" +
       (v.duration ? '<p class="hint" style="margin:0 0 8px">' + esc(v.duration) + (v.sample ? " · Sample video — placeholder only" : "") + "</p>" : "") +
       '<p class="tut-desc">' + esc(v.description || "") + "</p>" +
       (Tut() && Tut().isWatched(v.id) ? '<p class="tut-watched">Watched ✓</p>' : "") +
@@ -316,7 +312,7 @@
   function patchHelp(html) {
     if (!html || html.indexOf('data-screen="help"') === -1) return html;
     if (html.indexOf("data-go=\"tutorials\"") !== -1) return html;
-    var card = '<button type="button" class="card group" style="padding:14px;margin-bottom:10px;width:100%;text-align:left;border:0;display:block" data-go="tutorials"><p style="font-weight:800;margin-bottom:6px">Video tutorials</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Watch short guides on how to use the app, leave a Google review, or recommend a buddy. Start with the welcome video.</p></button>';
+    var card = '<button type="button" class="card group" style="padding:14px;margin-bottom:10px;width:100%;text-align:left;border:0;display:block" data-go="tutorials"><p style="font-weight:800;margin-bottom:6px">Video tutorials</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Watch short guides on how to use the app, leave a Google Review, or recommend a buddy. Start with the welcome video.</p></button>';
     html = html.replace('<div class="card group"', card + '<div class="card group"');
     return html;
   }

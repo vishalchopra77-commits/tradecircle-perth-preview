@@ -1,4 +1,4 @@
-/* TradeCircle Perth v1.5.8 — complete-profile, demo signup, finish-profile card */
+/* TradeCircle Perth v2.1.1 — complete-profile, demo signup, finish-profile card */
 (function (root) {
   "use strict";
 
@@ -38,8 +38,8 @@
   function completeness(fill) {
     fill = fill || fillOf();
     var links = fill.links || {};
-    var hasLink = Object.keys(links).some(function (k) {
-      return k !== "other" && String(links[k] || "").trim();
+    var hasLink = ["facebook", "google"].some(function (k) {
+      return String(links[k] || "").trim();
     });
     var bins = [
       hasLink,
@@ -69,11 +69,14 @@
   }
 
   function linkFields(links) {
+    if (root.TCLinks && TCLinks.editFields) return TCLinks.editFields(links || {});
     links = links || {};
     return '<p class="group-label">Social profile links <span class="opt">(optional)</span></p>' +
-      '<p class="hint" style="margin-top:0">Add a website or social page. Only the ones you fill in will show on your profile.</p>' +
+      '<p class="hint" style="margin-top:0">Add your Facebook personal profile and Google Business Profile. Only the ones you fill in will show on your profile.</p>' +
       platforms().map(function (p) {
-        return '<div class="field link-field"><label><span class="link-field-ico" style="background:' + p.color + '">' + p.icon + "</span>" + esc(p.label) + "</label>" +
+        var well = p.well ? " " + p.well : "";
+        var bg = p.well === "g" ? "" : ' style="background:' + p.color + '"';
+        return '<div class="field link-field"><label><span class="link-field-ico' + well + '"' + bg + '>' + p.icon + "</span>" + esc(p.label) + "</label>" +
           '<input name="link-' + p.id + '" inputmode="url" type="url" placeholder="' + esc(p.placeholder) + '" value="' + esc(links[p.id] || "") + '" data-link-id="' + p.id + '" autocomplete="off">' +
           '<p class="link-error" hidden></p></div>';
       }).join("");
@@ -98,6 +101,277 @@
       '<input type="hidden" name="' + hiddenName + '" value="' + esc(selected.join(", ")) + '">';
   }
 
+
+  function meTrade() {
+    var s = state();
+    var me = (T().MEMBERS || []).filter(function (m) { return m.id === (s.meId || T().meId); })[0];
+    var draft = (s.signup && s.signup.draft) || {};
+    return (me && me.trade) || draft.trade || "Pest Control";
+  }
+
+  function tradeKey(trade) {
+    var t = String(trade || "").toLowerCase();
+    if (/pest|termite|fumigat/.test(t)) return "pest";
+    if (/carpent|joiner|cabinet/.test(t)) return "carpenter";
+    if (/electr/.test(t)) return "electrician";
+    if (/plumb/.test(t)) return "plumber";
+    if (/paint/.test(t)) return "painter";
+    if (/landscap|garden/.test(t)) return "landscaper";
+    if (/fenc/.test(t)) return "fencer";
+    if (/air.?cond|hvac|split.?system/.test(t)) return "hvac";
+    if (/roof/.test(t)) return "roofer";
+    if (/tiler|tiling/.test(t)) return "tiler";
+    if (/handy/.test(t)) return "handyman";
+    if (/build/.test(t)) return "builder";
+    if (/lock/.test(t)) return "locksmith";
+    if (/barber|hair/.test(t)) return "barber";
+    if (/real.?estate|property.?manag/.test(t)) return "realestate";
+    if (/plaster/.test(t)) return "plasterer";
+    return "generic";
+  }
+
+  var SERVICE_MAP = {
+    pest: ["Termite inspections", "Pre-purchase inspections", "General pests", "Rodent control", "Cockroach treatments", "Spider control", "Bee and wasp removal", "Termite barriers", "Commercial pest", "Residential pest", "Emergency call-outs", "Ant control", "Possum and wildlife", "Bed bug treatments"],
+    carpenter: ["Kitchens", "Decks", "Home renovations", "Custom joinery", "Doors and windows", "Framing", "Built-in robes", "Stairs", "Pergolas", "Repairs"],
+    electrician: ["Safety switch upgrades", "Rewires", "Solar-ready boards", "Lighting", "Switchboards", "Data cabling", "Smoke alarms", "EV chargers", "Fault finding", "New builds"],
+    plumber: ["Bathroom fit-outs", "Hot water", "Blocked drains", "Gas fitting", "Leak repairs", "New installations", "Renovations", "Emergency call-outs", "Backflow", "Rainwater"],
+    painter: ["Interior painting", "Exteriors", "Colour consults", "Wallpaper", "Decks and fences", "Commercial painting", "New builds", "Restorations"],
+    landscaper: ["Garden design", "Paving", "Retaining walls", "Turf", "Irrigation", "Soft landscaping", "Decks and pergolas", "Garden maintenance"],
+    fencer: ["Colorbond fences", "Timber fences", "Gates", "Retaining", "Pool fencing", "Repairs", "Automatic gates"],
+    hvac: ["Split-system installs", "Servicing", "Office fit-outs", "Ducted systems", "Repairs", "New installs", "Maintenance plans"],
+    roofer: ["Re-roofs", "Roof repairs", "Gutters", "Skylights", "Insulation", "Leak repairs", "Colorbond roofs", "Tile roofs"],
+    tiler: ["Bathroom tiling", "Kitchen splashbacks", "Floor tiling", "Waterproofing", "Renovations", "Outdoor tiling"],
+    handyman: ["General repairs", "Assembly", "Odd jobs", "Maintenance", "Small installs", "Furniture assembly"],
+    builder: ["New homes", "Renovations", "Extensions", "Knockdowns", "Project management", "Commercial builds"],
+    locksmith: ["Lock changes", "Emergency call-outs", "Safes", "Master key systems", "Car locks", "Access control"],
+    barber: ["Men's cuts", "Beard trims", "Fades", "Hot towel shaves", "Kids' cuts", "Colour"],
+    realestate: ["Sales", "Property management", "Rentals", "Appraisals", "Buyer advocacy"],
+    plasterer: ["Cornice", "Gyprock", "Patching", "Ceilings", "Renovations"],
+    generic: ["General services", "Commercial work", "Residential work", "Maintenance", "New installs", "Emergency call-outs", "Repairs", "Consultations"]
+  };
+
+  var PARTNER_MAP = {
+    pest: ["Builder", "Carpenter", "Real Estate Agent", "Property Manager"],
+    carpenter: ["Electrician", "Plumber", "Painter", "Tiler"],
+    electrician: ["Builder", "Air Conditioning", "Carpenter", "Plumber"],
+    plumber: ["Tiler", "Electrician", "Carpenter", "Builder"],
+    painter: ["Carpenter", "Plasterer", "Builder", "Interior Designer"],
+    landscaper: ["Fencer", "Carpenter", "Electrician", "Irrigation Technician"],
+    fencer: ["Landscaper", "Builder", "Carpenter", "Pool Builder"],
+    hvac: ["Electrician", "Builder", "Plumber", "Carpenter"],
+    roofer: ["Builder", "Gutter Installer", "Electrician", "Carpenter"],
+    tiler: ["Plumber", "Waterproofing", "Builder", "Carpenter"],
+    handyman: ["Plumber", "Electrician", "Carpenter", "Painter"],
+    builder: ["Electrician", "Plumber", "Carpenter", "Painter"],
+    generic: ["Plumber", "Electrician", "Carpenter", "Builder"]
+  };
+
+  function servicesForTrade(trade) {
+    var key = tradeKey(trade);
+    var listA = (SERVICE_MAP[key] || SERVICE_MAP.generic).slice();
+    if (key !== "generic") {
+      SERVICE_MAP.generic.forEach(function (s) { if (listA.indexOf(s) === -1) listA.push(s); });
+    }
+    return listA;
+  }
+
+  function allTrades() {
+    var src = root.TC_TRADES;
+    if (Array.isArray(src) && src.length) return src.slice();
+    return ["Plumber", "Electrician", "Builder", "Carpenter", "Roofer", "Painter", "Landscaper", "Air Conditioning", "Tiler", "Handyman"];
+  }
+
+  function popularPartners(trade) {
+    var pref = (PARTNER_MAP[tradeKey(trade)] || PARTNER_MAP.generic).slice();
+    var all = allTrades();
+    pref = pref.filter(function (n) { return all.indexOf(n) !== -1 || true; });
+    return pref.slice(0, 4);
+  }
+
+  function searchIco() {
+    return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E293B" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>';
+  }
+
+  function matchSuggest(q, options, selected, allowCustom, limit) {
+    q = String(q || "").trim().toLowerCase();
+    selected = selected || [];
+    limit = limit || 8;
+    var out = [];
+    options.forEach(function (opt) {
+      if (selected.indexOf(opt) !== -1) return;
+      if (!q || opt.toLowerCase().indexOf(q) !== -1) out.push({ value: opt, custom: false });
+    });
+    if (q && allowCustom) {
+      var exact = options.some(function (o) { return o.toLowerCase() === q; }) ||
+        selected.some(function (o) { return String(o).toLowerCase() === q; });
+      if (!exact && q.length >= 2) {
+        var pretty = q.replace(/\s+/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+        out.unshift({ value: pretty, custom: true });
+      }
+    }
+    return out.slice(0, limit);
+  }
+
+  function pickerHTML(kind, hiddenName, selected, placeholder) {
+    selected = selected || [];
+    return '<div class="cp-search" data-cp-search="' + kind + '">' +
+      '<div class="search-wrap">' +
+      '<div class="search">' + searchIco() + '<input type="search" data-cp-q="' + kind + '" placeholder="' + esc(placeholder) + '" autocomplete="off"></div>' +
+      '<div class="ac-drop" data-cp-ac="' + kind + '" hidden></div></div>' +
+      '<div class="cp-picked" data-cp-picked="' + kind + '"></div>' +
+      '<div class="cp-quick" data-cp-quick="' + kind + '"></div>' +
+      '<input type="hidden" name="' + hiddenName + '" value="' + esc(selected.join(", ")) + '">' +
+      "</div>";
+  }
+
+  function readSelected(form, kind) {
+    var hid = hiddenOf(form, kind);
+    return hid ? list(hid.value) : [];
+  }
+
+  function hiddenOf(form, kind) {
+    if (!form) return null;
+    if (kind === "specialties") return form.querySelector("[name='profileSpecialties']");
+    if (kind === "idealTrades") return form.querySelector("[name='profileIdealTrades']");
+    return form.querySelector("[data-cp-search='" + kind + "'] input[type='hidden']");
+  }
+
+  function optionsFor(kind) {
+    if (kind === "specialties") return servicesForTrade(meTrade());
+    return allTrades();
+  }
+
+  function popularFor(kind, selected) {
+    selected = selected || [];
+    var src = kind === "specialties" ? servicesForTrade(meTrade()) : popularPartners(meTrade());
+    return src.filter(function (s) { return selected.indexOf(s) === -1; }).slice(0, 4);
+  }
+
+  function paintPicked(form, kind) {
+    var wrap = form.querySelector('[data-cp-picked="' + kind + '"]');
+    var hid = hiddenOf(form, kind);
+    if (!wrap || !hid) return;
+    var selected = list(hid.value);
+    wrap.innerHTML = selected.map(function (s) {
+      return '<span class="chip cp-sel">' + esc(s) +
+        '<button type="button" class="cp-x" data-cp-remove="' + kind + '" data-value="' + esc(s) + '" aria-label="Remove ' + esc(s) + '">×</button></span>';
+    }).join("");
+  }
+
+  function paintQuick(form, kind) {
+    var wrap = form.querySelector('[data-cp-quick="' + kind + '"]');
+    var inp = form.querySelector('[data-cp-q="' + kind + '"]');
+    if (!wrap) return;
+    var q = inp ? String(inp.value || "").trim() : "";
+    var selected = readSelected(form, kind);
+    if (q) { wrap.innerHTML = ""; return; }
+    var pops = popularFor(kind, selected);
+    wrap.innerHTML = pops.map(function (s) {
+      return '<button type="button" class="chip cp-pop" data-cp-add="' + kind + '" data-value="' + esc(s) + '">+ ' + esc(s) + "</button>";
+    }).join("");
+  }
+
+  function paintAc(form, kind, force) {
+    var box = form.querySelector('[data-cp-ac="' + kind + '"]');
+    var inp = form.querySelector('[data-cp-q="' + kind + '"]');
+    if (!box || !inp) return;
+    var q = String(inp.value || "");
+    if (!force && !q && document.activeElement !== inp) { box.hidden = true; box.innerHTML = ""; return; }
+    var allowCustom = kind === "specialties" || kind === "idealTrades";
+    var items = matchSuggest(q, optionsFor(kind), readSelected(form, kind), allowCustom, 8);
+    if (!items.length) {
+      box.innerHTML = '<div class="ac-item ac-empty">No matches. Type to add your own.</div>';
+      box.hidden = false;
+      return;
+    }
+    box.innerHTML = items.map(function (it) {
+      var lab = it.custom ? 'Add “' + esc(it.value) + '”' : esc(it.value);
+      return '<button type="button" class="ac-item' + (it.custom ? " ac-custom" : "") + '" data-cp-add="' + kind + '" data-value="' + esc(it.value) + '"><span>' + lab + "</span></button>";
+    }).join("");
+    box.hidden = false;
+  }
+
+  function setSelected(form, kind, selected) {
+    var hid = hiddenOf(form, kind);
+    if (hid) hid.value = selected.join(", ");
+    paintPicked(form, kind);
+    paintQuick(form, kind);
+    paintAc(form, kind, document.activeElement === form.querySelector('[data-cp-q="' + kind + '"]'));
+    if (typeof refreshProgress === "function") refreshProgress(form);
+  }
+
+  function addValue(form, kind, value) {
+    value = String(value || "").trim();
+    if (!value) return;
+    var selected = readSelected(form, kind);
+    if (selected.indexOf(value) !== -1) return;
+    selected.push(value);
+    var inp = form.querySelector('[data-cp-q="' + kind + '"]');
+    if (inp) inp.value = "";
+    setSelected(form, kind, selected);
+    var box = form.querySelector('[data-cp-ac="' + kind + '"]');
+    if (box) { box.hidden = true; box.innerHTML = ""; }
+  }
+
+  function removeValue(form, kind, value) {
+    var selected = readSelected(form, kind).filter(function (s) { return s !== value; });
+    setSelected(form, kind, selected);
+  }
+
+  function bindSearchPickers(form) {
+    if (!form || form.getAttribute("data-cp-pick-bound") === "1") return;
+    if (!form.querySelector("[data-cp-search]")) return;
+    form.setAttribute("data-cp-pick-bound", "1");
+    ["specialties", "idealTrades"].forEach(function (kind) {
+      if (form.querySelector('[data-cp-search="' + kind + '"]')) {
+        paintPicked(form, kind);
+        paintQuick(form, kind);
+      }
+    });
+    form.addEventListener("input", function (e) {
+      var inp = e.target.closest("[data-cp-q]");
+      if (!inp) return;
+      paintAc(form, inp.getAttribute("data-cp-q"), true);
+      paintQuick(form, inp.getAttribute("data-cp-q"));
+    });
+    form.addEventListener("focusin", function (e) {
+      var inp = e.target.closest("[data-cp-q]");
+      if (!inp) return;
+      paintAc(form, inp.getAttribute("data-cp-q"), true);
+    });
+    form.addEventListener("keydown", function (e) {
+      var inp = e.target.closest("[data-cp-q]");
+      if (!inp) return;
+      var kind = inp.getAttribute("data-cp-q");
+      if (e.key === "Enter") {
+        e.preventDefault();
+        var first = form.querySelector('[data-cp-ac="' + kind + '"] [data-cp-add]');
+        if (first) addValue(form, kind, first.getAttribute("data-value"));
+        else if (String(inp.value || "").trim().length >= 2) addValue(form, kind, inp.value);
+      } else if (e.key === "Escape") {
+        var box = form.querySelector('[data-cp-ac="' + kind + '"]');
+        if (box) box.hidden = true;
+      }
+    });
+    form.addEventListener("click", function (e) {
+      var add = e.target.closest("[data-cp-add]");
+      if (add && form.contains(add)) {
+        e.preventDefault();
+        addValue(form, add.getAttribute("data-cp-add"), add.getAttribute("data-value"));
+        return;
+      }
+      var rm = e.target.closest("[data-cp-remove]");
+      if (rm && form.contains(rm)) {
+        e.preventDefault();
+        removeValue(form, rm.getAttribute("data-cp-remove"), rm.getAttribute("data-value"));
+      }
+    });
+    document.addEventListener("click", function (e) {
+      if (form.contains(e.target) && e.target.closest("[data-cp-search]")) return;
+      form.querySelectorAll("[data-cp-ac]").forEach(function (box) { box.hidden = true; });
+    });
+  }
+
   function renderComplete() {
     var fill = fillOf();
     var c = completeness(fill);
@@ -115,10 +389,10 @@
       counted("Short bio", "bio", fill.bio, 280, 3, "A few sentences about who you are.") +
       counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.") +
       counted("About my business", "profileAbout", fill.about, 400, 4, "") +
-      '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Pick the work you are known for.</p>' +
-      chips("specialties", "profileSpecialties", SPEC_CHIPS, specs) +
-      '<p class="group-label">My ideal referral partner</p><p class="hint" style="margin-top:0">Who would you most like to swap work with?</p>' +
-      chips("idealTrades", "profileIdealTrades", IDEAL_CHIPS, ideals) +
+      '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
+      pickerHTML("specialties", "profileSpecialties", specs, "Search services, e.g. Termite inspections") +
+      '<p class="group-label">My ideal referral partner</p><p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +
+      pickerHTML("idealTrades", "profileIdealTrades", ideals, "Search business types, e.g. Carpenter") +
       counted("A short note", "profileIdealNote", fill.idealNote, 160, 2, "Optional. One sentence is enough.") +
       "</form></div>" +
       '<div class="cp-sticky">' +
@@ -180,6 +454,7 @@
     if (!form) return;
     if (root.TCProfile && TCProfile.bindForm) TCProfile.bindForm(form);
     if (root.TCLinks && TCLinks.bindValidation) TCLinks.bindValidation(form);
+    bindSearchPickers(form);
     form.addEventListener("input", function (e) {
       var el = e.target;
       var max = el.getAttribute && el.getAttribute("data-max");
@@ -302,6 +577,7 @@
   }
 
   function injectMore() {
+    if (document.querySelector("[data-more='v21'], .v21-more")) return;
     if (document.querySelector("[data-action='demo-signup']")) return;
     var scroll = document.querySelector(".screen[data-screen='more'] .scroll");
     if (!scroll) return;
@@ -333,6 +609,10 @@
     TC12.afterGo = function (id) {
       if (typeof prev === "function") prev(id);
       if (id === "complete-profile") bindComplete(document);
+      if (id === "edit-profile" || id === "create-profile" || id === "create-profile-connected") {
+        var ef = document.querySelector("form[data-form='edit-profile'], form[data-form='create-profile']");
+        if (ef) bindSearchPickers(ef);
+      }
       if (id === "settings") injectSettings();
       if (id === "more") injectMore();
       if (id === "home" || id === "me") injectFinish(id);
@@ -365,7 +645,9 @@
     onApproved: onApproved,
     completeness: completeness,
     shouldShowFinish: shouldShowFinish,
-    fillOf: fillOf
+    fillOf: fillOf,
+    pickerHTML: pickerHTML,
+    bindSearchPickers: bindSearchPickers
   };
   if (T().state && T().state.screen && T().go) T().go(T().state.screen);
 })(window);

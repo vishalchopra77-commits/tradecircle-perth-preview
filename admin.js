@@ -62,6 +62,35 @@
     trend: svg('<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>')
   };
 
+
+  function defaultBadgeTiers() {
+    return [
+      { id: "bronze", label: "Bronze", min: 5 },
+      { id: "silver", label: "Silver", min: 12 },
+      { id: "gold", label: "Gold", min: 25 },
+      { id: "platinum", label: "Platinum", min: 50 }
+    ];
+  }
+  function badgeTiers() {
+    try {
+      var raw = JSON.parse(localStorage.getItem("tc_badge_tiers"));
+      if (Array.isArray(raw) && raw.length) {
+        return defaultBadgeTiers().map(function (d, i) {
+          var x = raw[i] || {};
+          return { id: x.id || d.id, label: x.label || d.label, min: Math.max(0, Number(x.min) || d.min) };
+        });
+      }
+    } catch (e) {}
+    return defaultBadgeTiers();
+  }
+  function badgeTiersAdmin() {
+    var rows = badgeTiers().map(function (t) {
+      return '<div class="setting-row"><div><strong>' + t.label + ' badge</strong><div class="panel-sub">Combined Google Reviews given + confirmed Facebook vouches needed to reach ' + t.label + '.</div></div>' +
+        '<input class="badge-tier" data-tier="' + t.id + '" type="number" min="0" max="200" value="' + t.min + '" style="width:72px;height:40px;border:1px solid var(--line,#d5dde6);border-radius:10px;padding:0 10px;font-weight:800"></div>';
+    }).join("");
+    return '<div style="margin-top:16px"><p class="panel-sub" style="margin-bottom:8px"><strong>Badge levels</strong> — members earn a badge from the Google Reviews they give and the Facebook vouches that are confirmed. A badge is what gets them into the Facebook Promotion queue. These counts are easy to change.</p>' + rows + "</div>";
+  }
+
   function reviewCap() {
     try {
       var n = JSON.parse(localStorage.getItem("tc_review_daily_limit"));
@@ -460,15 +489,9 @@
         '<div class="field"><label>Name</label><input value="' + esc(m.name) + '" readonly></div>' +
         '<div class="field"><label>Business</label><input value="' + esc(m.business) + '" readonly></div>' +
         '<div class="field"><label>Trade or business type</label><input value="' + esc(m.trade) + '" readonly></div>' +
-        '<p class="panel-sub" style="margin:12px 0 8px"><strong>Links</strong> — website and social profiles. Only filled links show in the app.</p>' +
-        linkField("website", "Website", m.website) +
-        linkField("facebook", "Facebook page", m.facebook) +
-        linkField("instagram", "Instagram", m.instagram) +
-        linkField("linkedin", "LinkedIn", m.linkedin) +
-        linkField("tiktok", "TikTok", m.tiktok) +
-        linkField("youtube", "YouTube", m.youtube) +
-        linkField("google", "Google Business / review link", m.google) +
-        linkField("other", "Other link", m.other) +
+        '<p class="panel-sub" style="margin:12px 0 8px"><strong>Links</strong> — Facebook personal profile and Google Business Profile. Only filled links show in the app.</p>' +
+        linkField("facebook", "Facebook personal profile link", m.facebook) +
+        linkField("google", "Google Business Profile link", m.google) +
         '<button class="btn btn-primary" data-action="save-mem" data-id="' + m.id + '" style="margin-top:12px">Save links (prototype)</button>' +
         (window.TCProfile ? '<div style="margin-top:18px"><p class="panel-sub" style="margin-bottom:8px"><strong>Profile</strong> — about the business, expertise, gallery, ideal referral partner and goals. These are optional in the app.</p>' +
           window.TCProfile.adminHTML({ id: m.id, bio: m.bio || ((window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === m.id; })[0] || {}).bio || "", profile: m.profile || (window.TCProfile.seedFor({ id: m.id })) }) +
@@ -479,7 +502,8 @@
         '<div class="setting-row"><div><strong>New members need approval</strong><div class="panel-sub">Decided. New sign-ups wait until you approve them.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
         '<div class="setting-row"><div><strong>Recommendation alerts</strong><div class="panel-sub">Members get a push when someone shares a Facebook post.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
         '<div class="setting-row"><div><strong>Paid queue jumps</strong><div class="panel-sub">Price to be set. No payments are collected in this prototype.</div></div><button class="toggle on" data-action="toggle" type="button" aria-pressed="true"><i></i></button></div>' +
-        '<div class="setting-row"><div><strong>Daily Google review cap</strong><div class="panel-sub">At most this many Google reviews may be left for one business, from the circle, in a Perth calendar day. The default is 3, to reduce the chance of spam flags. The cap resets at midnight, Australia/Perth. The server would enforce this in the real app.</div></div><input id="reviewCap" type="number" min="1" max="20" value="' + reviewCap() + '" style="width:72px;height:40px;border:1px solid var(--line,#d5dde6);border-radius:10px;padding:0 10px;font-weight:800"></div>');
+        '<div class="setting-row"><div><strong>Daily Google Review cap</strong><div class="panel-sub">At most this many Google Reviews may be left for one business, from the circle, in a Perth calendar day. The default is 3, to reduce the chance of spam flags. The cap resets at midnight, Australia/Perth. The server would enforce this in the real app.</div></div><input id="reviewCap" type="number" min="1" max="20" value="' + reviewCap() + '" style="width:72px;height:40px;border:1px solid var(--line,#d5dde6);border-radius:10px;padding:0 10px;font-weight:800"></div>' +
+        badgeTiersAdmin());
     }
     if (page === "audit") {
       return panel("Audit log", "A record of admin and system actions. Fictional.", "",
@@ -510,9 +534,21 @@
       capInput.addEventListener("change", function () {
         var n = Math.max(1, Math.min(20, Number(capInput.value) || 3));
         localStorage.setItem("tc_review_daily_limit", JSON.stringify(n));
-        audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Set daily Google review cap to " + n });
+        audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Set daily Google Review cap to " + n });
       });
     }
+    document.querySelectorAll(".badge-tier").forEach(function (inp) {
+      inp.addEventListener("change", function () {
+        var list = badgeTiers();
+        list.forEach(function (tier) {
+          var el = document.querySelector('.badge-tier[data-tier="' + tier.id + '"]');
+          if (el) tier.min = Math.max(0, Math.min(200, Number(el.value) || tier.min));
+        });
+        list.sort(function (a, b) { return a.min - b.min; });
+        localStorage.setItem("tc_badge_tiers", JSON.stringify(list));
+        audit.unshift({ at: "Just now", who: "Vishal (you)", action: "Updated badge levels: " + list.map(function (x) { return x.label + " " + x.min; }).join(", ") });
+      });
+    });
     var search = $("memSearch");
     if (search) {
       search.value = q;

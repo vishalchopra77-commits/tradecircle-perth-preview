@@ -43,7 +43,7 @@
         thumb: "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
         embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1&playsinline=1",
         title: "Welcome to Rate Buddies — how to use the app",
-        description: "A short welcome that explains what Rate Buddies is, how recommendations and Google reviews work, and where to find more help.",
+        description: "A short welcome that explains what Rate Buddies is, how recommendations and Google Reviews work, and where to find more help.",
         duration: "3:20",
         durationSec: 200,
         sample: true
@@ -64,13 +64,13 @@
       ],
       sections: [
         { id: "getting-started", title: "Getting started", order: 1, hidden: false },
-        { id: "google-reviews", title: "Leaving Google reviews", order: 2, hidden: false },
+        { id: "google-reviews", title: "Leaving Google Reviews", order: 2, hidden: false },
         { id: "facebook-recs", title: "Facebook recommendations", order: 3, hidden: false },
         { id: "your-profile", title: "Your profile", order: 4, hidden: false }
       ],
       videos: [
         { id: "v1", sectionId: "getting-started", url: "https://www.youtube.com/watch?v=eRsGyueVLvQ", provider: "youtube", videoId: "eRsGyueVLvQ", thumb: "https://img.youtube.com/vi/eRsGyueVLvQ/hqdefault.jpg", embed: "https://www.youtube.com/embed/eRsGyueVLvQ?rel=0&enablejsapi=1", title: "A tour of Home, Reviews and Facebook", description: "Find your way around the app after you have watched the welcome video.", duration: "2:48", durationSec: 168, order: 1, hidden: false, sample: true },
-        { id: "v2", sectionId: "google-reviews", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", provider: "youtube", videoId: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg", embed: "https://www.youtube.com/embed/jNQXAC9IVRw?rel=0&enablejsapi=1", title: "How to leave a genuine Google review", description: "Only after a real job, in your own words, and within the daily limit of three.", duration: "3:05", durationSec: 185, order: 1, hidden: false, sample: true },
+        { id: "v2", sectionId: "google-reviews", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", provider: "youtube", videoId: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg", embed: "https://www.youtube.com/embed/jNQXAC9IVRw?rel=0&enablejsapi=1", title: "How to leave a genuine Google Review", description: "Only after a real job, in your own words, and within the daily limit of three.", duration: "3:05", durationSec: 185, order: 1, hidden: false, sample: true },
         { id: "v3", sectionId: "facebook-recs", url: "https://vimeo.com/1084537", provider: "vimeo", videoId: "1084537", thumb: "https://vumbnail.com/1084537.jpg", embed: "https://player.vimeo.com/video/1084537?api=1", title: "How to recommend a buddy on Facebook", description: "Pick a starter, add a few of your own words, and only vouch for someone you genuinely know.", duration: "4:12", durationSec: 252, order: 1, hidden: false, sample: true },
         { id: "v4", sectionId: "your-profile", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Fill in your profile and recommendation details", description: "Choose which contact details other members may include when they recommend you.", duration: "2:10", durationSec: 130, order: 1, hidden: false, sample: true }
       ]

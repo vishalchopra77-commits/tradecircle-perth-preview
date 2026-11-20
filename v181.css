@@ -169,3 +169,28 @@
 .rb-demo-toggle { display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; font-weight:700; color:#5B6B7C; }
 .rb-demo-toggle input { width:16px; height:16px; }
 .rb-login-error { color:#B42318; font-weight:700; font-size:13px; margin-top:8px; }
+
+
+/* v2.1.1 tutorials: one-line header title, stacked cards at 360 */
+.screen[data-screen="tutorials"] .app-header .ht,
+.screen[data-screen="tutorial-play"] .app-header .ht {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink, #14314C) !important;
+  flex: 1;
+  min-width: 0;
+  text-align: left !important;
+}
+.tut-intro { margin: 0 0 14px; font-size: 14px; font-weight: 600; line-height: 1.45; color: #3A4A5C; }
+@media (max-width: 400px) {
+  .tut-card { flex-direction: column; gap: 8px; padding: 8px; }
+  .tut-thumb { width: 100%; flex: none; height: auto; aspect-ratio: 16/9; }
+  .tut-card .meta { padding: 2px 4px 4px; }
+  .tut-card .meta strong { font-size: 14px; }
+  .tut-card .meta span { font-size: 13px; line-height: 1.4; }
+}

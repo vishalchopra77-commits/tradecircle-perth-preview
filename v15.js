@@ -128,45 +128,51 @@ function googleG(size, mono) {
   }
 
   function memberCard(m) {
-    var actions = '<div class="card-actions">' + friendButton(m, "sm") +
-      '<button type="button" class="msg-btn sm" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button></div>";
-    var back = "";
-    if (theyReviewed(m) && !iReviewed(m) && !reviewedBack(m)) {
-      back = '<button type="button" class="slim-cta" data-action="review-back" data-id="' + m.id + '">' + googleG(16) + " Review back</button>";
-    } else if (theyReviewed(m) && (iReviewed(m) || reviewedBack(m))) {
-      back = '<div class="reviewed-tick">' + I.check + " Reviewed \u2713</div>";
+    var r = relOf(m);
+    var fbUrl = m.facebook || "";
+    if (window.TCLinks && TCLinks.fromMember) {
+      try {
+        var L = TCLinks.fromMember(m);
+        if (L && L.facebook) fbUrl = L.facebook;
+      } catch (e1) {}
     }
-    var icons = (window.TC12 && TC12.memberCard) ? "" : "";
-    /* Reuse v12 status icons by calling into a temporary? We recreate a slim icon row via existing DOM classes. */
-    var status = "";
-    if (window.TC12) {
-      /* Keep icons: reconstruct using same classes as v12 */
-      var r = relOf(m);
-      var fb = r === "friends" ? "sb-friends" : r === "pending" ? "sb-pending" : "sb-none";
-      var fl = r === "friends" ? "Facebook friends" : r === "pending" ? "Friend request pending" : "Not connected on Facebook";
-      status = '<div class="sb-row"><span class="sb ' + fb + '" role="img" aria-label="' + fl + '" title="' + fl + '">' + I.fb + "</span>";
-      if (iReviewed(m) || reviewedBack(m)) status += '<span class="sb sb-you" role="img" aria-label="You reviewed them" title="You reviewed them">' + googleG(13, true) + "</span>";
-      else if (theyReviewed(m)) status += '<span class="sb sb-need" role="img" aria-label="Needs your review" title="Needs your review">' + googleG(13, true) + "</span>";
-      if (theyReviewed(m)) status += '<span class="sb sb-they" role="img" aria-label="They reviewed you" title="They reviewed you">' + googleG(13, true) + "</span>";
-      status += "</div>";
+    var gUrl = (typeof gLink === "function") ? gLink(m) : "";
+    var links = '<div class="mc-links">';
+    if (fbUrl) {
+      links += '<a class="mc-link fb" href="' + esa(fbUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Facebook personal profile">' + facebookF(18) + "</a>";
     }
+    if (gUrl) {
+      links += '<a class="mc-link g" href="' + esa(gUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Google Business">' + googleG(18) + "</a>";
+    }
+    links += "</div>";
+    var reviewed = iReviewed(m) || reviewedBack(m);
+    var status = reviewed
+      ? '<div class="mc-status is-done"><span class="mc-tick" aria-hidden="true">' + I.check + "</span> Reviewed</div>"
+      : (theyReviewed(m) && !iReviewed(m) ? '<div class="mc-status">Needs a review back</div>' : '<div class="mc-status is-empty"></div>');
+    var friend = friendButton(m, "sm");
+    var msg = '<button type="button" class="msg-btn sm mc-pill" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button>";
+    var cap = (window.TCReviews && TCReviews.counterHTML) ? TCReviews.counterHTML(m.id) : '<div class="rev-today">Google Reviews received today: 0 of 3</div>';
+    var badge = (window.TC211 && TC211.badgeChip) ? (" " + TC211.badgeChip(m.id)) : "";
     return '<div class="card member-card">' +
-      '<button type="button" class="member-main" data-go="member" data-id="' + m.id + '">' +
+      '<button type="button" class="member-main mc-open" data-go="member" data-id="' + m.id + '">' +
       av(m, 52) +
-      '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
+      '<div class="meta"><div class="nm"><span class="nm-text">' + esc(fn(m)) + "</span>" + badge + "</div>" +
       '<div class="biz">' + esc(m.business) + "</div>" +
-      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div>" +
-      status + back +
-      "</div></button>" + actions + "</div>";
+      '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div></div>" +
+      "</button>" +
+      links + status +
+      '<div class="card-actions mc-acts">' + friend + msg + "</div>" +
+      cap +
+      "</div>";
   }
 
   function reviewBackBanner(m, compact) {
     if (!theyReviewed(m)) return "";
     if (iReviewed(m) || reviewedBack(m)) {
-      return '<div class="review-back-banner"><div>' + I.check + '</div><div><p>' + esc(m.first) + " left you a Google review.</p>" +
+      return '<div class="review-back-banner"><div>' + I.check + '</div><div><p><button type="button" class="mem-open mem-name" data-go="member" data-id="' + m.id + '">' + esc(m.first) + "</button> left you a Google review.</p>" +
         '<div class="reviewed-tick">Reviewed \u2713</div></div></div>';
     }
-    return '<div class="review-back-banner"><div>' + googleG(18) + "</div><div><p>" + esc(m.first) + " left you a Google review.</p>" +
+    return '<div class="review-back-banner"><div>' + googleG(18) + '</div><div><p><button type="button" class="mem-open mem-name" data-go="member" data-id="' + m.id + '">' + esc(m.first) + "</button> left you a Google review.</p>" +
       '<a class="btn-review-back" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="review-back" data-id="' + m.id + '">' +
       googleG(16) + "<span>Review back</span></a></div></div>";
   }
@@ -303,7 +309,7 @@ function googleG(size, mono) {
     var tiles = [
       ["For you", [
         ["me", I.user, "teal", "My profile"],
-        ["promo-queue", facebookF(18), "navy", "Promo queue"],
+        ["promo-queue", facebookF(18), "navy", "Promotion queue"],
         ["rec-alerts", I.bell, "amber", "Alerts"],
         ["ai-assistant", I.spark, "moss", "AI assistant"],
         ["my-regions", I.queue, "steel", "Your areas"],
@@ -404,8 +410,10 @@ function googleG(size, mono) {
         var btn = atCap
           ? '<span class="ov-pill locked">Full today</span>'
           : '<button type="button" class="dash-attn-btn" data-action="review-back" data-id="' + mm.id + '">Review back</button>';
-        return '<div class="dash-attn ov-attn">' + av(mm, 36) +
-          '<div class="dash-attn-body"><strong>' + esc(fn(mm)) + '</strong><span>left you a Google review</span></div>' +
+        return '<div class="dash-attn ov-attn">' +
+          '<button type="button" class="mem-open dash-attn-who" data-go="member" data-id="' + mm.id + '" aria-label="Open ' + esc(fn(mm)) + ' profile">' +
+          av(mm, 36) +
+          '<div class="dash-attn-body"><strong>' + esc(fn(mm)) + '</strong><span>left you a Google review</span></div></button>' +
           btn + "</div>";
       }).join("");
     } else {
@@ -449,11 +457,19 @@ function googleG(size, mono) {
           ? '<div class="ov-av-g">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
           : av(mm, 36);
         var prev = clip(c.preview, 48);
-        return '<button type="button" class="ov-msg" data-action="open-thread" data-chat="' + c.id + '">' +
-          avHtml +
-          '<div class="ov-msg-meta"><div class="nm">' + esc(name) + "</div>" +
-          '<div class="prev">' + esc(prev) + "</div></div>" +
-          '<div class="when">' + esc(c.when || "") + (c.unread ? '<span class="ub">' + c.unread + "</span>" : "") + "</div></button>";
+        if (isGroup || !mm) {
+          return '<button type="button" class="ov-msg" data-action="open-thread" data-chat="' + c.id + '">' +
+            avHtml +
+            '<div class="ov-msg-meta"><div class="nm">' + esc(name) + "</div>" +
+            '<div class="prev">' + esc(prev) + "</div></div>" +
+            '<div class="when">' + esc(c.when || "") + (c.unread ? '<span class="ub">' + c.unread + "</span>" : "") + "</div></button>";
+        }
+        return '<div class="ov-msg">' +
+          '<button type="button" class="mem-open ov-msg-who" data-go="member" data-id="' + mm.id + '" aria-label="Open ' + esc(name) + ' profile">' +
+          avHtml + '<div class="nm">' + esc(name) + "</div></button>" +
+          '<button type="button" class="ov-msg-main" data-action="open-thread" data-chat="' + c.id + '">' +
+          '<div class="prev">' + esc(prev) + "</div>" +
+          '<div class="when">' + esc(c.when || "") + (c.unread ? '<span class="ub">' + c.unread + "</span>" : "") + "</div></button></div>";
       }).join("");
     } else {
       msgBody += '<p class="ov-empty">No conversations yet.</p>';
@@ -691,9 +707,7 @@ function googleG(size, mono) {
     if (typeof prev === "function") {
       /* We'll build our own for consistency */
     }
-    var pageBtn = m.page
-      ? '<a class="btn btn-ghost ink has-ico" href="' + esa(m.page) + '" target="_blank" rel="noopener noreferrer">' + I.open + " View business page</a>"
-      : "";
+    var pageBtn = "";
     return '<section class="screen has-header" data-screen="member">' +
       '<div class="app-header"><button class="icon-btn" data-go="members" aria-label="Back">' + ico("back") + '</button><div class="ht">Member</div>' +
       '<button class="icon-btn" data-action="open-chat" data-id="' + m.id + '" aria-label="Message">' + I.chat + "</button></div>" +
@@ -703,8 +717,8 @@ function googleG(size, mono) {
       reviewBackBanner(m) +
       '<p class="bio">' + esc(m.bio) + "</p>" +
       '<div class="action-stack">' + friendButton(m) +
-      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + googleG(16) + "<span>Leave a Google review</span></a>" +
-      '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for a Google review</span></button>" +
+      '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + googleG(16) + "<span>Leave a Google Review</span></a>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for a Google Review</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button>" +
       pageBtn + "</div>" +
       (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Areas they work in" }) : "") +

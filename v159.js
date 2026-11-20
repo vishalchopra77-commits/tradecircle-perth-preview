@@ -115,7 +115,7 @@
   var ICONS = {
     bug: svg('<path d="M12 6v4"/><circle cx="12" cy="14" r="5"/><path d="M5 10l3 2M19 10l-3 2M5 18l3-2M19 18l-3-2M8 4l2 3M16 4l-2 3"/>'),
     bolt: svg('<path d="M13 2L4 14h7l-1 8 10-13h-7l1-7z" fill="currentColor" stroke="none"/>'),
-    tap: svg('<path d="M4 14h9a3 3 0 003-3V7a3 3 0 00-3-3H9"/><path d="M13 14v3a3 3 0 01-6 0"/><path d="M4 11v6"/>'),
+    tap: svg('<path d="M3 12h11"/><path d="M14 12V7h7"/><path d="M17.5 7v3"/><path d="M14 12v4a3 3 0 01-3 3H8"/><path d="M10.4 22c0-1.3.9-2 1.6-2s1.6.7 1.6 2"/>'),
     fence: svg('<path d="M4 20V8l3-3 3 3 3-3 3 3 3-3v15"/><path d="M4 12h15M4 16h15"/>'),
     snow: svg('<path d="M12 2v20M5 6l14 12M19 6L5 18M3 12h18"/>'),
     roller: svg('<rect x="3" y="3" width="14" height="6" rx="1"/><path d="M17 6h2a2 2 0 010 4h-6v9"/>'),

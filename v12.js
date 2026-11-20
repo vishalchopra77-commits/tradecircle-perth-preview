@@ -385,7 +385,7 @@ function facebookF(size, color) {
 
   function gBadge(m) {
     var g = GMAP[m.id] || { rating: "\u2014", count: 0 };
-    return '<div class="g-badge">' + googleG(14) + " " + g.rating + " \u00b7 " + g.count + " Google reviews</div>";
+    return '<div class="g-badge">' + googleG(14) + " " + g.rating + " \u00b7 " + g.count + " Google Reviews</div>";
   }
 
   function renderMember(id) {
@@ -402,9 +402,7 @@ function facebookF(size, color) {
       : r === "none"
         ? '<button class="btn btn-ghost ink" data-action="mark-sent" data-id="' + m.id + '">Mark request as sent</button>'
         : "";
-    var pageBtn = m.page
-      ? '<a class="btn btn-ghost ink" href="' + esa(m.page) + '" target="_blank" rel="noopener noreferrer">' + ico("link") + " View business page</a>"
-      : "";
+    var pageBtn = "";
     var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + ico("phone") + '</div><div><div class="k">Phone</div><div class="v">' + esc(m.phone) + "</div></div></div>" : "";
     return '<section class="screen has-header" data-screen="member">' +
       '<div class="app-header"><button class="icon-btn" data-go="members" aria-label="Back">' + ico("back") + '</button><div class="ht">Member</div>' +
@@ -429,9 +427,9 @@ function facebookF(size, color) {
   function renderMe() {
     var m = T().me();
     var phoneRow = m.phone ? '<div class="info-row"><div class="ic">' + ico("phone") + '</div><div><div class="k">Phone</div><div class="v">' + esc(m.phone) + "</div></div></div>" : "";
-    var pageRow = m.page ? '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Business page</div><div class="v">' + esc(m.page.replace("https://www.", "")) + "</div></div></div>" : "";
+    var pageRow = "";
     return '<section class="screen has-tabs has-header" data-screen="me">' +
-      topbar("My profile", '<button class="header-link" data-go="edit-profile">Edit</button>') +
+      topbar("My profile") +
       '<div class="scroll"><div class="profile-hero">' + av(m, 96) +
       '<div class="nm">' + esc(fn(m)) + ' <span class="you-badge">You</span></div>' +
       '<div class="biz">' + esc(m.business) + '</div><div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span>" +
@@ -466,7 +464,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.0.0 \u00b7 20 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.1 \u00b7 20 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -487,15 +485,23 @@ function facebookF(size, color) {
   function injectGoogle() {
     var form = document.querySelector("form[data-form='create-profile'], form[data-form='edit-profile']");
     if (!form || form.querySelector("[data-g-block]")) return;
-    var pageField = null;
-    form.querySelectorAll(".field").forEach(function (f) {
-      var lab = f.querySelector("label");
-      if (lab && /business page/i.test(lab.textContent)) pageField = f;
+    var anchor = null;
+    form.querySelectorAll(".group-label").forEach(function (lab) {
+      if (/facebook profile/i.test(lab.textContent)) anchor = lab;
     });
     var wrap = document.createElement("div");
     wrap.innerHTML = '<div class="group-label">Google Business Profile</div>' + gBlock();
-    if (pageField && pageField.parentNode) pageField.parentNode.insertBefore(wrap, pageField.nextSibling);
-    else form.appendChild(wrap);
+    var fbBlock = form.querySelector("[data-fb-block], .fb-card, .fb-connect, [data-action='fb-connect']");
+    if (fbBlock && fbBlock.parentNode) {
+      var after = fbBlock.closest(".field") || fbBlock;
+      after.parentNode.insertBefore(wrap, after.nextSibling);
+    } else if (anchor && anchor.parentNode) {
+      var next = anchor.nextElementSibling;
+      if (next) next.parentNode.insertBefore(wrap, next.nextSibling);
+      else anchor.parentNode.appendChild(wrap);
+    } else {
+      form.insertBefore(wrap, form.querySelector("[type='submit']") || null);
+    }
   }
 
   function renderReviews() {
@@ -718,11 +724,19 @@ function facebookF(size, color) {
         ? '<div style="width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#0A1328;color:#7EC8FF">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
         : av(m, 52);
       var online = c.type === "dm" ? '<span class="' + (c.online ? "dot-on" : "dot-off") + '"></span>' : "";
-      return '<button type="button" class="chat-row" data-action="open-thread" data-chat="' + c.id + '">' +
-        '<div class="av-wrap">' + avHtml + online + "</div>" +
-        '<div class="meta"><div class="nm">' + esc(name) + (c.muted ? ' <span class="muted-ico">M</span>' : "") + "</div>" +
-        '<div class="prev">' + esc(c.preview) + "</div></div>" +
-        '<div class="when">' + esc(c.when) + (c.unread ? '<div class="ub">' + c.unread + "</div>" : "") + "</div></button>";
+      if (c.type === "group" || !m || !m.id) {
+        return '<button type="button" class="chat-row" data-action="open-thread" data-chat="' + c.id + '">' +
+          '<div class="av-wrap">' + avHtml + online + "</div>" +
+          '<div class="meta"><div class="nm">' + esc(name) + (c.muted ? ' <span class="muted-ico">M</span>' : "") + "</div>" +
+          '<div class="prev">' + esc(c.preview) + "</div></div>" +
+          '<div class="when">' + esc(c.when) + (c.unread ? '<div class="ub">' + c.unread + "</div>" : "") + "</div></button>";
+      }
+      return '<div class="chat-row">' +
+        '<button type="button" class="mem-open av-wrap" data-go="member" data-id="' + m.id + '" aria-label="Open ' + esc(name) + ' profile">' + avHtml + online + "</button>" +
+        '<div class="meta">' +
+        '<button type="button" class="mem-open nm" data-go="member" data-id="' + m.id + '">' + esc(name) + (c.muted ? ' <span class="muted-ico">M</span>' : "") + "</button>" +
+        '<button type="button" class="prev chat-open" data-action="open-thread" data-chat="' + c.id + '">' + esc(c.preview) + "</button></div>" +
+        '<button type="button" class="when chat-open" data-action="open-thread" data-chat="' + c.id + '">' + esc(c.when) + (c.unread ? '<div class="ub">' + c.unread + "</div>" : "") + "</button></div>";
     }
     return '<section class="screen has-tabs has-header" data-screen="chats">' +
       topbar("Chats", '<button class="icon-btn" data-action="new-group" aria-label="New group">' + I.plus + "</button>") +
@@ -791,9 +805,13 @@ function facebookF(size, color) {
       sub = c.online ? "Online" : "Last seen 2h ago";
       avHtml = av(m, 32);
     }
+    var headWho = (c.type !== "group" && m && m.id)
+      ? ('<button type="button" class="mem-open chat-head-who" data-go="member" data-id="' + m.id + '" aria-label="Open ' + esc(title) + ' profile">' + avHtml +
+        '<div class="ht" style="text-align:left">' + esc(title) + '<div style="font-size:11px;font-weight:600;color:var(--muted)">' + esc(sub) + "</div></div></button>")
+      : (avHtml + '<div class="ht" style="text-align:left">' + esc(title) + '<div style="font-size:11px;font-weight:600;color:var(--muted)">' + esc(sub) + "</div></div>");
     return '<section class="screen has-header chat-screen" data-screen="' + (c.type === "group" ? "chat-group" : "chat-dm") + '">' +
       '<div class="app-header"><button class="icon-btn" data-go="chats" aria-label="Back">' + ico("back") + "</button>" +
-      avHtml + '<div class="ht" style="text-align:left">' + esc(title) + '<div style="font-size:11px;font-weight:600;color:var(--muted)">' + esc(sub) + "</div></div>" +
+      headWho +
       '<button class="icon-btn" data-action="chat-more" aria-label="More">...</button></div>' +
       '<div class="chat-thread" id="chatThread">' + c.messages.map(function (msg) { return bubble(msg, c); }).join("") + "</div>" +
       '<div class="quick-row">' +
@@ -809,6 +827,7 @@ function facebookF(size, color) {
   }
   const NOTIFS = [
     { id: "n0", type: "limit", title: "Daily review limit reached", body: "Thompson Electrical already has 3 of 3 Google reviews from the circle today. Opens tomorrow.", time: "8:02 am", unread: true, go: "member", who: "jack" },
+    { id: "n-swap", type: "review", title: "Incoming Google Review swap requests", body: "5 members asked you to swap a Google Review.", time: "Now", unread: true, go: "incoming-swap" },
     { id: "n1", type: "review", title: "Jack Thompson", body: "Could you leave a Google review when you get a minute?", time: "7:12 am", unread: true, go: "review-ideas", who: "jack" },
     { id: "n2", type: "review", title: "Review request", body: "Tom Reeves asked you to leave a Google review for Reeves Fencing.", time: "Yesterday", unread: true, go: "review-ideas", who: "tom" },
     { id: "n5", type: "review", title: "Sarah left you a Google review", body: "Review back when you can, if the daily limit is not already full.", time: "Yesterday", unread: true, go: "reviews-back", who: "sarah" },
@@ -824,8 +843,16 @@ function facebookF(size, color) {
     return '<section class="screen has-tabs has-header" data-screen="notifications">' + topbar("Notifications") +
       '<div class="scroll" style="padding-left:0;padding-right:0">' +
       NOTIFS.map(function (n) {
+        var who = n.who ? (member(n.who) || null) : null;
+        var tile = (who && T().avatarHTML) ? T().avatarHTML(who, 36) : notifTile(n.type || "alert", 16);
+        if (who) {
+          return '<div class="notif-row' + (n.unread ? " unread" : "") + '">' +
+            '<button type="button" class="mem-open notif-who" data-go="member" data-id="' + who.id + '" aria-label="Open ' + esc(fn(who)) + ' profile">' + tile + "</button>" +
+            '<button type="button" class="notif-main" data-action="open-notif" data-nid="' + n.id + '">' +
+            '<div class="ttl">' + esc(n.title) + '</div><div class="bd">' + esc(n.body) + '</div><div class="tm">' + esc(n.time) + "</div></button></div>";
+        }
         return '<button type="button" class="notif-row' + (n.unread ? " unread" : "") + '" data-action="open-notif" data-nid="' + n.id + '">' +
-          notifTile(n.type || "alert", 16) +
+          tile +
           '<div style="flex:1;min-width:0"><div class="ttl">' + esc(n.title) + '</div><div class="bd">' + esc(n.body) + '</div><div class="tm">' + esc(n.time) + "</div></div></button>";
       }).join("") +
       "</div></section>";
@@ -911,7 +938,7 @@ function facebookF(size, color) {
       '<div class="scroll"><div class="auth-hero"><h2>How the circle works</h2><p>A simple way for local tradies who already know each other to stay in touch and recommend people they have actually met.</p></div>' +
       '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Weekly meet-ups stay offline</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">The app is for profiles, Facebook friend requests, messages and genuine Google reviews. Catch-ups are organised in person.</p></div>' +
       '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Recommendations</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend a member in a Facebook group if you have actually met or used them, and say so in your comment.</p></div>' +
-      '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Google reviews</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">The app can suggest ideas after you pick a real job. It will not write a finished review for you. Swapped or ready-made reviews can get a Google profile taken down, and they are against Australian Consumer Law.</p></div>' +
+      '<div class="card group" style="padding:14px;margin-bottom:10px"><p style="font-weight:800;margin-bottom:6px">Google Reviews</p><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">The app can suggest ideas after you pick a real job. It will not write a finished review for you. Swapped or ready-made reviews can get a Google profile taken down, and they are against Australian Consumer Law.</p></div>' +
       "</div></section>";
   }
 
@@ -1220,7 +1247,7 @@ function facebookF(size, color) {
       n.unread = false;
       if (n.chat) S().chatId = n.chat;
       if (n.who && n.go === "review-ideas") S().reviewFor = n.who;
-      if (n.who && n.go === "member") { go("member", n.who); return true; }
+      if (n.who && n.go === "member") { go("member", { memberId: n.who }); return true; }
       go(n.go);
       return true;
     }

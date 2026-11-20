@@ -547,13 +547,11 @@
     var toggle = '<button type="button" class="join-all' + (allOn ? " on" : "") + '" data-action="join-all-metro" data-kind="' + kind + '" data-prefix="' + prefix + '" aria-pressed="' + (allOn ? "true" : "false") + '">' +
       '<span class="join-all-txt"><strong>' + escapeText(label) + '</strong><span class="join-all-sub">' + subOn +
       "</span></span><span class=\"toggle" + (allOn ? " on" : "") + '" aria-hidden="true"></span></button>';
-    var sug = {};
-    REGIONS.forEach(function (r) { if (r.suggested) sug[r.id] = true; });
     var grid = '<div class="region-sec"><div class="region-grid">' + list.map(function (r) {
       var on = selectedIds.indexOf(r.id) !== -1;
       return '<button type="button" class="region-chip' + (on ? " on" : "") + '" data-region="' + r.id + '" data-prefix="' + prefix + '">' +
-        "<span><span class=\"n\">" + escapeText(r.name) + "</span>" + (sug[r.id] ? '<span class="sug">Suggested</span>' : "") + "</span>" +
-        '<span class="tick">' + icon("check") + "</span></button>";
+        "<span class=\"lbl\"><span class=\"n\">" + escapeText(r.name) + "</span></span>" +
+        '<span class="tick" aria-hidden="true">' + icon("check") + "</span></button>";
     }).join("") + "</div></div>";
     var sel = nSel ? (nSel + " selected") : "";
     return '<div class="acc ' + kind + (open ? " open" : "") + '">' +
@@ -1288,7 +1286,6 @@
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
-      '<div class="field"><label>Facebook business page <span class="opt">(optional)</span></label><input name="page" inputmode="url" value="' + escapeAttr(d.page || "") + '"></div>' +
       '<div class="group-label">My areas</div>' + selectedAreasCard(d.regions || [], { title: "My areas", openAreas: true, prefix: "edit", returnTo: "edit-profile", changeLabel: (d.regions && d.regions.length) ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Save changes</span></button></form></div></section>";
   }
@@ -1310,7 +1307,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.0 · 20 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.1 · 20 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }

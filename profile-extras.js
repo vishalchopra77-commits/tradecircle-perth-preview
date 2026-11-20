@@ -265,11 +265,17 @@
       '<div class="field"><label>Service areas</label><input name="profileAreas" placeholder="Suburbs, separated by commas" value="' + esa(csv(p.serviceAreas)) + '">' +
       '<div class="chips chips-tight" style="margin-top:8px">' + SUBURBS.map(function (s) { return chipToggle("serviceAreas", s, p.serviceAreas.indexOf(s) !== -1); }).join("") + "</div></div>" +
       '<p class="group-label">Expertise <span class="opt">(optional)</span></p>' +
-      '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Termite inspections, Decks" value="' + esa(csv(p.specialties)) + '"></div>' +
+      '<p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
+      (root.TC158 && TC158.pickerHTML
+        ? TC158.pickerHTML("specialties", "profileSpecialties", p.specialties, "Search services, e.g. Termite inspections")
+        : '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Termite inspections, Decks" value="' + esa(csv(p.specialties)) + '"></div>') +
       '<div class="field"><label>Licences</label><textarea name="profileLicences" rows="2" placeholder="One licence per line">' + esc(p.licences.join("\n")) + "</textarea></div>" +
       '<p class="group-label">My ideal referral partner <span class="opt">(optional)</span></p>' +
-      '<div class="chips chips-tight">' + TRADE_CHIPS.map(function (s) { return chipToggle("idealTrades", s, p.idealTrades.indexOf(s) !== -1); }).join("") + "</div>" +
-      '<input type="hidden" name="profileIdealTrades" value="' + esa(csv(p.idealTrades)) + '">' +
+      '<p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +
+      (root.TC158 && TC158.pickerHTML
+        ? TC158.pickerHTML("idealTrades", "profileIdealTrades", p.idealTrades, "Search business types, e.g. Carpenter")
+        : ('<div class="chips chips-tight">' + TRADE_CHIPS.map(function (s) { return chipToggle("idealTrades", s, p.idealTrades.indexOf(s) !== -1); }).join("") + "</div>" +
+          '<input type="hidden" name="profileIdealTrades" value="' + esa(csv(p.idealTrades)) + '">')) +
       '<div class="field" style="margin-top:8px"><label>A short sentence</label><textarea name="profileIdealNote" rows="2" placeholder="Who you like to work with, and why">' + esc(p.idealNote) + "</textarea></div>" +
       '<p class="group-label">My goals <span class="opt">(optional)</span></p>' +
       '<div data-goal-list>' + goalRows + "</div>" +
@@ -333,6 +339,7 @@
   function bindForm(form) {
     if (!form || form.getAttribute("data-profile-bound") === "1") return;
     form.setAttribute("data-profile-bound", "1");
+    if (root.TC158 && TC158.bindSearchPickers) TC158.bindSearchPickers(form);
     form.addEventListener("click", function (e) {
       var chip = e.target.closest("[data-profile-chip]");
       if (chip) {

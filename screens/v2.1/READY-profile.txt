@@ -1,0 +1,4 @@
+my-profile-v2.1.1.png ready
+path: /workspace/fb-marketing/screens/v2.1/my-profile-v2.1.1.png
+bytes: 566991
+screen: me

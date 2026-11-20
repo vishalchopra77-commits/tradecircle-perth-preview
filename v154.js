@@ -515,17 +515,29 @@
     if (!form || form.querySelector("[data-link-id]")) return;
     var m = (form.getAttribute("data-form") === "edit-profile") ? (T().me && T().me()) : (S().draft || {});
     var links = Links().fromMember(m);
-    if (S().draft && S().draft.links) links = Links().fromMember({ links: S().draft.links, page: S().draft.page });
+    if (S().draft && S().draft.links) links = Links().fromMember({ links: S().draft.links, facebook: S().draft.facebook });
     var html = Links().editFields(links);
-    var pageField = null;
-    form.querySelectorAll(".field").forEach(function (f) {
-      var lab = f.querySelector("label");
-      if (lab && /business page/i.test(lab.textContent)) pageField = f;
-    });
     var wrap = document.createElement("div");
     wrap.innerHTML = html;
-    if (pageField && pageField.parentNode) pageField.parentNode.insertBefore(wrap, pageField.nextSibling);
-    else form.insertBefore(wrap, form.querySelector("[type='submit']") || null);
+    var fbLab = null;
+    form.querySelectorAll(".group-label").forEach(function (lab) {
+      if (/facebook profile/i.test(lab.textContent)) fbLab = lab;
+    });
+    var areasLab = null;
+    form.querySelectorAll(".group-label").forEach(function (lab) {
+      if (/^my areas$/i.test(lab.textContent.trim())) areasLab = lab;
+    });
+    if (areasLab && areasLab.parentNode) areasLab.parentNode.insertBefore(wrap, areasLab);
+    else if (fbLab && fbLab.parentNode) {
+      var after = fbLab.nextElementSibling;
+      while (after && after.nextElementSibling && !after.nextElementSibling.classList.contains("group-label") && after.nextElementSibling.getAttribute("type") !== "submit") {
+        after = after.nextElementSibling;
+      }
+      if (after && after.parentNode) after.parentNode.insertBefore(wrap, after.nextSibling);
+      else form.insertBefore(wrap, form.querySelector("[type='submit']") || null);
+    } else {
+      form.insertBefore(wrap, form.querySelector("[type='submit']") || null);
+    }
     Links().bindValidation(form);
     if (Prof() && !form.querySelector("[data-profile-edit]")) {
       var p = (S().draft && S().draft.profile) ? S().draft.profile : Prof().fromMember(m);
@@ -536,6 +548,7 @@
       else form.appendChild(block);
       Prof().bindForm(form);
     }
+    if (root.TC158 && TC158.bindSearchPickers) TC158.bindSearchPickers(form);
   }
 
   function after(id) {

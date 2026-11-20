@@ -43,7 +43,6 @@ jobs:
       - name: Prepare web assets and sync Capacitor
         run: |
           bash scripts/prepare-www.sh
-          npm install @capacitor/local-notifications
           npx cap sync android
 
       - name: Build debug APK
@@ -61,9 +60,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
-          name: Rate Buddies test build v2.1.0
+          name: Rate Buddies test build v2.1.1
           body: |
-            Debug APK for sideloading on your phone (v2.1.0 test build).
+            Debug APK for sideloading on your phone (v2.1.1 test build).
             On Android, allow installing from this browser or “unknown apps”, then open the APK.
             Sign-in details are in the private test-logins file, not in this repo.
             The web admin is at the GitHub Pages admin.html URL after this version is published, and shares the same test data.

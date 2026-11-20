@@ -1,4 +1,4 @@
-/* Rate Buddies v2.1 — Google Reviews flow, trade-icon avatars, region UX, chrome. */
+/* Rate Buddies v2.1.1 — Google Reviews flow, trade-icon avatars, region UX, chrome. */
 (function (root) {
   "use strict";
 
@@ -43,7 +43,7 @@
     fencing:     { d: '<path d="M4 20V8l3-3 3 3 3-3 3 3 3-3v15"/><path d="M4 12h15M4 16h15"/>', fill: false },
     painter:     { d: '<rect x="3" y="3" width="14" height="6" rx="1"/><path d="M17 6h2a2 2 0 010 4h-6v9"/>', fill: false },
     hvac:        { d: '<path d="M12 2v20M5 6l14 12M19 6L5 18M3 12h18"/>', fill: false },
-    plumber:     { d: '<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>', fill: false },
+    plumber:     { d: '<path d="M3 12h11"/><path d="M14 12V7h7"/><path d="M17.5 7v3"/><path d="M14 12v4a3 3 0 01-3 3H8"/><path d="M10.4 22c0-1.3.9-2 1.6-2s1.6.7 1.6 2"/>', fill: false },
     landscaper:  { d: '<path d="M5 19c8-1 14-8 14-16-8 0-15 6-16 14 4-1 6 0 8 2"/><path d="M8 16c2-3 5-6 9-8"/>', fill: false },
     roofer:      { d: '<path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/>', fill: false },
     handyman:    { d: '<path d="M14.7 6.3a4 4 0 00-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6L15 12z"/>', fill: false },
@@ -75,7 +75,7 @@
     if (g.fill) {
       return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 24 24" fill="#fff" stroke="none" aria-hidden="true">' + g.d + "</svg>";
     }
-    return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + g.d + "</svg>";
+    return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + g.d + "</svg>";
   }
   function isAvailable(m) {
     if (!m) return false;
@@ -97,7 +97,7 @@
     }
     var st = tradeStyle(m.trade);
     var rad = Math.max(8, Math.round(size * 0.28));
-    var ico = Math.max(14, Math.round(size * 0.52));
+    var ico = Math.max(16, Math.round(size * 0.64));
     var dot = isAvailable(m) ? '<span class="dot" title="Available"></span>' : "";
     return '<div class="avatar av-trade" style="width:' + size + "px;height:" + size + "px;border-radius:" + rad + "px;background:linear-gradient(160deg," + st.a + "," + st.b + ");--trade-accent:" + st.accent + '">' +
       glyphSvg(m.trade, ico) + dot + "</div>";
@@ -109,11 +109,18 @@
   function atReceivedCap(id) { return RC ? RC.atLimit(id) : false; }
   function cap() { return RC ? RC.limit() : 3; }
   function givenTotal() {
+    if (root.TC211 && TC211.scoreOf) {
+      var sc = TC211.scoreOf((me() && me().id) || "jamie");
+      return (sc && sc.reviews) || 0;
+    }
     var n = load(LS_GIVEN, null);
-    if (typeof n === "number") return n;
-    return 47;
+    if (typeof n === "number" && n !== 47) return n;
+    return 8;
   }
-  function addGiven() { save(LS_GIVEN, givenTotal() + 1); }
+  function addGiven() {
+    if (root.TC211 && TC211.bumpReviews) TC211.bumpReviews((me() && me().id) || "jamie", 1);
+    else save(LS_GIVEN, givenTotal() + 1);
+  }
 
   function perthToday() { return RC && RC.perthToday ? RC.perthToday() : new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Perth" }); }
 
@@ -288,7 +295,7 @@
     var capped = rec >= c;
     var available = isMeAvailable() && !capped;
     var given = givenTotal();
-    var incoming = 5;
+    var incoming = (root.TC211 && TC211.incomingNewCount) ? TC211.incomingNewCount() : 5;
     var filter = load(LS_FILTER, "all") || "all";
     var only = !!load(LS_ONLY, false);
     var all = membersForList();
@@ -321,7 +328,7 @@
       '<button type="button" class="v21-toggle' + (available ? "" : " off") + '" role="switch" aria-checked="' + (available ? "true" : "false") + '" data-action="rb-toggle-avail"' + (capped ? " disabled" : "") + "><i></i></button></div>";
 
     html += '<button type="button" class="v21-card v21-incoming" data-action="rb-incoming" style="width:100%;text-align:left">' +
-      '<div style="flex:1"><div class="t">Incoming Google Review swap requests <span class="v21-count">' + incoming + " new</span></div>" +
+      '<div style="flex:1"><div class="t">Incoming Google Review swap requests' + (incoming ? ' <span class="v21-count">' + incoming + " new</span>" : "") + "</div>" +
       '<div class="c">Tap to view who asked you</div></div><div style="color:var(--accent-2);font-weight:800;font-size:16px">›</div></button>';
 
     html += '<div class="v21-chips" aria-label="Filters"><div class="v21-chip-row">';
@@ -380,23 +387,27 @@
       act = '<button type="button" class="v21-act warn" data-action="rb-remind-me" data-id="' + esa(m.id) + '">Remind</button>';
     } else {
       statusChip = '<span class="v21-chip not">' + googleG(11) + " Not given</span>";
-      act = '<button type="button" class="v21-act" data-action="rb-leave" data-id="' + esa(m.id) + '">Leave Google Review</button>';
+      act = '<button type="button" class="v21-act" data-action="rb-leave" data-id="' + esa(m.id) + '">' + googleG(12) + " Leave review</button>";
     }
     var availChip = av ? '<span class="v21-chip yes">Available</span>' : '<span class="v21-chip no">Not available</span>';
+    var nm = esc(((m.first || "") + " " + (m.last || "")).trim());
     return '<div class="v21-mrow" style="--trade-accent:' + style.accent + '">' +
+      '<button type="button" class="mem-open v21-who" data-go="member" data-id="' + esa(m.id) + '" aria-label="Open ' + nm + ' profile">' +
       avatar(m, 36) +
-      '<div class="meta"><div class="n">' + esc(m.first + " " + m.last) + "</div>" +
+      '<div class="meta"><div class="n">' + nm + "</div>" +
       '<div class="s">' + esc(m.trade) + " · " + esc(regionLabel(m)) + "</div>" +
-      '<div class="v21-flags">' + availChip + statusChip + "</div></div>" +
+      '<div class="v21-flags">' + availChip + statusChip + "</div></div></button>" +
       '<div class="v21-right">' + act + "</div></div>";
   }
 
   function reminderRow(m, label) {
     var style = tradeStyle(m.trade);
+    var nm = esc(((m.first || "") + " " + (m.last || "")).trim());
     return '<div class="v21-mrow" style="--trade-accent:' + style.accent + '">' +
+      '<button type="button" class="mem-open v21-who" data-go="member" data-id="' + esa(m.id) + '" aria-label="Open ' + nm + ' profile">' +
       avatar(m, 36) +
-      '<div class="meta"><div class="n">' + esc(m.first + " " + m.last) + "</div>" +
-      '<div class="s">' + esc(m.trade) + " · " + esc(regionLabel(m)) + "</div></div>" +
+      '<div class="meta"><div class="n">' + nm + "</div>" +
+      '<div class="s">' + esc(m.trade) + " · " + esc(regionLabel(m)) + "</div></div></button>" +
       '<div class="v21-right"><span class="v21-chip full">' + googleG(11) + " Full today</span>" +
       '<span class="v21-act ghost">' + esc(label || "Tomorrow 9:00") + "</span></div></div>";
   }
@@ -454,7 +465,8 @@
       return true;
     }
     if (action === "rb-incoming") {
-      toast("Incoming Google Review swap requests — 5 new.");
+      if (T().go) T().go("incoming-swap");
+      else toast("Open Incoming swap requests.");
       return true;
     }
     if (action === "rb-set-time") {
@@ -465,17 +477,80 @@
     return false;
   }
 
+
+  function icoStroke(d, px) {
+    px = px || 22;
+    return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
+  }
+  var MORE_ICOS = {
+    user: icoStroke('<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/>'),
+    people: icoStroke('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="3.4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>'),
+    chat: icoStroke('<path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/>'),
+    pin: icoStroke('<path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.2"/>'),
+    spark: icoStroke('<path d="M12 3l1.6 5.2L19 10l-5.4 1.8L12 17l-1.6-5.2L5 10l5.4-1.8z"/><path d="M19 15l.7 2.1L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.9z"/>'),
+    play: icoStroke('<path d="M8 6.5v11L19 12z"/>'),
+    gear: icoStroke('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/>'),
+    crown: icoStroke('<path d="M3 19h18"/><path d="M5 19V9l4.2 3.2L12 6l2.8 6.2L19 9v10"/>'),
+    send: icoStroke('<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>'),
+    help: icoStroke('<circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/>'),
+    chev: icoStroke('<path d="M9 6l6 6-6 6"/>', 20)
+  };
+  function moreTile(go, kind, ico, label) {
+    var well = '<span class="v21-more-ico' + (kind ? " " + kind : "") + '">' + ico + "</span>";
+    return '<button type="button" class="v21-more-tile" data-go="' + esa(go) + '">' + well + "<span>" + esc(label) + "</span></button>";
+  }
+  function renderMore() {
+    var I = me();
+    var name = ((I.first || "") + " " + (I.last || "")).trim() || "Member";
+    var biz = I.business || I.trade || "";
+    var sub = biz ? (biz + " · View your profile") : "View your profile";
+    var forYou = [
+      moreTile("me", "", MORE_ICOS.user, "My profile"),
+      moreTile("members", "", MORE_ICOS.people, "Members"),
+      moreTile("chats", "", MORE_ICOS.chat, "Chats"),
+      moreTile("my-regions", "", MORE_ICOS.pin, "Your areas"),
+      moreTile("promo-queue", "fb", facebookFMore(), "Promotion queue"),
+      moreTile("reviews", "g", googleG(20), "Reviews"),
+      moreTile("ai-assistant", "", MORE_ICOS.spark, "AI assistant"),
+      moreTile("tutorials", "", MORE_ICOS.play, "Tutorials")
+    ].join("");
+    var account = [
+      moreTile("settings", "", MORE_ICOS.gear, "Settings"),
+      moreTile("subscription", "", MORE_ICOS.crown, "Subscription"),
+      moreTile("invite", "", MORE_ICOS.send, "Invite"),
+      moreTile("help", "", MORE_ICOS.help, "Help")
+    ].join("");
+    return '<section class="screen has-tabs has-header" data-screen="more" data-more="v21">' +
+      heroHeader("", "More") +
+      '<div class="scroll v21-more">' +
+      '<button type="button" class="v21-more-profile" data-go="me">' +
+      avatar(I, 48) +
+      '<div class="meta"><div class="nm">' + esc(name) + '</div><div class="sub">' + esc(sub) + "</div></div>" +
+      '<span class="chev" aria-hidden="true">' + MORE_ICOS.chev + "</span></button>" +
+      '<div class="v21-more-sec">For you</div>' +
+      '<div class="v21-more-card"><div class="v21-more-grid">' + forYou + "</div></div>" +
+      '<div class="v21-more-sec">Account</div>' +
+      '<div class="v21-more-card"><div class="v21-more-grid">' + account + "</div></div>" +
+      '<button type="button" class="v21-signout" data-go="welcome">Sign out</button>' +
+      '<p class="v21-ver">Rate Buddies v2.1.1</p>' +
+      "</div></section>";
+  }
+  function facebookFMore() {
+    return '<svg viewBox="0 0 24 24" width="18" height="18" fill="#fff" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3.2L17 11h-4V9c0-.6.4-1 1-1z"/></svg>';
+  }
+
   function enhanceTabLabel() {
     var tab = document.getElementById("tab-reviews");
     if (!tab) return;
     var label = tab.childNodes[tab.childNodes.length - 1];
-    if (tab.querySelector(".tab-lab")) return;
+    var existing = tab.querySelector(".tab-lab");
+    if (existing) { existing.textContent = "Reviews"; return; }
     /* Replace trailing text node "Reviews" */
     for (var i = 0; i < tab.childNodes.length; i++) {
       if (tab.childNodes[i].nodeType === 3 && /Reviews/.test(tab.childNodes[i].textContent)) {
         var span = document.createElement("span");
         span.className = "tab-lab";
-        span.innerHTML = "Google<br>Reviews";
+        span.textContent = "Reviews";
         tab.replaceChild(span, tab.childNodes[i]);
         break;
       }
@@ -503,6 +578,12 @@
     enhanceTabLabel();
     enhanceTabHeaders(id);
     paintMemberCardAccents();
+    /* Keep the More screen free of the prototype Demo sign-up tile. */
+    if (id === "more" || id === "drawer") {
+      document.querySelectorAll(".screen[data-screen='more'] [data-action='demo-signup'], .screen[data-screen='more'] .apps-section").forEach(function (el) {
+        if (el.getAttribute("data-action") === "demo-signup" || /Prototype/i.test(el.textContent || "")) el.remove();
+      });
+    }
   }
 
   function install() {
@@ -511,6 +592,7 @@
       var prev = TC12.render;
       TC12.render = function (id) {
         if (id === "reviews" || id === "reviews-back") return renderReviews();
+        if (id === "more" || id === "drawer") return renderMore();
         if (id === "google-review-time" || (id === "lockscreen" && S()._grLock)) return renderLockNotif();
         return prev(id);
       };
@@ -544,11 +626,12 @@
     tradeStyle: tradeStyle,
     tradeKey: tradeKey,
     renderReviews: renderReviews,
+    renderMore: renderMore,
     renderLockNotif: renderLockNotif,
     afterGo: afterGo,
     isMeAvailable: isMeAvailable,
     notificationGap: function () { return notificationGap; },
-    VERSION: "2.1.0"
+    VERSION: "2.1.1"
   };
   install();
 })(typeof window !== "undefined" ? window : this);
