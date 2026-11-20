@@ -156,8 +156,8 @@ function googleG(size, mono) {
       '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
       '<div class="biz">' + esc(m.business) + "</div>" +
       '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div>" +
-      status + back +
-      "</div></button>" + actions + "</div>";
+      status + (back.indexOf("slim-cta") === -1 ? back : "") +
+      "</div></button>" + actions + (back.indexOf("slim-cta") !== -1 ? back : "") + "</div>";
   }
 
   function reviewBackBanner(m, compact) {

@@ -643,8 +643,43 @@
     return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
+  /* Profile pictures that match each member's trade: trade colour + trade icon. */
+  const S = 'fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"';
+  const TRADE_PICS = {
+    "pest control": [["#4ADE80", "#15803D"], '<ellipse cx="12" cy="13.5" rx="4" ry="5.5"/><path d="M12 8V6.5M10 5l2 1.5L14 5M8 11l-3-1.5M8 14H4.5M8 17l-3 1.5M16 11l3-1.5M16 14h3.5M16 17l3 1.5M12 8.5v10"/>'],
+    "carpenter": [["#E0A266", "#9A5B22"], '<path d="M4 20l9-9M13 11l-2-2 4-4 2 2M15 5l4 1-2 2 2 4-4-1"/><path d="M11 9l4 4"/>'],
+    "plumber": [["#60A5FA", "#1D4ED8"], '<path d="M14.5 5.5a4 4 0 0 0-5 5L4 16v4h4l5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-2.5-.5-.5-2.5 2.5-2.5z"/>'],
+    "painter": [["#F472B6", "#9D174D"], '<rect x="4" y="4" width="13" height="5" rx="1.5"/><path d="M17 6.5h2.5V11H11v3"/><rect x="9.5" y="14" width="3" height="6" rx="1"/>'],
+    "electrician": [["#FBBF24", "#D97706"], '<path d="M13 3L5.5 13.5H11L10 21l8-11h-5.5L13 3z"/>'],
+    "landscaper": [["#34D399", "#047857"], '<path d="M12 21v-8M12 13c0-4 3-7 8-7 0 5-3 7-8 7zM12 15c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/>'],
+    "roofer": [["#FB8A6B", "#B23A1E"], '<path d="M3 12l9-7 9 7M6 10v9h12v-9M10 19v-5h4v5"/>'],
+    "air conditioning": [["#67E8F9", "#0E7490"], '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5"/>'],
+    "tiler": [["#2DD4BF", "#0F766E"], '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'],
+    "fencer": [["#C08A4A", "#713F12"], '<path d="M5 20V7l2-2.5L9 7v13M11 20V7l2-2.5L15 7v13M17 20V7l2-2.5L21 7v13M3 10h20M3 16h20" transform="translate(-1 0)"/>'],
+    "handyman": [["#FB923C", "#C2410C"], '<rect x="3.5" y="9" width="17" height="10" rx="2"/><path d="M9 9V6.5h6V9M3.5 13.5h17M10.5 13.5v2h3v-2"/>'],
+    "locksmith": [["#94A3B8", "#334155"], '<circle cx="8" cy="12" r="4"/><path d="M12 12h9M17.5 12v3M20.5 12v2.5"/>'],
+    "barber": [["#FB7185", "#BE123C"], '<circle cx="6.5" cy="7" r="2.5"/><circle cx="6.5" cy="17" r="2.5"/><path d="M8.6 8.4L20 17M8.6 15.6L20 7"/>'],
+    "hairdresser": [["#E879F9", "#A21CAF"], '<circle cx="6.5" cy="7" r="2.5"/><circle cx="6.5" cy="17" r="2.5"/><path d="M8.6 8.4L20 17M8.6 15.6L20 7"/>'],
+    "end of lease cleaner": [["#7DD3FC", "#0369A1"], '<path d="M9 3h6l-1 6h-4L9 3zM8 9h8l1 12H7L8 9z"/><path d="M18 4l.6 1.4L20 6l-1.4.6L18 8l-.6-1.4L16 6l1.4-.6z"/>']
+  };
+  function tradePic(m) {
+    const t = String(m && m.trade || "").toLowerCase().trim();
+    if (TRADE_PICS[t]) return TRADE_PICS[t];
+    if (/clean/.test(t)) return TRADE_PICS["end of lease cleaner"];
+    if (/plumb/.test(t)) return TRADE_PICS.plumber;
+    if (/electr/.test(t)) return TRADE_PICS.electrician;
+    if (/hair/.test(t)) return TRADE_PICS.hairdresser;
+    return null;
+  }
+
   function avatarHTML(m, size) {
     const pal = AVATAR_COLORS[m.color] || AVATAR_COLORS.teal;
+    const tp = !(m.isMe && state.photoData) && tradePic(m);
+    if (tp) {
+      const ico = Math.round(size * 0.52);
+      return '<div class="avatar avatar-trade" data-acc="' + tp[0][1] + '" title="' + escapeAttr(m.trade) + '" style="width:' + size + 'px;height:' + size + 'px;background:linear-gradient(145deg,' + tp[0][0] + ',' + tp[0][1] + ')">' +
+        '<svg width="' + ico + '" height="' + ico + '" viewBox="0 0 24 24" ' + S + ' aria-hidden="true" style="position:relative;z-index:1">' + tp[1] + "</svg></div>";
+    }
     const font = size >= 88 ? 32 : size >= 64 ? 24 : 16;
     if (m.isMe && state.photoData) {
       return '<div class="avatar" style="width:' + size + 'px;height:' + size + 'px;background:#ccc"><img src="' + state.photoData + '" alt="" style="width:100%;height:100%;object-fit:cover"></div>';

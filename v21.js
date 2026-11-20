@@ -78,6 +78,29 @@
     screen.classList.add("h21", "h21-sub");
   }
 
+  /* Cards get a coloured left edge that matches the member's trade colour. */
+  var CARD_SEL = ".h21-card, .member-card, .rec-card, .req-card, .fb-card, .chat-card";
+  function accent() {
+    document.querySelectorAll("#screens " + CARD_SEL.split(", ").join(", #screens ")).forEach(function (c) {
+      if (c.classList.contains("h21-me") || c.querySelector(".h21-grid")) return;
+      var a = c.querySelector(".avatar-trade[data-acc]");
+      var col = a ? a.getAttribute("data-acc") : (c.querySelector(".h21-ico, .fb-ico") ? "#1877F2" : "");
+      c.classList.add("rb-acc");
+      if (col) c.style.setProperty("--acc", col);
+    });
+  }
+  window.RBAccent = accent;
+  function watch() {
+    var host = document.getElementById("screens");
+    if (!host || host._rbAcc) return;
+    host._rbAcc = true;
+    var t;
+    new MutationObserver(function () { clearTimeout(t); t = setTimeout(function () { try { accent(); } catch (e) {} }, 0); })
+      .observe(host, { childList: true, subtree: true });
+    try { accent(); } catch (e) {}
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", watch); else watch();
+
   function install() {
     if (!window.TC20 || TC20._v21) return;
     TC20._v21 = true;
@@ -85,6 +108,7 @@
     TC20.afterGo = function (id) {
       if (prev) prev.apply(this, arguments);
       try { transform(id); } catch (e) {}
+      try { accent(); } catch (e) {}
     };
     var st = window.RateBuddies && RateBuddies.state;
     if (st && st.screen) {
