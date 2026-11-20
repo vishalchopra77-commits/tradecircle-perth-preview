@@ -1,4 +1,4 @@
-/* Rate Buddies — daily Google review cap per business, v1.5.4
+/* TradeCircle Perth — daily Google review cap per business, v1.5.4
    Cap is per reviewee, per Perth calendar day. Default 3. */
 (function (root) {
   "use strict";
@@ -45,15 +45,15 @@
   function limit() {
     var n = load(LS_LIMIT, null);
     if (typeof n === "number" && n >= 1 && n <= 20) return n;
-    if (root.RateBuddies && root.RateBuddies.state && root.RateBuddies.state.reviewDailyLimit) {
-      return Number(root.RateBuddies.state.reviewDailyLimit) || DEFAULT_LIMIT;
+    if (root.TradeCircle && root.TradeCircle.state && root.TradeCircle.state.reviewDailyLimit) {
+      return Number(root.TradeCircle.state.reviewDailyLimit) || DEFAULT_LIMIT;
     }
     return DEFAULT_LIMIT;
   }
   function setLimit(n) {
     n = Math.max(1, Math.min(20, Number(n) || DEFAULT_LIMIT));
     save(LS_LIMIT, n);
-    if (root.RateBuddies && root.RateBuddies.state) root.RateBuddies.state.reviewDailyLimit = n;
+    if (root.TradeCircle && root.TradeCircle.state) root.TradeCircle.state.reviewDailyLimit = n;
     return n;
   }
 
@@ -61,10 +61,12 @@
     return load(LS_COUNTS, null) || seedCounts();
   }
   function seedCounts() {
-    /* Jack Thompson / Thompson Electrical already at the daily cap (fictional). */
+    /* Priya Sharma / Prism Painting is at the daily RECEIVED cap (fictional).
+       Jamie Hale (logged-in member) has received 2 of 3 today. Giving is unlimited. */
     var today = perthToday();
     var data = {
-      jack: { date: today, n: 3, by: ["sarah", "mei", "priya"] }
+      priya: { date: today, n: 3, by: ["sarah", "mei", "jack"] },
+      jamie: { date: today, n: 2, by: ["sarah", "liam"] }
     };
     save(LS_COUNTS, data);
     return data;
@@ -103,7 +105,7 @@
     var n = countFor(bizId);
     var cap = limit();
     var cls = n >= cap ? "rev-today warn" : "rev-today";
-    return '<div class="' + cls + '">Reviews today: ' + n + " of " + cap + "</div>";
+    return '<div class="' + cls + '">Google Reviews received today: ' + n + " of " + cap + "</div>";
   }
 
   function bannerHTML(bizId, opts) {
@@ -113,7 +115,7 @@
     var n = countFor(bizId);
     return '<div class="limit-banner" role="status">' +
       '<div class="limit-lock" aria-hidden="true">' + svgLock() + "</div>" +
-      "<div><strong>Daily limit reached: " + n + " of " + cap + " Google reviews today</strong>" +
+      "<div><strong>Daily received limit reached: " + n + " of " + cap + " Google Reviews today</strong>" +
       '<div class="sub">Opens tomorrow<span class="limit-eta"> \u00b7 ' + opensInLabel() + "</span></div>" +
       "</div></div>";
   }

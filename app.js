@@ -264,7 +264,7 @@
     { id: "edit-profile", title: "Edit profile", sub: "Connected Facebook, with disconnect" },
     { id: "settings", title: "Settings", sub: "Connections and notification toggles" },
     { id: "google-consent", title: "Google Business connect", sub: "Prototype consent sheet" },
-    { id: "reviews", title: "Reviews tab", sub: "Requests received and sent" },
+    { id: "reviews", title: "Google Reviews", sub: "Received today, swap toggle, filters and member list" },
     { id: "review-ideas", title: "Review ideas helper", sub: "Job details, ideas, write your own" },
     { id: "chats", title: "Chat list", sub: "Pinned, unread, online status" },
     { id: "chat-dm", title: "1:1 conversation", sub: "Replies, reactions, voice note, read ticks" },
@@ -303,7 +303,7 @@
     selectedMember: "liam",
     meId: "jamie",
     draft: null,
-    stepRegions: ["hills", "north"],
+    stepRegions: [],
     tipDismissed: false,
     notify: true,
     photoData: null,
@@ -588,14 +588,15 @@
     var prefix = pick.prefix || "create";
     var title = areaStepTitle(pick.step || "state");
     var right = '<span class="header-spacer"></span>';
+    var bottom = "";
     if ((pick.step || "state") === "state") {
       right = '<button type="button" class="header-link" data-action="area-next">Continue</button>';
     } else if (pick.step === "list" || pick.step === "kind") {
-      right = '<button type="button" class="header-link" data-action="area-done">Done</button>';
+      bottom = '<div class="area-done-bar"><button type="button" class="btn btn-primary" data-action="area-done">Done</button></div>';
     }
     return '<section class="screen has-header" data-screen="choose-areas">' +
       '<div class="app-header"><button class="icon-btn" data-action="area-back" aria-label="Back">' + icon("back") + '</button><div class="ht">' + title + "</div>" + right + "</div>" +
-      '<div class="scroll">' + areaWizardHTML(prefix) + "</div></section>";
+      '<div class="scroll">' + areaWizardHTML(prefix) + "</div>" + bottom + "</section>";
   }
   function areaAdvanceFromState() {
     var pick = ensureAreaPick();
@@ -643,43 +644,9 @@
     return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  /* Profile pictures that match each member's trade: trade colour + trade icon. */
-  const S = 'fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"';
-  const TRADE_PICS = {
-    "pest control": [["#4ADE80", "#15803D"], '<ellipse cx="12" cy="13.5" rx="4" ry="5.5"/><path d="M12 8V6.5M10 5l2 1.5L14 5M8 11l-3-1.5M8 14H4.5M8 17l-3 1.5M16 11l3-1.5M16 14h3.5M16 17l3 1.5M12 8.5v10"/>'],
-    "carpenter": [["#E0A266", "#9A5B22"], '<path d="M4 20l9-9M13 11l-2-2 4-4 2 2M15 5l4 1-2 2 2 4-4-1"/><path d="M11 9l4 4"/>'],
-    "plumber": [["#60A5FA", "#1D4ED8"], '<path d="M14.5 5.5a4 4 0 0 0-5 5L4 16v4h4l5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-2.5-.5-.5-2.5 2.5-2.5z"/>'],
-    "painter": [["#F472B6", "#9D174D"], '<rect x="4" y="4" width="13" height="5" rx="1.5"/><path d="M17 6.5h2.5V11H11v3"/><rect x="9.5" y="14" width="3" height="6" rx="1"/>'],
-    "electrician": [["#FBBF24", "#D97706"], '<path d="M13 3L5.5 13.5H11L10 21l8-11h-5.5L13 3z"/>'],
-    "landscaper": [["#34D399", "#047857"], '<path d="M12 21v-8M12 13c0-4 3-7 8-7 0 5-3 7-8 7zM12 15c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/>'],
-    "roofer": [["#FB8A6B", "#B23A1E"], '<path d="M3 12l9-7 9 7M6 10v9h12v-9M10 19v-5h4v5"/>'],
-    "air conditioning": [["#67E8F9", "#0E7490"], '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5"/>'],
-    "tiler": [["#2DD4BF", "#0F766E"], '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'],
-    "fencer": [["#C08A4A", "#713F12"], '<path d="M5 20V7l2-2.5L9 7v13M11 20V7l2-2.5L15 7v13M17 20V7l2-2.5L21 7v13M3 10h20M3 16h20" transform="translate(-1 0)"/>'],
-    "handyman": [["#FB923C", "#C2410C"], '<rect x="3.5" y="9" width="17" height="10" rx="2"/><path d="M9 9V6.5h6V9M3.5 13.5h17M10.5 13.5v2h3v-2"/>'],
-    "locksmith": [["#94A3B8", "#334155"], '<circle cx="8" cy="12" r="4"/><path d="M12 12h9M17.5 12v3M20.5 12v2.5"/>'],
-    "barber": [["#FB7185", "#BE123C"], '<circle cx="6.5" cy="7" r="2.5"/><circle cx="6.5" cy="17" r="2.5"/><path d="M8.6 8.4L20 17M8.6 15.6L20 7"/>'],
-    "hairdresser": [["#E879F9", "#A21CAF"], '<circle cx="6.5" cy="7" r="2.5"/><circle cx="6.5" cy="17" r="2.5"/><path d="M8.6 8.4L20 17M8.6 15.6L20 7"/>'],
-    "end of lease cleaner": [["#7DD3FC", "#0369A1"], '<path d="M9 3h6l-1 6h-4L9 3zM8 9h8l1 12H7L8 9z"/><path d="M18 4l.6 1.4L20 6l-1.4.6L18 8l-.6-1.4L16 6l1.4-.6z"/>']
-  };
-  function tradePic(m) {
-    const t = String(m && m.trade || "").toLowerCase().trim();
-    if (TRADE_PICS[t]) return TRADE_PICS[t];
-    if (/clean/.test(t)) return TRADE_PICS["end of lease cleaner"];
-    if (/plumb/.test(t)) return TRADE_PICS.plumber;
-    if (/electr/.test(t)) return TRADE_PICS.electrician;
-    if (/hair/.test(t)) return TRADE_PICS.hairdresser;
-    return null;
-  }
-
   function avatarHTML(m, size) {
+    if (window.TC21 && TC21.avatar) return TC21.avatar(m, size);
     const pal = AVATAR_COLORS[m.color] || AVATAR_COLORS.teal;
-    const tp = !(m.isMe && state.photoData) && tradePic(m);
-    if (tp) {
-      const ico = Math.round(size * 0.52);
-      return '<div class="avatar avatar-trade" data-acc="' + tp[0][1] + '" title="' + escapeAttr(m.trade) + '" style="width:' + size + 'px;height:' + size + 'px;background:linear-gradient(145deg,' + tp[0][0] + ',' + tp[0][1] + ')">' +
-        '<svg width="' + ico + '" height="' + ico + '" viewBox="0 0 24 24" ' + S + ' aria-hidden="true" style="position:relative;z-index:1">' + tp[1] + "</svg></div>";
-    }
     const font = size >= 88 ? 32 : size >= 64 ? 24 : 16;
     if (m.isMe && state.photoData) {
       return '<div class="avatar" style="width:' + size + 'px;height:' + size + 'px;background:#ccc"><img src="' + state.photoData + '" alt="" style="width:100%;height:100%;object-fit:cover"></div>';
@@ -899,7 +866,7 @@
   }
   function restoreManual(key) {
     var ids = state.regionBackup && state.regionBackup[key];
-    return ids && ids.length ? ids.slice() : ["hills", "north"];
+    return ids && ids.length ? ids.slice() : [];
   }
   function getPickedRegions(prefix) {
     if (prefix === "create") return (state.stepRegions || []).slice();
@@ -1343,7 +1310,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v1.1 · 16 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.0 · 20 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -1405,13 +1372,12 @@
       state.stepRegions = [];
     }
     if (id === "create-profile" && !state.draft) {
-      var kept = (state.stepRegions || []).slice();
-      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: kept };
-      state.stepRegions = kept;
+      state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", links: (window.TCLinks ? TCLinks.empty() : {}), profile: (window.TCProfile ? TCProfile.empty() : {}), regions: [] };
+      state.stepRegions = [];
     }
     if (id === "edit-profile") state.draft = draftFromMe();
     if (id === "create-regions" && !state.stepRegions) {
-      state.stepRegions = (draftFromMe().regions || []).slice();
+      state.stepRegions = ((state.draft && state.draft.regions) || []).slice();
     }
     if (id === "create-regions-all") {
       if (!state.regionBackup) state.regionBackup = {};
@@ -1702,25 +1668,27 @@
       if (id === "create-profile") {
         var m = me();
         state.fbConnected = false;
-        state.draft = { first: m.first, last: m.last, business: m.business, trade: m.trade, bio: m.bio, phone: m.phone, facebook: "", page: m.page, regions: m.regions.slice() };
+        state.stepRegions = [];
+        state.draft = { first: m.first, last: m.last, business: m.business, trade: m.trade, bio: m.bio, phone: m.phone, facebook: "", page: m.page, regions: [] };
       }
       if (id === "create-profile-connected") {
         var m2 = me();
         state.fbConnected = true;
-        state.draft = { first: m2.first, last: m2.last, business: m2.business, trade: m2.trade, bio: m2.bio, phone: m2.phone, facebook: demoFbLink(), page: m2.page, regions: m2.regions.slice() };
+        state.stepRegions = [];
+        state.draft = { first: m2.first, last: m2.last, business: m2.business, trade: m2.trade, bio: m2.bio, phone: m2.phone, facebook: demoFbLink(), page: m2.page, regions: [] };
       }
       if (id === "edit-profile" || id === "settings" || id === "me") {
         state.fbConnected = true;
         me().facebook = me().facebook || demoFbLink();
       }
       if (id === "choose-areas" || id === "create-regions") {
-        state.stepRegions = ["hills", "north"];
+        state.stepRegions = [];
         if (!state.regionBackup) state.regionBackup = {};
-        state.regionBackup.create = ["hills", "north"];
+        state.regionBackup.create = [];
         state.areaPick = { step: id === "create-regions" ? "list" : "state", stateId: "wa", kind: null, prefix: "create", returnTo: "create-profile", open: { metro: true, regional: false } };
         var m3 = me();
-        state.draft = state.draft || { first: m3.first, last: m3.last, business: m3.business, trade: m3.trade, bio: m3.bio, phone: m3.phone, facebook: "", page: m3.page, regions: ["hills", "north"] };
-        state.draft.regions = ["hills", "north"];
+        state.draft = state.draft || { first: m3.first, last: m3.last, business: m3.business, trade: m3.trade, bio: m3.bio, phone: m3.phone, facebook: "", page: m3.page, regions: [] };
+        state.draft.regions = [];
       }
       if (id === "create-regions-all") {
         if (!state.regionBackup) state.regionBackup = {};
@@ -2138,12 +2106,14 @@
   if (start === "create-profile") {
     var mm = me();
     state.fbConnected = false;
-    state.draft = { first: mm.first, last: mm.last, business: mm.business, trade: mm.trade, bio: mm.bio, phone: mm.phone, facebook: "", page: mm.page, regions: mm.regions.slice() };
+    state.stepRegions = [];
+    state.draft = { first: mm.first, last: mm.last, business: mm.business, trade: mm.trade, bio: mm.bio, phone: mm.phone, facebook: "", page: mm.page, regions: [] };
   }
   if (start === "create-profile-connected") {
     var mm2 = me();
     state.fbConnected = true;
-    state.draft = { first: mm2.first, last: mm2.last, business: mm2.business, trade: mm2.trade, bio: mm2.bio, phone: mm2.phone, facebook: demoFbLink(), page: mm2.page, regions: mm2.regions.slice() };
+    state.stepRegions = [];
+    state.draft = { first: mm2.first, last: mm2.last, business: mm2.business, trade: mm2.trade, bio: mm2.bio, phone: mm2.phone, facebook: demoFbLink(), page: mm2.page, regions: [] };
   }
   if (start === "edit-profile" || start === "settings" || start === "me" || start === "reviews" || start === "chats" || start === "drawer" || start === "google-consent" || start === "subscription" || start === "invite" || start === "help") {
     state.fbConnected = true;
@@ -2152,9 +2122,9 @@
   }
   if (start === "google-consent") state.googleConnected = false;
   if (start === "create-regions") {
-    state.stepRegions = ["hills", "north"];
+    state.stepRegions = [];
     state.regionBackup = state.regionBackup || {};
-    state.regionBackup.create = ["hills", "north"];
+    state.regionBackup.create = [];
   }
   if (start === "create-regions-all") {
     state.regionBackup = state.regionBackup || {};
@@ -2173,7 +2143,7 @@
   }
   go(start);
 
-  window.RateBuddies = {
+  window.TradeCircle = {
     go: go, state: state, MEMBERS: MEMBERS, REGIONS: REGIONS, CHOOSER: CHOOSER,
     TRADES: TRADES, filteredMembers: filteredMembers,
     icon: icon, avatarHTML: avatarHTML, escapeText: escapeText, escapeAttr: escapeAttr,

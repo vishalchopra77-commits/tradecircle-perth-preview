@@ -1,6 +1,6 @@
 {
   "name": "rate-buddies",
-  "version": "1.9.0",
+  "version": "2.1.0",
   "private": true,
   "description": "Rate Buddies Android test build",
   "scripts": {
@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",
-    "@capacitor/core": "^6.2.1"
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/local-notifications": "^6.1.2"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.2.1",

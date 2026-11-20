@@ -1,4 +1,4 @@
-/* Rate Buddies UI v1 */
+/* TradeCircle Perth UI v1 */
 @font-face {
   font-family: "Plus Jakarta Sans";
   src: url("fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
@@ -19,8 +19,8 @@
   --navy-2: #15244A;
   --ink: #101A33;
   --text: #1A2744;
-  --muted: #5A6780;
-  --faint: #8590A3;
+  --muted: #334155;
+  --faint: #1E293B;
   --line: #E2E8F0;
   --line-2: #EEF2F8;
   --bg: #F3F5FA;

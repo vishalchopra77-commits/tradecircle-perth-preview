@@ -27,58 +27,47 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Setup Android SDK
-        # The runner already has an Android SDK, so a hiccup here should not stop the build.
-        continue-on-error: true
-        uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        run: |
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          echo "$SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          echo "$SDK_ROOT/cmdline-tools/16.0/bin" >> "$GITHUB_PATH"
+          echo "$SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
+          export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$SDK_ROOT/cmdline-tools/16.0/bin:$SDK_ROOT/platform-tools:$PATH"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm install
 
       - name: Prepare web assets and sync Capacitor
         run: |
           bash scripts/prepare-www.sh
+          npm install @capacitor/local-notifications
           npx cap sync android
-
-      - name: Set the version number (goes up by 1 every build)
-        id: ver
-        run: |
-          # Builds 1-4 happened before numbering started, so the next build is v1.
-          N=$(( ${{ github.run_number }} - 4 ))
-          if [ "$N" -lt 1 ]; then N=1; fi
-          sed -i -E "s/versionCode [0-9]+/versionCode $N/; s/versionName \"[^\"]*\"/versionName \"$N\"/" android/app/build.gradle
-          grep -E "versionCode|versionName" android/app/build.gradle
-          echo "n=$N" >> "$GITHUB_OUTPUT"
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
         working-directory: android
 
-      - name: Name the APK RateBuddies-vN
-        id: apkname
-        run: |
-          N=${{ steps.ver.outputs.n }}
-          cp android/app/build/outputs/apk/debug/app-debug.apk "RateBuddies-v$N.apk"
-          echo "n=$N" >> "$GITHUB_OUTPUT"
-
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RateBuddies-v${{ steps.apkname.outputs.n }}
-          path: RateBuddies-v${{ steps.apkname.outputs.n }}.apk
+          name: rate-buddies-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.apkname.outputs.n }}
-          name: Rate Buddies v${{ steps.apkname.outputs.n }}
+          tag_name: apk-latest
+          name: Rate Buddies test build v2.1.0
           body: |
-            Rate Buddies v${{ steps.apkname.outputs.n }} test build (debug APK for sideloading on your phone).
+            Debug APK for sideloading on your phone (v2.1.0 test build).
             On Android, allow installing from this browser or “unknown apps”, then open the APK.
             Sign-in details are in the private test-logins file, not in this repo.
             The web admin is at the GitHub Pages admin.html URL after this version is published, and shares the same test data.
-          files: RateBuddies-v${{ steps.apkname.outputs.n }}.apk
+          files: android/app/build/outputs/apk/debug/app-debug.apk
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

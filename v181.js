@@ -1,7 +1,7 @@
 /* Rate Buddies v1.8.2 — unique recommend texts, profile share, tutorials, intro video */
 (function (root) {
   "use strict";
-  function T() { return root.RateBuddies || {}; }
+  function T() { return root.TradeCircle || {}; }
   function S() { return (T().state || (T().state = {})); }
   function C() { return root.TCDeviCity || null; }
   function Tut() { return root.TCTutorials || null; }

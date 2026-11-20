@@ -1,8 +1,8 @@
-/* Rate Buddies v1.5.9 — recommendations, trade covers, trade icons, My areas */
+/* TradeCircle Perth v1.5.9 — recommendations, trade covers, trade icons, My areas */
 (function (root) {
   "use strict";
 
-  function T() { return root.RateBuddies || {}; }
+  function T() { return root.TradeCircle || {}; }
   function state() { return T().state || {}; }
   function esc(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -377,12 +377,12 @@
       var place = (root.TCQueueWait && T().state) ? "" : "Your place #4";
       try {
         /* myQueuePlace isn't exported; default #4 matches the prototype. */
-        place = "#4";
+        place = "Your place #4";
       } catch (e) {}
       var pending = pendingCount();
       var recSub = pending
-        ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span></span>"
-        : "";
+        ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span> to do</span>"
+        : '<span class="fb-seg-place">All done</span>';
       return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections"><div class="fb-seg fb-seg-3">' +
         '<button type="button" role="tab" class="fb-seg-btn" data-go="members"><span class="fb-seg-lab">Circle</span></button>' +
         '<button type="button" role="tab" class="fb-seg-btn active" data-go="fb-recommend" aria-selected="true"><span class="fb-seg-lab">Recommend</span>' + recSub + "</button>" +

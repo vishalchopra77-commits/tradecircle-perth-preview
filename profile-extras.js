@@ -1,4 +1,4 @@
-/* Rate Buddies — richer profile sections (v1.5.4) */
+/* TradeCircle Perth — richer profile sections (v1.5.4) */
 (function (root) {
   "use strict";
 
@@ -379,7 +379,7 @@
 
   function openViewer(mid, index) {
     var m = null;
-    try { m = (window.RateBuddies && RateBuddies.MEMBERS || []).filter(function (x) { return x.id === mid; })[0]; } catch (e) {}
+    try { m = (window.TradeCircle && TradeCircle.MEMBERS || []).filter(function (x) { return x.id === mid; })[0]; } catch (e) {}
     var items = fromMember(m).gallery;
     if (!items.length) return;
     viewer.mid = mid;

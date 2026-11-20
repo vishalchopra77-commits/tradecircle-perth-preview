@@ -11,7 +11,7 @@ This note is for a new developer or AI taking over the repo. It is a clickable H
 
 v2.0 is on GitHub `main` as commit `162fa7f` (20 November 2026, Australia/Perth).
 
-The product is **Rate Buddies** (ratebuddies.com, ratebuddies.app): a referral circle for local Australian trades. Members recommend people they genuinely know in Facebook groups, and leave Google reviews only after a real job, in their own words, with a daily cap of 3. The GitHub repo, filenames and API now use the Rate Buddies name; the old TradeCircle filenames remain only as redirect pages so existing preview links keep working. The in-app API is `window.RateBuddies` / `T()`.
+The product is **Rate Buddies** (ratebuddies.com, ratebuddies.app): a referral circle for local Australian trades. Members recommend people they genuinely know in Facebook groups, and leave Google reviews only after a real job, in their own words, with a daily cap of 3. The GitHub repo and many filenames still say `TradeCircle` so existing preview links keep working. The in-app API is `window.TradeCircle` / `T()`.
 
 Owner: Vishal Chopra (Australia/Perth). Do not push unless he asks. Do not put passwords or the Supabase service-role key in the repo or in chat.
 
@@ -20,10 +20,10 @@ Owner: Vishal Chopra (Australia/Perth). Do not push unless he asks. Do not put p
 | Path | What it is |
 | --- | --- |
 | `index.html` | Phone app shell (preview + native). |
-| `RateBuddies.html`, `RankBuddies.html`, `RateBuddies.html` | Standalone copies of the app for existing links. |
+| `RateBuddies.html`, `RankBuddies.html`, `TradeCircle-Perth.html` | Standalone copies of the app for existing links. |
 | `app.js`, `styles.css`, `v12.*`–`v181.*` | Screen renderers and styles, stacked in order. |
 | `v20.css`, `v20.js` | **v2.0 premium design system** (compact type, full-bleed on phones, welcome carousel, scroll-keep hooks). Linked after the older CSS. |
-| `admin.html`, `admin.css`, `admin.js`, `admin-v180.js`, `admin-v181.js` | Web admin. `RateBuddies-Admin.html` is a bundled copy. |
+| `admin.html`, `admin.css`, `admin.js`, `admin-v180.js`, `admin-v181.js` | Web admin. `TradeCircle-Admin.html` is a bundled copy. |
 | `rb-config.js` | Public Supabase URL + **anon key only**. Never add the service-role key here. |
 | `rb-backend.js`, `rb-app.js`, `rb-admin.js` | Supabase client wrapper and live-data wiring for the app and admin. |
 | `devi-city.js`, `tutorials-store.js`, `recommend-text` / `ideas-engine.js` | Devi city mapping, video tutorials + intro, unique recommend starters, review-idea helpers. |
@@ -53,9 +53,9 @@ Open the app at `index.html` and the admin at `admin.html` (local `python3 -m ht
 5. This is a debug sideload build, not a Play Store app. Sign-in details stay in the private login file, not in the release notes.
 
 Public preview (updates only after a push):  
-https://github.com/vishalchopra77-commits/rate-buddies-preview  
-https://vishalchopra77-commits.github.io/rate-buddies-preview/RateBuddies.html  
-https://vishalchopra77-commits.github.io/rate-buddies-preview/admin.html
+https://github.com/vishalchopra77-commits/tradecircle-perth-preview  
+https://vishalchopra77-commits.github.io/tradecircle-perth-preview/RateBuddies.html  
+https://vishalchopra77-commits.github.io/tradecircle-perth-preview/admin.html
 
 ## Key product rules (do not regress)
 

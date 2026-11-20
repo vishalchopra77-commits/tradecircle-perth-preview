@@ -19,7 +19,7 @@
     } catch (e) {}
   }
   function toast(msg) {
-    if (root.RateBuddies && RateBuddies.toast) RateBuddies.toast(msg);
+    if (root.TradeCircle && TradeCircle.toast) TradeCircle.toast(msg);
     else if (root.TCAdmin) { /* admin may not have toast */ }
   }
 

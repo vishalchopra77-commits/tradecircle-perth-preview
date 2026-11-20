@@ -1,4 +1,4 @@
-/* Rate Buddies — prototype v1.5.1 visual polish and new screens */
+/* TradeCircle Perth — prototype v1.5.1 visual polish and new screens */
 
 .btn-primary {
   background: linear-gradient(180deg, #2E86F0 0%, #1658C7 100%);
@@ -237,7 +237,7 @@
 .home-short .ic.navy { background: linear-gradient(180deg, #1C4B73, #0B1F33); color: #fff; }
 .home-short svg { width: 15px; height: 15px; }
 
-/* More — apps grid (structure only; RateBuddies colours) */
+/* More — apps grid (structure only; TradeCircle colours) */
 .more-head {
   display: flex; align-items: center; justify-content: space-between;
   padding: 4px 2px 10px;

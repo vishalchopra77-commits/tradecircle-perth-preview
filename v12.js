@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  function T() { return window.RateBuddies || {}; }
+  function T() { return window.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }

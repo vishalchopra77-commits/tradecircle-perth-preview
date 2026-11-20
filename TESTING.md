@@ -8,7 +8,7 @@ Test account emails and passwords are **not** in this repository. You’ll get a
 
 Once this version has been pushed, GitHub Actions builds a debug APK and attaches it to a release named **Rate Buddies test build v1.9.0** (tag `apk-latest`).
 
-1. On your phone, open the GitHub release for tag `apk-latest` in the `rate-buddies-preview` repo. You can do this in the browser — you do not need to sign in to download from a public release.
+1. On your phone, open the GitHub release for tag `apk-latest` in the `tradecircle-perth-preview` repo. You can do this in the browser — you do not need to sign in to download from a public release.
 2. Download `app-debug.apk`.
 3. If Android asks, allow this browser (or your Files app) to install unknown apps.
 4. Open the APK and install **Rate Buddies**.

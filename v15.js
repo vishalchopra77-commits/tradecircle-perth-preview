@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  function T() { return window.RateBuddies || {}; }
+  function T() { return window.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function esc(s) { return T().escapeText ? T().escapeText(s) : String(s == null ? "" : s); }
   function esa(s) { return T().escapeAttr ? T().escapeAttr(s) : String(s == null ? "" : s).replace(/"/g, "&quot;"); }
@@ -156,8 +156,8 @@ function googleG(size, mono) {
       '<div class="meta"><div class="nm">' + esc(fn(m)) + "</div>" +
       '<div class="biz">' + esc(m.business) + "</div>" +
       '<div class="tags"><span class="pill t-pill">' + esc(m.trade) + "</span></div>" +
-      status + (back.indexOf("slim-cta") === -1 ? back : "") +
-      "</div></button>" + actions + (back.indexOf("slim-cta") !== -1 ? back : "") + "</div>";
+      status + back +
+      "</div></button>" + actions + "</div>";
   }
 
   function reviewBackBanner(m, compact) {
@@ -244,14 +244,14 @@ function googleG(size, mono) {
   }
   function fbSegment(which) {
     var p = myQueuePlace();
-    var place = p.mine ? ("#" + p.mine) : "";
+    var place = p.mine ? ("Your place #" + p.mine) : "Request a turn";
     var circleOn = which === "circle";
     var recOn = which === "recommend";
     var queueOn = which === "queue";
     var pending = (window.TC159 && TC159.pendingCount) ? TC159.pendingCount() : 2;
     var recSub = pending
-      ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span></span>"
-      : "";
+      ? '<span class="fb-seg-place"><span class="fb-seg-badge">' + pending + "</span> to do</span>"
+      : '<span class="fb-seg-place">All done</span>';
     return '<div class="fb-seg-bar" role="tablist" aria-label="Facebook sections">' +
       '<div class="fb-seg fb-seg-3">' +
       '<button type="button" role="tab" class="fb-seg-btn' + (circleOn ? " active" : "") + '" data-go="members" aria-selected="' + (circleOn ? "true" : "false") + '">' +
@@ -269,9 +269,7 @@ function googleG(size, mono) {
     html = html.replace('<div class="ht">Members</div>', '<div class="ht">Facebook</div>');
     html = html.replace('<div class="ht">Facebook promotion queue</div>', '<div class="ht">Facebook</div>');
     html = html.replace('<div class="ht">Recommend</div>', '<div class="ht">Facebook</div>');
-    if (html.indexOf("fb-seg-bar") === -1 && html.indexOf('class="h21-head h21-top"') !== -1) {
-      html = html.replace("</header>", "</header>" + fbSegment(which));
-    } else if (html.indexOf("fb-seg-bar") === -1) {
+    if (html.indexOf("fb-seg-bar") === -1) {
       html = html.replace('<div class="scroll">', fbSegment(which) + '<div class="scroll">');
     }
     return html;
@@ -302,53 +300,50 @@ function googleG(size, mono) {
   }
   function renderMore() {
     var m = T().me && T().me();
-    function tile(go, icon, label, tone) {
-      return '<button type="button" class="h21-tile" data-go="' + go + '"><span class="h21-tile-ico tone-' + tone + '">' + icon + "</span><span>" + label + "</span></button>";
+    var tiles = [
+      ["For you", [
+        ["me", I.user, "teal", "My profile"],
+        ["promo-queue", facebookF(18), "navy", "Promo queue"],
+        ["rec-alerts", I.bell, "amber", "Alerts"],
+        ["ai-assistant", I.spark, "moss", "AI assistant"],
+        ["my-regions", I.queue, "steel", "Your areas"],
+        ["reviews", googleG(18), "amber", "Reviews"],
+        ["chats", I.chat, "navy", "Chat"],
+        ["members", facebookF(18), "fb", "Facebook"]
+      ]],
+      ["Account", [
+        ["settings", I.gear, "steel", "Settings"],
+        ["notifications", I.bell, "amber", "Notifications"],
+        ["subscription", I.star, "navy", "Subscription"],
+        ["invite", I.send, "teal", "Invite"],
+        ["help", I.spark, "moss", "Help"],
+        ["welcome", I.open, "rose", "Sign out"]
+      ]]
+    ];
+    var q = (S()._moreQuery || "").trim().toLowerCase();
+    function grid(list) {
+      var shown = list.filter(function (it) { return !q || it[3].toLowerCase().indexOf(q) >= 0; });
+      if (!shown.length) return "";
+      return '<div class="apps-grid">' + shown.map(function (it) {
+        return '<button type="button" class="apps-tile" data-go="' + it[0] + '"><span class="apps-ico ' + it[2] + '">' + it[1] + "</span><span>" + it[3] + "</span></button>";
+      }).join("") + "</div>";
     }
-    function g(p) { return svg(p, 24); }
-    var forYou = [
-      ["me", g('<circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0114 0"/>'), "My profile", "teal"],
-      ["members", g('<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A5 5 0 0121 19"/>'), "Members", "indigo"],
-      ["chats", g('<path d="M21 12a8 8 0 01-8 8H7l-4 3V12a8 8 0 018-8h2a8 8 0 018 8z"/>'), "Chats", "green"],
-      ["my-regions", g('<path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/>'), "Your areas", "orange"],
-      ["promo-queue", facebookF(26, "#FFFFFF"), "Promo queue", "fb"],
-      ["reviews", googleG(26), "Reviews", "google"],
-      ["ai-assistant", g('<path d="M12 3l1.6 5.2L19 10l-5.4 1.8L12 17l-1.6-5.2L5 10l5.4-1.8z"/><path d="M19 15l.7 2.2L22 18l-2.3.8L19 21l-.7-2.2L16 18l2.3-.8z"/>'), "AI assistant", "purple"],
-      ["tutorials", g('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/>'), "Tutorials", "red"]
-    ];
-    var account = [
-      ["settings", I.gear, "Settings", "grey"],
-      ["subscription", g('<path d="M3 8l4 3 5-6 5 6 4-3-2 11H5z"/>'), "Subscription", "gold"],
-      ["invite", g('<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>'), "Invite", "blue"],
-      ["help", g('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 014.6 1.3c0 1.7-2.1 2-2.1 3.4M12 17h.01"/>'), "Help", "cyan"]
-    ];
-    function grid(list) { return '<article class="h21-card"><div class="h21-grid">' + list.map(function (t) { return tile(t[0], t[1], t[2], t[3]); }).join("") + "</div></article>"; }
-    return '<section class="screen has-tabs h21" data-screen="more"><div class="scroll">' + bigHead("", "More") +
-      (m ? '<button type="button" class="h21-card h21-me" data-go="me">' + av(m, 52) +
-        '<div class="h21-who-t"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">' + esc(m.business || "") + " · View your profile</div></div>" +
+    var body = tiles.map(function (sec) {
+      var g = grid(sec[1]);
+      if (!g) return "";
+      return '<div class="apps-section"><h3>' + sec[0] + "</h3>" + g + "</div>";
+    }).join("");
+    if (!body) body = '<p class="apps-empty">No matches for that search.</p>';
+    return '<section class="screen has-tabs has-header" data-screen="more">' + topbar("More") +
+      '<div class="scroll"><div class="more-head"><h2>More</h2></div>' +
+      '<div class="search-wrap"><div class="search">' + ico("search") +
+      '<input id="moreSearch" type="search" placeholder="Search the menu" value="' + esa(S()._moreQuery || "") + '" autocomplete="off"></div></div>' +
+      (m ? '<button type="button" class="more-profile" data-go="me">' + av(m, 48) +
+        '<div style="flex:1;min-width:0;text-align:left"><div class="nm">' + esc(fn(m)) + '</div><div class="sub">View your profile</div></div>' +
         (T().icon ? T().icon("chev") : "") + "</button>" : "") +
-      '<div class="h21-label">For you</div>' + grid(forYou) +
-      '<div class="h21-label">Account</div>' + grid(account) +
-      '<button type="button" class="h21-ghost" data-go="welcome">Sign out</button>' +
-      "</div></section>";
+      body + "</div></section>";
   }
 
-  /* v2.1 design: large page header (small label, big title, round chat/bell) */
-  function bigHead(kicker, title, back) {
-    var n = (window.TC12 && TC12.unreadTotal) ? TC12.unreadTotal() : 0;
-    var bn = (window.TC12 && TC12.notifUnread) ? TC12.notifUnread() : 0;
-    return '<header class="h21-head h21-top">' +
-      (back ? '<button type="button" class="h21-round" data-go="' + back + '" aria-label="Back">' + ico("back") + "</button>" : "") +
-      '<div class="h21-hello">' + (kicker ? '<div class="h21-date">' + esc(kicker) + "</div>" : "") + "<h1>" + esc(title) + "</h1></div>" +
-      '<button type="button" class="h21-round" data-go="chats" aria-label="Chats">' + I.chat + (n ? '<span class="h21-badge">' + n + "</span>" : "") + "</button>" +
-      '<button type="button" class="h21-round" data-go="notifications" aria-label="Notifications">' + I.bell + (bn ? '<span class="h21-badge">' + bn + "</span>" : "") + "</button></header>";
-  }
-  function h21Card(mm, when, inner) {
-    return '<article class="h21-card"><div class="h21-who">' + av(mm, 48) +
-      '<div class="h21-who-t"><div class="nm">' + esc(fn(mm)) + '</div><div class="sub">' + esc(mm.business || "") + (mm.trade ? " · " + esc(mm.trade) : "") + "</div></div>" +
-      (when ? '<span class="h21-when">' + esc(when) + "</span>" : "") + "</div>" + inner + "</article>";
-  }
-  var LOCK_SVG = svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>', 18);
 
   function greetName() {
     var h = new Date().getHours();
@@ -401,13 +396,13 @@ function googleG(size, mono) {
         '<strong>Daily limit reached: ' + today + " of " + cap + " today</strong>" +
         '<span>Opens tomorrow' + (window.TCReviews && TCReviews.opensInLabel ? " · " + TCReviews.opensInLabel() : "") + "</span></div>";
     } else {
-      googleBody += '<div class="ov-cap">Reviews on your listing today: <strong>' + today + " of " + cap + "</strong></div>";
+      googleBody += '<div class="ov-cap">Google Reviews received today: <strong>' + today + " of " + cap + "</strong></div>";
     }
     if (backs.length) {
       googleBody += '<p class="ov-subhead">Review back</p>' + backs.map(function (mm) {
         var atCap = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(mm.id);
         var btn = atCap
-          ? '<span class="ov-pill locked">Locked today</span>'
+          ? '<span class="ov-pill locked">Full today</span>'
           : '<button type="button" class="dash-attn-btn" data-action="review-back" data-id="' + mm.id + '">Review back</button>';
         return '<div class="dash-attn ov-attn">' + av(mm, 36) +
           '<div class="dash-attn-body"><strong>' + esc(fn(mm)) + '</strong><span>left you a Google review</span></div>' +
@@ -509,71 +504,17 @@ function googleG(size, mono) {
       return '<div class="dash-feed-item">' + tile + '<div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
     }).join("");
 
-    /* v2.1 design: date + greeting header, two stat cards, "Up next" list */
-    var nb = (window.TC12 && TC12.notifUnread) ? TC12.notifUnread() : 0;
-    var dt = new Date();
-    var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var dateLine = DAYS[dt.getDay()] + " " + dt.getDate() + " " + MONTHS[dt.getMonth()];
-    function bars(n, on, cls) {
-      var h = "";
-      for (var i = 0; i < n; i++) h += '<span class="' + (i < on ? "on " + cls : "") + '"></span>';
-      return '<div class="h21-bars">' + h + "</div>";
-    }
-    function where(mm) {
-      var r = (mm.regions || [])[0] || "";
-      r = r ? r.charAt(0).toUpperCase() + r.slice(1) : "";
-      return esc(mm.trade || "") + (r ? " · " + esc(r) : "");
-    }
-    var qTotal = Math.max(place.total, 1);
-    var qOn = place.mine ? (qTotal - place.mine + 1) : 0;
-    var whenLabels = ["Yesterday", "2 days ago", "3 days ago", "This week"];
-    backs.sort(function (x, y) {
-      var lx = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(x.id) ? 1 : 0;
-      var ly = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(y.id) ? 1 : 0;
-      return lx - ly;
-    });
-    var upNext = backs.map(function (mm, i) {
-      var atCap = window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(mm.id);
-      var first = esc(mm.first || fn(mm).split(" ")[0]);
-      var note = atCap
-        ? '<div class="h21-note">' + svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>', 18) + "<span>Daily limit reached · opens tomorrow</span></div>"
-        : '<div class="h21-note"><span class="h21-star">★</span><span>' + first + " left you a Google review</span></div>";
-      var actions = atCap ? "" :
-        '<button type="button" class="h21-cta" data-action="review-back" data-id="' + mm.id + '">Review ' + first + " back</button>" +
-        '<button type="button" class="h21-link" data-go="member" data-id="' + mm.id + '">View profile</button>';
-      return '<article class="h21-card">' +
-        '<div class="h21-who">' + av(mm, 48) +
-        '<div class="h21-who-t"><div class="nm">' + esc(fn(mm)) + '</div><div class="sub">' + where(mm) + "</div></div>" +
-        '<span class="h21-when">' + (whenLabels[i] || "Earlier") + "</span></div>" +
-        note + actions + "</article>";
-    }).join("");
-    if (openAlert) {
-      upNext += '<article class="h21-card">' +
-        '<div class="h21-who"><span class="h21-ico">' + facebookF(22) + '</span>' +
-        '<div class="h21-who-t"><div class="nm">Recommendation request</div><div class="sub">Facebook group</div></div></div>' +
-        '<div class="h21-note"><span>Someone’s asking for ' + esc(tradeAsk(openAlert.trade)) + ". Comment in your own words.</span></div>" +
-        '<button type="button" class="h21-cta" data-action="open-alert" data-id="' + openAlert.id + '">Open request</button></article>';
-    }
-    if (!upNext) upNext = '<article class="h21-card"><div class="h21-note"><span>You’re all caught up. Nothing waiting for you.</span></div></article>';
-
-    return '<section class="screen has-tabs h21" data-screen="home">' +
-      '<div class="scroll">' +
-      '<header class="h21-head h21-home-head">' +
-      '<button type="button" class="h21-round" data-go="chats" aria-label="Chats">' + I.chat + (unread ? '<span class="h21-badge">' + unread + "</span>" : "") + "</button>" +
-      '<div class="h21-home-logo"><img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt=""><div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div></div>' +
-      '<button type="button" class="h21-round" data-go="notifications" aria-label="Notifications">' + I.bell + (nb ? '<span class="h21-badge">' + nb + "</span>" : "") + "</button></header>" +
-      '<div class="h21-hello h21-home-hello"><div class="h21-date">' + dateLine + '</div><h1>Hi, ' + esc(g.first) + "</h1></div>" +
-      '<div class="h21-stats">' +
-      '<button type="button" class="h21-stat" data-go="reviews"><div class="h21-stat-h"><span class="h21-logo">' + googleG(20) + "</span>Google</div>" +
-      '<div class="h21-big">' + recd + '</div><div class="h21-sub">received · <b>' + gave + "</b> given</div>" +
-      bars(cap, today, "dark") + '<div class="h21-foot">' + today + " of " + cap + " today</div></button>" +
-      '<button type="button" class="h21-stat" data-go="promo-queue"><div class="h21-stat-h"><span class="h21-logo">' + facebookF(20, "#1877F2") + "</span>Facebook</div>" +
-      '<div class="h21-big">' + (place.mine ? "#" + place.mine : "—") + '</div><div class="h21-sub">' + (place.mine ? "in the promo queue" : "not in the queue") + "</div>" +
-      bars(qTotal, qOn, "blue") + '<div class="h21-foot">' + (place.mine ? (place.mine <= 1 ? "Your turn is now" : "Your turn in ~" + queueWaitDays(place.mine) + " days") : "Request a free turn") + "</div></button>" +
-      "</div>" +
-      '<h2 class="h21-h2">Up next</h2>' + upNext +
-      "</div></section>";
+    return '<section class="screen has-tabs has-header" data-screen="home">' + topbar("Home") +
+      '<div class="scroll"><div class="dash-hello">' +
+      (g.m ? av(g.m, 56) : "") +
+      "<div><p class=\"dash-greet\">" + esc(g.hi) + ", " + esc(g.first) + "</p><p class=\"dash-biz\">" + esc(g.biz) + "</p></div></div>" +
+      card("google", googleG(18), "Google Reviews", googleBody, "reviews", "Open Google Reviews") +
+      card("facebook", facebookF(18), "Facebook", fbBody, "promo-queue", "View the queue") +
+      card("messages", I.chat, "Messages", msgBody, "chats", "Open chats") +
+      card("friends", I.user, "Friends", frBody, "members", "Open Facebook") +
+      '<p class="group-label">Quick actions</p>' + actHtml +
+      '<p class="group-label">Recent activity</p>' +
+      '<div class="dash-feed">' + feedHtml + "</div></div></section>";
   }
 
   /* ---------- Screens ---------- */
@@ -689,62 +630,47 @@ function googleG(size, mono) {
     var q = queue();
     var mine = 0;
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
-    var segs = "";
-    for (var i = 0; i < q.length; i++) segs += '<span class="' + (mine && i < mine ? "on blue" : "") + '"></span>';
-    var place = mine
-      ? '<div class="h21-place"><span class="n">' + mine + '</span><span class="of">of ' + q.length + " · " + esc(queueWaitPhrase(mine)) + "</span></div>" +
-        '<div class="h21-bars big">' + segs + "</div>" +
-        '<div class="h21-note">' + facebookF(18, "#1877F2") + "<span>The circle takes turns posting in the Facebook group. The normal queue is free.</span></div>" +
-        '<button type="button" class="h21-ghost" data-action="leave-queue">Leave the queue</button>'
-      : '<div class="h21-note"><span>You’re not in the queue yet. The normal queue is free.</span></div>' +
-        '<button type="button" class="h21-cta" data-action="join-queue">Request a turn</button>';
-    var rows = q.map(function (row, i) {
-      var m = member(row.memberId);
-      var status = i === 0 ? "Posting today" : (row.paid ? "Paid jump (later)" : "Free turn");
-      return '<div class="h21-qrow' + (row.memberId === "jamie" ? " me" : "") + '"><span class="h21-qn">' + (i + 1) + "</span>" + av(m, 40) +
-        '<div class="h21-who-t"><div class="nm">' + esc(fn(m)) + (row.memberId === "jamie" ? " (you)" : "") + '</div><div class="sub">' + esc(m.business) + " · " + status + "</div></div></div>";
-    }).join("");
-    return withFbSeg('<section class="screen has-tabs h21" data-screen="promo-queue"><div class="scroll">' + bigHead("Promotion queue", "Facebook") +
-      '<article class="h21-card"><div class="h21-label in">Your place</div>' + place + "</article>" +
-      '<article class="h21-card"><div class="h21-row"><span class="nm">Jump the queue</span><span class="h21-pill">Price to be set</span></div>' +
-      '<div class="h21-meta">No payment is taken in this prototype. This option stays on the waiting list until a price is chosen.</div>' +
-      '<div class="h21-locked">Coming later</div></article>' +
-      '<div class="h21-label">Current queue</div><article class="h21-card h21-list">' + rows + "</article>" +
+    return withFbSeg('<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook") +
+      '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
+      '<div class="queue-card"><div class="areas-card-h">Your place</div>' +
+      (mine ? '<div class="queue-pos"><span class="n">' + mine + '</span><span class="hint" style="margin:0">of ' + q.length + " \u00b7 " + queueWaitPhrase(mine) + ", at one post every couple of days</span></div>"
+        : '<p class="hint">You’re not in the queue yet.</p>') +
+      (mine ? '<button class="btn btn-ghost ink has-ico" data-action="leave-queue">' + I.check + "<span>Leave the queue</span></button>"
+        : '<button class="btn btn-primary has-ico" data-action="join-queue">' + facebookF(18) + "<span>Request a turn</span></button>") +
+      "</div>" +
+      '<div class="queue-card"><div class="areas-card-h">Jump the queue</div>' +
+      '<p class="plan-price"><span class="price-tbc">Price to be set</span></p>' +
+      '<p class="hint">No payment is taken in this prototype. In the real app, a paid jump would go through the App Store, Google Play, or Stripe on the web. Until a price is chosen, this stays on the waiting list.</p>' +
+      '<button class="btn btn-navy has-ico" data-action="jump-queue" disabled>' + facebookF(18) + "<span>Coming later</span></button></div>" +
+      '<p class="group-label">Current queue</p>' +
+      q.map(function (row, i) {
+        var m = member(row.memberId);
+        return '<div class="queue-card" style="display:flex;gap:10px;align-items:center">' +
+          '<div style="font-weight:800;width:24px">' + (i + 1) + "</div>" + av(m, 40) +
+          "<div style=\"flex:1;min-width:0\"><strong>" + esc(fn(m)) + "</strong><div class=\"hint\" style=\"margin:0\">" + esc(m.business) + (row.paid ? " \u00b7 Paid jump (later)" : " \u00b7 Free turn") + "</div></div></div>";
+      }).join("") +
       "</div></section>", "queue");
   }
 
   function renderReviews() {
     var theyList = (T().MEMBERS || []).filter(function (m) { return !m.isMe && theyReviewed(m); });
-    var cap = (window.TCReviews && TCReviews.limit) ? TCReviews.limit() : 3;
-    function rank(m) {
-      if (iReviewed(m) || reviewedBack(m)) return 2;
-      return (window.TCReviews && TCReviews.atLimit && TCReviews.atLimit(m.id)) ? 1 : 0;
-    }
-    theyList.sort(function (x, y) { return rank(x) - rank(y); });
-    var whens = ["Yesterday", "2 days ago", "Last week", "Earlier"];
-    var cards = theyList.map(function (m, i) {
-      var first = esc(m.first || fn(m).split(" ")[0]);
-      var r = rank(m), inner;
-      if (r === 2) {
-        inner = '<div class="h21-note"><span class="h21-ok">' + I.check + "</span><span>You reviewed " + first + " back</span></div>";
-      } else if (r === 1) {
-        var used = (window.TCReviews && TCReviews.countFor) ? TCReviews.countFor(m.id) : cap;
-        inner = '<div class="h21-note">' + LOCK_SVG + '<span class="grow">Daily limit reached: ' + used + " of " + cap + ' today</span><span class="h21-mini">Opens tomorrow</span></div>' +
-          '<div class="h21-locked">' + LOCK_SVG + "<span>Locked today</span></div>";
-      } else {
-        var today = (window.TCReviews && TCReviews.countFor) ? TCReviews.countFor(m.id) : 0;
-        inner = '<div class="h21-note"><span class="h21-star">★</span><span>' + first + " left you a Google review</span></div>" +
-          '<div class="h21-meta">Reviews for ' + first + " today: " + today + " of " + cap + "</div>" +
-          '<button type="button" class="h21-cta" data-action="review-back" data-id="' + m.id + '">Review ' + first + " back</button>" +
-          '<button type="button" class="h21-link" data-go="member" data-id="' + m.id + '">View profile</button>';
-      }
-      return h21Card(m, whens[i] || "Earlier", inner);
-    }).join("");
-    if (!cards) cards = '<article class="h21-card"><div class="h21-note"><span>No one has left you a review yet.</span></div></article>';
-    return '<section class="screen has-tabs h21" data-screen="reviews"><div class="scroll">' + bigHead("Google", "Reviews") +
-      '<div class="h21-info">' + svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', 18) +
-      "<span>This helper gives ideas only. Write the review yourself, and only for a job you actually had done.</span></div>" +
-      '<div class="h21-label">They left you a Google review</div>' + cards + "</div></section>";
+    var html = '<section class="screen has-tabs has-header" data-screen="reviews">' + topbar("Reviews") +
+      '<div class="scroll"><div class="notice">This helper gives ideas only. Write the review yourself, and only for a job you actually had done.</div>' +
+      '<p class="group-label">They left you a Google review</p>';
+    theyList.forEach(function (m) {
+      html += '<div class="card req-card">' + reviewBackBanner(m) +
+        '<div style="display:flex;gap:10px;align-items:center">' + av(m, 44) +
+        '<div><div class="who">' + esc(fn(m)) + '</div><div class="meta">' + esc(m.business) + " \u00b7 " + esc(m.trade) + "</div></div></div></div>";
+    });
+    html += '<p class="group-label">Requests received</p>';
+    html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("jack"), 44) +
+      '<div><div class="who">Jack Thompson</div><div class="meta">Thompson Electrical \u00b7 Today 7:12 am</div></div></div>' +
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="jack">' + googleG(16) + "<span>Write review</span></button></div>";
+    html += '<div class="card req-card"><div style="display:flex;gap:10px;align-items:center">' + av(member("tom"), 44) +
+      '<div><div class="who">Tom Reeves</div><div class="meta">Reeves Fencing \u00b7 Yesterday</div></div></div>' +
+      '<button class="btn btn-primary has-ico" style="margin-top:10px" data-action="open-ideas" data-id="tom">' + googleG(16) + "<span>Write review</span></button></div>";
+    html += "</div></section>";
+    return html;
   }
 
   function renderLock() {

@@ -1,4 +1,4 @@
-# Review ideas research — Rate Buddies v1.5.4
+# Review ideas research — TradeCircle Perth v1.5.4
 
 This note records how the review-idea and Facebook-comment engine was built (17 November 2026, Australia/Perth). **All fragments in the app are original.** Real reviews were read only to learn common themes and everyday Australian wording. Nothing was copied verbatim.
 
@@ -30,7 +30,7 @@ Checked 17 November 2026:
 
 “Search-friendly” here means the idea naturally mentions the **trade**, the **specific service** (for example “termite inspection” or “hot water system swap”) and the **suburb or Perth**, the way local search tends to favour. It must still read like something a person would say. The engine never repeats keywords for effect.
 
-Google’s own review rules still apply: a review must be a **genuine experience**. **Incentives** (money, discounts or gifts in return for a review) are not allowed. RateBuddies ideas stay **suggestions only**. The member must edit the text in their own words and only post after a real job.
+Google’s own review rules still apply: a review must be a **genuine experience**. **Incentives** (money, discounts or gifts in return for a review) are not allowed. TradeCircle ideas stay **suggestions only**. The member must edit the text in their own words and only post after a real job.
 
 ## How the engine is built
 

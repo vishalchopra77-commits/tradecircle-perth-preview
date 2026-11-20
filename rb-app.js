@@ -1,7 +1,7 @@
 /* Rate Buddies v1.9.0 — wire the member app to Supabase. */
 (function () {
   "use strict";
-  function T() { return window.RateBuddies; }
+  function T() { return window.TradeCircle; }
   function toast(m) { if (T() && T().toast) T().toast(m); }
   function isNative() {
     try { return !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()); }

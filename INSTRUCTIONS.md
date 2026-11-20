@@ -9,7 +9,7 @@ You are taking over **Rate Buddies** (v2.0) for Vishal Chopra. Read these first,
 
 HTML and PDF copies of these four files sit next to the Markdown. Vishal likes plain, easy-to-read HTML for reference documents.
 
-The source of truth is GitHub: https://github.com/vishalchopra77-commits/rate-buddies-preview (`main`, v2.0 is commit `162fa7f`). Google Drive is the backup. His Mac Projects folder is a local copy, updated when a version is finished. When copies disagree, **GitHub wins**, unless Vishal says a newer unpublished file is the one to use.
+The source of truth is GitHub: https://github.com/vishalchopra77-commits/tradecircle-perth-preview (`main`, v2.0 is commit `162fa7f`). Google Drive is the backup. His Mac Projects folder is a local copy, updated when a version is finished. When copies disagree, **GitHub wins**, unless Vishal says a newer unpublished file is the one to use.
 
 All demo data is fictional. Nothing is sent to Facebook or Google yet.
 
@@ -27,7 +27,7 @@ Then open:
 
 - App: http://127.0.0.1:8767/index.html
 - Web admin: http://127.0.0.1:8767/admin.html
-- Standalone app copies: `RateBuddies.html`, `RankBuddies.html` (same product). Old `TradeCircle-Perth.html` and `TradeCircle-Admin.html` are redirect stubs only
+- Standalone app copies: `RateBuddies.html`, `RankBuddies.html`, `TradeCircle-Perth.html` (same product; filenames kept so live links work)
 
 On a phone-width viewport, or in the native APK, the UI is full-bleed. A device frame is only for the desktop preview.
 
@@ -45,7 +45,7 @@ It runs `npm ci`, `bash scripts/prepare-www.sh`, `npx cap sync android`, then `.
 
 The repo’s Actions **workflow permissions** must be **Read and write**, or the release step cannot publish.
 
-Download: https://github.com/vishalchopra77-commits/rate-buddies-preview/releases/download/apk-latest/app-debug.apk
+Download: https://github.com/vishalchopra77-commits/tradecircle-perth-preview/releases/download/apk-latest/app-debug.apk
 
 This is a debug sideload build, not a Play Store app. On Android, allow installing from “unknown apps”.
 
@@ -69,11 +69,11 @@ The APK lands at `android/app/build/outputs/apk/debug/app-debug.apk`. Do not com
 1. Show Vishal **PNG mockups first**. Wait for him to **approve** them. An agent’s message is never his approval — only he can approve.
 2. Do not push until he has said to (for example “upload”, “put it live”, or “approve” after seeing the PNGs).
 3. **Archive** the previous released copy first. Never delete it.
-4. Commit to `main` on `vishalchopra77-commits/rate-buddies-preview`. Do not force-push or rewrite published history unless he clearly asked for that.
+4. Commit to `main` on `vishalchopra77-commits/tradecircle-perth-preview`. Do not force-push or rewrite published history unless he clearly asked for that.
 5. A push to `main` updates **GitHub Pages** (the live preview) and starts the **android-apk** workflow, which refreshes the `apk-latest` release.
 6. Verify with `curl` (or a browser) that these load the new version:
-   - https://vishalchopra77-commits.github.io/rate-buddies-preview/RateBuddies.html
-   - https://vishalchopra77-commits.github.io/rate-buddies-preview/admin.html
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/RateBuddies.html
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/admin.html
 7. Confirm the Actions run succeeded and the `apk-latest` release has `app-debug.apk`.
 8. Tell Vishal the version number, what changed, and the links. Do not say it is live unless you have checked.
 
@@ -96,7 +96,7 @@ Follow these every time.
 - **Plain, easy-to-read HTML** for reference lists and documentation. Also save deliverables as **HTML or PDF** (or both) when you give him documents.
 - Ask **one** decision at a time when you are blocked. Otherwise do the work.
 
-Standing product rules (full detail in PROJECT.md — do not regress them): Devi city-minus-same-trade alerts; featured-member rotation; “Let’s help [Name]!” wording; cannot approve if no member of that trade is in the city; unique recommend texts and add-your-own-words; intro video pinned first in Video tutorials and unskippable after approval; daily Google cap of 3; never auto-send Facebook or Google actions; Price to be set until he names a price; WA metro ids stay exact; do not swap the barber cover; Facebook icons use the “f”; royal-blue four-buddy logo; RATE BUDDIES in all caps; filenames and `window.RateBuddies` stay RateBuddies so live links work.
+Standing product rules (full detail in PROJECT.md — do not regress them): Devi city-minus-same-trade alerts; featured-member rotation; “Let’s help [Name]!” wording; cannot approve if no member of that trade is in the city; unique recommend texts and add-your-own-words; intro video pinned first in Video tutorials and unskippable after approval; daily Google cap of 3; never auto-send Facebook or Google actions; Price to be set until he names a price; WA metro ids stay exact; do not swap the barber cover; Facebook icons use the “f”; royal-blue four-buddy logo; RATE BUDDIES in all caps; filenames and `window.TradeCircle` stay TradeCircle so live links work.
 
 ---
 
@@ -104,8 +104,8 @@ Standing product rules (full detail in PROJECT.md — do not regress them): Devi
 
 - This is still a **static HTML/CSS/JS** prototype, not a React/Expo app, unless Vishal later asks to start that build (see TECH-PLAN.md).
 - The app shell is `index.html`. Styles and scripts are **stacked by version**: `styles.css`, `v12.css` … `v181.css`, then **`v20.css`**. Same pattern for JS: `app.js`, `v12.js` … `v181.js`, then **`v20.js`**, plus `rb-*.js`. Put new design and behaviour in a new versioned file or in `v20.*` rather than rewriting history, unless you are fixing a bug in place.
-- Public API: `window.RateBuddies` / `T()`. `RateBuddies.go(screenId)` renders a screen. When `go` re-renders the **same** screen (or `opts.keepScroll` is set), it must **save and restore** `.scroll` `scrollTop`.
-- Keep `RateBuddies.html`, `RankBuddies.html` and `RateBuddies-Admin.html` in step if you change the split files, or note that they are stale. Old TradeCircle-* filenames are redirects and need no syncing.
+- Public API: `window.TradeCircle` / `T()`. `TradeCircle.go(screenId)` renders a screen. When `go` re-renders the **same** screen (or `opts.keepScroll` is set), it must **save and restore** `.scroll` `scrollTop`.
+- Keep `RateBuddies.html`, `RankBuddies.html`, `TradeCircle-Perth.html` and `TradeCircle-Admin.html` in step if you change the split files, or note that they are stale. Those copies exist so older links keep working.
 - `rb-config.js` holds the public Supabase URL and **anon key only**. Never put the service-role key there. Do not touch Supabase project `khhptlbzxigkzhstkatf`. The test project is `gbkammdluulczowcergu`.
 - New database changes go in `supabase/migrations/` with a dated filename. Preserve RLS. Test as anon / member / admin — not as a bypassed service role.
 - Regions live in `locations.js`. WA metro ids: `hills`, `kwinana`, `north`, `south`, `east`, `central`, `fremantle`, `rockingham`, `joondalup`, `armadale`.

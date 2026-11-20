@@ -1,4 +1,4 @@
-/* Rate Buddies v1.5.8 — signup polish, complete-profile, finish-profile card */
+/* TradeCircle Perth v1.5.8 — signup polish, complete-profile, finish-profile card */
 .signup-steps { display: flex; gap: 6px; margin: 4px 0 6px; }
 .signup-steps span { flex: 1; height: 4px; border-radius: 99px; background: #E4EAF0; }
 .signup-steps span.on { background: var(--accent, #1A5FD4); }

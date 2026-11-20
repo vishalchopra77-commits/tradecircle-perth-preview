@@ -10,8 +10,8 @@ The owner is Vishal Chopra. He wants everyone to work together on the **online c
 
 | Place | Role |
 |---|---|
-| **GitHub:** [github.com/vishalchopra77-commits/rate-buddies-preview](https://github.com/vishalchopra77-commits/rate-buddies-preview) | **Source of truth.** New work is committed here. Live preview: [vishalchopra77-commits.github.io/rate-buddies-preview](https://vishalchopra77-commits.github.io/rate-buddies-preview/). |
-| **Google Drive folder:** RateBuddies App - Mac Files | **Backup copy** of the files, plus this hand-off pack, so another assistant can keep going if a chat hits a usage limit. Keep it in sync after each released version. |
+| **GitHub:** [github.com/vishalchopra77-commits/tradecircle-perth-preview](https://github.com/vishalchopra77-commits/tradecircle-perth-preview) | **Source of truth.** New work is committed here. Live preview: [vishalchopra77-commits.github.io/tradecircle-perth-preview](https://vishalchopra77-commits.github.io/tradecircle-perth-preview/). |
+| **Google Drive folder:** TradeCircle App - Mac Files | **Backup copy** of the files, plus this hand-off pack, so another assistant can keep going if a chat hits a usage limit. Keep it in sync after each released version. |
 | **Vishal’s Mac** (`Documents/Projects/Facebook-Business-Marketing`) | **Not** the source of truth. Do not treat the Mac folder as the place to continue work. A copy will be made to the Mac later, when a version is finished. The Mac is often offline. |
 
 When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly said a Drive or chat file is newer and has not been pushed yet. In that case, reconcile and push to GitHub.
@@ -21,7 +21,7 @@ When GitHub and Drive disagree, **GitHub wins**, unless Vishal has explicitly sa
 ## 2. How to continue the work
 
 1. Read `START-HERE.md`, this file, and `README.md` in the current version folder.
-2. Open the current prototype (`index.html` or `RateBuddies.html`) and confirm you are starting from the latest version number (see section 4). As of 20 November 2026, Australia/Perth, that is **v1.9.0**.
+2. Open the current prototype (`index.html` or `TradeCircle-Perth.html`) and confirm you are starting from the latest version number (see section 4). As of 20 November 2026, Australia/Perth, that is **v1.9.0**.
 3. Only change what Vishal asked for in the current request. Do not redesign unrelated screens.
 4. Keep all demo data fictional. Do not add real customer names, phone numbers, addresses, passwords, API keys, or other secrets.
 5. Ask Vishal **one question at a time**, in plain non-technical words, when a decision is required. Do not assume an answer.
@@ -74,7 +74,7 @@ The app is **free for now**. A paid plan may come later. Until Vishal sets a pri
 The real product is **one app for both iPhone and Android**, hosted on AWS in the Sydney region. Follow [TECH-PLAN.md](TECH-PLAN.md). Do not plan two separate native apps unless Vishal changes that decision.
 
 ### Placeholder name
-The product name is **Rate Buddies**. From v2.1 the filenames, GitHub repo (`rate-buddies-preview`) and JavaScript API (`window.RateBuddies`) all use the Rate Buddies name. `TradeCircle-Perth.html` and `TradeCircle-Admin.html` are kept only as redirect pages so old links work. Do not delete them.
+The product name is **Rate Buddies**. Keep existing filenames (`TradeCircle-Perth.html`, `TradeCircle-Admin.html`, `RankBuddies.html`). `RateBuddies.html` is an additional copy. Keep the GitHub repo `tradecircle-perth-preview` unless the owner asks to change them, so live links keep working. The internal JavaScript API remains `window.TradeCircle`.
 
 ### Open questions
 Do not decide these for him:
@@ -108,7 +108,7 @@ Do these steps in order. Do not skip the archive step.
 4. **Bump the version number** in `README.md` and the on-screen version label. Add a short “What’s new” section.
 5. **Update START-HERE.md** if the product story, features, or open questions changed. Leave this file (`AI-INSTRUCTIONS.md`) in the current version folder as well.
 6. **Publish to GitHub** (source of truth):
-   - Commit the new current files to `vishalchopra77-commits/rate-buddies-preview`.
+   - Commit the new current files to `vishalchopra77-commits/tradecircle-perth-preview`.
    - If GitHub Pages is enabled, confirm the preview link opens the new version.
    - Do not force-push or rewrite published history unless Vishal clearly asked for that.
 7. **Refresh the Google Drive backup:**
@@ -130,7 +130,7 @@ In the current version folder (and in the GitHub repo, once created):
 - `index.html` — desktop chooser plus the app; loads `styles.css`, `v12.css`, `v15.css`, `trades.js`, `app.js`, `v12.js`, `v15.js`
 - `admin.html` — super admin dashboard (with `admin.css` and `admin.js`)
 - `TRADES-SOURCES.md` — where the Australian trades list came from
-- `RateBuddies.html` — same prototype with CSS and JS inlined (still needs `fonts/`)
+- `TradeCircle-Perth.html` — same prototype with CSS and JS inlined (still needs `fonts/`)
 - `README.md` — version notes, Facebook Login limits, review-policy sources
 - `START-HERE.md`, `AI-INSTRUCTIONS.md` and `TECH-PLAN.md` — this hand-off pack and the real-app plan
 - `overview.png`, `overview-chat.png`, `screens/`, `fonts/`

@@ -49,7 +49,7 @@
 <li><a href="TESTING.md">TESTING.md</a> — how to try the connected test accounts (passwords are not in the repo)</li>
 </ol>
 <p>HTML and PDF copies of these four files sit next to the Markdown. Vishal likes plain, easy-to-read HTML for reference documents.</p>
-<p>The source of truth is GitHub: https://github.com/vishalchopra77-commits/rate-buddies-preview (<code>main</code>, v2.0 is commit <code>162fa7f</code>). Google Drive is the backup. His Mac Projects folder is a local copy, updated when a version is finished. When copies disagree, <strong>GitHub wins</strong>, unless Vishal says a newer unpublished file is the one to use.</p>
+<p>The source of truth is GitHub: https://github.com/vishalchopra77-commits/tradecircle-perth-preview (<code>main</code>, v2.0 is commit <code>162fa7f</code>). Google Drive is the backup. His Mac Projects folder is a local copy, updated when a version is finished. When copies disagree, <strong>GitHub wins</strong>, unless Vishal says a newer unpublished file is the one to use.</p>
 <p>All demo data is fictional. Nothing is sent to Facebook or Google yet.</p>
 <hr />
 <h2>1. How to run locally and preview</h2>
@@ -60,7 +60,7 @@
 <ul>
 <li>App: http://127.0.0.1:8767/index.html</li>
 <li>Web admin: http://127.0.0.1:8767/admin.html</li>
-<li>Standalone app copies: <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>RateBuddies.html</code> (same product; filenames kept so live links work)</li>
+<li>Standalone app copies: <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>TradeCircle-Perth.html</code> (same product; filenames kept so live links work)</li>
 </ul>
 <p>On a phone-width viewport, or in the native APK, the UI is full-bleed. A device frame is only for the desktop preview.</p>
 <p>To use the <strong>shared test database</strong>, turn <strong>Demo (offline)</strong> off (it should be off by default). Demo mode only browses sample screens and does not change live data.</p>
@@ -70,7 +70,7 @@
 <p><strong>Preferred:</strong> push to <code>main</code> (after Vishal has approved the PNGs) and let GitHub Actions build it. Workflow: <code>.github/workflows/android-apk.yml</code>.</p>
 <p>It runs <code>npm ci</code>, <code>bash scripts/prepare-www.sh</code>, <code>npx cap sync android</code>, then <code>./gradlew assembleDebug</code>. It uploads artifact <code>rate-buddies-debug-apk</code> and publishes the release tag <strong><code>apk-latest</code></strong> (<code>app-debug.apk</code>).</p>
 <p>The repo’s Actions <strong>workflow permissions</strong> must be <strong>Read and write</strong>, or the release step cannot publish.</p>
-<p>Download: https://github.com/vishalchopra77-commits/rate-buddies-preview/releases/download/apk-latest/app-debug.apk</p>
+<p>Download: https://github.com/vishalchopra77-commits/tradecircle-perth-preview/releases/download/apk-latest/app-debug.apk</p>
 <p>This is a debug sideload build, not a Play Store app. On Android, allow installing from “unknown apps”.</p>
 <p><strong>Local build</strong> (if you have Node 20, Java 17 and an Android SDK):</p>
 <pre><code class="language-bash">npm ci
@@ -86,11 +86,11 @@ cd android &amp;&amp; ./gradlew assembleDebug
 <li>Show Vishal <strong>PNG mockups first</strong>. Wait for him to <strong>approve</strong> them. An agent’s message is never his approval — only he can approve.</li>
 <li>Do not push until he has said to (for example “upload”, “put it live”, or “approve” after seeing the PNGs).</li>
 <li><strong>Archive</strong> the previous released copy first. Never delete it.</li>
-<li>Commit to <code>main</code> on <code>vishalchopra77-commits/rate-buddies-preview</code>. Do not force-push or rewrite published history unless he clearly asked for that.</li>
+<li>Commit to <code>main</code> on <code>vishalchopra77-commits/tradecircle-perth-preview</code>. Do not force-push or rewrite published history unless he clearly asked for that.</li>
 <li>A push to <code>main</code> updates <strong>GitHub Pages</strong> (the live preview) and starts the <strong>android-apk</strong> workflow, which refreshes the <code>apk-latest</code> release.</li>
 <li>Verify with <code>curl</code> (or a browser) that these load the new version:
-   - https://vishalchopra77-commits.github.io/rate-buddies-preview/RateBuddies.html
-   - https://vishalchopra77-commits.github.io/rate-buddies-preview/admin.html</li>
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/RateBuddies.html
+   - https://vishalchopra77-commits.github.io/tradecircle-perth-preview/admin.html</li>
 <li>Confirm the Actions run succeeded and the <code>apk-latest</code> release has <code>app-debug.apk</code>.</li>
 <li>Tell Vishal the version number, what changed, and the links. Do not say it is live unless you have checked.</li>
 </ol>
@@ -110,14 +110,14 @@ cd android &amp;&amp; ./gradlew assembleDebug
 <li><strong>Plain, easy-to-read HTML</strong> for reference lists and documentation. Also save deliverables as <strong>HTML or PDF</strong> (or both) when you give him documents.</li>
 <li>Ask <strong>one</strong> decision at a time when you are blocked. Otherwise do the work.</li>
 </ul>
-<p>Standing product rules (full detail in PROJECT.md — do not regress them): Devi city-minus-same-trade alerts; featured-member rotation; “Let’s help [Name]!” wording; cannot approve if no member of that trade is in the city; unique recommend texts and add-your-own-words; intro video pinned first in Video tutorials and unskippable after approval; daily Google cap of 3; never auto-send Facebook or Google actions; Price to be set until he names a price; WA metro ids stay exact; do not swap the barber cover; Facebook icons use the “f”; royal-blue four-buddy logo; RATE BUDDIES in all caps; filenames and <code>window.RateBuddies</code> stay RateBuddies so live links work.</p>
+<p>Standing product rules (full detail in PROJECT.md — do not regress them): Devi city-minus-same-trade alerts; featured-member rotation; “Let’s help [Name]!” wording; cannot approve if no member of that trade is in the city; unique recommend texts and add-your-own-words; intro video pinned first in Video tutorials and unskippable after approval; daily Google cap of 3; never auto-send Facebook or Google actions; Price to be set until he names a price; WA metro ids stay exact; do not swap the barber cover; Facebook icons use the “f”; royal-blue four-buddy logo; RATE BUDDIES in all caps; filenames and <code>window.TradeCircle</code> stay TradeCircle so live links work.</p>
 <hr />
 <h2>5. Coding conventions</h2>
 <ul>
 <li>This is still a <strong>static HTML/CSS/JS</strong> prototype, not a React/Expo app, unless Vishal later asks to start that build (see TECH-PLAN.md).</li>
 <li>The app shell is <code>index.html</code>. Styles and scripts are <strong>stacked by version</strong>: <code>styles.css</code>, <code>v12.css</code> … <code>v181.css</code>, then <strong><code>v20.css</code></strong>. Same pattern for JS: <code>app.js</code>, <code>v12.js</code> … <code>v181.js</code>, then <strong><code>v20.js</code></strong>, plus <code>rb-*.js</code>. Put new design and behaviour in a new versioned file or in <code>v20.*</code> rather than rewriting history, unless you are fixing a bug in place.</li>
-<li>Public API: <code>window.RateBuddies</code> / <code>T()</code>. <code>RateBuddies.go(screenId)</code> renders a screen. When <code>go</code> re-renders the <strong>same</strong> screen (or <code>opts.keepScroll</code> is set), it must <strong>save and restore</strong> <code>.scroll</code> <code>scrollTop</code>.</li>
-<li>Keep <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>RateBuddies.html</code> and <code>RateBuddies-Admin.html</code> in step if you change the split files, or note that they are stale. Those copies exist so older links keep working.</li>
+<li>Public API: <code>window.TradeCircle</code> / <code>T()</code>. <code>TradeCircle.go(screenId)</code> renders a screen. When <code>go</code> re-renders the <strong>same</strong> screen (or <code>opts.keepScroll</code> is set), it must <strong>save and restore</strong> <code>.scroll</code> <code>scrollTop</code>.</li>
+<li>Keep <code>RateBuddies.html</code>, <code>RankBuddies.html</code>, <code>TradeCircle-Perth.html</code> and <code>TradeCircle-Admin.html</code> in step if you change the split files, or note that they are stale. Those copies exist so older links keep working.</li>
 <li><code>rb-config.js</code> holds the public Supabase URL and <strong>anon key only</strong>. Never put the service-role key there. Do not touch Supabase project <code>khhptlbzxigkzhstkatf</code>. The test project is <code>gbkammdluulczowcergu</code>.</li>
 <li>New database changes go in <code>supabase/migrations/</code> with a dated filename. Preserve RLS. Test as anon / member / admin — not as a bypassed service role.</li>
 <li>Regions live in <code>locations.js</code>. WA metro ids: <code>hills</code>, <code>kwinana</code>, <code>north</code>, <code>south</code>, <code>east</code>, <code>central</code>, <code>fremantle</code>, <code>rockingham</code>, <code>joondalup</code>, <code>armadale</code>.</li>
