@@ -221,9 +221,7 @@ body, button, input, textarea, select {
 /* ---- Avatars: square with rounded corners, dark ---- */
 .avatar {
   border-radius: 14px !important;
-  background: #252222 !important;
   color: #FFFFFF !important;
-  box-shadow: none !important;
 }
 .avatar svg.pattern { display: none !important; }
 .profile-hero .avatar { border-radius: 22px !important; }
@@ -490,3 +488,109 @@ body, button, input, textarea, select {
 /* Info row icon */
 .h21-info svg{color:#2563EB}
 .screen[data-screen="more"] .apps-section{display:none !important}
+
+/* =====================================================================
+   v2.3 PREMIUM COLOUR LAYER — gradient hero, white floating cards,
+   blue-violet glossy buttons, colourful avatars
+   ===================================================================== */
+:root{
+  --pm-hero: radial-gradient(120% 90% at 100% 0%, rgba(236,72,153,.45) 0%, rgba(236,72,153,0) 45%),
+             radial-gradient(90% 80% at 0% 0%, rgba(56,189,248,.35) 0%, rgba(56,189,248,0) 50%),
+             linear-gradient(160deg,#0B1B3F 0%,#1E2A78 45%,#4C1D95 100%);
+  --pm-bg:#F3F4F9;
+  --pm-cta: linear-gradient(180deg,#5B6CFF 0%,#4F46E5 50%,#4338CA 100%);
+  --pm-cta-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.18), 0 2px 4px rgba(67,56,202,.25), 0 10px 24px rgba(79,70,229,.35);
+  --pm-card-shadow: 0 1px 2px rgba(16,24,40,.05), 0 12px 32px rgba(16,24,40,.08);
+  --pm-tint:#F5F6FC;
+}
+body, .phone, #screens, .screen{background:var(--pm-bg) !important}
+.screen.h21 .scroll{background:var(--pm-bg) !important}
+
+/* Gradient hero band behind the header on tab screens */
+.screen.h21.has-tabs .scroll{
+  background: var(--pm-hero) top / 100% var(--band,170px) no-repeat, var(--pm-bg) !important;
+}
+.screen.h21.has-tabs[data-screen="home"] .scroll{--band:284px}
+.screen.h21.has-tabs.has-fb-seg .scroll,
+.screen.h21.has-tabs[data-screen^="fb-recommend"] .scroll,
+.screen.h21.has-tabs[data-screen="members"] .scroll,
+.screen.h21.has-tabs[data-screen="promo-queue"] .scroll{--band:236px}
+.screen.h21.has-tabs .scroll{border-radius:0}
+/* soft rounded bottom edge of the band */
+.screen.h21.has-tabs .h21-head{position:relative;z-index:1}
+
+/* Header text and buttons on the band */
+.screen.h21.has-tabs .h21-head h1{color:#FFF !important}
+.screen.h21.has-tabs .h21-date{color:rgba(255,255,255,.72) !important}
+.screen.h21.has-tabs .h21-round{
+  background:rgba(255,255,255,.14) !important; border:1px solid rgba(255,255,255,.22) !important;
+  color:#FFF !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px rgba(0,0,0,.18) !important;
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.h21-badge, .bell-dot, .fb-seg-badge{background:linear-gradient(180deg,#FF5C8A,#E11D48) !important;color:#FFF !important;border-color:transparent !important;box-shadow:0 2px 8px rgba(225,29,72,.45) !important}
+
+/* Facebook segmented control on the band: glass */
+.screen.h21.has-tabs .fb-seg{background:rgba(255,255,255,.12) !important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18) !important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.screen.h21.has-tabs .fb-seg-btn{color:rgba(255,255,255,.85) !important}
+.screen.h21.has-tabs .fb-seg-btn.active{background:#FFF !important;color:#1E1B4B !important;box-shadow:0 4px 14px rgba(0,0,0,.2) !important}
+.screen.h21.has-tabs .fb-seg-btn.active::after{display:none}
+
+/* Home stat cards: glass on the gradient */
+.screen[data-screen="home"] .h21-stat{
+  background:rgba(255,255,255,.12) !important; border:1px solid rgba(255,255,255,.2) !important; color:#FFF !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 12px 30px rgba(0,0,0,.2) !important;
+}
+.screen[data-screen="home"] .h21-sub, .screen[data-screen="home"] .h21-foot{color:rgba(255,255,255,.75) !important}
+.screen[data-screen="home"] .h21-sub b{color:#FFF !important}
+.screen[data-screen="home"] .h21-bars span{background:rgba(255,255,255,.22) !important}
+.screen[data-screen="home"] .h21-bars span.on.dark{background:linear-gradient(90deg,#FBBF24,#F59E0B) !important}
+.screen[data-screen="home"] .h21-bars span.on.blue{background:linear-gradient(90deg,#60A5FA,#38BDF8) !important}
+.screen[data-screen="home"] .h21-h2{margin-top:10px}
+
+/* Cards: white, floating */
+.h21-card, .screen.h21 .card, .screen.h21 .member-card, .screen.h21 .rec-card, .screen.h21 .chat-row, .screen.h21 .notif-row,
+.screen.h21 .profile-block, .screen.h21 .areas-card, .screen.h21 .queue-card, .screen.h21 .req-card{
+  background:#FFF !important; border:1px solid rgba(16,24,40,.04) !important; box-shadow:var(--pm-card-shadow) !important;
+}
+.h21-note, .h21-info{background:var(--pm-tint) !important;box-shadow:none !important}
+.h21-info{background:linear-gradient(180deg,#EEF2FF,#E9EDFF) !important;color:#1E1B4B}
+.h21-info svg{color:#4F46E5}
+.h21-label{color:#6B7280}
+
+/* Primary buttons: glossy indigo */
+.h21-cta, .btn.btn-primary, .btn.btn-navy, .btn-review-back, .dash-attn-btn:not(.btn-locked), .slim-cta,
+.rec-filters button.active, .seg button.active, .seg .active, .chip.active, .chip.on{
+  background: var(--pm-cta) !important; box-shadow: var(--pm-cta-shadow) !important;
+}
+.btn.btn-fb{background:linear-gradient(180deg,#3B8BFF,#1877F2 50%,#0F5FD6) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 24px rgba(24,119,242,.35) !important}
+.h21-link{color:#4F46E5 !important;text-decoration:none !important;font-weight:600 !important}
+
+/* Avatars: colourful gradient squircles with gloss */
+.avatar{position:relative;overflow:hidden;box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 4px 12px rgba(16,24,40,.15) !important}
+.avatar::after{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,0));pointer-events:none}
+
+/* Queue / place accents */
+.h21-place .n{background:linear-gradient(135deg,#4F46E5,#DB2777);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h21-bars span.on.blue{background:linear-gradient(90deg,#4F46E5,#8B5CF6) !important}
+.h21-pill{background:linear-gradient(180deg,#FEF3C7,#FDE68A) !important;color:#92400E !important;border:0 !important}
+
+/* Tab bar: glass with indigo active */
+.tabbar{box-shadow:0 -1px 0 rgba(16,24,40,.06),0 -10px 30px rgba(16,24,40,.08) !important}
+.tab.active{color:#4F46E5 !important}
+.tab.active svg{color:#4F46E5 !important}
+/* fixes */
+.screen.h21.has-tabs .fb-seg-btn.active, .screen.h21.has-tabs .fb-seg-btn.active *{color:#1E1B4B !important}
+.screen.h21.has-tabs .fb-seg-btn.active .fb-seg-badge{color:#FFF !important}
+.screen.h21.has-tabs.has-fb-seg .scroll,
+.screen.h21.has-tabs[data-screen^="fb-recommend"] .scroll,
+.screen.h21.has-tabs[data-screen="members"] .scroll,
+.screen.h21.has-tabs[data-screen="promo-queue"] .scroll{--band:172px}
+.screen.h21.has-tabs .scroll > div:empty{display:none}
+.rel-chip.active, .chips .chip.active, .chips button.active, .chips .on{background:var(--pm-cta) !important;color:#FFF !important;border:0 !important;box-shadow:var(--pm-cta-shadow) !important}
+.screen[data-screen="members"] .banner.info, .screen[data-screen="members"] .icon-legend{display:none !important}
+.screen[data-screen="members"] .count-line{color:#6B7280;margin:4px 4px 0}
+.friend-btn.friends{background:linear-gradient(180deg,#3B8BFF,#1877F2 50%,#0F5FD6) !important;color:#FFF !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 16px rgba(24,119,242,.3) !important}
+.member-card .btn-msg, .member-card [data-action="open-chat"]{background:var(--pm-cta) !important;color:#FFF !important;border:0 !important;box-shadow:var(--pm-cta-shadow) !important}
+.chat-row .ub, .chat-row .badge, .ov-msg .ub, .unread-badge{background:linear-gradient(180deg,#FF5C8A,#E11D48) !important;color:#FFF !important}
+.screen[data-screen="members"] .count-line{display:none}
