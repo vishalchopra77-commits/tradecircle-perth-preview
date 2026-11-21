@@ -218,6 +218,8 @@ function googleG(size, mono) {
 
   /* ---------- Promotion queue (fictional) ---------- */
   function queue() {
+    /* v2.1.3: one queue source — the badge-ranked queue from v211 (TC211.myPlace) seeds it, so Home, Queue, profile and the switch badge agree */
+    if (!S()._queue && window.TC211 && TC211.myPlace) { try { TC211.myPlace(); } catch (eQ) {} }
     if (!S()._queue) {
       S()._queue = [
         { id: "q1", memberId: "priya", when: "Mon", paid: false },
@@ -456,7 +458,7 @@ function googleG(size, mono) {
         var avHtml = isGroup
           ? '<div class="ov-av-g">' + (c.id === "grp-north" ? "N" : "H") + "</div>"
           : av(mm, 36);
-        var prev = clip(c.preview, 48);
+        var prev = clip(c.preview, 400); /* v2.1.3: full preview, wraps instead of "…" */
         if (isGroup || !mm) {
           return '<button type="button" class="ov-msg" data-action="open-thread" data-chat="' + c.id + '">' +
             avHtml +
@@ -477,7 +479,7 @@ function googleG(size, mono) {
 
     var frBody = '<div class="ov-stats">' +
       ovStat("Friends", String(friends), "teal", I.user) +
-      ovStat("Pending", String(pending.length), "green-deep", I.user) +
+      ovStat("Pending", String(pending.length), "orange", I.user) +
       "</div>";
     if (pending.length) {
       frBody += '<p class="ov-subhead">Pending requests</p>' + pending.map(function (id) {
@@ -527,7 +529,7 @@ function googleG(size, mono) {
       card("google", googleG(18), "Google Reviews", googleBody, "reviews", "Open Google Reviews") +
       card("facebook", facebookF(18), "Facebook", fbBody, "promo-queue", "View the queue") +
       card("messages", I.chat, "Messages", msgBody, "chats", "Open chats") +
-      card("friends", I.user, "Friends", frBody, "members", "Open Facebook") +
+      card("friends", I.user, "Facebook Friends", frBody, "members", "Open Facebook") +
       '<p class="group-label">Quick actions</p>' + actHtml +
       '<p class="group-label">Recent activity</p>' +
       '<div class="dash-feed">' + feedHtml + "</div></div></section>";
@@ -608,11 +610,11 @@ function googleG(size, mono) {
       '<p class="hint" style="margin:0">From ' + esc(who) + " \u00b7 " + a.helped.length + " helped</p></button>";
   }
   function renderRecCompose() {
-    var trade = S().recTrade || "Pest Control";
+    var trade = S().recTrade || "";
     return '<section class="screen has-header" data-screen="rec-compose">' +
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Send alert</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-hero"><h2>Share a Facebook post</h2><p>Paste the link, pick the trade they asked for, and send it to the circle.</p></div>' +
-      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.homeowners.demo/posts/840211"></div>' +
+      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value=""></div>' +
       '<div class="field"><label>Trade or business type they are asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
       '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
       '<button class="btn btn-primary has-ico" data-action="send-alert">' + I.bell + "<span>Send to circle</span></button>" +

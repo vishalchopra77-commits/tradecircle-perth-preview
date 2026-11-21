@@ -548,7 +548,7 @@
       else form.appendChild(block);
       Prof().bindForm(form);
     }
-    if (root.TC158 && TC158.bindSearchPickers) TC158.bindSearchPickers(form);
+    if (window.TC158 && TC158.bindSearchPickers) TC158.bindSearchPickers(form);
   }
 
   function after(id) {

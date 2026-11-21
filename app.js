@@ -245,9 +245,9 @@
     { id: "signup", title: "Sign up — choose method", sub: "Facebook, email or phone" },
     { id: "signup-email", title: "Sign up — email", sub: "Email and password" },
     { id: "signup-phone", title: "Sign up — phone", sub: "Phone number and a one-time code" },
-    { id: "signup-name", title: "Sign up — name", sub: "First and last name" },
+    { id: "signup-name", title: "Sign up — your details", sub: "Name, business, trade, ABN and phone" },
     { id: "fb-consent", title: "Facebook connect", sub: "Prototype consent sheet" },
-    { id: "create-profile", title: "Sign up — business and areas", sub: "Business details, trade, regions, then send for approval" },
+    { id: "create-profile", title: "Sign up — your regions", sub: "Choose your regions, then send for approval" },
     { id: "create-profile-connected", title: "Create profile — connected", sub: "Name and profile link filled" },
     { id: "choose-areas", title: "Choose areas — state", sub: "State, then metro and regional accordions" },
     { id: "create-regions", title: "Choose areas — WA regions", sub: "Metro accordion open, regional collapsed" },
@@ -275,7 +275,7 @@
     { id: "more", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
     { id: "tutorials", title: "Video tutorials", sub: "Short guides on how to use Rate Buddies" },
     { id: "drawer", title: "More menu", sub: "Search, shortcuts and account in an apps grid" },
-    { id: "subscription", title: "Subscription", sub: "Free now, Pro later — price to be set" },
+    { id: "subscription", title: "Subscription", sub: "1 month free, then $50 / month (AUD, incl. GST)" },
     { id: "invite", title: "Invite a tradie", sub: "Share a join link" },
     { id: "help", title: "Help & how it works", sub: "Circle rules and review guidance" },
     { id: "my-regions", title: "Your areas", sub: "State, then metro or regional, then regions" },
@@ -309,7 +309,7 @@
     notify: true,
     photoData: null,
     fbConnected: false,
-    fbNext: "create-profile",
+    fbNext: "signup-name",
     relFilter: "all",
     googleConnected: true,
     regionBackup: {},
@@ -595,7 +595,7 @@
     }
     return '<section class="screen has-header" data-screen="choose-areas">' +
       '<div class="app-header"><button class="icon-btn" data-action="area-back" aria-label="Back">' + icon("back") + '</button><div class="ht">' + title + "</div>" + right + "</div>" +
-      '<div class="scroll">' + areaWizardHTML(prefix) + "</div>" + bottom + "</section>";
+      '<div class="scroll">' + (prefix === "create" ? signupSteps(3) : "") + areaWizardHTML(prefix) + "</div>" + bottom + "</section>";
   }
   function areaAdvanceFromState() {
     var pick = ensureAreaPick();
@@ -974,8 +974,15 @@
     });
   }
 
+  /* v2.1.3: sign-up and profile set-up for a NEW member always start empty (no demo values, no preselected trade or region). */
+  var NEW_MEMBER_FLOW = { signup: 1, "signup-email": 1, "signup-phone": 1, "signup-name": 1, "fb-consent": 1, "create-profile": 1, "create-profile-connected": 1, "signup-business": 1, "complete-profile": 1, "choose-areas": 1, "create-regions": 1, "create-regions-all": 1 };
+  function emptyDraft() {
+    return { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", abn: "", email: "", tagline: "",
+      links: (window.TCLinks && TCLinks.empty ? TCLinks.empty() : {}), profile: (window.TCProfile && TCProfile.empty ? TCProfile.empty() : {}), regions: [] };
+  }
   function draftFromMe() {
     var m = me();
+    if (!state.draft && NEW_MEMBER_FLOW[state.screen]) state.draft = emptyDraft();
     return state.draft || {
       first: m.first, last: m.last, business: m.business, trade: m.trade,
       bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
@@ -988,7 +995,7 @@
 
   function parseName(name) {
     var parts = String(name || "").trim().split(/\s+/);
-    if (!parts[0]) return { first: "Jamie", last: "Hale" };
+    if (!parts[0]) return { first: "", last: "" };
     if (parts.length === 1) return { first: parts[0], last: "" };
     return { first: parts[0], last: parts.slice(1).join(" ") };
   }
@@ -1006,8 +1013,8 @@
       first: first || current.first, last: last || current.last,
       business: fd.get("business") || current.business,
       trade: current.trade,
-      bio: fd.get("bio") || "",
-      phone: fd.get("phone") || "",
+      bio: (fd.get("bio") != null ? fd.get("bio") : (current.bio || "")),
+      phone: (fd.get("phone") != null ? String(fd.get("phone") || "").trim() : (current.phone || "")),
       facebook: fd.get("facebook") || current.facebook || "",
       page: fd.get("page") || current.page || "",
       abn: (fd.get("abn") != null ? String(fd.get("abn") || "").trim() : (current.abn || "")),
@@ -1051,6 +1058,22 @@
       '<div class="or-line"><span>or paste your link</span></div>' +
       '<div class="field"><label>Facebook profile link</label><input name="facebook" inputmode="url" placeholder="https://www.facebook.com/your.profile" value="' + escapeAttr(currentLink || "") + '">' +
       '<p class="hint">This is the profile other members will open to send you a friend request.</p></div>';
+  }
+
+  function markSignupErrors(form, names) {
+    if (!form) return;
+    form.querySelectorAll(".field.has-error").forEach(function (f) { f.classList.remove("has-error"); var m = f.querySelector(".field-err"); if (m) m.remove(); });
+    var msg = { first: "Add your first name", last: "Add your last name", business: "Add your business name", trade: "Choose your trade or business type", phone: "Add a phone number" };
+    names.forEach(function (nm) {
+      var inp = nm === "trade" ? document.getElementById("tradeType") : form.querySelector('[name="' + nm + '"]');
+      var f = inp && inp.closest(".field"); if (!f) return;
+      f.classList.add("has-error"); inp.setAttribute("aria-invalid", "true");
+      f.insertAdjacentHTML("beforeend", '<p class="field-err" role="alert">' + msg[nm] + "</p>");
+    });
+    var first = form.querySelector(".has-error input"); if (first) first.focus();
+  }
+  function markRegionsError() {
+    var c = document.querySelector('.screen.active .selected-count'); if (c) c.classList.add("is-error");
   }
 
   function signupSteps(n, total) {
@@ -1127,7 +1150,7 @@
         '<form data-form="signup-phone">' +
         '<div class="field"><label>Phone number</label><input name="phone" inputmode="tel" placeholder="Mobile number" value="' + escapeAttr(d.phone || "") + '" required autocomplete="tel"></div>' +
         (state.otpSent
-          ? '<div class="field"><label>One-time code</label><input name="otp" inputmode="numeric" placeholder="6-digit code" value="482913" required><p class="hint">Prototype code: 482913. Use this to continue.</p></div>' +
+          ? '<div class="field"><label>One-time code</label><input name="otp" inputmode="numeric" placeholder="6-digit code" value="" required><p class="hint">Prototype code: 482913. Use this to continue.</p></div>' +
             '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("check") + "<span>Verify and continue</span></button>"
           : '<button class="btn btn-primary has-ico" type="button" data-action="send-otp" style="margin-top:8px">' + icon("phone") + "<span>Send code</span></button>") +
         "</form>" +
@@ -1150,14 +1173,20 @@
     var note = state.fbConnected
       ? "We have filled these from Facebook. You can change them."
       : "Use the name other members should see.";
+    var tradeField = '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>';
     return '<section class="screen has-header" data-screen="signup-name">' +
-      '<div class="app-header"><button class="icon-btn" data-go="signup" aria-label="Back">' + icon("back") + '</button><div class="ht">Your name</div><span class="header-spacer"></span></div>' +
+      '<div class="app-header"><button class="icon-btn" data-go="signup" aria-label="Back">' + icon("back") + '</button><div class="ht">Your details</div><span class="header-spacer"></span></div>' +
       '<div class="scroll">' + signupSteps(2) +
-      '<div class="auth-hero"><h2>What is your name?</h2><p>' + note + "</p></div>" +
-      '<form data-form="signup-name">' +
-      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="Jamie" value="' + escapeAttr(d.first || "") + '" required autocomplete="given-name"></div>' +
-      '<div class="field"><label>Last name</label><input name="last" placeholder="Hale" value="' + escapeAttr(d.last || "") + '" required autocomplete="family-name"></div></div>' +
-      '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form></div></section>";
+      '<div class="auth-hero"><h2>Your details</h2><p>' + note + " Then tell the circle about your business.</p></div>" +
+      '<form data-form="signup-name" novalidate>' +
+      '<div class="name-row"><div class="field"><label>First name</label><input name="first" placeholder="First name" value="' + escapeAttr(d.first || "") + '" required autocomplete="given-name"></div>' +
+      '<div class="field"><label>Last name</label><input name="last" placeholder="Last name" value="' + escapeAttr(d.last || "") + '" required autocomplete="family-name"></div></div>' +
+      '<p class="group-label">Business details</p>' +
+      '<div class="field"><label>Business name</label><input name="business" placeholder="Your business name" value="' + escapeAttr(d.business || "") + '" required autocomplete="organization"></div>' +
+      tradeField +
+      '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="11-digit ABN" value="' + escapeAttr(d.abn || "") + '"></div>' +
+      '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="Mobile number" value="' + escapeAttr(d.phone || "") + '" autocomplete="tel"></div>' +
+      '<button class="btn btn-primary" type="submit" style="margin-top:8px"><span>Continue</span></button></form></div></section>';
   }
 
   function renderCreateProfile() {
@@ -1166,18 +1195,13 @@
     state.stepRegions = selected.slice();
     var count = selected.length ? (selected.length + " region" + (selected.length > 1 ? "s" : "") + " selected") : "Select at least one region";
     return '<section class="screen has-header" data-screen="create-profile">' +
-      '<div class="app-header"><button class="icon-btn" data-go="signup-name" aria-label="Back">' + icon("back") + '</button><div class="ht">Business and areas</div><span class="header-spacer"></span></div>' +
+      '<div class="app-header"><button class="icon-btn" data-go="signup-name" aria-label="Back">' + icon("back") + '</button><div class="ht">Your regions</div><span class="header-spacer"></span></div>' +
       '<div class="scroll">' + signupSteps(3) +
-      '<div class="auth-hero"><h2>Business details and areas</h2><p>Tell the circle what you do and where you work, then send your profile for approval.</p></div>' +
-      '<form data-form="signup-business">' +
-      '<div class="field"><label>Business name</label><input name="business" placeholder="Your business name" value="' + escapeAttr(d.business || "") + '" required></div>' +
-      '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
-      '<div class="field"><label>ABN <span class="opt">(optional)</span></label><input name="abn" inputmode="numeric" placeholder="Optional" value="' + escapeAttr(d.abn || "") + '"></div>' +
-      '<div class="field"><label>Business phone</label><input name="phone" inputmode="tel" placeholder="Mobile number" value="' + escapeAttr(d.phone || "") + '"></div>' +
-      '<p class="group-label">Your areas</p>' +
+      '<div class="auth-hero"><h2>Choose your regions</h2><p>Pick the areas you really work in, then send your profile for approval.</p></div>' +
+      '<form data-form="signup-business" novalidate>' +
       selectedAreasCard(selected, { title: "Your areas", openAreas: true, prefix: "create", returnTo: "create-profile", changeLabel: selected.length ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
       '<p class="selected-count">' + count + "</p>" +
-      '<button class="btn btn-primary has-ico" type="button" data-action="finish-create">' + icon("check") + "<span>Send for approval</span></button>" +
+      '<button class="btn btn-primary" type="button" data-action="finish-create"><span>Send for approval</span></button>' +
       '<p class="hint" style="text-align:center;margin-top:12px">New members wait for a super admin to approve their profile before they appear in the circle. You can add a bio, links and more after you are approved.</p></form></div></section>';
   }
 
@@ -1187,7 +1211,7 @@
 
   function renderPending() {
     var d = draftFromMe();
-    var who = escapeText((d.first || "Jamie") + (d.last ? " " + d.last : ""));
+    var who = escapeText((d.first || "") + (d.last ? " " + d.last : ""));
     var bits = "Name: " + who + "<br>Trade: " + escapeText(d.trade || "To be added");
     if (d.business) bits += "<br>Business: " + escapeText(d.business);
     if (d.abn) bits += "<br>ABN: " + escapeText(d.abn);
@@ -1195,7 +1219,7 @@
       '<div class="app-header"><button class="icon-btn" data-go="create-profile" aria-label="Back">' + icon("back") + '</button><div class="ht">Awaiting approval</div><span class="header-spacer"></span></div>' +
       '<div class="scroll">' +
       '<div class="pending-art">' + icon("check") + "</div>" +
-      '<div class="auth-hero" style="text-align:center"><h2>Thanks, ' + escapeText(d.first || "Jamie") + ". We are reviewing your profile.</h2>" +
+      '<div class="auth-hero" style="text-align:center"><h2>Thanks' + (d.first ? ", " + escapeText(d.first) : "") + ". We are reviewing your profile.</h2>" +
       "<p>Your profile stays hidden until a Rate Buddies admin approves it. You will get a notification when you are in. This usually takes a day.</p></div>" +
       '<div class="areas-card"><div class="areas-card-h">Submitted</div>' +
       '<p class="hint" style="margin:0">' + bits + "</p></div>" +
@@ -1308,7 +1332,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.2 · 20 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.3 · 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -1367,6 +1391,10 @@
     var signupStart = { signup: 1, "signup-email": 1, "signup-phone": 1, "signup-name": 1, "fb-consent": 1 };
     if (signupStart[id] && !state.draft) {
       state.draft = { first: "", last: "", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", abn: "", email: "", regions: [], links: {}, profile: {} };
+      state.stepRegions = [];
+    }
+    if (NEW_MEMBER_FLOW[id] && !state.draft) {
+      state.draft = emptyDraft();
       state.stepRegions = [];
     }
     if (id === "create-profile" && !state.draft) {
@@ -1450,7 +1478,7 @@
     });
     setHash(id);
     bindScreen();
-    if (id === "fb-consent") openFbSheet("create-profile");
+    if (id === "fb-consent") openFbSheet("signup-name");
     if (window.TC12 && TC12.afterGo) TC12.afterGo(id);
     if (window.TC20 && TC20.afterGo) TC20.afterGo(id);
   }
@@ -1606,10 +1634,7 @@
     var form = document.querySelector("#screens form");
     if (form) captureDraft(form);
     var d = draftFromMe();
-    if (!d.first) {
-      if (state.onboarding && state.onboarding.fresh) { d.first = "Alex"; d.last = "Reid"; }
-      else { d.first = "Jamie"; d.last = "Hale"; }
-    }
+    /* v2.1.3: no demo name is filled in; the member types their own (or the real Facebook login supplies it). */
     d.facebook = demoFbLink();
     state.draft = d;
     state.fbConnected = true;
@@ -1621,7 +1646,7 @@
   }
 
   function openFbSheet(next) {
-    state.fbNext = next || state.screen || "create-profile";
+    state.fbNext = next || state.screen || "signup-name";
     closeSheet();
     sheetEl = document.createElement("div");
     sheetEl.className = "overlay show";
@@ -1937,9 +1962,8 @@
         state.draft = dC;
       }
       var d3 = draftFromMe();
-      if (!(d3.business || "").trim()) { toast("Please add your business name."); return; }
-      if (!(d3.trade || "").trim()) { toast("Please choose your trade or business type."); return; }
-      if (!(state.stepRegions || []).length) { toast("Select at least one region."); return; }
+      if (!(d3.first || "").trim() || !(d3.business || "").trim() || !(d3.trade || "").trim()) { toast("Please finish Your details first."); go("signup-name"); return; }
+      if (!(state.stepRegions || []).length) { markRegionsError(); toast("Select at least one region."); return; }
       d3.regions = state.stepRegions.slice();
       state.draft = d3;
       applyDraftToMe();
@@ -2025,8 +2049,17 @@
       var dN = draftFromMe();
       dN.first = String(fdN.get("first") || "").trim() || dN.first;
       dN.last = String(fdN.get("last") || "").trim() || dN.last;
-      if (!dN.first || !dN.last) { toast("Please add your first and last name."); return; }
+      var tinN = document.getElementById("tradeType");
+      if (tinN) {
+        var exactN = TRADES.find(function (tr) { return tr.toLowerCase() === String(tinN.value || "").trim().toLowerCase(); });
+        if (exactN) dN.trade = exactN; else if (tinN.value.trim()) dN.trade = tinN.value.trim();
+      }
       state.draft = dN;
+      var missN = [];
+      if (!dN.first) missN.push("first"); if (!dN.last) missN.push("last");
+      if (!(dN.business || "").trim()) missN.push("business"); if (!(dN.trade || "").trim()) missN.push("trade");
+      if (!(dN.phone || "").trim()) missN.push("phone");
+      if (missN.length) { markSignupErrors(form, missN); toast(missN.indexOf("first") >= 0 || missN.indexOf("last") >= 0 ? "Please add your first and last name." : missN.indexOf("business") >= 0 ? "Please add your business name." : missN.indexOf("trade") >= 0 ? "Please choose your trade or business type." : "Please add your business phone."); return; }
       go("create-profile");
       return;
     }
@@ -2096,7 +2129,7 @@
   if (start === "signup-email") state.signupMethod = "email";
   if (start === "signup-phone") { state.signupMethod = "phone"; state.otpSent = true; }
   if (start === "signup-name") {
-    state.draft = state.draft || { first: "Alex", last: "Reid", business: "", trade: "", bio: "", phone: "", facebook: "", page: "", abn: "", email: "", regions: [] };
+    state.draft = state.draft || emptyDraft();
   }
   if (start === "complete-profile") {
     state.onboarding = { fresh: true, forceComplete: true, skipped: false, done: false, fill: {} };
@@ -2105,13 +2138,13 @@
     var mm = me();
     state.fbConnected = false;
     state.stepRegions = [];
-    state.draft = { first: mm.first, last: mm.last, business: mm.business, trade: mm.trade, bio: mm.bio, phone: mm.phone, facebook: "", page: mm.page, regions: [] };
+    state.draft = emptyDraft(); /* v2.1.3: new member form starts empty */
   }
   if (start === "create-profile-connected") {
     var mm2 = me();
     state.fbConnected = true;
     state.stepRegions = [];
-    state.draft = { first: mm2.first, last: mm2.last, business: mm2.business, trade: mm2.trade, bio: mm2.bio, phone: mm2.phone, facebook: demoFbLink(), page: mm2.page, regions: [] };
+    state.draft = emptyDraft(); state.draft.facebook = demoFbLink(); /* v2.1.3: only the connected Facebook link is filled */
   }
   if (start === "edit-profile" || start === "settings" || start === "me" || start === "reviews" || start === "chats" || start === "drawer" || start === "google-consent" || start === "subscription" || start === "invite" || start === "help") {
     state.fbConnected = true;

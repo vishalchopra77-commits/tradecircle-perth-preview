@@ -177,6 +177,7 @@
     ["queue", "Promotion queue", "queue"],
     ["reports", "Reports", "reports"],
     ["chats", "Chat moderation", "chats"],
+    ["support", "Support inbox", "chats"],
     ["devi", "Devi automation", "ai", "Automations"],
     ["devi-inbox", "Incoming requests", "alerts"],
     ["tutorials", "Video tutorials", "ai", "Content"],
@@ -198,6 +199,7 @@
     queue: ["Circle", "Promotion queue"],
     reports: ["Circle", "Reports"],
     chats: ["Circle", "Chat moderation"],
+    support: ["Circle", "Support inbox"],
     devi: ["Automations", "Devi automation"],
     "devi-inbox": ["Automations", "Incoming requests"],
     tutorials: ["Content", "Video tutorials"],
@@ -223,6 +225,11 @@
     return '<div class="av ' + (size || "") + " " + avClass(name) + '">' + esc(initials(name)) + "</div>";
   }
   function who(name, sub) {
+    /* v2.1.3: a member's trade always shows with their name (shared in admin lists) */
+    try {
+      var mm = (typeof members !== "undefined" && members || []).find(function (x) { return x.name === name; });
+      if (mm && mm.trade && String(sub || "").toLowerCase().indexOf(String(mm.trade).toLowerCase()) === -1) sub = mm.trade + (sub ? " · " + sub : "");
+    } catch (e) {}
     return '<div class="who">' + av(name) + '<div><div class="name">' + esc(name) + '</div><div class="sub">' + esc(sub || "") + "</div></div></div>";
   }
   function badge(status) {
@@ -412,7 +419,7 @@
       var groups = ["Perth Hills Community Noticeboard", "Hills Mums & Dads", "Joondalup Home Owners", "Northern Suburbs Tradie Talk", "Fremantle Community Noticeboard"];
       var form = panel("Post a recommendation request", "Paste a Facebook group post and choose the member the circle should vouch for. Members will see this in the Facebook tab, under Recommend.", "",
         '<form id="fbPostForm" class="fb-post-form">' +
-        '<div class="field"><label>Facebook post link</label><input name="link" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.hills.noticeboard.demo/posts/482190"></div>' +
+        '<div class="field"><label>Facebook post link</label><input name="link" inputmode="url" placeholder="https://www.facebook.com/groups/..." value=""></div>' +
         '<div class="field"><label>Facebook group</label><select name="group">' + groups.map(function (g) { return "<option>" + esc(g) + "</option>"; }).join("") + "</select></div>" +
         '<div class="field"><label>Member to recommend</label><div class="admin-mem-chips">' +
         members.filter(function (m) { return m.status === "active"; }).map(function (m) {
@@ -457,15 +464,34 @@
           return "<tr><td data-label=\"From\">" + who(c.from, "") + '</td><td data-label="Room">' + esc(c.room) + '</td><td data-label="Message">' + esc(c.text) + '</td><td data-label="Flag">' + (c.flag === "None" ? badge("Handled") : badge("Open")) + " " + esc(c.flag) + '</td><td data-label="When">' + esc(c.when) + "</td></tr>";
         }).join("") + "</tbody></table>");
     }
+    if (page === "support") {
+      /* v2.1.3: member <-> support desk threads. Demo: fictional rows. Live: RB.listSupport() (needs migration 20261121, not applied yet). */
+      var sup = window.__rbSupportRows || [
+        { member: "Jamie Hale", trade: "Pest Control", topic: "Reviews", last: "My Google Review for Reeves Fencing is not showing on their card yet.", when: "Yesterday 4:05 pm", open: false },
+        { member: "Priya Sharma", trade: "Painter", topic: "Billing", last: "When does my free month end?", when: "Today 9:12 am", open: true },
+        { member: "Tom Reeves", trade: "Fencer", topic: "Facebook", last: "The Join Our Facebook Group link opened the browser, is that right?", when: "Today 10:40 am", open: true }
+      ];
+      var sel = window.__rbSupportSel || 0;
+      var th = sup[sel] || sup[0];
+      var list = sup.map(function (r, i) {
+        return '<button type="button" class="sup-row' + (i === sel ? " active" : "") + '" data-sup-sel="' + i + '">' + who(r.member, r.trade) +
+          '<div class="sup-row-m"><span class="price-tbc">' + esc(r.topic) + "</span> " + esc(r.last) + '</div><div class="sup-row-w">' + esc(r.when) + (r.open ? " " + badge("Open") : " " + badge("Handled")) + "</div></button>";
+      }).join("");
+      var reply = '<form class="sup-reply" data-sup-reply="' + sel + '"><textarea rows="3" placeholder="Reply to ' + esc(th.member) + '…" aria-label="Reply"></textarea><div class="sup-reply-a"><span class="panel-sub">Replies appear in the member\'s Support chat in the app.</span><button class="btn btn-primary btn-sm" type="submit">Send reply</button></div></form>';
+      return '<div class="dash-grid">' +
+        panel("Support inbox", sup.filter(function (r) { return r.open; }).length + " open · fictional demo threads", "", '<div class="sup-list">' + list + "</div>") +
+        panel(esc(th.member) + " · " + esc(th.trade), "Topic: " + esc(th.topic), "", '<div class="sup-thread"><div class="sup-msg in">' + esc(th.last) + '<span>' + esc(th.when) + "</span></div></div>" + reply) +
+        "</div>";
+    }
     if (page === "plans") {
       return '<div class="dash-grid">' +
-        '<section class="panel"><div class="panel-h"><h2>Free</h2><span class="price-tbc">Current plan</span></div><p class="panel-sub">The circle is free for now. Members can join, chat, send alerts and take a free turn in the promotion queue.</p></section>' +
-        '<section class="panel"><div class="panel-h"><h2>Pro</h2><span class="price-tbc">Price to be set</span></div><p class="panel-sub">Planned later. Could include jumping the promotion queue and extra tools. No payment is collected in this prototype.</p></section>' +
+        '<section class="panel"><div class="panel-h"><h2>Rate Buddies membership</h2><span class="price-tbc">One plan</span></div><p class="panel-sub">1 month free, then $50 / month (AUD, incl. GST). Members can join, chat, send alerts and take their turn in the promotion queue. Billing goes through the App Store and Google Play.</p></section>' +
+        '<section class="panel"><div class="panel-h"><h2>Queue jumps</h2><span class="price-tbc">Price to be set</span></div><p class="panel-sub">Jumping the promotion queue may be paid later. No payment is collected in this prototype.</p></section>' +
         "</div>" +
         panel("Members on a plan", "Fictional counts only", "",
-          '<table><thead><tr><th>Plan</th><th>Members</th><th>Price</th></tr></thead><tbody>' +
-          "<tr><td data-label=\"Plan\">Free</td><td data-label=\"Members\">8</td><td data-label=\"Price\">Free for now</td></tr>" +
-          "<tr><td data-label=\"Plan\">Pro</td><td data-label=\"Members\">0</td><td data-label=\"Price\"><span class=\"price-tbc\">Price to be set</span></td></tr></tbody></table>");
+          '<table><thead><tr><th>Status</th><th>Members</th><th>Price</th></tr></thead><tbody>' +
+          "<tr><td data-label=\"Status\">Free month</td><td data-label=\"Members\">3</td><td data-label=\"Price\">$0 (first month)</td></tr>" +
+          "<tr><td data-label=\"Status\">Paying</td><td data-label=\"Members\">5</td><td data-label=\"Price\">$50 / month (AUD, incl. GST)</td></tr></tbody></table>");
     }
     if (page === "ai") {
       return panel("AI integrations", "Members can connect their own assistant in the app. This is a prototype — nothing is actually connected.", "",
@@ -476,8 +502,8 @@
     }
     if (page === "broadcast") {
       return panel("Broadcast a notification", "This is a mock. Nothing is sent to real phones.", "",
-        '<div class="field"><label>Title</label><input id="bcTitle" value="Reminder: Hills meet this Thursday"></div>' +
-        '<div class="field"><label>Message</label><textarea id="bcBody" rows="4">The weekly catch-up is at 6:30 pm in Midland. Bring a mate if you like.</textarea></div>' +
+        '<div class="field"><label>Title</label><input id="bcTitle" value="" placeholder="e.g. Reminder: meet-up this Thursday"></div>' +
+        '<div class="field"><label>Message</label><textarea id="bcBody" rows="4" placeholder="Write the message members will see"></textarea></div>' +
         '<button class="btn btn-primary btn-sm" data-action="broadcast" style="width:auto">' + I.send + "<span>Send mock broadcast</span></button>");
     }
     if (page === "member-detail") {

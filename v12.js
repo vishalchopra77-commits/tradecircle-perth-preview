@@ -464,7 +464,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.2 \u00b7 20 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.3 \u00b7 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -478,7 +478,7 @@ function facebookF(size, color) {
     }
     return '<div data-g-block="1"><button type="button" class="btn btn-google" data-action="google-connect">' + I.google + " Connect Google Business Profile</button>" +
       '<div class="or-line"><span>or paste your review link</span></div>' +
-      '<div class="field"><label>Google review link</label><input name="google" inputmode="url" placeholder="Paste your Google review link" value="' + esa(googleLink) + '">' +
+      '<div class="field"><label>Google review link</label><input name="google" inputmode="url" placeholder="Paste your Google Review link" value="' + esa(googleLink) + '">' +
       '<p class="hint">Prototype only \u2014 a real build would use Google official Business Profile connection. Members use this link to leave a review after a real job.</p></div></div>';
   }
 
@@ -893,31 +893,27 @@ function facebookF(size, color) {
   }
 
   function renderSubscription() {
+    var trialLeft = 23; /* demo state: fictional member 7 days into the free month */
     return '<section class="screen has-tabs has-header" data-screen="subscription">' + topbar("Subscription") +
       '<div class="scroll">' +
-      '<div class="auth-hero"><h2>Plans</h2><p>The app is free for now. A paid plan can be added later. The price has not been set.</p></div>' +
-      '<article class="plan-card current">' +
-        '<div class="plan-top"><h3>Free</h3><span class="plan-badge">Your plan</span></div>' +
-        '<p class="plan-price">Free</p>' +
-        '<p class="plan-note">Everything in the app today is included.</p>' +
+      '<div class="auth-hero"><h2>Your plan</h2><p>One simple membership. Try everything free for a month.</p></div>' +
+      '<article class="plan-card current rb-plan">' +
+        '<div class="plan-top"><h3>Rate Buddies membership</h3><span class="plan-badge trial">Free trial · ' + trialLeft + ' days left</span></div>' +
+        '<p class="plan-hero">1 month free</p>' +
+        '<p class="plan-price">$50 / month after your free month</p>' +
+        '<p class="plan-gst">AUD, incl. GST. Cancel any time before the free month ends and you will not be charged.</p>' +
         '<ul class="plan-list">' +
           '<li>Profile, regions and member list</li>' +
-          '<li>Facebook friend requests</li>' +
-          '<li>Google review requests and ideas</li>' +
-          '<li>In-app chat and notifications</li>' +
+          '<li>Facebook friend requests and Facebook recommendations</li>' +
+          '<li>Google Review requests, swaps and review ideas</li>' +
+          '<li>Your turn in the Facebook promotion queue</li>' +
+          '<li>Badges and vouches</li>' +
+          '<li>In-app chat, group chats and notifications</li>' +
+          '<li>AI assistant and video tutorials</li>' +
         '</ul>' +
+        '<p class="plan-note">Payment goes through the App Store or Google Play, not a card form in the app.</p>' +
       '</article>' +
-      '<article class="plan-card coming">' +
-        '<div class="plan-top"><h3>Pro (coming later)</h3><span class="plan-badge later">Later</span></div>' +
-        '<p class="plan-price"><span class="price-tbc-label">Price to be set</span></p>' +
-        '<p class="plan-note">No price has been chosen yet. When it is, payment would go through the App Store and Google Play, not a card form in the app.</p>' +
-        '<ul class="plan-list">' +
-          '<li>Extra features to be decided</li>' +
-          '<li>Still free to use the app until then</li>' +
-        '</ul>' +
-        '<button type="button" class="btn btn-primary has-ico" disabled>' + I.sub + "<span>Coming later</span></button>" +
-      '</article>' +
-      '<p class="settings-foot" style="padding-top:4px">Placeholder only. This screen does not take payment.</p>' +
+      '<p class="settings-foot plan-proto">Prototype placeholder. This screen does not take payment.</p>' +
       "</div></section>";
   }
 

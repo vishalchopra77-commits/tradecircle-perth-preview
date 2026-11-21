@@ -414,7 +414,7 @@
       guard++;
     }
     var fb = 0;
-    while (out.length < want) {
+    while (out.length < 3) {
       var map = makeMap(opts);
       fb++;
       var fallback = fillTpl("Write a short note in your own words about {job} with {business} in {suburb}.", map) + " Mention what stood out, then change it so it sounds like you.";

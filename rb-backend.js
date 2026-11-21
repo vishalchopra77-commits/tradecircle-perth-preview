@@ -232,6 +232,24 @@
     subs.push(ch);
   }
 
+  /* v2.1.3: support desk thread (table from migration 20261121_v213_support_messages.sql — not applied yet) */
+  async function listSupport(memberId) {
+    var q = client.from("support_messages").select("*").order("created_at", { ascending: true });
+    if (memberId) q = q.eq("member_id", memberId);
+    var res = await q;
+    if (res.error) throw res.error;
+    return res.data || [];
+  }
+  async function sendSupport(body, topic, memberId) {
+    var asAdmin = !!memberId;
+    var row = asAdmin
+      ? { member_id: memberId, from_admin: true, admin_id: session.user.id, body: body, topic: topic || null }
+      : { member_id: session.user.id, from_admin: false, body: body, topic: topic || null };
+    var res = await client.from("support_messages").insert(row).select().single();
+    if (res.error) throw res.error;
+    return res.data;
+  }
+
   root.RB = {
     init: init, isDemo: isDemo, setDemo: setDemo, ready: ready,
     getSession: getSession, loadProfile: loadProfile,
@@ -242,6 +260,7 @@
     approveRequest: approveRequest, dismissRequest: dismissRequest, createRequest: createRequest,
     markRecommended: markRecommended, markIntroWatched: markIntroWatched,
     addLedger: addLedger, markVideoWatched: markVideoWatched,
+    listSupport: listSupport, sendSupport: sendSupport,
     listen: listen, profileFromRow: profileFromRow,
     get session() { return session; },
     get profile() { return profile; },

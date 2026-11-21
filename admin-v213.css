@@ -1,0 +1,9 @@
+/* Rate Buddies v2.1.3 — admin design fixes (#87–#89) */
+.kpi[class*="kpi-"] .sub, .kpi[class*="kpi-"] .trend, .kpi[class*="kpi-"] small, .kpi[class*="kpi-"] .l{color:rgba(255,255,255,.88) !important}
+.side .nav-btn{white-space:nowrap !important;overflow:hidden;text-overflow:ellipsis}
+.side .nav-btn span{overflow:hidden;text-overflow:ellipsis}
+.bnav.active, .bnav[aria-current], .mtab.active{color:#1D4ED8 !important}
+.bnav.active svg{stroke:#1D4ED8 !important}
+.kpi[class*="kpi-"] *:not(svg):not(path){color:#fff !important}
+.kpi[class*="kpi-"] .l + *, .kpi[class*="kpi-"] div:last-child{opacity:.92}
+.side .brand span, .side strong + span{white-space:nowrap}
