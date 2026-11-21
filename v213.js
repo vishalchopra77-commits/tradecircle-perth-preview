@@ -3,7 +3,7 @@
    normalisation, wording, scroll preservation and dead-tap fixes. Nothing is deleted; old layers stay. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.1.3";
+  var VERSION = "v2.1.4";
   function T() { return root.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function me() { try { return T().me ? T().me() : {}; } catch (e) { return {}; } }

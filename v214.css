@@ -1,0 +1,4 @@
+/* Rate Buddies v2.1.4 — Android navigation bar: keep every bottom control above the system bar.
+   In the APK the native layer pads the web view above the nav bar (env() is then 0, so nothing is padded twice);
+   in a browser / installed web app env(safe-area-inset-bottom) does the same job. */
+html body .screen .chat-composer{padding-bottom:max(22px, calc(10px + env(safe-area-inset-bottom,0px))) !important}

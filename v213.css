@@ -643,7 +643,7 @@ html body .screen.screen .v21-more-grid{grid-auto-rows:116px !important;align-it
 html body .screen.screen .v21-more-grid > .v21-more-tile{height:116px !important;min-height:0 !important;display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important;box-sizing:border-box !important;padding-top:0 !important;padding-bottom:0 !important}
 html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{-webkit-line-clamp:2 !important}
 html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{display:block !important;white-space:nowrap !important}
-@media (max-width:374px){ html body .screen.screen .v21-more-grid{grid-auto-rows:108px !important} html body .screen.screen .v21-more-grid > .v21-more-tile{height:108px !important} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{font-size:10.5px !important;letter-spacing:-.02em !important} }
+@media (max-width:399px){ html body .screen.screen .v21-more-grid{grid-auto-rows:108px !important} html body .screen.screen .v21-more-grid > .v21-more-tile{height:108px !important} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{font-size:10.5px !important;letter-spacing:-.02em !important} }
 /* 6) profile chips: badge in the chip row, balanced rows */
 html body .screen.screen .profile-hero .tags{display:flex !important;flex-wrap:wrap !important;justify-content:center !important;gap:6px !important;row-gap:6px !important}
 html body .screen.screen .profile-hero .tags > .rb-break{flex-basis:100% !important;height:0 !important;margin:0 !important;padding:0 !important;border:0 !important;display:block !important}
@@ -655,24 +655,24 @@ html body .screen.screen .banner.rb-tip > [data-action="dismiss-tip"]{align-self
 html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .fb-seg-lab.fb-seg-lab{font-size:13px !important;flex:0 0 auto !important}
 html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button.fb-seg-btn.fb-seg-btn, html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button{gap:4px !important}
 html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .rb-seg-badge.rb-seg-badge{min-width:18px !important;height:18px !important;padding:0 5px !important;font-size:11px !important;flex:0 0 auto !important}
-@media (max-width:374px){
+@media (max-width:399px){
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .fb-seg-lab.fb-seg-lab{font-size:11px !important;letter-spacing:-.01em !important}
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button.fb-seg-btn.fb-seg-btn, html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button{gap:3px !important}
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .rb-seg-badge.rb-seg-badge{min-width:16px !important;height:16px !important;padding:0 4px !important;font-size:10px !important}
 }
-@media (max-width:374px){
+@media (max-width:399px){
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .fb-seg-lab.fb-seg-lab{font-size:12px !important;letter-spacing:-.035em !important}
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button.fb-seg-btn.fb-seg-btn, html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button{gap:2px !important}
   html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .rb-seg-badge.rb-seg-badge{min-width:15px !important;height:16px !important;padding:0 3px !important;font-size:12px !important;letter-spacing:-.02em !important}
 }
-@media (max-width:374px){html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .fb-seg-lab.fb-seg-lab{letter-spacing:-.045em !important}}
+@media (max-width:399px){html body .screen.screen.screen :is(.fb-seg,.seg).rb-seg > button .fb-seg-lab.fb-seg-lab{letter-spacing:-.045em !important}}
 html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{font-size:12px !important}
 html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{font-size:12px !important;letter-spacing:-.02em !important}
-@media (max-width:374px){ html body .screen.screen .v21-more-grid > .v21-more-tile.rb-fb-group{padding-left:2px !important;padding-right:2px !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{letter-spacing:-.04em !important} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{font-size:12px !important;letter-spacing:0 !important} }
-@media (max-width:374px){ html body .screen.screen .v21-more-grid > .v21-more-tile.rb-fb-group{padding-left:6px !important;padding-right:6px !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{display:inline !important;white-space:normal !important;letter-spacing:-.01em !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l + .rb-l::before{content:" "} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{-webkit-line-clamp:3 !important} }
+@media (max-width:399px){ html body .screen.screen .v21-more-grid > .v21-more-tile.rb-fb-group{padding-left:2px !important;padding-right:2px !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{letter-spacing:-.04em !important} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{font-size:12px !important;letter-spacing:0 !important} }
+@media (max-width:399px){ html body .screen.screen .v21-more-grid > .v21-more-tile.rb-fb-group{padding-left:6px !important;padding-right:6px !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{display:inline !important;white-space:normal !important;letter-spacing:-.01em !important} html body .screen.screen .v21-more-tile.rb-fb-group .rb-l + .rb-l::before{content:" "} html body .screen.screen .v21-more-tile.rb-fb-group > span:last-child{-webkit-line-clamp:3 !important} }
 html body .screen.screen .rb-wrap.rb-wrap.rb-wrap-ht{font-size:inherit;line-height:1.2 !important}
-@media (max-width:374px){ html body .screen.screen .v21-more-grid{grid-auto-rows:124px !important} html body .screen.screen .v21-more-grid > .v21-more-tile{height:124px !important} }
-html body .screen.screen .v21-more-grid.v21-more-grid{gap:8px !important} @media (min-width:375px){html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{letter-spacing:-.03em !important}}
+@media (max-width:399px){ html body .screen.screen .v21-more-grid{grid-auto-rows:124px !important} html body .screen.screen .v21-more-grid > .v21-more-tile{height:124px !important} }
+html body .screen.screen .v21-more-grid.v21-more-grid{gap:8px !important} @media (min-width:400px){html body .screen.screen .v21-more-tile.rb-fb-group .rb-l{letter-spacing:-.03em !important}}
 html body .screen.screen .rb-break{flex-basis:100% !important;width:100% !important;height:0 !important;margin:0 !important;padding:0 !important;border:0 !important;display:block !important}
 /* Home message rows: name + full preview on the left, time + unread count on the right */
 html body .screen[data-screen="home"] .ov-msg .ov-msg-main{display:grid !important;grid-template-columns:minmax(0,1fr) auto !important;column-gap:10px !important;row-gap:2px !important;align-items:start !important;text-align:left !important}

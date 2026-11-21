@@ -532,7 +532,7 @@
       '<div class="v21-more-sec">Account</div>' +
       '<div class="v21-more-card"><div class="v21-more-grid">' + account + "</div></div>" +
       '<button type="button" class="v21-signout" data-go="welcome">Sign out</button>' +
-      '<p class="v21-ver">Rate Buddies v2.1.3</p>' +
+      '<p class="v21-ver">Rate Buddies v2.1.4</p>' +
       "</div></section>";
   }
   function facebookFMore() {

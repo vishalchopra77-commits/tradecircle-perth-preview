@@ -2,6 +2,14 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.1.4 — 21 Nov 2026 (versionCode 7)
+
+### Android navigation bar fix
+- Bottom buttons (onboarding Next, sign-up steps, tab bar, bottom CTAs, sheets, chat and Support message bars) no longer sit behind the Android navigation bar.
+- Native (MainActivity): the content view holding the WebView is now padded by the navigation bar, display cutout and the open keyboard, so the page ends above the system bar. v2.1.3 padded the WebView itself, which a WebView ignores. Insets are consumed natively, so CSS env(safe-area-inset-bottom) is 0 in the app and nothing is padded twice. The status bar stays transparent with the header padded by --rb-sat. Nav-bar area uses the app background with dark icons.
+- Web (v214.css): chat and Support message bars add env(safe-area-inset-bottom) for browsers and installed web apps; other bottom bars already did.
+- QA: new inset check (qa/run_inset.py) emulates a 48px bottom inset on every screen at 360/390/412 and fails any control that ends inside it.
+
 ## v2.1.3 — 21 Nov 2026 (versionCode 6)
 
 ### Sign-up
