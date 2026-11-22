@@ -278,7 +278,7 @@
   document.addEventListener("change", function (e) {
     if (!live()) return;
     var t = e.target;
-    if (t && t.id === "reviewCap") { e.stopImmediatePropagation(); var n = Math.max(1, Math.min(20, Number(t.value) || 3)); saveSetting("review_daily_cap", n, "Set daily Google Review cap to " + n); }
+    if (t && t.id === "reviewCap") { e.stopImmediatePropagation(); var n = Math.max(1, Math.min(20, Number(t.value) || 3)); var nowC = Date.now(); if (root.__rbCapLast && root.__rbCapLast.n === n && nowC - root.__rbCapLast.t < 8000) return; root.__rbCapLast = { n: n, t: nowC }; saveSetting("review_daily_cap", n, "Set daily Google Review cap to " + n); }
     if (t && t.classList && t.classList.contains("badge-tier")) {
       setTimeout(function () { var v = null; try { v = JSON.parse(localStorage.getItem("tc_badge_tiers")); } catch (eB) {} if (Array.isArray(v)) saveSetting("badge_tiers", v, "Updated badge levels"); }, 0);
     }

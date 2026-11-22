@@ -7,16 +7,34 @@ android {
         applicationId "com.ratebuddies.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
+        versionCode 12
         versionName "2.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // v2.2.2c: Facebook app sign-in (public values; the client token is semi-public and ships in every APK)
+        resValue "string", "facebook_app_id", "1699917951765989"
+        resValue "string", "fb_login_protocol_scheme", "fb1699917951765989"
+        resValue "string", "facebook_client_token", (System.getenv("FB_CLIENT_TOKEN") ?: (project.findProperty("fbClientToken") ?: "MISSING_CLIENT_TOKEN"))
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // v2.2.2c: one stable test-build signing key, so Meta's Android key hash stays the same on every CI build
+    // and new builds install over old ones. Debug/test only; NOT for a Play Store release.
+    signingConfigs {
+        rbDebug {
+            storeFile file("rb-debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+            storeType "pkcs12"
+        }
+    }
     buildTypes {
+        debug {
+            if (file("rb-debug.keystore").exists()) signingConfig signingConfigs.rbDebug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

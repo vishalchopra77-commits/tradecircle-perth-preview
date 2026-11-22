@@ -18,6 +18,7 @@
   function isNative() { try { return !!(root.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()); } catch (e) { return false; } }
   var fb = { enabled: null, checking: null, busy: false };
 
+  var FB_APP_ID = "1699917951765989"; /* public Facebook App ID (Rate Buddies) */
   function checkEnabled() {
     if (fb.enabled !== null) return Promise.resolve(fb.enabled);
     if (fb.checking) return fb.checking;
@@ -29,16 +30,54 @@
     return fb.checking;
   }
 
+  /* v2.2.2c: native Facebook app sign-in (@capacitor-community/facebook-login). Returns true when signed in,
+     "cancel" when the member backed out, false when it is not available (then the Custom Tab login runs). */
+  async function nativeLogin() {
+    var FL = root.Capacitor && Capacitor.Plugins && Capacitor.Plugins.FacebookLogin;
+    if (!isNative() || !FL || !FL.login) return false;
+    try {
+      try { if (FL.initialize) await FL.initialize({ appId: FB_APP_ID }); } catch (eI) {}
+      var r = await FL.login({ permissions: ["public_profile", "email", "user_link"] });
+      var tok = r && r.accessToken && r.accessToken.token;
+      if (!tok) return "cancel";
+      var resp = await fetch(cfg().url + "/functions/v1/facebook-native", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: cfg().anonKey, Authorization: "Bearer " + cfg().anonKey },
+        body: JSON.stringify({ access_token: tok })
+      });
+      var j = await resp.json().catch(function () { return {}; });
+      if (!resp.ok || !j.token_hash) throw new Error(j.error || ("sign-in service " + resp.status));
+      var v = await RB.client.auth.verifyOtp({ token_hash: j.token_hash, type: "magiclink" });
+      if (v.error) throw v.error;
+      await afterLogin(true, tok);
+      return true;
+    } catch (err) {
+      var msg = String((err && (err.message || err.errorMessage)) || err || "");
+      if (/cancel/i.test(msg)) return "cancel";
+      console.warn("RB native Facebook sign-in failed, using the browser login", msg);
+      return false;
+    }
+  }
+
   async function start() {
     if (fb.busy) return; fb.busy = true;
     try {
       RB.init();
       var native = isNative();
+      if (native) {
+        var nl = await nativeLogin();
+        if (nl === true || nl === "cancel") return;
+      }
       var redirectTo = native ? DEEP : (location.origin + location.pathname);
       try { localStorage.setItem("rb_fb_pending", String(Date.now())); } catch (e) {}
       var res = await RB.client.auth.signInWithOAuth({ provider: "facebook", options: { redirectTo: redirectTo, scopes: "email,public_profile,user_link", skipBrowserRedirect: native } });
       if (res.error) throw res.error;
-      if (native && res.data && res.data.url) root.location.href = res.data.url; /* Capacitor hands non-app URLs to the system browser */
+      if (native && res.data && res.data.url) {
+        /* v2.2.2c: open Facebook login in an in-app Chrome Custom Tab (@capacitor/browser), not via an Android app chooser */
+        var Br = root.Capacitor && Capacitor.Plugins && Capacitor.Plugins.Browser;
+        if (Br && Br.open) await Br.open({ url: res.data.url, presentationStyle: "popover" });
+        else root.location.href = res.data.url; /* older build without the plugin */
+      }
     } catch (err) {
       toast("Facebook sign-in did not start: " + ((err && err.message) || "please try again"));
     } finally { setTimeout(function () { fb.busy = false; }, 1500); }
@@ -86,16 +125,16 @@
   }
 
   /* After Facebook: fill what Facebook gave us, then the usual details → areas → Awaiting approval */
-  async function afterLogin() {
+  async function afterLogin(force, nativeToken) {
     var sess = (await RB.client.auth.getSession()).data.session;
     if (!sess) return;
     var user = sess.user, md = user.user_metadata || {};
-    var isFb = (user.app_metadata && (user.app_metadata.provider === "facebook" || (user.app_metadata.providers || []).indexOf("facebook") >= 0));
+    var isFb = force === true || md.signup_provider === "facebook" || (user.app_metadata && (user.app_metadata.provider === "facebook" || (user.app_metadata.providers || []).indexOf("facebook") >= 0));
     if (!isFb) return;
     try { localStorage.removeItem("rb_fb_pending"); } catch (e) {}
     await RB.getSession(); await RB.loadProfile();
     var p = RB.profile || {}, nm = splitName(md), avatar = md.avatar_url || md.picture || "", link = fbLink(user);
-    if (!link && sess.provider_token) link = await graphLink(sess.provider_token);
+    if (!link && (nativeToken || sess.provider_token)) link = await graphLink(nativeToken || sess.provider_token);
     var patch = {}, ex = Object.assign({}, p.extras || {});
     if (!p.first && nm.first) patch.first_name = nm.first.slice(0, 60);
     if (!p.last && nm.last) patch.last_name = nm.last.slice(0, 60);
@@ -181,7 +220,10 @@
       var App = root.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App;
       if (App && App.addListener && !boot._l) {
         boot._l = true;
-        App.addListener("appUrlOpen", function (ev) { handleUrl(ev && ev.url); });
+        App.addListener("appUrlOpen", function (ev) {
+          try { var Br = Capacitor.Plugins && Capacitor.Plugins.Browser; if (Br && Br.close && ev && String(ev.url || "").indexOf("com.ratebuddies.app://") === 0) Br.close().catch(function () {}); } catch (eC) {}
+          handleUrl(ev && ev.url);
+        });
         if (App.getLaunchUrl) App.getLaunchUrl().then(function (r) { if (r && r.url) handleUrl(r.url); }).catch(function () {});
       }
     } catch (e) {}
@@ -192,7 +234,7 @@
       RB.client.auth.getSession().then(function (r) {
         var s = r.data && r.data.session; if (!s) return;
         var prov = s.user.app_metadata || {};
-        if (prov.provider === "facebook" || (prov.providers || []).indexOf("facebook") >= 0) {
+        if (prov.provider === "facebook" || (prov.providers || []).indexOf("facebook") >= 0 || (s.user.user_metadata || {}).signup_provider === "facebook") {
           if (pending || !(RB.profile && RB.profile.business && RB.profile.trade)) afterLogin();
         }
       });

@@ -10,6 +10,8 @@ android/captures/
 *.aab
 *.keystore
 *.jks
+# v2.2.2c: the shared TEST signing key (debug only, password "android") so the Facebook key hash stays stable
+!android/app/rb-debug.keystore
 .DS_Store
 secrets/
 .env

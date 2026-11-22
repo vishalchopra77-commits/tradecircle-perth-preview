@@ -23,6 +23,8 @@ done
 cp -R "$ROOT/vendor/." "$WWW/vendor/"
 if [ -d "$ROOT/fonts" ]; then cp -R "$ROOT/fonts/." "$WWW/fonts/"; fi
 if [ -d "$ROOT/assets" ]; then cp -R "$ROOT/assets/." "$WWW/assets/"; fi
+# v2.2.2c: trade cover photos (v159.js covers/*.jpg) were missing from the APK
+if [ -d "$ROOT/covers" ]; then mkdir -p "$WWW/covers"; cp -R "$ROOT/covers/." "$WWW/covers/"; fi
 # icons
 cp "$ROOT/favicon.ico" "$WWW/" 2>/dev/null || true
 cp "$ROOT/apple-touch-icon.png" "$WWW/" 2>/dev/null || true
