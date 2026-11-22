@@ -50,7 +50,7 @@
     }
     if (TCAdmin.members) {
       TCAdmin.members.splice(0, TCAdmin.members.length);
-      active.filter(function (p) { return p.status === "approved" || p.status === "pending" || p.status === "rejected"; }).forEach(function (p) {
+      active.filter(function (p) { return p.status === "approved" || p.status === "pending" || p.status === "rejected" || p.status === "suspended"; }).forEach(function (p) {
         TCAdmin.members.push({
           id: p.id,
           name: p.name,

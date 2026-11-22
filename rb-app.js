@@ -59,6 +59,7 @@
       if (m.avatarPath && RB.client) {
         try { var pu = RB.client.storage.from("avatars").getPublicUrl(m.avatarPath); row.photo = (pu && pu.data && pu.data.publicUrl) || ""; } catch (eP) {}
       }
+      if (!row.photo && m.extras && /^https:\/\//.test(m.extras.avatar_url || "")) row.photo = m.extras.avatar_url; /* v2.2.2b: Facebook photo */
       row.links = { facebook: m.facebook || "", google: m.googleBusinessUrl || "", website: (m.links && m.links.website) || "" };
       row.profile = {
         years: m.years != null ? String(m.years) : "",
@@ -219,6 +220,7 @@
         phone: draft.phone,
         regions: draft.regions || []
       });
+      if (T() && T().state) T().state._rbSignupError = "";
       if (res.needsConfirm) {
         toast("Account created. Check your email and tap the link to confirm, then sign in.");
       } else {
@@ -232,11 +234,38 @@
       }
       window.__rbSignupPassword = "";
     } catch (err) {
-      toast((err && err.message) || "Could not create the account.");
+      /* v2.2.2b: never leave a failed sign-up looking like "Awaiting approval" */
+      var msg = (err && err.message) || "Could not create the account.";
+      if (/at least 6 characters/i.test(msg)) msg = "Your password is too short. Use at least 8 characters.";
+      if (T() && T().state) T().state._rbSignupError = msg;
+      window.__rbSignupPassword = "";
+      toast("Your account was not created: " + msg);
     } finally {
       signingUp = false;
+      if (onScreen("pending") && T().go) T().go("pending", { replace: true });
     }
     return true;
+  }
+  /* v2.2.2b: phone / Facebook sign-up routes (prototype screens) still need an email + password for the live account */
+  function finishCardHtml() {
+    var st = (T() && T().state) || {}, d = st.draft || {};
+    if (RB.isDemo() || isPreviewStudio() || isDesignShot()) return "";
+    if (RB.session) return '<div class="rb-finish ok" role="status"><strong>Account created.</strong> Your profile is with the admin now. This screen moves on by itself when you are approved.</div>';
+    if (signingUp) return '<div class="rb-finish" role="status"><strong>Creating your account…</strong></div>';
+    var err = st._rbSignupError ? '<p class="rb-finish-err" role="alert">Your account was not created: ' + esc(st._rbSignupError) + "</p>" : "";
+    var lead = st._rbSignupError ? "Fix it below and tap Create my account." : "One more step: add the email and password you will sign in with.";
+    return '<form class="rb-finish' + (st._rbSignupError ? " bad" : "") + '" data-form="rb-finish-account">' + err +
+      '<p class="rb-finish-lead">' + lead + "</p>" +
+      '<div class="field"><label>Email</label><input type="email" name="email" required autocomplete="email" value="' + esc(d.email || "") + '" placeholder="you@example.com"></div>' +
+      '<div class="field"><label>Password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></div>' +
+      '<button class="btn btn-primary" type="submit">Create my account</button></form>';
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function finishCss() {
+    if (document.getElementById("rb-finish-css")) return;
+    var st = document.createElement("style"); st.id = "rb-finish-css";
+    st.textContent = ".rb-finish{margin:0 0 14px;padding:14px;border:1px solid #D7DEEA;border-radius:16px;background:#fff;color:#0F172A;font-size:15px;line-height:1.45}.rb-finish.ok{border-color:#16A34A;background:#F0FDF4}.rb-finish.bad{border-color:#DC2626;background:#FEF2F2}.rb-finish-err{margin:0 0 6px;color:#991B1B;font-weight:600}.rb-finish-lead{margin:0 0 10px;color:#1E293B}.rb-finish .btn{margin-top:8px;width:100%}";
+    document.head.appendChild(st);
   }
 
   /* After the first real sign-in, apply sign-up details that could not be saved
@@ -331,7 +360,27 @@
       }
       if (type === "signup" || type === "signup-email") {
         var p = form.querySelector('[name="password"]');
+        if (p && !RB.isDemo() && String(p.value || "").length < 8) {
+          e.preventDefault(); e.stopImmediatePropagation();
+          p.classList.add("invalid");
+          toast("Use at least 8 characters for your password.");
+          try { p.focus(); } catch (eF) {}
+          return;
+        }
         if (p) window.__rbSignupPassword = p.value;
+        if (T() && T().state) T().state._rbSignupError = "";
+      }
+      if (type === "rb-finish-account") {
+        e.preventDefault(); e.stopImmediatePropagation();
+        var em = String((form.querySelector('[name="email"]') || {}).value || "").trim();
+        var pw2 = String((form.querySelector('[name="password"]') || {}).value || "");
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { toast("Enter a valid email."); return; }
+        if (pw2.length < 8) { toast("Use at least 8 characters for your password."); return; }
+        var TCf = T(), dr = (TCf && TCf.state && TCf.state.draft) || {};
+        dr.email = em; if (TCf && TCf.state) { TCf.state.draft = dr; TCf.state._rbSignupError = ""; }
+        window.__rbSignupPassword = pw2;
+        onSignUp(dr, pw2);
+        if (TCf && TCf.go) TCf.go("pending", { replace: true });
       }
     }, true);
 
@@ -344,6 +393,11 @@
 
     document.addEventListener("click", function (e) {
       var btn = e.target.closest && e.target.closest("[data-action]");
+      if (btn && btn.getAttribute("data-action") === "simulate-approval" && !RB.isDemo() && RB.session && RB.profile && RB.profile.status !== "approved") {
+        e.preventDefault(); e.stopImmediatePropagation();
+        toast("Live test: approve this account in the web admin. This screen moves on by itself.");
+        return;
+      }
       if (btn && btn.getAttribute("data-action") === "finish-create" && !RB.isDemo() && !RB.session) {
         afterCreateStep();
         return;
@@ -408,6 +462,21 @@
       console.warn("RB boot", err);
     }
   }
+
+  /* v2.2.2b: account status card on Awaiting approval (inserted into whatever renders that screen) */
+  var lastCard = "";
+  setInterval(function () {
+    var sc = document.querySelector('[data-screen="pending"]');
+    if (!sc || !onScreen("pending")) { lastCard = ""; return; }
+    var html = finishCardHtml(), host = sc.querySelector(".scroll") || sc, cur = host.querySelector(".rb-finish");
+    if (cur && document.activeElement && cur.contains(document.activeElement)) return; /* member is typing */
+    if (html === lastCard && cur) return;
+    lastCard = html;
+    if (cur) cur.remove();
+    if (!html) return;
+    finishCss();
+    host.insertAdjacentHTML("afterbegin", html);
+  }, 400);
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else setTimeout(boot, 0);

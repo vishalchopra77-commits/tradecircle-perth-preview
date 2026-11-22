@@ -143,6 +143,7 @@
 
   function vouches() {
     var list = loadJson(LS_VOUCHES, null);
+    if (root.RB_LIVE_VOUCHES) return Array.isArray(list) ? list : []; /* v2.2.2b live: no sample vouches */
     if (!Array.isArray(list) || !list.length) {
       list = DEFAULT_VOUCHES.map(function (v) { return Object.assign({}, v); });
       saveJson(LS_VOUCHES, list);
@@ -211,6 +212,8 @@
   }
 
   function syncQueue() {
+    /* v2.2.2b live: the promotion queue comes from the database (members join themselves) */
+    if (root.RBLiveQueue && RBLiveQueue.rows) { var liveQ = RBLiveQueue.rows(); if (liveQ) { S()._queue = liveQ; return S()._queue; } }
     var eligible = (T().MEMBERS || []).filter(function (m) {
       return !m.isMe && badgeOf(m.id).current;
     });

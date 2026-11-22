@@ -94,6 +94,7 @@
         avail[p.id] = p.available_for_swap !== false;
         var cur = stats[p.id] || {};
         stats[p.id] = { reviews: p.reviews_given_count || 0, vouches: cur.vouches || 0 };
+        if (p.id === me && !p.avatar_path && RB.profile && RB.profile.extras && /^https:\/\//.test(RB.profile.extras.avatar_url || "")) st.photoData = RB.profile.extras.avatar_url; /* v2.2.2b: Facebook photo */
         if (p.id === me && p.avatar_path) {
           var u = db().storage.from("avatars").getPublicUrl(p.avatar_path);
           if (u && u.data && u.data.publicUrl) st.photoData = u.data.publicUrl + "?v=" + encodeURIComponent(p.avatar_path);

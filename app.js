@@ -1142,7 +1142,7 @@
       body = '<div class="auth-hero"><h2>Continue with email</h2><p>Use an email and a password. This is a prototype — nothing is sent to a real inbox.</p></div>' +
         '<form data-form="signup-email">' +
         '<div class="field"><label>Email</label><input type="email" name="email" placeholder="you@example.com" value="' + escapeAttr(d.email || "") + '" required autocomplete="email"></div>' +
-        '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required autocomplete="new-password"></div>' +
+        '<div class="field"><label>Password</label><input type="password" name="password" placeholder="At least 8 characters" required minlength="8" autocomplete="new-password"></div>' +
         '<button class="btn btn-primary has-ico" type="submit" style="margin-top:8px">' + icon("chev") + "<span>Continue</span></button></form>" +
         '<button type="button" class="btn btn-ghost ink" data-action="signup-method" data-method="" style="margin-top:10px">Back to options</button>';
     } else if (method === "phone") {

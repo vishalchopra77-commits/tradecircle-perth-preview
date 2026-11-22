@@ -18,6 +18,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- v2.2.2b: Facebook sign-in returns here (Supabase redirect com.ratebuddies.app://auth-callback) -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.ratebuddies.app" android:host="auth-callback" />
+            </intent-filter>
         </activity>
 
         <provider

@@ -299,10 +299,10 @@
 
   function kpis() {
     return '<div class="kpis">' +
-      '<article class="kpi kpi-amber"><div class="kpi-ico">' + I.requests + '</div><div class="n">' + pendingCount() + '</div><div class="l">Profiles waiting</div><div class="kpi-trend up">' + I.trend + " +2 this week</div></article>" +
-      '<article class="kpi kpi-teal"><div class="kpi-ico">' + I.members + '</div><div class="n">' + members.filter(function (m) { return m.status === "active"; }).length + '</div><div class="l">Active members</div><div class="kpi-trend up">' + I.trend + " +5 this month</div></article>" +
-      '<article class="kpi kpi-blue"><div class="kpi-ico">' + I.alerts + '</div><div class="n">7</div><div class="l">Alerts this week</div><div class="kpi-trend up">' + I.trend + " +3 vs last week</div></article>" +
-      '<article class="kpi kpi-navy"><div class="kpi-ico">' + I.queue + '</div><div class="n">' + queue.length + '</div><div class="l">In the promo queue</div><div class="kpi-trend flat">1 paid jump pending</div></article>' +
+      '<article class="kpi kpi-amber"><div class="kpi-ico">' + I.requests + '</div><div class="n">' + pendingCount() + '</div><div class="l">Profiles waiting</div><div class="kpi-trend up">' + I.trend + (window.__rbKpi ? " " + __rbKpi.pendingTrend : " +2 this week") + "</div></article>" +
+      '<article class="kpi kpi-teal"><div class="kpi-ico">' + I.members + '</div><div class="n">' + members.filter(function (m) { return m.status === "active"; }).length + '</div><div class="l">Active members</div><div class="kpi-trend up">' + I.trend + (window.__rbKpi ? " " + __rbKpi.membersTrend : " +5 this month") + "</div></article>" +
+      '<article class="kpi kpi-blue"><div class="kpi-ico">' + I.alerts + '</div><div class="n">' + (window.__rbKpi ? __rbKpi.alertsWeek : 7) + '</div><div class="l">Alerts this week</div><div class="kpi-trend up">' + I.trend + (window.__rbKpi ? " " + __rbKpi.alertsTrend : " +3 vs last week") + "</div></article>" +
+      '<article class="kpi kpi-navy"><div class="kpi-ico">' + I.queue + '</div><div class="n">' + queue.length + '</div><div class="l">In the promo queue</div><div class="kpi-trend flat">' + (window.__rbKpi ? __rbKpi.queueTrend : "1 paid jump pending") + '</div></article>' +
       "</div>";
   }
 
@@ -326,8 +326,8 @@
     if (page === "dashboard") {
       return kpis() +
         '<div class="dash-grid">' +
-          '<section class="chart-card"><div class="panel-h"><div><h2>Members joined</h2><p class="panel-sub">Fictional weekly sign-ups</p></div></div>' + bars(memberWeeks) + "</section>" +
-          '<section class="chart-card"><div class="panel-h"><div><h2>Recommendation alerts</h2><p class="panel-sub">Fictional weekly alerts sent</p></div></div>' + bars(alertWeeks, true) + "</section>" +
+          '<section class="chart-card"><div class="panel-h"><div><h2>Members joined</h2><p class="panel-sub">' + (window.__rbKpi ? "Weekly sign-ups (live)" : "Fictional weekly sign-ups") + '</p></div></div>' + bars(memberWeeks) + "</section>" +
+          '<section class="chart-card"><div class="panel-h"><div><h2>Recommendation alerts</h2><p class="panel-sub">' + (window.__rbKpi ? "Weekly alerts approved (live)" : "Fictional weekly alerts sent") + '</p></div></div>' + bars(alertWeeks, true) + "</section>" +
         "</div>" +
         '<div class="dash-grid">' +
           panel("Recent profile requests", "Approve or decline from here", '<button class="btn btn-ghost btn-sm" data-page="requests">' + I.requests + "<span>View all</span></button>", requestRows(requests, true)) +
@@ -356,7 +356,7 @@
         var hay = (m.name + " " + m.business + " " + m.trade + " " + m.areas).toLowerCase();
         return !q || hay.indexOf(q.toLowerCase()) >= 0;
       });
-      return panel("Members", members.length + " members in this fictional circle", "",
+      return panel("Members", members.length + (window.__rbKpi ? " members (live)" : " members in this fictional circle"), "",
         '<div class="search"><input id="memSearch" type="search" placeholder="Search by name, trade or area" value="' + esc(q) + '"><select id="memFilter"><option value="">All statuses</option><option>active</option><option>suspended</option></select></div>' +
         (list.length ? '<table><thead><tr><th>Member</th><th>Trade</th><th>Areas</th><th>Joined</th><th>Status</th><th>Intro</th><th></th></tr></thead><tbody>' +
           list.map(function (m) {
@@ -589,10 +589,10 @@
   function renderNotifs() {
     $("notifPanel").innerHTML =
       "<h3>Notifications</h3>" +
-      [["Devi found a plumber request in Perth (Joondalup post) — 12 members will be asked to recommend Michael. Tap to approve.", "Today 7:58 am", "devi-inbox"],
+      (window.__rbAdminNotifs || [["Devi found a plumber request in Perth (Joondalup post) — 12 members will be asked to recommend Michael. Tap to approve.", "Today 7:58 am", "devi-inbox"],
        ["Nina Kaur applied to join.", "Today 8:10 am", "requests"],
        ["A pest control alert is still open.", "Today 7:30 am", "alerts"],
-       ["Tom Reeves jumped the promotion queue.", "Sat 10:12 am", "queue"]].map(function (n) {
+       ["Tom Reeves jumped the promotion queue.", "Sat 10:12 am", "queue"]]).map(function (n) {
         return '<button class="notif-item" type="button" data-page="' + n[2] + '">' + av(n[0]) + "<div><p>" + esc(n[0]) + "</p><span>" + n[1] + "</span></div></button>";
       }).join("");
   }
@@ -704,7 +704,9 @@
   $("menuBtn").innerHTML = I.menu;
   $("notifBtn").insertAdjacentHTML("afterbegin", I.bell);
 
-  window.TCAdmin = { go: go, paint: paint, esc: esc, panel: panel, badge: badge, facebookF: facebookF, I: I, who: who, av: av, requests: requests, members: members, getRequests: function(){return requests;}, getMembers: function(){return members;} };
+  window.TCAdmin = { go: go, paint: paint, esc: esc, panel: panel, badge: badge, facebookF: facebookF, I: I, who: who, av: av, requests: requests, members: members, getRequests: function(){return requests;}, getMembers: function(){return members;},
+    /* v2.2.2b live: the live bridge (rb-admin-live2.js) refills these arrays in place */
+    queue: queue, flags: flags, audit: audit, alerts: alerts, chats: chats, activity: activity, fbPosts: fbPosts, memberWeeks: memberWeeks, alertWeeks: alertWeeks, regions: regions, trades: trades, page: function () { return page; }, empty: empty, icoBtn: icoBtn };
   if (window.TC180Admin && TC180Admin.attach) TC180Admin.attach();
   if (window.TC181Admin && TC181Admin.attach) TC181Admin.attach();
 

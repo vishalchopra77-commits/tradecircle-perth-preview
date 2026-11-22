@@ -36,7 +36,7 @@
     if (client) return client;
     if (!root.supabase || !cfg().url || !cfg().anonKey) return null;
     client = root.supabase.createClient(cfg().url, cfg().anonKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" } /* v2.2.2b: PKCE so Facebook sign-in can return to the app with a code */
     });
     client.auth.onAuthStateChange(function (_evt, sess) {
       session = sess || null;
