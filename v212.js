@@ -10,6 +10,18 @@
     { id: "your-profile", label: "Profile" }
   ];
 
+  /* v2.2.0 (Vishal, 22 Nov): chips come from the admin Tutorial sections (TCTutorials).
+     All first, then visible sections that have at least one visible video, sorted A-Z by title.
+     CHIPS above is only the fallback when the store is missing. */
+  function chipLabel(t) { return String(t || "").replace(/google reviews?/gi, function (m) { return /s$/i.test(m) ? "Google Reviews" : "Google Review"; }); }
+  function chipList() {
+    var tut = root.TCTutorials;
+    if (!tut || !tut.visibleSections) return CHIPS;
+    var secs = (tut.visibleSections() || []).filter(function (sec) { return (tut.videosIn(sec.id) || []).length > 0; });
+    secs.sort(function (a, b) { return String(a.title || "").localeCompare(String(b.title || ""), "en", { sensitivity: "base" }); });
+    return [{ id: "all", label: "All" }].concat(secs.map(function (sec) { return { id: sec.id, label: chipLabel(sec.title) }; }));
+  }
+
   var BRAND_THUMBS = {
     "intro-1": "assets/tutorials/welcome.png",
     v1: "assets/tutorials/tour.png",
@@ -69,8 +81,12 @@
     return out;
   }
 
-  function chip() { return S()._tutChip || "all"; }
-  function query() { return String(S()._tutQuery || "").trim().toLowerCase(); }
+  function chip() {
+    var c = S()._tutChip || "all";
+    if (c !== "all" && !chipList().some(function (x) { return x.id === c; })) c = "all";
+    return c;
+  }
+  function query() { return window.RB_TUT_SEARCH ? String(S()._tutQuery || "").trim().toLowerCase() : ""; }
   function searching() { return !!S()._tutSearch; }
 
   function matchesQuery(v, q) {
@@ -124,9 +140,9 @@
     var dash = (watchedN / totalN) * C;
     var q = S()._tutQuery || "";
     var c = chip();
-    var searchOn = searching();
+    var searchOn = !!window.RB_TUT_SEARCH && searching();
 
-    var chips = CHIPS.map(function (ch) {
+    var chips = chipList().map(function (ch) {
       return '<button type="button" class="tut-chip' + (c === ch.id ? " is-on" : "") +
         '" role="tab" aria-selected="' + (c === ch.id ? "true" : "false") +
         '" data-action="tut-chip" data-chip="' + esc(ch.id) + '">' + esc(ch.label) + "</button>";
@@ -138,12 +154,13 @@
         '<div class="tut-header-row">' +
           backBtn() +
           '<div class="ht">Video tutorials</div>' +
+          (!window.RB_TUT_SEARCH ? "" : /* v2.2.0: search icon removed (Vishal, 22 Nov); flag brings it back */
           '<button class="icon-btn tut-round-btn tut-search-btn" type="button" data-action="tut-search-toggle" aria-label="' +
             (searchOn ? "Close search" : "Search") + '">' +
             (searchOn
               ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
               : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>') +
-          "</button>" +
+          "</button>") +
         "</div>" +
         (searchOn
           ? '<div class="tut-search-field"><input type="search" id="tutSearch" placeholder="Search tutorials" value="' + esc(q) + '" aria-label="Search tutorials"></div>'

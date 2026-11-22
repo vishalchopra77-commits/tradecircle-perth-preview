@@ -167,6 +167,7 @@
   function passRelFilter(m) {
     var f = S().relFilter || "all";
     if (f === "all") return true;
+    if (f === "friends") return relOf(m) === "friends";
     if (f === "notfriends") return relOf(m) === "none";
     if (f === "pending") return relOf(m) === "pending";
     if (f === "need") return needsMyReview(m);
@@ -312,7 +313,7 @@ function facebookF(size, color) {
     var fb = r === "friends"
       ? '<span class="st st-friends">Facebook friends</span>'
       : r === "pending"
-        ? '<span class="st st-pending">Request pending</span>'
+        ? '<span class="st st-pending">Request Pending</span>'
         : '<span class="st st-none">Not connected</span>';
     var mine = iReviewed(m)
       ? '<span class="st st-yes">You reviewed them</span>'
@@ -343,6 +344,14 @@ function facebookF(size, color) {
       "</div></button>" + actions + "</div>";
   }
 
+  /* v2.2.0 (Vishal, 22 Nov): Status chips replaced by ONE filter dropdown, same component as Reviews (rb-dd). Friends option added. relChips kept for rollback. */
+  var REL_OPTS = [
+    ["all", "All"],
+    ["friends", "Friends"],
+    ["notfriends", "Not friends yet"],
+    ["pending", "Pending"],
+    ["need", "Need my review"]
+  ];
   function relChips() {
     var cur = S().relFilter || "all";
     var items = [
@@ -356,8 +365,34 @@ function facebookF(size, color) {
     }).join("") + "</div>";
   }
 
+  function relCount(id) {
+    var keep = S().relFilter;
+    S().relFilter = id;
+    var n = 0;
+    try { n = T().filteredMembers().length; } catch (e) {}
+    S().relFilter = keep;
+    return n;
+  }
+  function relDropdown() {
+    var cur = S().relFilter || "all";
+    var curO = REL_OPTS.filter(function (o) { return o[0] === cur; })[0] || REL_OPTS[0];
+    var open = !!S()._relMenuOpen;
+    var chev = '<svg class="rb-keep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+    return '<div class="v21-sec-row rb-sec-filter rb-circle-filter"><div class="sec">Status</div>' +
+      '<div class="rb-dd' + (open ? " open" : "") + '">' +
+      '<button type="button" class="rb-dd-btn" data-action="rb-rel-menu" aria-haspopup="listbox" aria-expanded="' + (open ? "true" : "false") + '">' +
+      esc(curO[1]) + " (" + relCount(curO[0]) + ")" + chev + "</button>" +
+      '<div class="rb-dd-menu" role="listbox" aria-label="Filter Circle members">' +
+      REL_OPTS.map(function (o) {
+        return '<button type="button" role="option" aria-selected="' + (cur === o[0] ? "true" : "false") + '" class="rb-dd-opt' + (cur === o[0] ? " on" : "") + '" data-action="rb-rel" data-rel-id="' + o[0] + '"><span>' + esc(o[1]) + '</span><span class="rb-dd-n">' + relCount(o[0]) + "</span></button>";
+      }).join("") +
+      "</div></div></div>";
+  }
+
   function renderMembers() {
     var st = S();
+    /* v2.2.0: Trade row removed from Circle (flag RB_CIRCLE_TRADE brings it back); no hidden trade filter left applied. */
+    if (!window.RB_CIRCLE_TRADE) st.tradeFilter = "All";
     var list = T().filteredMembers();
     var used = {};
     (T().MEMBERS || []).forEach(function (m) { if (!m.isMe) used[m.trade] = true; });
@@ -369,17 +404,17 @@ function facebookF(size, color) {
     var allMine = T().isAllMetro && T().isAllMetro(mineIds);
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
       '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
-      '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
       '<button class="' + (st.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
-      '</div>' + relChips() +
-      '<div style="height:8px"></div><div class="chips">' +
+      '</div>' + (window.RB_CIRCLE_CHIPS ? relChips() : relDropdown()) +
+      (window.RB_CIRCLE_TRADE ? '<div style="height:8px"></div><div class="chips">' +
       trades.map(function (t) { return '<button class="chip' + (st.tradeFilter === t ? " active" : "") + '" data-trade="' + esa(t) + '">' + t + "</button>"; }).join("") +
-      "</div>" +
+      "</div>" : "") +
       (st.tipDismissed ? '<div style="height:10px"></div>' : '<div class="banner info" style="margin:8px 0 14px" id="tipBanner">Tap Add friend to send a Facebook request, or Message to chat in the app. Weekly meet-ups stay offline. <button class="link" data-action="dismiss-tip" style="margin-left:6px">Got it</button></div>') +
       statusLegend() +
-      '<div id="memberList">' + (list.length ? list.map(function (m) { return (window.TC12 && TC12.memberCard) ? TC12.memberCard(m) : memberCard(m); }).join("") : '<div class="empty"><h3>No members match</h3><p>Try All Perth metro, or clear the filters and search.</p></div>') +
+      '<div id="memberList">' + (list.length ? list.map(function (m) { return (window.TC12 && TC12.memberCard) ? TC12.memberCard(m) : memberCard(m); }).join("") : '<div class="empty"><h3>No members match</h3><p>' + ((st.relFilter && st.relFilter !== "all") ? "Try setting Status to All, choose All Perth metro, or clear the search." : "Try All Perth metro, or clear the search.") + "</p></div>") +
       "</div></div></section>";
   }
 
@@ -464,7 +499,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.4 \u00b7 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.2.0 \u00b7 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -814,11 +849,12 @@ function facebookF(size, color) {
       headWho +
       '<button class="icon-btn" data-action="chat-more" aria-label="More">...</button></div>' +
       '<div class="chat-thread" id="chatThread">' + c.messages.map(function (msg) { return bubble(msg, c); }).join("") + "</div>" +
-      '<div class="quick-row">' +
+      /* v2.2.0: quick-action chips removed from the chat (Vishal, 22 Nov). Handlers stay; set window.RB_CHAT_QUICK = true to bring them back. */
+      (window.RB_CHAT_QUICK ? '<div class="quick-row">' +
       '<button type="button" data-action="ask-review-chat">Send review request</button>' +
       '<button type="button" data-action="share-my-profile">Share my profile</button>' +
       '<button type="button" data-action="share-location">Share location</button>' +
-      "</div>" +
+      "</div>" : "") +
       '<div class="chat-composer">' +
       '<button class="plus" data-action="attach" aria-label="Attach">' + I.plus + "</button>" +
       '<textarea id="chatInput" rows="1" placeholder="Message"></textarea>' +
@@ -1070,6 +1106,20 @@ function facebookF(size, color) {
       if (act === "drawer-fb") { go("edit-profile"); return true; }
       if (act === "drawer-google") { go("settings"); setTimeout(openGoogleSheet, 30); return true; }
       if (dItem.dataset.go) { go(dItem.dataset.go); return true; }
+    }
+    var relMenu = e.target.closest("[data-action='rb-rel-menu']");
+    if (relMenu) {
+      S()._relMenuOpen = !S()._relMenuOpen;
+      var rdd = relMenu.closest(".rb-dd");
+      if (rdd) { rdd.classList.toggle("open", !!S()._relMenuOpen); relMenu.setAttribute("aria-expanded", S()._relMenuOpen ? "true" : "false"); if (window.TC220 && TC220.fitMenu) TC220.fitMenu(); }
+      return true;
+    }
+    var relOpt = e.target.closest("[data-action='rb-rel']");
+    if (relOpt) {
+      S()._relMenuOpen = false;
+      S().relFilter = relOpt.getAttribute("data-rel-id") || "all";
+      go("members");
+      return true;
     }
     var relB = e.target.closest("[data-rel]");
     if (relB) {
@@ -1394,6 +1444,11 @@ function facebookF(size, color) {
   window.notifTile = notifTile;
   window.TC12 = {
     passRelFilter: passRelFilter,
+    relOf: relOf,
+    iReviewed: iReviewed,
+    theyReviewed: theyReviewed,
+    needsMyReview: needsMyReview,
+    gLink: gLink,
     memberCard: memberCard,
     renderMembers: renderMembers,
     renderMember: renderMember,

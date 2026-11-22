@@ -96,7 +96,7 @@
         '<button class="btn btn-ghost btn-sm" type="button" data-action="tut-sec-rename" data-id="' + s.id + '">Rename</button>' +
         '<button class="btn btn-ghost btn-sm" type="button" data-action="tut-sec-hide" data-id="' + s.id + '">' + (s.hidden ? "Show section" : "Hide section") + "</button></div>" + rows + "</div>";
     }).join("");
-    return panel("Tutorial sections", "Create sections such as Getting started or Leaving Google reviews. Hide a section or video instead of deleting it.",
+    return panel("Tutorial sections", "Create sections such as Getting started or Leaving Google Reviews. The app shows them as category buttons: All first, then A–Z by name. Hidden sections and sections with no visible videos are left out. Hide a section or video instead of deleting it.",
       '<button class="btn btn-primary btn-sm" type="button" data-action="tut-add-section">Add a section</button>',
       body);
   }

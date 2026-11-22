@@ -328,7 +328,7 @@
 
   function statusLabel(st) {
     if (st === "confirmed") return "Confirmed";
-    if (st === "rejected" || st === "not-found") return "Not found";
+    if (st === "rejected" || st === "not-found") return "Not Found";
     return "Pending";
   }
   function icoClock() {
@@ -388,7 +388,7 @@
       '<div class="app-header"><button class="icon-btn" data-go="promo-queue" aria-label="Back">' +
       icoBack() + '</button><div class="ht">Vouch received?</div><span class="header-spacer"></span></div>' +
       '<div class="scroll v211-vouches">' +
-      "<p class=\"hint\">When someone leaves a Facebook vouch for you, tap View post to check it, then Accept if it is genuine and you know their work. “Not found” means you could not see the vouch.</p>" +
+      "<p class=\"hint\">When someone leaves a Facebook vouch for you, tap View post to check it, then Accept if it is genuine and you know their work. “Not Found” means you could not see the vouch.</p>" +
       '<p class="group-label">Waiting for you</p>';
     if (!pending.length) html += '<p class="ov-empty">No vouches waiting.</p>';
     pending.forEach(function (v) {
@@ -402,7 +402,7 @@
         viewPostBtn(v) +
         '<div class="v211-confirm-acts">' +
         '<button type="button" class="btn btn-primary v211-accept" data-action="vouch-accept" data-id="' + v.id + '">Accept</button>' +
-        '<button type="button" class="btn btn-ghost ink" data-action="vouch-reject" data-id="' + v.id + '">Not found</button>' +
+        '<button type="button" class="btn btn-ghost ink" data-action="vouch-reject" data-id="' + v.id + '">Not Found</button>' +
         "</div></div>";
     });
     if (others.length) {

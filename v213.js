@@ -3,7 +3,7 @@
    normalisation, wording, scroll preservation and dead-tap fixes. Nothing is deleted; old layers stay. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.1.4";
+  var VERSION = "v2.2.0";
   function T() { return root.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function me() { try { return T().me ? T().me() : {}; } catch (e) { return {}; } }
@@ -155,7 +155,7 @@
       if (!hasText) return;
       var cs = getComputedStyle(el);
       if (el.classList.contains("bell-dot")) { el.style.removeProperty("font-size"); return; }
-      if (parseFloat(cs.fontSize) < 12) el.style.setProperty("font-size", "12px", "important");
+      if (parseFloat(cs.fontSize) < 12 && !el.closest(".fb-seg-btn, .v21-more-tile")) el.style.setProperty("font-size", "12px", "important"); /* v2.2.0: switch labels are fitted by v220.js (min 11px) */
       var c = lum(cs.color); if (!c) return;
       var r = c.rgb, grey = Math.max(r[0], r[1], r[2]) - Math.min(r[0], r[1], r[2]) < 40;
       if (grey && c.L > 0.17 && c.L < 0.8 && !el.closest(".btn[disabled], .rb-disabled, .is-locked, #tabbar") && !darkBg(el)) el.style.setProperty("color", "#475569", "important");
@@ -692,7 +692,7 @@
       if (e.matches(TRUNC_OK) || (sc.matches && sc.matches('[data-screen="chats"]') && e.closest(".prev"))) return;
       e.classList.add("rb-wrap");
       if (/[a-z0-9-]+\.[a-z]{2,}\/\S+/i.test(e.textContent)) { var tw2 = document.createTreeWalker(e, NodeFilter.SHOW_TEXT), tns = []; while (tw2.nextNode()) tns.push(tw2.currentNode);
-        tns.forEach(function (tn) { if (!/[\/?=&]/.test(tn.nodeValue)) return; var parts = tn.nodeValue.split(/(?<=[\/?=&])/); if (parts.length < 2) return; var fr = document.createDocumentFragment(); parts.forEach(function (pt, i) { fr.appendChild(document.createTextNode(pt)); if (i < parts.length - 1) fr.appendChild(document.createElement("wbr")); }); tn.parentNode.replaceChild(fr, tn); }); }
+        tns.forEach(function (tn) { if (!/[\/?=&]/.test(tn.nodeValue)) return; var parts = tn.nodeValue.split(/(?<=[\/?=&.])/); if (parts.length < 2) return; var fr = document.createDocumentFragment(); parts.forEach(function (pt, i) { fr.appendChild(document.createTextNode(pt)); if (i < parts.length - 1) fr.appendChild(document.createElement("wbr")); }); tn.parentNode.replaceChild(fr, tn); }); }
       var hd = e.closest(".app-header, .v21-header"); if (hd) e.classList.add("rb-wrap-ht");
     });
   }
@@ -839,8 +839,9 @@
       try { glueDots(sc); unTruncate(sc); balanceChips(sc); tradeBreaks(sc); showActiveChip(sc); } catch (eU) {}
       restoreScroll();
     } catch (err) { if (root.console) console.warn("v213", err); }
-    finally { busy = false; }
+    finally { busy = false; /* v2.2.0 perf fix: ignore this pass's own DOM changes */ if (mo213) try { mo213.takeRecords(); } catch (eT) {} }
   }
+  var mo213 = null;
   function stamp() {
     var ph = document.getElementById("phone"); if (!ph || ph.querySelector(".rb-draft-stamp")) return;
     ph.insertAdjacentHTML("beforeend", '<div class="rb-draft-stamp">Rate Buddies ' + VERSION + "</div>");
@@ -849,7 +850,7 @@
   function schedule() { clearTimeout(timer); timer = setTimeout(pass, 30); }
   function install() {
     var screens = document.getElementById("screens");
-    if (screens && root.MutationObserver) new MutationObserver(function () { if (!busy) schedule(); }).observe(screens, { childList: true, subtree: true });
+    if (screens && root.MutationObserver) { mo213 = new MutationObserver(function () { if (!busy) schedule(); }); mo213.observe(screens, { childList: true, subtree: true }); }
     var tc = T();
     /* v2.1.3 r2: the first screen was drawn before v211 loaded (old 5-member seed queue). Sync to the badge-ranked queue and redraw queue screens once. */
     try { if (root.TC211 && TC211.myPlace && tc && tc.go) { var q0 = JSON.stringify((S()._queue || []).map(function (r) { return r.memberId; })); TC211.myPlace(); var q1 = JSON.stringify((S()._queue || []).map(function (r) { return r.memberId; }));

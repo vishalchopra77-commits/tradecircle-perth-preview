@@ -2,6 +2,25 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.0 — 21 Nov 2026 (versionCode 8) — PNG review round, not built yet
+
+### Design spec v2.2
+- Calmer type (400 body, 500 labels, 600 buttons, 700 titles), main tab titles 22/700 (20 on small phones), words never break in half.
+- Slimmer bottom tab bar: 22px icons, 11/500 labels, small pill behind the active icon only.
+- One 1.75px icon stroke, 32px chips, 52px inputs with 16/400 text, 16px card corners.
+- Android: WebView text zoom follows the phone but is capped at 115% (MainActivity).
+
+### Vishal's batch
+- Last welcome slide: no Next button (Continue with Facebook / Create account / Sign in only); "Work where you work" heading no longer clipped.
+- Sign-up never copies demo data (name, business, trade, ABN, phone stay empty, also after Continue with Facebook); no state or region pre-selected or highlighted.
+- Awaiting approval: hourglass icon in waiting orange, no Submitted box, white text under the video, no "Demo: simulate approval" button (web preview only with ?demo=1).
+- Inner-page header options A (actions only on main tabs, default), B (one ⋯ menu), C (two rows) — ?hdr=a|b|c.
+- Member profile: "Facebook Friends" wording, action row option A (full-width Message + two equal buttons, default) or B (three icon-on-top buttons) — ?prof=a|b; no dark band behind the header; clear medal icon on tier badges.
+- Facebook switch labels always fully visible (the badge wraps under the label at large text sizes rather than clipping).
+
+### QA
+- Every screen checked at 100/115/130% text size × 360/390/412 (9 passes), new mid-word-break rule, plus the 48px nav-bar inset check.
+
 ## v2.1.4 — 21 Nov 2026 (versionCode 7)
 
 ### Android navigation bar fix

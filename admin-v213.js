@@ -17,7 +17,7 @@
     var g = document.getElementById("globalSearch");
     if (g) g.placeholder = window.innerWidth < 700 ? "Search…" : "Search members, trades, requests…";
     var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), n;
-    while ((n = w.nextNode())) if (/v2\.1\.[23]\b/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/v2\.1\.[23]\b/g, "v2.1.4");
+    while ((n = w.nextNode())) if (/v2\.1\.[234]\b/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/v2\.1\.[234]\b/g, "v2.2.0");
     w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     while ((n = w.nextNode())) if (/promo queue/i.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/the promo queue/g, "the Promotion queue").replace(/Promo queue/g, "Promotion queue");
     document.querySelectorAll("*").forEach(function (e) { if (e.childNodes.length && !e.closest("svg")) { var t = e.firstChild; if (t && t.nodeType === 3 && /\bGoogle review(s?)\b/.test(t.nodeValue)) t.nodeValue = t.nodeValue.replace(/\bGoogle review(s?)\b/g, "Google Review$1"); } });

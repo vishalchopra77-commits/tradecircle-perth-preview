@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.getcapacitor.BridgeActivity;
 
 /**
+ * v2.2.0: text zoom capped at 115% (design spec v2.2).
  * v2.1.4: system bars.
  * - Top: the app draws under a transparent status bar (headers and trade covers reach the top). The status-bar
  *   height is passed to the web layer as the CSS variable --rb-sat, which the headers add as top padding.
@@ -44,6 +45,13 @@ public class MainActivity extends BridgeActivity {
             c.setAppearanceLightNavigationBars(true);
 
             final WebView webView = getBridge().getWebView();
+            // v2.2.0: follow the phone's text size, but cap it at 115% so large system fonts cannot clip buttons and titles
+            try {
+                float fontScale = getResources().getConfiguration().fontScale;
+                int zoom = Math.round(fontScale * 100f);
+                webView.getSettings().setTextZoom(Math.max(85, Math.min(115, zoom)));
+            } catch (Exception ignoredZoom) {
+            }
             webView.addJavascriptInterface(new StatusBarBridge(), "RBStatusBar");
             ViewCompat.setOnApplyWindowInsetsListener(content, (View v, WindowInsetsCompat insets) -> {
                 Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());

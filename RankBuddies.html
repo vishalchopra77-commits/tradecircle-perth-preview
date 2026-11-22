@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0A1328" />
-  <title>Rate Buddies — UI prototype v2.1.4</title>
+  <title>Rate Buddies — UI prototype v2.2.0</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/icon-32.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/icon-192.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -11074,13 +11074,13 @@ window.TC_BUSINESS_CATEGORIES = {
       '<p class="group-label">Expertise <span class="opt">(optional)</span></p>' +
       '<p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
       (root.TC158 && TC158.pickerHTML
-        ? TC158.pickerHTML("specialties", "profileSpecialties", p.specialties, "Search services, e.g. Termite inspections")
+        ? TC158.pickerHTML("specialties", "profileSpecialties", p.specialties, "Search services")
         : '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Termite inspections, Decks" value="' + esa(csv(p.specialties)) + '"></div>') +
       '<div class="field"><label>Licences</label><textarea name="profileLicences" rows="2" placeholder="One licence per line">' + esc(p.licences.join("\n")) + "</textarea></div>" +
       '<p class="group-label">My ideal referral partner <span class="opt">(optional)</span></p>' +
       '<p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +
       (root.TC158 && TC158.pickerHTML
-        ? TC158.pickerHTML("idealTrades", "profileIdealTrades", p.idealTrades, "Search business types, e.g. Carpenter")
+        ? TC158.pickerHTML("idealTrades", "profileIdealTrades", p.idealTrades, "Search business types")
         : ('<div class="chips chips-tight">' + TRADE_CHIPS.map(function (s) { return chipToggle("idealTrades", s, p.idealTrades.indexOf(s) !== -1); }).join("") + "</div>" +
           '<input type="hidden" name="profileIdealTrades" value="' + esa(csv(p.idealTrades)) + '">')) +
       '<div class="field" style="margin-top:8px"><label>A short sentence</label><textarea name="profileIdealNote" rows="2" placeholder="Who you like to work with, and why">' + esc(p.idealNote) + "</textarea></div>" +
@@ -12658,7 +12658,7 @@ window.TC_BUSINESS_CATEGORIES = {
       : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
     return '<section class="screen has-tabs" data-screen="members"><div class="scroll">' +
       '<h1 class="large-title">Members</h1><p class="count-line">' + countLabel + "</p>" +
-      '<div class="search-wrap"><div class="search">' + icon("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + escapeAttr(state.query) + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div class="search-wrap"><div class="search">' + icon("search") + '<input id="memberSearch" type="search" placeholder="Search name or trade" value="' + escapeAttr(state.query) + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:12px"></div><div class="seg">' +
       '<button class="' + (state.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
       '<button class="' + (state.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
@@ -12752,7 +12752,7 @@ window.TC_BUSINESS_CATEGORIES = {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.4 · 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.0 · 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -13973,7 +13973,7 @@ function facebookF(size, color) {
     var allMine = T().isAllMetro && T().isAllMetro(mineIds);
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
       '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
-      '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
       '<button class="' + (st.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
@@ -14068,7 +14068,7 @@ function facebookF(size, color) {
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app. Only leave a Google review after a real job, in your own words.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.1.4 \u00b7 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">UI prototype v2.2.0 \u00b7 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -15641,9 +15641,9 @@ function googleG(size, mono) {
     return '<section class="screen has-header" data-screen="rec-compose">' +
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Send alert</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-hero"><h2>Share a Facebook post</h2><p>Paste the link, pick the trade they asked for, and send it to the circle.</p></div>' +
-      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value="https://www.facebook.com/groups/perth.homeowners.demo/posts/840211"></div>' +
+      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="facebook.com/groups/…" value="https://www.facebook.com/groups/perth.homeowners.demo/posts/840211"></div>' +
       '<div class="field"><label>Trade or business type they are asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
-      '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
+      '<input id="tradeType" type="text" placeholder="Search, e.g. cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
       '<button class="btn btn-primary has-ico" data-action="send-alert">' + I.bell + "<span>Send to circle</span></button>" +
       '<p class="hint" style="text-align:center">Members get a push alert. Comment ideas are suggestions only. Each person writes their own words on Facebook.</p></div></section>';
   }
@@ -17046,9 +17046,9 @@ function googleG(size, mono) {
       counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.") +
       counted("About my business", "profileAbout", fill.about, 400, 4, "") +
       '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
-      pickerHTML("specialties", "profileSpecialties", specs, "Search services, e.g. Termite inspections") +
+      pickerHTML("specialties", "profileSpecialties", specs, "Search services") +
       '<p class="group-label">My ideal referral partner</p><p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +
-      pickerHTML("idealTrades", "profileIdealTrades", ideals, "Search business types, e.g. Carpenter") +
+      pickerHTML("idealTrades", "profileIdealTrades", ideals, "Search business types") +
       counted("A short note", "profileIdealNote", fill.idealNote, 160, 2, "Optional. One sentence is enough.") +
       "</form></div>" +
       '<div class="cp-sticky">' +
@@ -20272,7 +20272,7 @@ window.RBConfig = {
       '<div class="v21-more-sec">Account</div>' +
       '<div class="v21-more-card"><div class="v21-more-grid">' + account + "</div></div>" +
       '<button type="button" class="v21-signout" data-go="welcome">Sign out</button>' +
-      '<p class="v21-ver">Rate Buddies v2.1.4</p>' +
+      '<p class="v21-ver">Rate Buddies v2.2.0</p>' +
       "</div></section>";
   }
   function facebookFMore() {

@@ -452,14 +452,14 @@
   }
   function ensureAreaPick(prefix, returnTo) {
     if (!state.areaPick) {
-      state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix || "create", returnTo: returnTo || "create-profile" };
+      state.areaPick = { step: "state", stateId: null, kind: null, prefix: prefix || "create", returnTo: returnTo || "create-profile" };
     }
     if (prefix) state.areaPick.prefix = prefix;
     if (returnTo) state.areaPick.returnTo = returnTo;
     return state.areaPick;
   }
   function openAreaWizard(prefix, returnTo) {
-    state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: prefix, returnTo: returnTo };
+    state.areaPick = { step: "state", stateId: null, kind: null, prefix: prefix, returnTo: returnTo };
     go(prefix === "me-regions" ? "my-regions" : "choose-areas");
   }
   function rememberListManual(prefix, ids, kind) {
@@ -490,7 +490,7 @@
   }
   function areaStepHero(step) {
     if (step === "list" || step === "kind") return '<div class="auth-hero"><h2>Choose your regions</h2></div>';
-    return '<div class="auth-hero"><h2>Choose your state or territory</h2><p>Western Australia is highlighted because this circle began in Perth — tap any state.</p></div>';
+    return '<div class="auth-hero"><h2>Choose your state or territory</h2><p>Tap the state or territory where you work.</p></div>';
   }
   function areaGoogleG() {
     return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>';
@@ -514,14 +514,14 @@
   }
   function stateStepHTML(prefix) {
     var pick = ensureAreaPick(prefix);
-    var selected = pick.stateId || "wa";
+    var selected = pick.stateId || null; /* v2.2.0: nothing pre-selected */
     var rows = auStates().map(function (st) {
       var metro = kindCount(st, "metro");
       var regional = kindCount(st, "regional");
       var sub = regional ? (metro + " metro · " + regional + " regional") : (metro + " metro areas");
       var cls = "state-row";
       if (st.id === selected) cls += " on";
-      else if (st.id === "wa") cls += " hinted";
+      /* v2.2.0: no state hinted or pre-selected */
       return '<button type="button" class="' + cls + '" data-area-state="' + st.id + '">' +
         '<span class="abbr">' + escapeText(st.abbrev) + "</span>" +
         '<span><div class="nm">' + escapeText(st.name) + '</div><div class="sub">' + escapeText(sub) + "</div></span>" +
@@ -1105,7 +1105,7 @@
       '<button class="btn btn-ghost has-ico" data-go="signin">' + icon("user") + "<span>Sign in</span></button>";
     return '<section class="screen dark welcome-v20" id="screen-welcome" data-screen="welcome">' +
       '<div class="w20-top"><div class="w20-brand">' +
-      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
+      '<img class="brand-mark" src="assets/logo/rate-buddies-mark.svg" alt="">' +
       '<div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div></div>' +
       '<button type="button" class="w20-skip" data-action="welcome-skip">Skip</button></div>' +
       '<div class="w20-carousel"><div class="w20-track" id="welcomeTrack">' + slideHtml + "</div></div>" +
@@ -1120,7 +1120,7 @@
     return '<section class="screen has-header" data-screen="signin">' +
       '<div class="app-header"><button class="icon-btn" data-go="welcome" aria-label="Back">' + icon("back") + '</button><div class="ht">Sign in</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-lockup">' +
-      '<img class="brand-mark" src="assets/logo/rank-buddies-mark.png" alt="">' +
+      '<img class="brand-mark" src="assets/logo/rate-buddies-mark.svg" alt="">' +
       '<div class="brand-wordmark">RATE <span class="w-buddies">BUDDIES</span></div>' +
       '</div>' +
       '<div class="auth-hero"><h2>Welcome back</h2><p>Sign in to see members in your areas.</p></div>' +
@@ -1238,7 +1238,7 @@
       : (list.length + " member" + (list.length === 1 ? "" : "s") + " across Perth metro");
     return '<section class="screen has-tabs" data-screen="members"><div class="scroll">' +
       '<h1 class="large-title">Members</h1><p class="count-line">' + countLabel + "</p>" +
-      '<div class="search-wrap"><div class="search">' + icon("search") + '<input id="memberSearch" type="search" placeholder="Search name, business or trade" value="' + escapeAttr(state.query) + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
+      '<div class="search-wrap"><div class="search">' + icon("search") + '<input id="memberSearch" type="search" placeholder="Search name or trade" value="' + escapeAttr(state.query) + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:12px"></div><div class="seg">' +
       '<button class="' + (state.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
       '<button class="' + (state.areaFilter === "all" ? "active" : "") + '" data-area="all">All Perth metro</button>' +
@@ -1332,7 +1332,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.1.4 · 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.0 · 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -1424,7 +1424,7 @@
       if (!state.areaPick) {
         var pref = state.screen === "edit-profile" ? "edit" : "create";
         var ret = pref === "edit" ? "edit-profile" : "create-profile";
-        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: pref, returnTo: ret };
+        state.areaPick = { step: "state", stateId: null, kind: null, prefix: pref, returnTo: ret };
       }
       if (state.areaPick && state.areaPick.step === "kind") state.areaPick.step = "list";
       if (id === "create-regions") {
@@ -1444,7 +1444,7 @@
     }
     if (id === "my-regions" || id === "my-regions-all") {
       if (!state.areaPick || state.areaPick.prefix !== "me-regions") {
-        state.areaPick = { step: "state", stateId: "wa", kind: null, prefix: "me-regions", returnTo: "me", open: { metro: true, regional: false } };
+        state.areaPick = { step: "state", stateId: null, kind: null, prefix: "me-regions", returnTo: "me", open: { metro: true, regional: false } };
       }
       if (id === "my-regions-all") {
         state.areaPick.step = "list";
@@ -1633,7 +1633,7 @@
   function applyFbConnect() {
     var form = document.querySelector("#screens form");
     if (form) captureDraft(form);
-    var d = draftFromMe();
+    var d = state.draft || emptyDraft(); /* v2.2.0: never copy the demo member into a new sign-up */
     /* v2.1.3: no demo name is filled in; the member types their own (or the real Facebook login supplies it). */
     d.facebook = demoFbLink();
     state.draft = d;

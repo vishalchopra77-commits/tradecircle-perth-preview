@@ -1,6 +1,6 @@
 {
   "name": "rate-buddies",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "private": true,
   "description": "Rate Buddies Android test build",
   "scripts": {

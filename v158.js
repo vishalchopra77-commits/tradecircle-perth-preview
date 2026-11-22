@@ -390,9 +390,9 @@
       counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.") +
       counted("About my business", "profileAbout", fill.about, 400, 4, "") +
       '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
-      pickerHTML("specialties", "profileSpecialties", specs, "Search services, e.g. Termite inspections") +
+      pickerHTML("specialties", "profileSpecialties", specs, "Search services") +
       '<p class="group-label">My ideal referral partner</p><p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +
-      pickerHTML("idealTrades", "profileIdealTrades", ideals, "Search business types, e.g. Carpenter") +
+      pickerHTML("idealTrades", "profileIdealTrades", ideals, "Search business types") +
       counted("A short note", "profileIdealNote", fill.idealNote, 160, 2, "Optional. One sentence is enough.") +
       "</form></div>" +
       '<div class="cp-sticky">' +

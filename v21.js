@@ -108,6 +108,7 @@
   function receivedToday(id) { return RC ? RC.countFor(id) : 0; }
   function atReceivedCap(id) { return RC ? RC.atLimit(id) : false; }
   function cap() { return RC ? RC.limit() : 3; }
+  function capLabel() { var c = cap(); return c + "/" + c + " Reviews Today"; } /* r9: replaces "Full Today" (Vishal) */
   function givenTotal() {
     if (root.TC211 && TC211.scoreOf) {
       var sc = TC211.scoreOf((me() && me().id) || "jamie");
@@ -221,14 +222,27 @@
   }
 
   var FILTERS = [
-    { id: "all", label: "All" },
+    { id: "all", label: "All Members" },
     { id: "available", label: "Available" },
-    { id: "not-available", label: "Not available" },
-    { id: "given", label: "Given" },
-    { id: "not-given", label: "Not given" },
-    { id: "pending", label: "Pending" },
-    { id: "already", label: "Already given" }
+    { id: "not-available", label: "Not Available" },
+    { id: "leave", label: "Leave Review" },
+    { id: "left", label: "Review Given" },
+    { id: "swapped", label: "Review Swapped" },
+    { id: "pending", label: "Review Requested" },
+    { id: "incoming", label: "Incoming Review Requests" },
+    { id: "full", get label() { return capLabel(); } },
+    { id: "fb-yes", label: "Facebook Friends" },
+    { id: "fb-no", label: "Not Facebook Friends" }
   ];
+  /* v2.2.0 r5: fictional Facebook Friend status (most members are friends) */
+  var FB_NOT = { emma: 1, noah: 1, chris: 1 };
+  function isFbFriend(m) { return !FB_NOT[m.id]; }
+  function incomingIds() {
+    var list = null;
+    try { list = JSON.parse(localStorage.getItem("rb_swap_incoming") || "null"); } catch (e) { list = null; }
+    if (!Array.isArray(list) || !list.length) list = [{ id: "jack" }, { id: "tom" }, { id: "sarah" }, { id: "priya" }, { id: "mei" }];
+    var o = {}; list.forEach(function (r) { if ((r.status || "new") === "new") o[r.id] = 1; }); return o;
+  }
 
   function membersForList() {
     seedDemoRelations();
@@ -243,12 +257,18 @@
     if (id === "all") return true;
     if (id === "available") return av;
     if (id === "not-available") return !av;
-    if (id === "given") return st === "given" || st === "already";
-    if (id === "not-given") return st === "not";
+    if (id === "leave") return st === "not" && av;
+    if (id === "left" || id === "given") return st === "given";
+    if (id === "swapped" || id === "already") return st === "already";
     if (id === "pending") return st === "pending";
-    if (id === "already") return st === "already";
+    if (id === "incoming") return !!incomingIds()[m.id];
+    if (id === "full") return st === "full";
+    if (id === "fb-yes") return isFbFriend(m);
+    if (id === "fb-no") return !isFbFriend(m);
+    if (id === "not-given") return st === "not";
     return true;
   }
+
 
   function googleG(n) {
     n = n || 12;
@@ -287,6 +307,41 @@
     return names[id] || id;
   }
 
+  /* v2.2.0 r4: fictional stats per period (Today <= This Week <= Fortnight <= This Month; Last Month independent) */
+  var PERIODS = [
+    { id: "today", label: "Today", given: 1, requested: 2, swapped: 1 },
+    { id: "yesterday", label: "Yesterday", given: 2, requested: 1, swapped: 1 },
+    { id: "week", label: "This Week", given: 6, requested: 4, swapped: 3 },
+    { id: "fortnight", label: "Fortnight", given: 9, requested: 6, swapped: 5 },
+    { id: "month", label: "This Month", given: 14, requested: 9, swapped: 7 },
+    { id: "lastmonth", label: "Last Month", given: 11, requested: 7, swapped: 6 }
+  ];
+  /* v2.2.0: shared "Your Stats" header + 2x2 tiles (Reviews screen and Home dashboard use the same markup) */
+  function statsBlock() {
+    var I = me(), rec = receivedToday(I.id), c = cap(), pips = "";
+    for (var i = 0; i < c; i++) pips += "<i" + (i < rec ? ' class="on"' : "") + "></i>";
+    var html = "";
+    var period = load("rb_gr_period", "today") || "today";
+    var PER = PERIODS.filter(function (x) { return x.id === period; })[0] || PERIODS[0];
+    var pOpen = !!S()._rbPeriodOpen;
+    html += '<div class="v21-sec-row rb-sec-filter rb-stats-head"><div class="sec">Your Stats</div>' +
+      '<div class="rb-dd' + (pOpen ? " open" : "") + '">' +
+      '<button type="button" class="rb-dd-btn" data-action="rb-period-menu" aria-haspopup="listbox" aria-expanded="' + (pOpen ? "true" : "false") + '">' + esc(PER.label) +
+      '<svg class="rb-keep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>' +
+      '<div class="rb-dd-menu" role="listbox" aria-label="Stats period">';
+    PERIODS.forEach(function (x) {
+      html += '<button type="button" role="option" aria-selected="' + (x.id === PER.id ? "true" : "false") + '" class="rb-dd-opt' + (x.id === PER.id ? " on" : "") + '" data-action="rb-period" data-id="' + x.id + '"><span>' + esc(x.label) + "</span></button>";
+    });
+    html += "</div></div></div>" +
+      '<div class="v21-stats rb-stats4">' +
+      '<div class="v21-stat gold">' + '<span class="rb-tile-g" aria-hidden="true">' + googleG(16) + '</span>' + '<div class="num">' + rec + "/" + c + '</div><div class="hint">Received Today</div><div class="v21-pbar" aria-label="' + rec + " of " + c + '">' + pips + "</div></div>" +
+      '<div class="v21-stat navy">' + '<span class="rb-tile-g" aria-hidden="true">' + googleG(16) + '</span>' + '<div class="num">' + PER.given + '</div><div class="hint">Reviews Given</div></div>' +
+      '<div class="v21-stat violet">' + '<span class="rb-tile-g" aria-hidden="true">' + googleG(16) + '</span>' + '<div class="num">' + PER.requested + '</div><div class="hint">Reviews Requested</div></div>' +
+      '<div class="v21-stat green">' + '<span class="rb-tile-g" aria-hidden="true">' + googleG(16) + '</span>' + '<div class="num">' + PER.swapped + '</div><div class="hint">Reviews Swapped</div></div>' +
+      "</div>";
+
+    return html;
+  }
   function renderReviews() {
     seedDemoRelations();
     var I = me();
@@ -297,7 +352,8 @@
     var given = givenTotal();
     var incoming = (root.TC211 && TC211.incomingNewCount) ? TC211.incomingNewCount() : 5;
     var filter = load(LS_FILTER, "all") || "all";
-    var only = !!load(LS_ONLY, false);
+    var only = false; /* v2.2.0: "Show only available" replaced by the dropdown filter */
+    if (!FILTERS.some(function (f) { return f.id === filter; })) filter = "all";
     var all = membersForList();
     var visible = all.filter(function (m) {
       if (only && !isAvailable(m)) return false;
@@ -311,10 +367,8 @@
       '<div class="scroll">' +
       '<div class="v21-who">' + avatar(I, 40) +
       "<div><div class=\"nm\">" + esc(I.first) + "</div><div class=\"sub\">" + esc(I.trade) + " · Perth</div></div></div>" +
-      '<div class="v21-stats">' +
-      '<div class="v21-stat gold"><div class="num">' + rec + "/" + c + '</div><div class="hint">Received today</div><div class="v21-pbar" aria-label="' + rec + " of " + c + '">' + pips + "</div></div>" +
-      '<div class="v21-stat navy"><div class="num">' + given + '</div><div class="hint">Google Reviews given</div></div>' +
-      "</div>";
+      "";
+    html += statsBlock();
 
     if (capped) {
       html += '<div class="v21-banner"><div>' +
@@ -327,19 +381,29 @@
       '<div class="c">' + (capped ? "Paused automatically · back on tomorrow" : "Visible to all members — they can send you a Google Review swap request") + "</div></div>" +
       '<button type="button" class="v21-toggle' + (available ? "" : " off") + '" role="switch" aria-checked="' + (available ? "true" : "false") + '" data-action="rb-toggle-avail"' + (capped ? " disabled" : "") + "><i></i></button></div>";
 
-    html += '<button type="button" class="v21-card v21-incoming" data-action="rb-incoming" style="width:100%;text-align:left">' +
-      '<div style="flex:1"><div class="t">Incoming Google Review swap requests' + (incoming ? ' <span class="v21-count">' + incoming + " new</span>" : "") + "</div>" +
-      '<div class="c">Tap to view who asked you</div></div><div style="color:var(--accent-2);font-weight:800;font-size:16px">›</div></button>';
+    var left = Math.max(0, c - rec);
+    var CHEV = '<svg class="rb-keep rb-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+    html += '<div class="rb-sum-cards">' +
+      '<button type="button" class="v21-card rb-sum v21-incoming" data-action="rb-incoming">' +
+      '<div class="rb-sum-body"><div class="t">Incoming Google Review Swap Requests' + (incoming ? ' <span class="v21-count">' + incoming + " new</span>" : "") + "</div>" +
+      '<div class="c">Tap to view who asked you</div></div>' + CHEV + "</button>" +
+      '<button type="button" class="v21-card rb-sum rb-rt2' + (capped ? " full" : "") + '" data-action="rb-received-today">' +
+      '<div class="rb-sum-body"><div class="t">Received Today</div>' +
+      '<div class="rb-rt-bar" aria-hidden="true">' + pips + "</div>" +
+      '<div class="c"><b>' + rec + "/" + c + "</b> · " + (capped ? "Reviews Today" : left + " left today") + "</div></div>" + CHEV + "</button>" +
+      "</div>";
 
-    html += '<div class="v21-chips" aria-label="Filters"><div class="v21-chip-row">';
+    var curF = FILTERS.filter(function (f) { return f.id === filter; })[0] || FILTERS[0];
+    var menuOpen = !!S()._rbFilterOpen;
+    html += '<div class="v21-sec-row rb-sec-filter"><div class="sec">Members in your areas</div>' +
+      '<div class="rb-dd' + (menuOpen ? " open" : "") + '">' +
+      '<button type="button" class="rb-dd-btn" data-action="rb-filter-menu" aria-haspopup="listbox" aria-expanded="' + (menuOpen ? "true" : "false") + '">' +
+      esc(curF.label) + " (" + countFilter(curF.id, all) + ')<svg class="rb-keep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>' +
+      '<div class="rb-dd-menu" role="listbox" aria-label="Filter members">';
     FILTERS.forEach(function (f) {
-      html += '<button type="button" class="v21-fchip' + (filter === f.id ? " on" : "") + '" data-action="rb-filter" data-id="' + f.id + '"><b>' + countFilter(f.id, all) + "</b> " + esc(f.label) + "</button>";
+      html += '<button type="button" role="option" aria-selected="' + (filter === f.id ? "true" : "false") + '" class="rb-dd-opt' + (filter === f.id ? " on" : "") + '" data-action="rb-filter" data-id="' + f.id + '"><span>' + esc(f.label) + '</span><span class="rb-dd-n">' + countFilter(f.id, all) + "</span></button>";
     });
-    html += "</div></div>";
-
-    html += '<div class="v21-sec-row"><div class="sec">Members in your areas</div>' +
-      '<button type="button" class="v21-only" data-action="rb-only-avail">Show only available' +
-      '<span class="v21-toggle' + (only ? "" : " off") + '" style="width:36px;height:22px"><i style="width:16px;height:16px"></i></span></button></div>';
+    html += "</div></div></div>";
 
     html += '<div class="v21-list">';
     visible.forEach(function (m) { html += memberRow(m); });
@@ -374,31 +438,30 @@
     var st = statusOf(m);
     var av = isAvailable(m);
     var style = tradeStyle(m.trade);
-    var statusChip = "";
-    var act = "";
-    if (st === "full") {
-      statusChip = '<span class="v21-chip full">' + googleG(11) + " Full today · 3/3</span>";
-      act = '<button type="button" class="v21-act warn" data-action="rb-remind-me" data-id="' + esa(m.id) + '">Remind me</button>';
-    } else if (st === "given" || st === "already") {
-      statusChip = '<span class="v21-chip given">' + googleG(11) + (st === "already" ? " Already given" : " Given") + "</span>";
-      act = '<button type="button" class="v21-act ghost" data-action="rb-view" data-id="' + esa(m.id) + '">View</button>';
-    } else if (st === "pending") {
-      statusChip = '<span class="v21-chip pend">' + googleG(11) + " Pending</span>";
-      act = '<button type="button" class="v21-act warn" data-action="rb-remind-me" data-id="' + esa(m.id) + '">Remind</button>';
-    } else {
-      statusChip = '<span class="v21-chip not">' + googleG(11) + " Not given</span>";
-      act = '<button type="button" class="v21-act" data-action="rb-leave" data-id="' + esa(m.id) + '">' + googleG(12) + " Leave review</button>";
-    }
-    var availChip = av ? '<span class="v21-chip yes">Available</span>' : '<span class="v21-chip no">Not available</span>';
+    var id = esa(m.id), act = "";
+    /* v2.2.0: one simple status or action per row */
+    if (st === "full") act = '<button type="button" class="rb-st-btn warn rb-full1" data-action="rb-remind-me" data-id="' + id + '" aria-label="' + capLabel() + '. Remind Me"><svg class="rb-bell" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="rb-full-lab"><span class="rb-seg">' + capLabel() + '</span> · <span class="rb-seg">Remind Me</span></span></button>';
+    else if (st === "already") act = '<span class="rb-st ok">' + ICON_SWAP + "<span>Review Swapped</span></span>";
+    else if (st === "given") act = '<span class="rb-st ok">' + ICON_CHECK + "<span>Review Given</span></span>";
+    else if (st === "pending") act = '<span class="rb-st pend">' + ICON_CLOCK + "<span>Review Requested</span></span>";
+    else if (!av) act = '<span class="rb-st muted"><span>Not Available</span></span>';
+    else act = '<button type="button" class="rb-st-btn primary" data-action="rb-leave" data-id="' + id + '">' + googleG(14) + '<span class="rb-lr-long">Leave Review</span></button>';
+    /* v2.2.0 r2: Reviews card V3 (Vishal). Old row: window.RB_REVIEW_CARD = "old" or localStorage rb_review_card = "old" */
+    var CB = window.TCCircleB;
+    if (CB && CB.reviewCard && !CB.reviewOld()) return CB.reviewCard(m, { st: st, av: av, friend: isFbFriend(m), area: regionLabel(m), avHtml: avatar(m, 52) });
     var nm = esc(((m.first || "") + " " + (m.last || "")).trim());
-    return '<div class="v21-mrow" style="--trade-accent:' + style.accent + '">' +
-      '<button type="button" class="mem-open v21-who" data-go="member" data-id="' + esa(m.id) + '" aria-label="Open ' + nm + ' profile">' +
-      avatar(m, 36) +
+    return '<div class="v21-mrow rb-mrow2" style="--trade-accent:' + style.accent + '">' +
+      '<button type="button" class="mem-open v21-who" data-go="member" data-id="' + id + '" aria-label="Open ' + nm + ' profile">' +
+      avatar(m, 40) +
       '<div class="meta"><div class="n">' + nm + "</div>" +
-      '<div class="s">' + esc(m.trade) + " · " + esc(regionLabel(m)) + "</div>" +
-      '<div class="v21-flags">' + availChip + statusChip + "</div></div></button>" +
+      '<div class="s"><span class="rb-seg">' + esc(m.trade) + '</span> · <span class="rb-seg">' + esc(regionLabel(m)) + "</span></div>" +
+      '<div class="v21-flags">' +
+      (isFbFriend(m) ? '<div class="rb-fb yes"><svg class="rb-keep" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="M13.4 19v-6.1h2.1l.3-2.4h-2.4V9c0-.7.2-1.2 1.2-1.2h1.3V5.6c-.2 0-1-.1-1.9-.1-1.9 0-3.1 1.1-3.1 3.2v1.8H8.8v2.4h2.1V19h2.5z" fill="#fff"/></svg><span>' + (isFbFriend(m) ? "Facebook Friends" : "Not Facebook Friends") + "</span></div>" : "") + "</div>" + /* r9: Facebook tag only for Facebook Friends (Vishal) */
+      "</div></button>" +
       '<div class="v21-right">' + act + "</div></div>";
   }
+  var SV = function (d) { return '<svg class="rb-keep" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>"; };
+  var ICON_CHECK = SV('<path d="M20 6 9 17l-5-5"/>'), ICON_SWAP = SV('<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>'), ICON_CLOCK = SV('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>');
 
   function reminderRow(m, label) {
     var style = tradeStyle(m.trade);
@@ -436,7 +499,31 @@
       T().go("reviews");
       return true;
     }
+    if (action === "rb-received-today") {
+      var rr = receivedToday(me().id), cc = cap();
+      toast(rr >= cc ? capLabel() + ": you have received " + rr + " of " + cc + " Google Reviews today" : "You have received " + rr + " of " + cc + " Google Reviews today · " + (cc - rr) + " left today");
+      return true;
+    }
+    if (action === "rb-period-menu") {
+      S()._rbPeriodOpen = !S()._rbPeriodOpen; S()._rbFilterOpen = false;
+      Array.prototype.forEach.call(document.querySelectorAll(".rb-dd.open"), function (d) { if (!d.contains(el)) d.classList.remove("open"); });
+      var pd = el.closest(".rb-dd"); if (pd) { pd.classList.toggle("open", !!S()._rbPeriodOpen); el.setAttribute("aria-expanded", S()._rbPeriodOpen ? "true" : "false"); if (root.TC220 && TC220.fitMenu) TC220.fitMenu(); }
+      return true;
+    }
+    if (action === "rb-period") {
+      S()._rbPeriodOpen = false;
+      save("rb_gr_period", id);
+      T().go(S().screen === "home" ? "home" : "reviews");
+      return true;
+    }
+    if (action === "rb-filter-menu") {
+      S()._rbFilterOpen = !S()._rbFilterOpen; S()._rbPeriodOpen = false;
+      Array.prototype.forEach.call(document.querySelectorAll(".rb-dd.open"), function (d) { if (!d.contains(el)) d.classList.remove("open"); });
+      var dd = el.closest(".rb-dd"); if (dd) { dd.classList.toggle("open", !!S()._rbFilterOpen); el.setAttribute("aria-expanded", S()._rbFilterOpen ? "true" : "false"); if (root.TC220 && TC220.fitMenu) TC220.fitMenu(); }
+      return true;
+    }
     if (action === "rb-filter") {
+      S()._rbFilterOpen = false;
       save(LS_FILTER, id);
       T().go("reviews");
       return true;
@@ -532,7 +619,7 @@
       '<div class="v21-more-sec">Account</div>' +
       '<div class="v21-more-card"><div class="v21-more-grid">' + account + "</div></div>" +
       '<button type="button" class="v21-signout" data-go="welcome">Sign out</button>' +
-      '<p class="v21-ver">Rate Buddies v2.1.4</p>' +
+      '<p class="v21-ver">Rate Buddies v2.2.0</p>' +
       "</div></section>";
   }
   function facebookFMore() {
@@ -626,6 +713,7 @@
     tradeStyle: tradeStyle,
     tradeKey: tradeKey,
     renderReviews: renderReviews,
+    statsBlock: statsBlock,
     renderMore: renderMore,
     renderLockNotif: renderLockNotif,
     afterGo: afterGo,

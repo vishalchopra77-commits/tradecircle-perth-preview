@@ -395,7 +395,8 @@ function googleG(size, mono) {
         '<div class="l">' + label + "</div></div>";
     }
 
-    var googleBody = '<div class="ov-stats">' +
+    /* v2.2.0: same "Your Stats" tiles as the Reviews screen (shared TC21.statsBlock); old Received/Given blocks retired */
+    var googleBody = (window.TC21 && TC21.statsBlock) ? '<div class="rb-home-stats">' + TC21.statsBlock() + "</div>" : '<div class="ov-stats">' +
       ovStat("Received", String(recd), "amber", googleG(16)) +
       ovStat("Given", String(gave), "navy", googleG(16)) +
       "</div>";
@@ -403,7 +404,7 @@ function googleG(size, mono) {
       googleBody += '<div class="ov-lock">' +
         '<strong>Daily limit reached: ' + today + " of " + cap + " today</strong>" +
         '<span>Opens tomorrow' + (window.TCReviews && TCReviews.opensInLabel ? " · " + TCReviews.opensInLabel() : "") + "</span></div>";
-    } else {
+    } else if (!(window.TC21 && TC21.statsBlock)) {
       googleBody += '<div class="ov-cap">Google Reviews received today: <strong>' + today + " of " + cap + "</strong></div>";
     }
     if (backs.length) {
@@ -614,9 +615,9 @@ function googleG(size, mono) {
     return '<section class="screen has-header" data-screen="rec-compose">' +
       '<div class="app-header"><button class="icon-btn" data-go="rec-alerts" aria-label="Back">' + ico("back") + '</button><div class="ht">Send alert</div><span class="header-spacer"></span></div>' +
       '<div class="scroll"><div class="auth-hero"><h2>Share a Facebook post</h2><p>Paste the link, pick the trade they asked for, and send it to the circle.</p></div>' +
-      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="https://www.facebook.com/groups/..." value=""></div>' +
+      '<div class="field"><label>Facebook post link</label><input id="recLink" inputmode="url" placeholder="facebook.com/groups/…" value=""></div>' +
       '<div class="field"><label>Trade or business type they are asking for</label><div class="search-wrap"><div class="search">' + ico("search") +
-      '<input id="tradeType" type="text" placeholder="Search, e.g. hairdresser or cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
+      '<input id="tradeType" type="text" placeholder="Search, e.g. cafe" value="' + esa(trade) + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div></div>' +
       '<button class="btn btn-primary has-ico" data-action="send-alert">' + I.bell + "<span>Send to circle</span></button>" +
       '<p class="hint" style="text-align:center">Members get a push alert. Comment ideas are suggestions only. Each person writes their own words on Facebook.</p></div></section>';
   }
