@@ -190,7 +190,7 @@
     window.addEventListener("pageshow", clearDemo);
     setTimeout(clearDemo, 0);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 14)</span>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 15)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";
@@ -247,6 +247,69 @@
     d.textContent = "Demo (offline): sample members only. Real phone sign-ups are not shown. To see them, sign out, untick Demo (offline) and sign in with your admin email.";
     app.insertBefore(d, app.firstChild);
   }
+
+  /* v2.2.2f: "Delete member" (admin only). Archives the profile + email first (public.deleted_members_archive),
+     writes the audit log, then removes the login so the same email can sign up again. Done server-side by the
+     Edge Function admin-delete-member; admins and your own account can never be deleted. */
+  var UUIDRE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  var DEL_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
+  function delBtn(id) {
+    return '<button type="button" class="btn btn-sm rb-del-member" data-action="rb-del-member" data-id="' + id + '" style="background:#b91c1c;color:#fff;border-color:#b91c1c">' + DEL_ICON + "<span>Delete member</span></button>";
+  }
+  function addDeleteButtons() {
+    if (!RB.session || RB.isDemo()) return;
+    document.querySelectorAll('[data-action="decline"][data-id], [data-action="save-mem"][data-id]').forEach(function (b) {
+      var id = b.getAttribute("data-id");
+      if (!UUIDRE.test(id || "")) return;
+      var box = b.parentNode; if (!box || box.querySelector('[data-action="rb-del-member"][data-id="' + id + '"]')) return;
+      b.insertAdjacentHTML("afterend", (b.getAttribute("data-action") === "save-mem" ? '<div style="margin-top:12px">' + delBtn(id) + "</div>" : delBtn(id)));
+    });
+  }
+  function adminToast(msg, bad) {
+    var t = document.createElement("div");
+    t.setAttribute("role", "status");
+    t.setAttribute("style", "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;max-width:90vw;padding:12px 16px;border-radius:12px;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25);" + (bad ? "background:#7f1d1d;color:#fff" : "background:#0f172a;color:#fff"));
+    t.textContent = msg; document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 4500);
+  }
+  function memberInfo(id) {
+    var p = (window.__rbProfiles || []).filter(function (x) { return x.id === id; })[0] || {};
+    var r = ((window.TCAdmin && TCAdmin.requests) || []).filter(function (x) { return x.id === id; })[0] || {};
+    var m = ((window.TCAdmin && TCAdmin.members) || []).filter(function (x) { return x.id === id; })[0] || {};
+    var name = p.name || [p.first, p.last].filter(Boolean).join(" ") || [r.first, r.last].filter(Boolean).join(" ") || m.name || "this member";
+    return { name: name, email: p.email || r.email || "", business: p.business || r.business || m.business || "" };
+  }
+  async function deleteMember(id) {
+    var info = memberInfo(id);
+    var ok = window.confirm("Delete member?\n\n" + info.name + (info.business ? " · " + info.business : "") + "\n" + (info.email || "(no email on file)") +
+      "\n\nThis can't be undone in the app. Their login is removed so the email can sign up again. A copy is kept in the archive.");
+    if (!ok) return;
+    try {
+      var tok = RB.session && RB.session.access_token;
+      var cfg = window.RBConfig || {};
+      var res = await fetch(cfg.url + "/functions/v1/admin-delete-member", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: cfg.anonKey, Authorization: "Bearer " + tok },
+        body: JSON.stringify({ member_id: id })
+      });
+      var j = await res.json().catch(function () { return {}; });
+      if (!res.ok || !j.ok) throw new Error(j.error || ("error " + res.status));
+      adminToast("Deleted " + (j.name || info.name) + ". A copy is kept in the archive.");
+      if (window.TCAdmin && TCAdmin.page && TCAdmin.page() === "member-detail" && TCAdmin.go) TCAdmin.go("members");
+      softHydrate();
+      if (window.RBAdminLive2 && RBAdminLive2.refresh) try { RBAdminLive2.refresh(); } catch (e2) {}
+    } catch (err) {
+      adminToast("Could not delete: " + ((err && err.message) || err), true);
+    }
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest('[data-action="rb-del-member"]');
+    if (!b) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (!RB.session || RB.isDemo()) return;
+    deleteMember(b.getAttribute("data-id"));
+  }, true);
+  setInterval(addDeleteButtons, 600);
 
   async function boot() {
     if (!window.RB || boot.done) return;
