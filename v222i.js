@@ -265,7 +265,7 @@
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") { beat(true); loadPresence(true); } });
 
   /* ================= #10 Home activity ================= */
-  var TYPE = { swap_request: "review", review_done: "review", approved: "admin", friend_request: "admin", friend_added: "admin", support: "admin", feature: "admin", account: "admin" };
+  var TYPE = { swap_request: "review", review_done: "review", approved: "admin", friend_request: "admin", friend_added: "admin", mention: "admin", support: "admin", feature: "admin", account: "admin" };
   var lastFeed = 0, feedKey = "";
   function whenLabel(iso) {
     try {

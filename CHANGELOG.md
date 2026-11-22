@@ -2,6 +2,17 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.2 (build 19 candidates — NOT built) — 23 Nov 2026
+
+Fixes found by the two-member + admin end-to-end test of build 18 (fictional members Liam Carter and Sophie Bennett). versionCode 19. Not built or published until the owner says so.
+
+- Profile kept clearing (Vishal: "I fill the profile, it keeps getting cleared"): Edit profile was filled from a stale local member row (no private phone, and Complete profile only refreshed the extras), so saving Edit profile wrote blanks over bio, tagline, goal, services, ideal partners, links and phone. My own row is now built from the saved profile (RB.profile) and refreshed straight after every save (rb-app.js refreshMe/applyMembers, rb-live.js saveProfileNow).
+- Approval while waiting: a member approved while on the "waiting for approval" screen now goes to the must-watch welcome video first, instead of skipping it (rb-app.js moveOnApproved).
+- Suspended while the app is open: the member is now signed out within seconds with the reason, as the admin prompt promises (rb-live.js sync self-status check). Before, they kept using the app until they restarted it.
+- Deleted while the app is open: the member is now signed out with "This account is closed" (rb-live.js checkRemoved, checked every 15 s once the member was live). Approved members are never signed out by it.
+- Home: "Reviews Swapped" counts a member you and they have both reviewed, even when it was two one-way requests (was 0). The "Review back" card no longer shows a member you have already reviewed (rb-live.js periodStats/swappedCount, v15.js).
+- Group chat @mentions notify the mentioned member (bell + push "Mentions" setting): new migration supabase/migrations/20261123_b19_011_group_mentions.sql (NOT applied yet), push-send KIND_PREF mention → mentions, app opens Chats from a mention notification (rb-live.js NOTIF_MAP, v222i.js).
+
 ## v2.2.2 (build 18) — 22 Nov 2026
 
 Services picker, typing kept, bottom menu everywhere, Google/Facebook links, admin Delete member (Vishal). versionCode 18.

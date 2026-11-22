@@ -33,6 +33,14 @@
     var meId = RB.profile && RB.profile.id;
     TC.MEMBERS.splice(0, TC.MEMBERS.length);
     list.forEach(function (m) {
+      /* b19: my own row comes from RB.profile (it has my private phone + email and the latest save);
+         the members list leaves phone/email out, so Edit profile showed them blank and Save wiped them */
+      if (m.id === meId && RB.profile) m = Object.assign({}, m, RB.profile);
+      TC.MEMBERS.push(buildRow(m, meId));
+    });
+    finishApply(TC, list, meId);
+  }
+  function buildRow(m, meId) {
       var row = {
         id: m.id,
         first: m.first,
@@ -77,8 +85,18 @@
         goals: (m.extras && m.extras.goals) || []
       };
       row.abn = (m.extras && m.extras.abn) || "";
-      TC.MEMBERS.push(row);
-    });
+      return row;
+  }
+  /* b19: rebuild my own row from RB.profile right after a profile save, so Edit profile never shows stale/blank values */
+  function refreshMe() {
+    var TC = T(); if (!TC || !TC.MEMBERS || !RB.profile) return false;
+    var meId = RB.profile.id, cur = TC.MEMBERS.filter(function (x) { return x.id === meId; })[0];
+    var fresh = buildRow(Object.assign({}, cur ? {} : {}, RB.profile), meId);
+    if (cur) { if (!fresh.photo && cur.photo) fresh.photo = cur.photo; Object.assign(cur, fresh); }
+    else TC.MEMBERS.push(fresh);
+    return true;
+  }
+  function finishApply(TC, list, meId) {
     if (TC.state) TC.state.meId = meId;
     if (window.TCDeviCity && Array.isArray(TCDeviCity.CIRCLE)) {
       TCDeviCity.CIRCLE.splice(0, TCDeviCity.CIRCLE.length);
@@ -340,6 +358,13 @@
     st.onboarding.skipped = false;
     st.onboarding.done = false;
     if (window.TC158 && TC158.onApproved) TC158.onApproved();
+    /* b19: approved while waiting on the Pending screen: the intro video must still come first (it was skipped until an app restart) */
+    if (RB.profile && !RB.profile.intro_watched) {
+      st._forceIntro = true;
+      if (TC.go) TC.go("intro-video");
+      toast("You're approved. Please watch the short intro first.");
+      return;
+    }
     if (TC.go) TC.go("complete-profile");
     toast("You're approved. Next, finish a few profile details, or skip for now.");
   }
@@ -365,7 +390,7 @@
     }
     if (!approvalTimer) approvalTimer = setInterval(checkApproval, 20000);
   }
-  window.RBApp = { checkApproval: checkApproval, watchApproval: watchApproval, refresh: function () { return refresh(); }, route: function () { return routeAfterLogin(); } };
+  window.RBApp = { refreshMe: refreshMe, checkApproval: checkApproval, watchApproval: watchApproval, refresh: function () { return refresh(); }, route: function () { return routeAfterLogin(); } };
 
   /* Run sign-up only once the app's own checks have passed and it shows Awaiting approval. */
   function afterCreateStep() {

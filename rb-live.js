@@ -52,16 +52,65 @@
     return {
       requested: rowsCache.swaps.filter(function (s) { return s.requester_id === me && inPeriod(s.created_at, period); }).length,
       given: rowsCache.reviews.filter(function (r) { return r.from_member_id === me && r.status === "done" && inPeriod(r.done_at, period); }).length,
-      swapped: rowsCache.swaps.filter(function (s) { return (s.requester_id === me || s.recipient_id === me) && s.status === "swapped" && inPeriod(s.updated_at || s.created_at, period); }).length
+      swapped: swappedCount(me, period)
     };
+  }
+  /* b19: a swap is two members reviewing each other, however it was asked (one 2-way request or two 1-way requests);
+     dated by the later of the two reviews. Before, two 1-way requests left "Reviews Swapped" at 0. */
+  function swappedCount(me, period) {
+    var mine = {}, theirs = {}, n = 0, seen = {};
+    rowsCache.reviews.forEach(function (r) {
+      if (r.status !== "done") return;
+      if (r.from_member_id === me) mine[r.to_member_id] = r.done_at;
+      if (r.to_member_id === me) theirs[r.from_member_id] = r.done_at;
+    });
+    Object.keys(mine).forEach(function (id) {
+      if (!theirs[id] || seen[id]) return; seen[id] = true;
+      var a = mine[id] || "", b = theirs[id] || "";
+      if (inPeriod(a > b ? a : b, period)) n++;
+    });
+    rowsCache.swaps.forEach(function (s) {
+      var other = s.requester_id === me ? s.recipient_id : (s.recipient_id === me ? s.requester_id : null);
+      if (other && !seen[other] && s.status === "swapped" && inPeriod(s.updated_at || s.created_at, period)) { seen[other] = true; n++; }
+    });
+    return n;
   }
 
   /* ---------- read: database -> the maps the screens use ---------- */
+  var wasLive = false;
+  /* b19: the member was live in this session, then their profile vanished (deleted by the admin) or stopped being approved:
+     confirm with the database, then sign out and say why (the old check needed a live profile, so it never ran) */
+  async function checkRemoved() {
+    if (!wasLive || !window.RB || RB.isDemo() || !RB.session || !RB.client) return;
+    var sid = RB.session.user && RB.session.user.id; if (!sid) return;
+    try {
+      var r = await db().from("profiles").select("status,archived_at").eq("id", sid).maybeSingle();
+      if (r.error) return;
+      var gone = !r.data, bad = r.data && (r.data.status === "suspended" || r.data.archived_at);
+      if ((gone || bad) && window.TC222i && TC222i.suspended) {
+        wasLive = false;
+        if (bad) { try { await RB.loadProfile(); } catch (eL) {} }
+        TC222i.suspended((bad && RB.profile) || { status: gone ? "archived" : r.data.status, archivedAt: gone ? new Date().toISOString() : r.data.archived_at, extras: {} });
+      }
+    } catch (e) {}
+  }
   async function sync(reason) {
-    if (!live() || syncing) return;
+    if (!live()) { checkRemoved(); return; }
+    wasLive = true;
+    if (syncing) return;
     syncing = true;
     try {
       var me = myId();
+      /* b19: a member suspended (or deleted) by the admin while the app is open is signed out and told why
+         (before, it only happened on the next app start, so they kept using the app) */
+      try {
+        var mine = await db().from("profiles").select("status,archived_at").eq("id", me).maybeSingle();
+        var gone = !mine.error && !mine.data;
+        if (gone || (mine.data && (mine.data.status === "suspended" || mine.data.archived_at))) {
+          try { await RB.loadProfile(); } catch (eL) {}
+          if (window.TC222i && TC222i.suspended) { TC222i.suspended(RB.profile || { status: gone ? "archived" : "suspended", archivedAt: gone ? new Date().toISOString() : null, extras: {} }); return; }
+        }
+      } catch (eS) {}
       var rv = await db().from("google_reviews").select("id,from_member_id,to_member_id,status,swap_id,done_at");
       var sw = await db().from("review_swaps").select("id,requester_id,recipient_id,mode,review_text,note,status,created_at,updated_at").order("created_at", { ascending: false });
       var pr = await db().from("profiles").select("id,available_for_swap,reviews_given_count,reviews_received_count,avatar_path");
@@ -202,6 +251,7 @@
     var r = await db().from("profiles").update(patch).eq("id", myId());
     if (r.error) { toast("Saved on this phone, but not online: " + r.error.message); return false; }
     await RB.loadProfile();
+    if (window.RBApp && RBApp.refreshMe) try { RBApp.refreshMe(); } catch (eR) {} /* b19: bio, tagline, links, services, phone too */
     /* keep this phone's copy of me in step with what was saved (About, ideal note, areas, gallery, goals, ABN) */
     var meRow = (T().MEMBERS || []).filter(function (x) { return x.id === myId(); })[0];
     if (meRow) {
@@ -386,6 +436,7 @@
     feature: { type: "admin", go: "feature-board" },
     account: { type: "admin", go: "notifications" },
     group_added: { type: "admin", go: "chats" }, /* b16 QA #49 */
+    mention: { type: "admin", go: "chats" }, /* b19: @mention in a group (migration 011) */
     info: { type: "alert", go: "notifications" }
   };
   async function syncNotifs() {
@@ -488,8 +539,10 @@
 
   /* first sync after sign-in, then on changes + every 60s */
   var listening = false;
+  var lastRemovedCheck = 0;
   setInterval(function () {
-    if (!live()) return;
+    if (!live()) { if (wasLive && Date.now() - lastRemovedCheck > 15000) { lastRemovedCheck = Date.now(); checkRemoved(); } return; }
+    wasLive = true;
     if (!listening) {
       listening = true;
       RB.listen("review_swaps", function () { sync("rt-swaps"); });

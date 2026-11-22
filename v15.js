@@ -441,7 +441,7 @@ function googleG(size, mono) {
 
     var backs = [];
     Object.keys(they || {}).forEach(function (id) {
-      if (they[id] && !reviewedBack({ id: id })) {
+      if (they[id] && !reviewedBack({ id: id }) && !(S()._reviewed || {})[id]) { /* b19: live 'I already reviewed them' (rb-live _reviewed) */
         var mm = member(id);
         if (mm) backs.push(mm);
       }

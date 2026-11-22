@@ -15,7 +15,7 @@ const FRESH_MS = 3 * 60 * 1000;
 // notification kind -> the toggle on the app's Notification settings screen (null = always on)
 const KIND_PREF: Record<string, string | null> = {
   swap_request: "reviews", review_done: "reviews", friend_request: "friends", friend_added: "friends",
-  group_added: "messages", rec_alert: "alerts", new_member: "members", limit: "limits",
+  group_added: "messages", mention: "mentions", rec_alert: "alerts", new_member: "members", limit: "limits",
   support: null, feature: null, account: null, approved: null, info: null,
 };
 
