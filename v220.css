@@ -1,4 +1,4 @@
-/* Rate Buddies v2.2.0 — design spec v2.2 (21 Nov 2026): calmer type, slimmer tab bar, 32px chips, 52px inputs,
+/* Rate Buddies v2.2.1 — design spec v2.2 (21 Nov 2026): calmer type, slimmer tab bar, 32px chips, 52px inputs,
    1.75 stroke icons, 16px cards, text that survives 130% phone text size. Loaded last. */
 :root{--rb-ink:#0F172A;--rb-ink2:#334155;--rb-muted:#475569;--rb-blue:#1D4ED8;--rb-pill:#DBEAFE;--rb-wait:#C2410C;--rb-wait-bg:#FFF1E6}
 
@@ -172,7 +172,7 @@ html body .screen.screen .v21-chip-row,html body .screen.screen .rel-chips,html 
 /* chats list: name and message preview are separate tap targets, keep 8px between them */
 html body .screen.screen .chat-row .meta > .prev.chat-open{margin-top:8px !important}
 
-/* ===== v2.2.0 r3 — Reviews tab redesign ===== */
+/* ===== v2.2.1 r3 — Reviews tab redesign ===== */
 html body .screen.screen .v21-stat .hint{color:#FFFFFF !important;opacity:1 !important;font-weight:700 !important}
 /* Received today inside the swap-requests card */
 html body .screen .v21-incoming{align-items:center !important}
@@ -230,7 +230,7 @@ html body .screen .rb-st-full .rb-st-cap{font-size:12px;font-weight:800;color:#9
 html body .screen .rb-st-btn.warn{flex-direction:row !important;line-height:1.2;padding:8px 12px !important;min-height:36px}
 @media (max-width:399px){html.rb-tz-big body .screen .rb-mrow2 .rb-st-full{align-items:flex-start}}
 
-/* ===== v2.2.0 r4 — Reviews: each member is its own card ===== */
+/* ===== v2.2.1 r4 — Reviews: each member is its own card ===== */
 html body .screen.screen .v21-list:has(> .rb-mrow2){background:transparent !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;overflow:visible !important;display:flex !important;flex-direction:column !important;gap:12px !important;padding:0 0 4px !important}
 html body .screen.screen .v21-list > .v21-mrow.rb-mrow2{background:#FFFFFF !important;border:1px solid #E2E8F0 !important;border-radius:16px !important;box-shadow:0 1px 2px rgba(15,23,42,.06),0 2px 8px rgba(15,23,42,.05) !important;padding:14px 16px !important;margin:0 !important;gap:12px !important}
 html body .screen.screen .v21-list > .v21-mrow.rb-mrow2:first-child{border-top:1px solid #E2E8F0 !important}
@@ -511,10 +511,10 @@ html body .screen .app-header .icon-btn > .bell-dot, html body .screen .v21-head
 /* Chats + Notifications keep AI and bell / chat in the header even under header option A (Vishal, 22 Nov) */
 html.rb-hdr-a body .screen[data-screen="chats"] .app-header .header-right, html.rb-hdr-a body .screen[data-screen="notifications"] .app-header .header-right{display:flex !important}
 html.rb-hdr-a body .screen[data-screen="chats"] .app-header .header-right > .icon-btn:not(.rb-hide):not(.rb-more-btn), html.rb-hdr-a body .screen[data-screen="notifications"] .app-header .header-right > .icon-btn:not(.rb-hide):not(.rb-more-btn){display:inline-flex !important}
-/* v2.2.0 Circle: two-line "Add Facebook friend" gets proper inner padding; both action buttons stay the same height */
+/* v2.2.1 Circle: two-line "Add Facebook friend" gets proper inner padding; both action buttons stay the same height */
 html body .screen .member-card .card-actions{align-items:stretch !important}
 html body .screen.screen.screen .member-card .card-actions > :is(.friend-btn,.msg-btn):is(.friend-btn,.msg-btn){min-height:44px !important;height:auto !important;padding-top:10px !important;padding-bottom:10px !important;line-height:1.2 !important}
-/* ===== v2.2.0 Circle card B (Vishal picked B, 22 Nov) — circle-b.js ===== */
+/* ===== v2.2.1 Circle card B (Vishal picked B, 22 Nov) — circle-b.js ===== */
 html body .screen .card.rb-cb{display:block !important;padding:18px !important;margin:0 0 14px !important;border-radius:16px !important;border:1px solid #E2E8F0 !important;background:#fff !important;box-shadow:0 1px 2px rgba(15,23,42,.06),0 2px 8px rgba(15,23,42,.05) !important}
 html body .screen .rb-cb .rb-cb-top{all:unset;box-sizing:border-box;display:flex !important;column-gap:12px;align-items:flex-start;width:100%;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent}
 html body .screen .rb-cb .rb-cb-av{position:relative;width:52px;height:52px;display:block}
@@ -543,14 +543,14 @@ html body .screen .rb-cb .rb-cb-btn.soft{background:#EAF1FD !important;color:#15
 html body .screen .rb-cb .rb-cb-btn.muted{background:#F1F5F9 !important;color:#334155 !important}
 html body .screen .rb-cb .rb-cb-btn svg{color:currentColor;stroke-width:2 !important}
 
-/* v2.2.0 Circle B: name/trade get width first; the Facebook tag wraps before the trade line does */
+/* v2.2.1 Circle B: name/trade get width first; the Facebook tag wraps before the trade line does */
 html body .screen .rb-cb .rb-cb-av{flex:none}
 html body .screen .rb-cb .rb-cb-id{flex:1 1 auto;min-width:0}
 html body .screen .rb-cb .rb-cb-flags{flex:0 1000 auto;min-width:min-content;margin-left:auto}
 html body .screen .rb-cb .rb-cb-s.rb-cb-s2 .rb-cb-d{display:none !important}
 html body .screen .rb-cb .rb-cb-s.rb-cb-s2 .rb-cb-t,html body .screen .rb-cb .rb-cb-s.rb-cb-s2 .rb-cb-a{display:block}
 
-/* v2.2.0 r2: V3 "Today" dot meter chip + Reviews tab card (shares the Circle B styles) */
+/* v2.2.1 r2: V3 "Today" dot meter chip + Reviews tab card (shares the Circle B styles) */
 html body .screen .rb-cb .rb-cb-meter{gap:6px}
 html body .screen .rb-cb .rb-cb-meter b{font-weight:800;color:#101A33}
 html body .screen .rb-cb .rb-cb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#CBD5E1;flex:none}
@@ -559,3 +559,11 @@ html body .screen .rb-rv.rb-cb{display:block !important;padding:18px !important;
 html body .screen .rb-cb span.rb-cb-btn{cursor:default}
 html body .screen .v21-list:has(> .rb-rv){background:transparent !important;border:0 !important;box-shadow:none !important;padding:0 !important}
 html body .screen.screen .rb-rv.rb-cb .rb-cb-n{font-size:15px !important}
+
+/* v2.2.1: a search wrapper owns the one box. Reset its input so the global 52px field rule
+   cannot create a second white rounded box, overflow the 48px wrapper, or cover the search icon. */
+html body .screen.screen.screen .search > input:not([type=checkbox]):not([type=radio]){min-height:0 !important;height:auto !important;align-self:stretch !important;min-width:0 !important;flex:1 1 0% !important;background:transparent !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;padding:0 !important;margin:0 !important;outline:0 !important;box-sizing:border-box !important}
+html body .screen.screen.screen .search:focus-within{border-color:#2563EB !important;box-shadow:0 0 0 2px rgba(37,99,235,.12) !important}
+html body .screen.screen.screen .ac-kind{font-size:12px !important;font-weight:700 !important;letter-spacing:0 !important;text-transform:none !important;color:#1558C9 !important;background:#EAF1FD !important;white-space:nowrap !important;flex:none !important}
+html body .screen.screen.screen .search-wrap > .search{min-height:52px !important;box-sizing:border-box !important}
+html body .screen.screen.screen .ac-item > .ac-kind{margin-left:auto !important}

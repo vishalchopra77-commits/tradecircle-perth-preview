@@ -3,7 +3,7 @@
    normalisation, wording, scroll preservation and dead-tap fixes. Nothing is deleted; old layers stay. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.2.0";
+  var VERSION = "v2.2.1";
   function T() { return root.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function me() { try { return T().me ? T().me() : {}; } catch (e) { return {}; } }
@@ -155,7 +155,7 @@
       if (!hasText) return;
       var cs = getComputedStyle(el);
       if (el.classList.contains("bell-dot")) { el.style.removeProperty("font-size"); return; }
-      if (parseFloat(cs.fontSize) < 12 && !el.closest(".fb-seg-btn, .v21-more-tile")) el.style.setProperty("font-size", "12px", "important"); /* v2.2.0: switch labels are fitted by v220.js (min 11px) */
+      if (parseFloat(cs.fontSize) < 12 && !el.closest(".fb-seg-btn, .v21-more-tile")) el.style.setProperty("font-size", "12px", "important"); /* v2.2.1: switch labels are fitted by v220.js (min 11px) */
       var c = lum(cs.color); if (!c) return;
       var r = c.rgb, grey = Math.max(r[0], r[1], r[2]) - Math.min(r[0], r[1], r[2]) < 40;
       if (grey && c.L > 0.17 && c.L < 0.8 && !el.closest(".btn[disabled], .rb-disabled, .is-locked, #tabbar") && !darkBg(el)) el.style.setProperty("color", "#475569", "important");
@@ -839,7 +839,7 @@
       try { glueDots(sc); unTruncate(sc); balanceChips(sc); tradeBreaks(sc); showActiveChip(sc); } catch (eU) {}
       restoreScroll();
     } catch (err) { if (root.console) console.warn("v213", err); }
-    finally { busy = false; /* v2.2.0 perf fix: ignore this pass's own DOM changes */ if (mo213) try { mo213.takeRecords(); } catch (eT) {} }
+    finally { busy = false; /* v2.2.1 perf fix: ignore this pass's own DOM changes */ if (mo213) try { mo213.takeRecords(); } catch (eT) {} }
   }
   var mo213 = null;
   function stamp() {

@@ -2,6 +2,12 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.1 — 22 Nov 2026 (versionCode 9)
+- Restore the existing "Demo: simulate approval" button and its original position on Awaiting approval.
+- Fix nested search inputs: one wrapper, no inner white rounded box, consistent focus state.
+- Trade suggestions: "Select" instead of "TYPE"; same row action.
+- Owner rule: never remove or hide any button, screen, feature or file without explicit approval.
+
 ## v2.2.0 — 21 Nov 2026 (versionCode 8) — PNG review round, not built yet
 
 ### Design spec v2.2

@@ -514,14 +514,14 @@
   }
   function stateStepHTML(prefix) {
     var pick = ensureAreaPick(prefix);
-    var selected = pick.stateId || null; /* v2.2.0: nothing pre-selected */
+    var selected = pick.stateId || null; /* v2.2.1: nothing pre-selected */
     var rows = auStates().map(function (st) {
       var metro = kindCount(st, "metro");
       var regional = kindCount(st, "regional");
       var sub = regional ? (metro + " metro · " + regional + " regional") : (metro + " metro areas");
       var cls = "state-row";
       if (st.id === selected) cls += " on";
-      /* v2.2.0: no state hinted or pre-selected */
+      /* v2.2.1: no state hinted or pre-selected */
       return '<button type="button" class="' + cls + '" data-area-state="' + st.id + '">' +
         '<span class="abbr">' + escapeText(st.abbrev) + "</span>" +
         '<span><div class="nm">' + escapeText(st.name) + '</div><div class="sub">' + escapeText(sub) + "</div></span>" +
@@ -820,7 +820,7 @@
       html += '<div class="ac-group">Trades &amp; businesses</div>' + sugg.map(function (tr) {
         var label = tr.label || tr;
         var value = tr.value || tr;
-        var kind = label === value ? "Type" : "Also called";
+        var kind = "Select"; /* v2.2.1: clear action, row is the button */
         return '<button type="button" class="ac-item" data-ac-trade="' + escapeAttr(value) + '"><span>' + escapeText(label) + (label !== value ? '<span class="sub"> · ' + escapeText(value) + "</span>" : "") + '</span><span class="ac-kind">' + kind + "</span></button>";
       }).join("");
     }
@@ -1332,7 +1332,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.0 · 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.1 · 21 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }
@@ -1633,7 +1633,7 @@
   function applyFbConnect() {
     var form = document.querySelector("#screens form");
     if (form) captureDraft(form);
-    var d = state.draft || emptyDraft(); /* v2.2.0: never copy the demo member into a new sign-up */
+    var d = state.draft || emptyDraft(); /* v2.2.1: never copy the demo member into a new sign-up */
     /* v2.1.3: no demo name is filled in; the member types their own (or the real Facebook login supplies it). */
     d.facebook = demoFbLink();
     state.draft = d;

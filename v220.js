@@ -1,9 +1,9 @@
-/* Rate Buddies v2.2.0 — design spec v2.2 behaviour: header options (A/B/C), profile action row options (A/B),
+/* Rate Buddies v2.2.1 — design spec v2.2 behaviour: header options (A/B/C), profile action row options (A/B),
    Awaiting approval (hourglass, no Submitted box, no demo approval in the live app), Facebook Friends wording,
    clear tier medal. Options: ?hdr=a|b|c and ?prof=a|b (saved); default A / A. Fictional demo data only. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.2.0";
+  var VERSION = "v2.2.1";
   var html = document.documentElement;
   function q(name) { var m = new RegExp("[?&]" + name + "=([a-z])").exec(location.search); return m ? m[1] : null; }
   function opt(name, def, allowed) { var v = q(name); try { if (v) localStorage.setItem("rb220-" + name, v); else v = localStorage.getItem("rb220-" + name); } catch (e) {} return allowed.indexOf(v) >= 0 ? v : def; }
@@ -21,7 +21,7 @@
     var art = sc.querySelector(".pending-art");
     if (art && !art.classList.contains("rb-wait")) { art.classList.add("rb-wait"); art.innerHTML = SVG(HOURGLASS, 32); art.setAttribute("aria-label", "Waiting for approval"); }
     sc.querySelectorAll(".areas-card").forEach(function (c) { var h = c.querySelector(".areas-card-h"); if (h && /submitted/i.test(h.textContent)) c.hidden = true, c.style.display = "none"; });
-    if (!DEMO_TOOLS || isLive()) {
+    if (false) { /* v2.2.1: restore tester continuation, no hiding without owner approval */
       var b = sc.querySelector('[data-action="simulate-approval"]');
       if (b) { b.style.setProperty("display", "none", "important"); var n = b.nextElementSibling; if (n && n.classList.contains("hint") && /super admin/i.test(n.textContent)) n.style.setProperty("display", "none", "important"); }
     }
@@ -178,12 +178,12 @@
       var id = sc.dataset.screen;
       if (id === "pending") pending(sc);
       friendsWording(sc); medals(sc); memBadge(sc); try { fitMenu(); actWidth(sc); tradeSpan(sc); } catch (eM) {} profileRow(sc); headerMore(sc); try { document.documentElement.classList.toggle("rb-tz-big", textZoomReal() > 1.05); fitSeg(sc); chatPad(sc); dots(sc); fitTiles(sc); iconMid(sc); } catch (eF) { if (root.console) console.warn("v220 fit", eF && eF.message); }
-      var ver = sc.querySelectorAll(".v21-ver, .set-row .b"); ver.forEach(function (e) { if (/v2\.1\.\d/.test(e.textContent)) e.textContent = e.textContent.replace(/v2\.1\.\d/, VERSION); });
-    } catch (e) { if (root.console) console.warn("v220", e); } finally { busy = false; /* v2.2.0 perf fix: drop the mutations this pass made itself, so it can't re-trigger itself forever */ if (mo) try { mo.takeRecords(); } catch (eT) {} }
+      var ver = sc.querySelectorAll(".v21-ver, .set-row .b"); ver.forEach(function (e) { if (/v2\.(?:1\.\d|2\.0)\b/.test(e.textContent)) e.textContent = e.textContent.replace(/v2\.(?:1\.\d|2\.0)\b/, VERSION); });
+    } catch (e) { if (root.console) console.warn("v220", e); } finally { busy = false; /* v2.2.1 perf fix: drop the mutations this pass made itself, so it can't re-trigger itself forever */ if (mo) try { mo.takeRecords(); } catch (eT) {} }
   }
   var t = null, t2 = null, t3 = null, mo = null, extra = [];
   function schedule() { clearTimeout(t); clearTimeout(t2); clearTimeout(t3); extra.forEach(clearTimeout); t = setTimeout(pass, 40); t2 = setTimeout(pass, 260); /* second pass after the older overlays finish */ t3 = setTimeout(pass, 700); extra = [120, 400, 520, 1300, 2000].map(function (ms) { return setTimeout(function () { if (!busy) pass(); }, ms); }); settle(); }
-  /* v2.2.0: one more fit pass once the DOM has been quiet for 250ms (other layers finish after our timed passes) */
+  /* v2.2.1: one more fit pass once the DOM has been quiet for 250ms (other layers finish after our timed passes) */
   var st = null; function settle() { clearTimeout(st); st = setTimeout(function () { if (busy) return settle(); requestAnimationFrame(function () { pass(); }); }, 250); }
   window.addEventListener("resize", function () { schedule(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { schedule(); });
