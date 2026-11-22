@@ -62,7 +62,7 @@
     if (r === "none") chips += '<span class="rb-cb-chip n">Not friends yet</span>';
     else if (r === "pending") chips += '<span class="rb-cb-chip a">' + CLOCK + "<span>Request pending</span></span>";
     if (reviewed(m)) chips += '<span class="rb-cb-chip g">' + TICK + "<span>Reviewed</span></span>";
-    else if (needsReview(m)) chips += '<span class="rb-cb-chip a">' + STAR + "<span>Needs your review</span></span>";
+    else if (needsReview(m)) chips += '<span class="rb-cb-chip a">' + STAR + "<span>Request review swap</span></span>";
     chips += meter(td);
     var second;
     if (r === "none") {
@@ -122,9 +122,12 @@
       act = '<button type="button" class="rb-cb-btn muted" data-action="rb-remind-me" data-id="' + id + '" aria-label="Daily limit reached. Remind Me">' + BELL + "<span>Remind Me</span></button>"; }
     else if (st === "already") { chip = '<span class="rb-cb-chip g">' + TICK + "<span>Review Swapped</span></span>"; act = muted(TICK, "Reviewed"); }
     else if (st === "given") { chip = '<span class="rb-cb-chip g">' + TICK + "<span>Reviewed</span></span>"; act = muted(TICK, "Reviewed"); }
-    else if (st === "pending") { chip = '<span class="rb-cb-chip a">' + CLOCK + "<span>Review Requested</span></span>"; act = leave; }
+    /* v2.2.2 b16 (Vishal): has this member already left ME a Google Review? (live: google_reviews -> S()._they; demo: seed) */
+    else if ((S()._they || {})[m.id]) { chip = '<span class="rb-cb-chip g rb-cb-recv">' + TICK + "<span>Review received</span></span>"; act = leave; }
+    else if (st === "pending") { chip = '<span class="rb-cb-chip a">' + CLOCK + "<span>Review Requested</span></span>"; act = muted(CLOCK, "Request sent", ' data-rb-sent="1"'); }
     else if (!o.av) { chip = '<span class="rb-cb-chip n"><span>Not available</span></span>'; act = leave; }
-    else { chip = '<span class="rb-cb-chip a">' + STAR + "<span>Needs your review</span></span>"; act = leave; }
+    else { chip = '<span class="rb-cb-chip a">' + STAR + "<span>Request review swap</span></span>";
+      act = '<button type="button" class="rb-cb-btn soft rb-cb-swap" data-action="ask-review" data-id="' + id + '">' + STAR + "<span>Send swap request</span></button>"; }
     if (root.RB_REVIEW_ADDFRIEND && !o.friend && o.av && !st) { act = '<a class="rb-cb-btn fb" href="' + esc(fbUrl(m) || "#") + '" target="_blank" rel="noopener noreferrer">' + FBW + "<span>Add friend</span></a>"; }
     /* not friends: grey "Facebook friends" chip opens their profile in the Facebook app */
     var fbChip = o.friend ? "" : '<a class="rb-cb-chip n rb-cb-fbgrey" data-action="rb-fb-open" data-id="' + id + '" href="' + esc(fbUrl(m) || "https://www.facebook.com/") + '" target="_blank" rel="noopener noreferrer" aria-label="Not Facebook friends yet. Open ' + esc(m.first || "") + '\u2019s Facebook profile">' + FBI + "<span>Facebook friends</span></a>";

@@ -295,9 +295,9 @@
       var cv = await db().from("conversations").select("id,kind,title,created_by,dm_key,last_message_at,created_at").is("archived_at", null);
       var cm = await db().from("conversation_members").select("conversation_id,member_id,last_read_at,muted");
       var ids = (cv.data || []).map(function (c) { return c.id; });
-      var msgs = ids.length ? await db().from("chat_messages").select("id,conversation_id,sender_id,body,created_at").in("conversation_id", ids).order("created_at", { ascending: true }).limit(1000) : { data: [] };
+      var msgs = ids.length ? await db().from("chat_messages").select("id,conversation_id,sender_id,body,created_at,hidden").in("conversation_id", ids).order("created_at", { ascending: true }).limit(1000) : { data: [] };
       var byConv = {};
-      (msgs.data || []).forEach(function (m) { (byConv[m.conversation_id] = byConv[m.conversation_id] || []).push(m); });
+      (msgs.data || []).forEach(function (m) { if (m.hidden) return; /* b16 QA #2: hidden by the admin */ (byConv[m.conversation_id] = byConv[m.conversation_id] || []).push(m); });
       var mem = {};
       (cm.data || []).forEach(function (r) { (mem[r.conversation_id] = mem[r.conversation_id] || []).push(r); });
       var list = (cv.data || []).map(function (c) {
@@ -379,6 +379,13 @@
     swap_request: { type: "review", go: "incoming-swap" },
     review_done: { type: "review", go: "reviews" },
     approved: { type: "admin", go: "home" },
+    /* v2.2.2 b16 QA #9/#33/#39/#45/#52: kinds written by the 010 triggers */
+    friend_request: { type: "admin", go: "members" },
+    friend_added: { type: "admin", go: "members" },
+    support: { type: "admin", go: "support" },
+    feature: { type: "admin", go: "feature-board" },
+    account: { type: "admin", go: "notifications" },
+    group_added: { type: "admin", go: "chats" }, /* b16 QA #49 */
     info: { type: "alert", go: "notifications" }
   };
   async function syncNotifs() {
@@ -389,7 +396,7 @@
       var list = (r.data || []).map(function (n) {
         var m = NOTIF_MAP[n.kind] || NOTIF_MAP.info, p = n.payload || {};
         var row = { id: n.id, live: true, type: m.type, title: n.title, body: n.body, time: timeLabel(n.created_at), unread: !n.read, go: m.go };
-        if (p.from && n.kind !== "review_done") row.who = p.from;
+        if (p.from && n.kind !== "review_done" && n.kind !== "friend_request" && n.kind !== "friend_added") row.who = p.from;
         return row;
       });
       TC12.setLiveNotifs(list);
@@ -425,7 +432,7 @@
     if (!live() || !window.TC12 || !TC12.setLiveRel) return;
     try {
       var me = myId();
-      var r = await db().from("facebook_friends").select("id,from_member_id,to_member_id,status");
+      var r = await db().from("facebook_friends").select("id,from_member_id,to_member_id,status,created_at,updated_at");
       if (r.error) return;
       fbRows = r.data || [];
       var map = {};
@@ -434,6 +441,10 @@
         if (x.status === "added") map[other] = "friends";
         else if (x.status === "requested" && x.from_member_id === me && map[other] !== "friends") map[other] = "pending";
       });
+      /* v2.2.2 b16 QA #9: requests sent TO me, waiting for my Confirm / Not now */
+      var incoming = {};
+      fbRows.forEach(function (x) { if (x.status === "requested" && x.to_member_id === me && map[x.from_member_id] !== "friends") incoming[x.from_member_id] = x; });
+      S()._relIn = incoming;
       TC12.setLiveRel(map);
       S()._rel = Object.assign({}, map);
       if (["members", "member", "home", "members-all"].indexOf(S().screen) >= 0) rerender();
@@ -445,7 +456,11 @@
     var mine = fbRows.filter(function (x) { return x.from_member_id === me && x.to_member_id === other; })[0];
     var theirs = fbRows.filter(function (x) { return x.from_member_id === other && x.to_member_id === me; })[0];
     var res;
-    if (status === "added" && theirs && !mine) res = await db().from("facebook_friends").update({ status: "added", updated_at: new Date().toISOString() }).eq("id", theirs.id);
+    /* v2.2.2 b16 QA #29: only the person who RECEIVED a request can confirm it (the DB enforces this too) */
+    if (status === "requested" && theirs && theirs.status === "requested" && !mine) status = "added";
+    if (status === "added" && !(theirs && theirs.status !== "dismissed" && !mine)) { toast("They need to confirm your request in their app. We'll let you know."); await syncFriends(); return; }
+    if (status === "dismissed") res = theirs ? await db().from("facebook_friends").update({ status: "dismissed", updated_at: new Date().toISOString() }).eq("id", theirs.id) : { error: null };
+    else if (status === "added" && theirs && !mine) res = await db().from("facebook_friends").update({ status: "added", updated_at: new Date().toISOString() }).eq("id", theirs.id);
     else if (mine) res = (mine.status === "added" && status === "requested") ? { error: null } : await db().from("facebook_friends").update({ status: status, updated_at: new Date().toISOString() }).eq("id", mine.id);
     else res = await db().from("facebook_friends").insert({ from_member_id: me, to_member_id: other, status: status });
     if (res && res.error) toast("Not saved online: " + res.error.message);
@@ -466,6 +481,9 @@
       RB.addLedger(id, text).catch(function (err) { console.warn("RB ledger", err); });
     }, 120);
     if (a === "mark-friends" && id) setTimeout(function () { setFriend(id, "added"); }, 0);
+    /* v2.2.2 b16 QA #9: incoming request buttons (v222i.js renders them) */
+    if (a === "rb-fr-confirm" && id) setTimeout(function () { setFriend(id, "added").then(function () { toast("You're now Facebook friends."); }); }, 0);
+    if (a === "rb-fr-notnow" && id) setTimeout(function () { setFriend(id, "dismissed"); }, 0);
   }, true);
 
   /* first sync after sign-in, then on changes + every 60s */
@@ -490,5 +508,5 @@
     if (Date.now() - lastSync > 60000) { sync("timer"); syncChats(); syncNotifs(); syncFriends(); }
     markRead();
   }, 1500);
-  window.RBLive = { syncFriends: syncFriends, syncChats: syncChats, syncNotifs: syncNotifs, sync: sync, saveProfile: saveProfile, periodStats: periodStats, isLive: live };
+  window.RBLive = { get fbRows() { return fbRows; }, inPeriod: inPeriod, setFriend: setFriend, syncFriends: syncFriends, syncChats: syncChats, syncNotifs: syncNotifs, sync: sync, saveProfile: saveProfile, periodStats: periodStats, isLive: live };
 })();

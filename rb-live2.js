@@ -178,7 +178,20 @@
     if (a === "send-alert") {
       e.preventDefault(); e.stopImmediatePropagation();
       var linkEl = document.getElementById("recLink"), tradeEl = document.getElementById("tradeType");
-      sendAlert(linkEl && linkEl.value.trim(), (tradeEl && tradeEl.value.trim()) || "");
+      /* v2.2.2 b16 QA #34: a Facebook post link and a trade from the list are both required */
+      var lv = linkEl ? linkEl.value.trim() : "", tv = tradeEl ? tradeEl.value.trim() : "";
+      if (lv && !/^https?:\/\//i.test(lv)) lv = "https://" + lv;
+      var tl = (root.TC_TRADES || []).map(function (t) { return String(t && (t.name || t.label || t) || "").toLowerCase(); });
+      var okLink = /^https?:\/\/([a-z0-9-]+\.)*(facebook\.com|fb\.com|fb\.me)\//i.test(lv);
+      var okTrade = !!tv && (!tl.length || tl.indexOf(tv.toLowerCase()) > -1);
+      [[linkEl, okLink, "Paste the link to the Facebook post (facebook.com/…)"], [tradeEl, okTrade, "Choose a trade from the list"]].forEach(function (x) {
+        var f = x[0] && x[0].closest(".field"); if (!f) return;
+        var old = f.querySelector(".field-err"); if (old) old.remove();
+        f.classList.toggle("has-error", !x[1]);
+        if (!x[1]) f.insertAdjacentHTML("beforeend", '<p class="field-err" role="alert">' + x[2] + "</p>");
+      });
+      if (!okLink || !okTrade) { toast(!okLink ? "Add the Facebook post link first." : "Choose a trade from the list."); return; }
+      sendAlert(lv, tv);
       return;
     }
     if (a === "alert-done" && isUuid(id)) {

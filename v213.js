@@ -304,6 +304,8 @@
     /* one queue place everywhere: the Recommend tab's bar hard-codes "#4", so reuse the place shown on Circle / Queue */
     var qb = sc.querySelector('.fb-seg-btn[data-go="promo-queue"] .rb-seg-badge, .fb-seg-btn[data-go="promo-queue"] .fb-seg-badge');
     var truth = 0; try { if (root.TC211 && TC211.myPlace) truth = TC211.myPlace().mine || 0; } catch (eQ) {}
+    if (!truth && root.RBLive && RBLive.isLive()) { try { var lq = (T().state && T().state._queue) || [], mid = RB.profile.id; lq.forEach(function (row, i) { if (row.memberId === mid) truth = i + 1; }); } catch (eL) {} }
+    if (qb && !truth && root.RBLive && RBLive.isLive()) { qb.remove(); root.__rbQueuePlace = ""; qb = null; } /* v2.2.2 b16 QA #30: not in the queue = plain "Queue" */
     if (qb && truth) { qb.textContent = "#" + truth; qb.setAttribute("aria-label", "Your place #" + truth); root.__rbQueuePlace = "#" + truth; qb = null; }
     if (qb) {
       var ds = sc.getAttribute("data-screen");
@@ -475,6 +477,7 @@
     var list = (T().MEMBERS || []), idx = {};
     list.forEach(function (m) {
       var full = ((m.first || "") + " " + (m.last || "")).trim(); if (!full || !m.trade) return;
+      if (m.role === "admin" || /^rate buddies/i.test(full)) return; /* v2.2.2 b16 QA #40: never decorate the admin / "Rate Buddies" */
       idx[full.replace(/[’']/g, "'")] = m;
     });
     return idx;
@@ -487,6 +490,7 @@
     $all("*", sc).forEach(function (el) {
       if (el.dataset.rbTrade || el.closest("svg, .rb-trade-line, .region-chip, .tabbar, input, textarea, select")) return;
       var own = ownText(el); if (!own || own.length > 40) return;
+      if (el.closest(".dash-biz, .biz, .business, [data-business], .me-biz, .profile-biz")) return; /* b16 QA #40 */
       var m = idx[own.replace(/\s*YOU$/, "")]; if (!m) return;
       var trade = m.trade, row = el.closest(ROW_SEL) || el.parentElement;
       if (el.closest(".app-header")) row = el.closest(".app-header");
@@ -510,6 +514,7 @@
       var v = tn.nodeValue.replace(/[’']/g, "'"); if (v.length < 12 || v.length > 240) continue;
       for (var j = 0; j < names.length; j++) {
         var nm2 = names[j], at = v.indexOf(nm2); if (at < 0) continue;
+        if (/^\s+[A-Z][a-z]/.test(v.slice(at + nm2.length)) || /^['’]s?\s+[A-Z]/.test(v.slice(at + nm2.length))) continue; /* b16 QA #40: part of a business name ("QA Alice Plumbing") */
         var rowEl = pe.closest(ROW_SEL + ", .msg, .bubble, .dash-feed-item, .voice-line, .hint, .bd") || pe;
         if (txt(rowEl).toLowerCase().indexOf(idx[nm2].trade.toLowerCase()) > -1) break;
         var up2 = (pe.parentElement && pe.parentElement.parentElement) || pe; if (rowEl === pe && txt(up2).length < 300 && txt(up2).toLowerCase().indexOf(idx[nm2].trade.toLowerCase()) > -1) break;
@@ -563,6 +568,14 @@
       else title = "Welcome";
       if (id === "intro-video" || id === "pending") title = "Welcome";
       img.src = thumbFor(title).replace(".svg", variant + ".svg"); img.dataset.rbThumb = 1; img.classList.add("rb-thumb");
+      /* v2.2.2 b16: the Welcome intro poster has no centre circle/icon and reads "See How It Works" */
+      if ((id === "intro-video" || id === "pending") && img.closest(".tut-player")) img.src = "assets/tutorials/thumb-welcome-intro.svg";
+    });
+    /* v2.2.2 b16: one clean play triangle (optically centred: centroid on the button centre) */
+    if (id === "intro-video" || id === "pending") $all(".tut-player .play-big", sc).forEach(function (b) {
+      if (b.classList.contains("rb-intro-play")) return;
+      b.classList.add("rb-intro-play");
+      b.innerHTML = '<svg viewBox="0.77 0 24 24" width="44" height="44" fill="currentColor" aria-hidden="true" data-rb-play="1"><path d="M9.2 5.6c0-.9 1-1.5 1.8-1L19.6 11c.7.5.7 1.5 0 2L11 19.4c-.8.5-1.8-.1-1.8-1z"/></svg>';
     });
     if (id === "tutorials") {
       /* shared header set here too (Vishal: messages + notifications everywhere): back · title · AI · Chat · Bell; search moves to the start of the chips row */

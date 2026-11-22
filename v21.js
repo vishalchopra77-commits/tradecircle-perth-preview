@@ -210,7 +210,9 @@
   function theyReviewed(m) { return !!(S()._they && S()._they[m.id]); }
   function pendingOf(m) { return !!(S()._pendingReq && S()._pendingReq[m.id]); }
   function alreadyGiven(m) { return iReviewed(m) && theyReviewed(m); }
+  function rbLive() { return !!(root.RBLive && RBLive.isLive()); }
   function seedDemoRelations() {
+    if (rbLive()) { S()._reviewed = S()._reviewed || {}; S()._they = S()._they || {}; S()._pendingReq = S()._pendingReq || {}; return; } /* v2.2.2 b16 QA #16: no demo relations when live */
     S()._reviewed = S()._reviewed || { sarah: true, daniel: true, chris: true };
     S()._they = S()._they || { sarah: true, mei: true, liam: true };
     S()._pendingReq = S()._pendingReq || { jack: true, emma: true };
@@ -238,7 +240,7 @@
   ];
   /* v2.2.0 r5: fictional Facebook Friend status (most members are friends) */
   var FB_NOT = { emma: 1, noah: 1, chris: 1 };
-  function isFbFriend(m) { return !FB_NOT[m.id]; }
+  function isFbFriend(m) { return rbLive() ? (S()._rel || {})[m.id] === "friends" : !FB_NOT[m.id]; } /* b16 QA #16: live friend map */
   function incomingIds() {
     var list = null;
     try { list = JSON.parse(localStorage.getItem("rb_swap_incoming") || "null"); } catch (e) { list = null; }
@@ -248,7 +250,16 @@
 
   function membersForList() {
     seedDemoRelations();
-    return (T().MEMBERS || []).filter(function (m) { return !m.isMe && m.id !== me().id; });
+    var list = (T().MEMBERS || []).filter(function (m) { return !m.isMe && m.id !== me().id; });
+    if (rbLive()) { /* v2.2.2 b16 QA #35: no admins / suspended / archived; same "in your areas" rule as Facebook › Circle */
+      var mine = (RB.profile && RB.profile.regions) || [];
+      list = list.filter(function (m) {
+        if (m.role === "admin" || (m.status && m.status !== "approved")) return false;
+        if (!mine.length) return true;
+        return (m.regions || []).some(function (r) { return mine.indexOf(r) > -1; });
+      });
+    }
+    return list;
   }
   function countFilter(id, list) {
     return list.filter(function (m) { return matchFilter(id, m); }).length;

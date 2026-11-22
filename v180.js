@@ -171,6 +171,8 @@
     if (root.TC12 && TC12.render && !TC12._v180) {
       var prev = TC12.render;
       TC12.render = function (id) {
+        /* v2.2.2 b16 (owner: no demo data): the demo Devi post, notification and Home line never show in the live app */
+        if ((window.RBLive && RBLive.isLive && RBLive.isLive())) { var sL = S(); if (sL._fbPosts) sL._fbPosts = sL._fbPosts.filter(function (p) { return p.id !== "d1"; }); sL._deviSeeded = true; return prev.apply(this, arguments); }
         seedPosts();
         var html = prev.apply(this, arguments);
         if (!html) return html;
@@ -184,7 +186,7 @@
     if (root.TC159 && TC159.pendingCount && !TC159._v180pend) {
       var prevP = TC159.pendingCount;
       TC159.pendingCount = function () {
-        seedPosts();
+        if (!(window.RBLive && RBLive.isLive && RBLive.isLive())) seedPosts();
         return prevP();
       };
       TC159._v180pend = 1;

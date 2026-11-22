@@ -52,7 +52,9 @@
     out.idealTrades = list(p.idealTrades);
     out.idealNote = p.idealNote || "";
     out.gallery = Array.isArray(p.gallery) ? p.gallery.map(function (g, i) {
-      return { id: g.id || ("g" + (i + 1)), title: g.title || ("Job photo " + (i + 1)), tone: g.tone || "teal", icon: g.icon || "house" };
+      var o = { id: g.id || ("g" + (i + 1)), title: g.title || ("Job photo " + (i + 1)), tone: g.tone || "teal", icon: g.icon || "house" };
+      if (/^https:\/\//.test(g.url || "")) { o.url = g.url; if (g.path) o.path = g.path; } /* v2.2.2 b16 QA #32: real uploaded photo */
+      return o;
     }) : [];
     out.goals = Array.isArray(p.goals) ? p.goals.map(function (g, i) {
       return { id: g.id || ("goal" + (i + 1)), label: g.label || "", current: Number(g.current) || 0, target: Number(g.target) || 0 };
@@ -183,6 +185,7 @@
     var remove = mine
       ? '<button type="button" class="gal-remove" data-action="gal-remove" data-id="' + esa(mid) + '" data-gid="' + esa(item.id) + '" aria-label="Remove photo">×</button>'
       : "";
+    if (item.url) return '<div class="gal-cell"><button type="button" class="gal-tile rb-gal-photo" data-action="gal-open" data-id="' + esa(mid) + '" data-index="' + i + '" aria-label="' + esa(item.title) + '" style="background:#0A1328 url(&quot;' + esa(item.url) + '&quot;) center/cover no-repeat"></button>' + remove + "</div>"; /* b16 QA #32 */
     return '<div class="gal-cell"><button type="button" class="gal-tile" data-action="gal-open" data-id="' + esa(mid) + '" data-index="' + i + '" style="background:' + bg + '">' +
       '<span class="gal-ico" aria-hidden="true">' + ico + "</span>" +
       '<span class="gal-cap">' + esc(item.title) + "</span></button>" + remove + "</div>";
@@ -217,10 +220,11 @@
       var add = mine
         ? '<div class="gal-cell"><button type="button" class="gal-tile gal-add" data-action="gal-add" data-id="' + esa(mid) + '"><span class="gal-ico" aria-hidden="true">+</span><span class="gal-cap">Add photo</span></button></div>'
         : "";
-      var emptyGal = !p.gallery.length ? '<p class="hint" style="margin:0 0 8px">No job photos yet. Add a few so other members can see the kind of work you do. These are placeholders in the prototype.</p>' : "";
+      var rbLiveG = !!(window.RBLive && RBLive.isLive()); /* b16 QA #32 */
+      var emptyGal = !p.gallery.length ? '<p class="hint" style="margin:0 0 8px">No job photos yet. Add a few so other members can see the kind of work you do.' + (rbLiveG ? "" : " These are placeholders in the prototype.") + '</p>' : "";
       parts.push('<section class="profile-block"><h3 class="profile-h">Image gallery</h3>' + emptyGal +
         '<div class="gal-grid">' + p.gallery.map(function (g, i) { return galleryTile(g, i, mid, mine); }).join("") + add + "</div>" +
-        (mine ? '<p class="hint">Photos are placeholders in this prototype. Tap a tile to view it full screen. Add or remove is a mock only.</p>' : "") +
+        (mine ? (rbLiveG ? '<p class="hint">Tap a photo to see it full screen. Tap × to remove it.</p>' : '<p class="hint">Photos are placeholders in this prototype. Tap a tile to view it full screen. Add or remove is a mock only.</p>') : "") +
         "</section>");
     }
 
@@ -376,8 +380,8 @@
     var item = viewer.items[i];
     var bg = TONES[item.tone] || TONES.teal;
     var ico = ICONS[item.icon] || ICONS.house;
-    el.querySelector(".gal-view-stage").style.background = bg;
-    el.querySelector(".gal-view-ico").innerHTML = ico;
+    el.querySelector(".gal-view-stage").style.background = item.url ? ("#0A1328 url(\"" + item.url + "\") center/contain no-repeat") : bg; /* b16 QA #32 */
+    el.querySelector(".gal-view-ico").innerHTML = item.url ? "" : ico;
     el.querySelector(".gal-view-title").textContent = item.title;
     el.querySelector(".gal-view-count").textContent = (i + 1) + " of " + viewer.items.length;
     el.querySelector("[data-action='gal-prev']").disabled = viewer.items.length < 2;

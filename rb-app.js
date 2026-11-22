@@ -49,6 +49,8 @@
         recShare: m.recShare,
         color: m.color || "navy",
         isMe: m.id === meId,
+        role: m.role || "member", /* v2.2.2 b16 QA #35/#40: lists and the name decorator leave admins out */
+        status: m.status,
         /* v2.2.2 live: fields the profile + Reviews screens read */
         email: m.email || "",
         tagline: m.tagline || "",
@@ -159,7 +161,7 @@
   async function refresh() {
     if (!RB.session || RB.isDemo()) return;
     var list = await RB.listProfiles();
-    applyMembers(list.filter(function (m) { return m.status === "approved" || m.id === (RB.profile && RB.profile.id); }));
+    applyMembers(list.filter(function (m) { return (m.status === "approved" && !m.archivedAt) || m.id === (RB.profile && RB.profile.id); }));
     var reqs = await RB.listRequests();
     var prog = await RB.listProgress();
     applyRequests(reqs, prog);
@@ -172,19 +174,51 @@
     var go = T() && T().go;
     if (!go) return;
     if (!p) { go("signin"); return; }
+    if (p.status === "suspended" || p.archivedAt) { /* v2.2.2 b16 QA #1: suspended members are signed out and told why */
+      if (window.TC222i && TC222i.suspended) TC222i.suspended(p);
+      else { try { RB.logout(); } catch (e) {} go("signin"); }
+      return;
+    }
     if (p.status === "pending" || p.status === "rejected") {
       fillDraftFromProfile();
       go("pending");
       if (p.status === "pending") watchApproval();
       return;
     }
+    /* v2.2.2 b16 QA #15: "Complete your profile" is remembered in profiles.extras.profile_step (done / skipped),
+       so a member approved while the app was closed still gets the step after the intro. */
+    var ex = p.extras || {};
+    var stepDone = !!ex.profile_step || !!(p.tagline || ex.about || p.goal || (p.services && p.services.length));
+    if (!stepDone && T().state) {
+      var st = T().state; st.onboarding = st.onboarding || { fill: {} };
+      st.onboarding.fresh = true; st.onboarding.forceComplete = true; st.onboarding.skipped = false; st.onboarding.done = false;
+      st.onboarding.fill = st.onboarding.fill || {};
+    }
     if (!p.intro_watched) {
       if (T().state) T().state._forceIntro = true;
       go("intro-video");
       return;
     }
+    if (!stepDone) { go("complete-profile"); return; }
     go("home");
   }
+  async function saveProfileStep(val) {
+    try {
+      if (!RB.session || RB.isDemo() || !RB.profile) return;
+      var fresh = await RB.client.from("profiles").select("extras").eq("id", RB.profile.id).maybeSingle();
+      var ex = Object.assign({}, (fresh.data && fresh.data.extras) || {}, { profile_step: val });
+      await RB.client.from("profiles").update({ extras: ex }).eq("id", RB.profile.id);
+      if (RB.profile.extras) RB.profile.extras.profile_step = val;
+    } catch (e) { console.warn("RB profile step", e); }
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest && e.target.closest("[data-action='skip-complete'], [data-action='save-complete']");
+    if (!b) return;
+    var val = b.getAttribute("data-action") === "skip-complete" ? "skipped" : "done";
+    if (!RB.session || RB.isDemo()) return;
+    setTimeout(function () { if (T() && T().state) T().state.draft = null; }, 0); /* the complete-profile step left an empty draft (no areas) behind for Edit profile */
+    setTimeout(function () { saveProfileStep(val); }, 2000); /* after rb-live's own save-complete write of extras */
+  }, true);
 
   async function onSignIn(form) {
     var fd = new FormData(form);
@@ -331,7 +365,7 @@
     }
     if (!approvalTimer) approvalTimer = setInterval(checkApproval, 20000);
   }
-  window.RBApp = { checkApproval: checkApproval, watchApproval: watchApproval, refresh: function () { return refresh(); } };
+  window.RBApp = { checkApproval: checkApproval, watchApproval: watchApproval, refresh: function () { return refresh(); }, route: function () { return routeAfterLogin(); } };
 
   /* Run sign-up only once the app's own checks have passed and it shows Awaiting approval. */
   function afterCreateStep() {

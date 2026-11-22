@@ -19,11 +19,18 @@
   var introDraft = null;
 
   function membersList() {
+    var lm = (window.TCAdmin && TCAdmin.members) || [];
+    if (lm.length && lm[0] && lm[0].introWatched != null) return lm.filter(function (x) { return x.status !== "Archived"; }); /* b16: live members */
     var circle = (window.TCDeviCity && TCDeviCity.CIRCLE) || [];
     if (circle.length) return circle;
     return (window.TCAdmin && TCAdmin.members) || [];
   }
-  function watchedMap() { return Tut().loadIntroWatched(); }
+  function watchedMap() {
+    /* v2.2.2 b16 QA #5: live = profiles.intro_watched (from rb-admin members), not this browser's storage */
+    var live = (window.TCAdmin && TCAdmin.members) || [], m = {}, i, hasLive = false;
+    for (i = 0; i < live.length; i++) if (live[i] && live[i].introWatched != null) { hasLive = true; if (live[i].introWatched) m[live[i].id] = true; }
+    return hasLive ? m : Tut().loadIntroWatched();
+  }
 
   function parseOrNull(url) { return Tut().parseVideoUrl(url); }
 

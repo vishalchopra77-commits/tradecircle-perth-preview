@@ -1,0 +1,79 @@
+/* Rate Buddies v2.2.2 build 16 — Welcome intro video card (Vishal, 22 Nov):
+   one big clean play button with a continuous soft glow; the old circle + icon on the poster are gone. */
+html body .screen[data-screen="intro-video"] .tut-player .play-big,
+html body .screen[data-screen="pending"] .tut-player .play-big {
+  inset: auto !important; position: absolute !important; left: 50% !important; top: 40% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 92px !important; height: 92px !important; border-radius: 50% !important; padding: 0 !important;
+  background: #fff !important; color: #1D4ED8 !important; border: 0 !important;
+  display: grid !important; place-items: center !important; z-index: 3 !important;
+  box-shadow: 0 0 0 0 rgba(255,255,255,.55), 0 0 28px 6px rgba(147,197,253,.55), 0 10px 26px rgba(4,16,48,.35);
+  animation: rbIntroGlow 2.2s ease-in-out infinite;
+}
+html body .screen[data-screen="intro-video"] .tut-player .play-big svg,
+html body .screen[data-screen="pending"] .tut-player .play-big svg { width: 44px !important; height: 44px !important; margin: 0 !important; display: block; }
+@keyframes rbIntroGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,.55), 0 0 22px 4px rgba(147,197,253,.45), 0 10px 26px rgba(4,16,48,.35); }
+  50%      { box-shadow: 0 0 0 16px rgba(255,255,255,0), 0 0 44px 14px rgba(147,197,253,.75), 0 10px 26px rgba(4,16,48,.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .screen[data-screen="intro-video"] .tut-player .play-big,
+  html body .screen[data-screen="pending"] .tut-player .play-big { animation: none !important; }
+}
+
+/* v2.2.2 b16 (Vishal, 22 Nov, "apply to all"): compact filter / period dropdown pills everywhere in the app
+   (Home Google Reviews + Facebook "Today", Reviews filter, Members relationship filter …).
+   Visual pill ~32px tall with 6x12 padding; the tap target stays >= 44px through an invisible hit area. */
+html body .screen .rb-dd-btn{position:relative;min-height:0 !important;padding:6px 12px !important;gap:4px !important;border-radius:999px !important;border-width:1px !important;font-size:13px !important;line-height:1.25 !important;white-space:nowrap !important;max-width:none !important;overflow:visible !important;flex-shrink:0}
+html body .screen .rb-dd-btn::before{content:"";position:absolute;left:-4px;right:-4px;top:-7px;bottom:-7px}
+html body .screen .rb-dd-btn svg{width:13px !important;height:13px !important;flex:0 0 13px}
+html body .screen .rb-dd-opt{font-size:14px}
+
+/* v2.2.2 b16: Facebook Profile / Google Business Profile buttons on member + My profile pages */
+html body .screen .rb-ext-row{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0 0;width:100%}
+html body .screen[data-screen="me"] .rb-ext-row{margin:12px 0 4px}
+html body .screen .rb-ext-btn{display:flex;align-items:center;gap:10px;min-height:56px;padding:9px 12px;border-radius:14px;border:1.5px solid #CBD5E1;background:#fff;color:#0F172A;font:inherit;text-align:left;cursor:pointer;min-width:0}
+html body .screen .rb-ext-fb{border-color:#1877F2;background:#EEF5FF}
+html body .screen .rb-ext-fb .rb-ext-ico{background:#1877F2;color:#fff}
+html body .screen .rb-ext-g .rb-ext-ico{background:#fff;box-shadow:0 0 0 1px #E2E8F0 inset}
+html body .screen .rb-ext-ico{flex:0 0 32px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center}
+html body .screen .rb-ext-txt{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+html body .screen .rb-ext-l{font-size:14px;font-weight:800;overflow-wrap:normal;word-break:normal;hyphens:none}
+html body .screen .rb-ext-s{font-size:12px;font-weight:600;color:#475569;margin-top:2px}
+html body .screen .rb-ext-btn.is-missing{background:#F1F5F9;border-color:#E2E8F0;border-style:dashed;color:#64748B;cursor:default}
+html body .screen .rb-ext-btn.is-missing .rb-ext-ico{filter:grayscale(1);opacity:.55}
+html body .screen .rb-ext-btn.is-missing .rb-ext-s{color:#94A3B8;font-style:italic}
+
+/* v2.2.2 b16: chat header — two lines max, ellipsis */
+html body .screen.screen.screen[data-screen="chat-dm"] .app-header > .chat-head-who{flex:1 1 auto !important;min-width:0 !important;overflow:hidden !important}
+html body .screen.screen.screen[data-screen="chat-dm"] .chat-head-who .ht{min-width:0 !important;flex:1 1 auto !important;display:block !important;overflow:hidden !important;white-space:nowrap !important;text-overflow:ellipsis !important;max-width:100% !important}
+html body .screen.screen.screen[data-screen="chat-dm"] .chat-head-who .ht > div{display:block !important;overflow:hidden !important;white-space:nowrap !important;text-overflow:ellipsis !important;max-width:100% !important}
+/* v2.2.2 b16: empty new chat */
+html body .screen .rb-chat-empty{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 16px 12px}
+html body .screen .rb-ce-card{width:100%;max-width:340px;background:#fff;border:1px solid #E2E8F0;border-radius:20px;padding:20px 16px;text-align:center;box-shadow:0 6px 20px rgba(15,23,42,.06)}
+html body .screen .rb-ce-av{display:flex;justify-content:center;margin:0 0 10px}
+html body .screen .rb-ce-av .avatar{display:grid;place-items:center;position:relative}
+html body .screen .rb-ce-n{font-size:18px;font-weight:800;color:#0F172A;overflow-wrap:normal;word-break:normal}
+html body .screen .rb-ce-s{font-size:13px;color:#475569;margin-top:2px}
+html body .screen .rb-ce-h{font-size:16px;font-weight:800;color:#1D4ED8;margin-top:12px}
+html body .screen .rb-ce-p{font-size:13px;color:#64748B;margin:4px 0 0;line-height:1.4}
+html body .screen .rb-ce-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:360px}
+html body .screen .rb-ce-chip{border:1.5px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:999px;padding:8px 14px;min-height:40px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:normal;text-align:center}
+/* v2.2.2 b16: Reviews card "Review received" chip */
+html body .screen .rb-cb-chip.rb-cb-recv{white-space:nowrap}
+
+/* v2.2.2 b16: Notifications → Reminders */
+html body .screen .rb-rem .set-row{width:100%}
+html body .screen .rb-rem-time input[type=time]{border:1.5px solid #CBD5E1;border-radius:10px;padding:6px 10px;font:inherit;font-weight:700;background:#fff;color:#0F172A;min-height:40px}
+html body .screen .rb-rem-days{flex-wrap:wrap;gap:8px;align-items:center}
+html body .screen .rb-rem-days .lab{flex:0 0 auto}
+html body .screen .rb-rem-chips{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 220px;justify-content:flex-end}
+html body .screen .rb-rem-day{min-width:44px;min-height:36px;padding:6px 8px;border-radius:999px;border:1.5px solid #CBD5E1;background:#fff;color:#334155;font:inherit;font-size:13px;font-weight:700;cursor:pointer;position:relative}
+html body .screen .rb-rem-day::before{content:"";position:absolute;inset:-4px 0}
+html body .screen .rb-rem-day.on{background:#1D4ED8;border-color:#1D4ED8;color:#fff}
+html body .screen .rb-rem .is-off{opacity:.55}
+
+/* v2.2.2 b16: Reviews cards never split a trade word (e.g. "Landscaper") at large text — the Facebook flag drops below instead */
+html body .screen .rb-cb .rb-cb-top{flex-wrap:wrap !important;row-gap:8px}
+html body .screen .rb-cb .rb-cb-id{min-width:min-content !important}
+html body .screen .rb-cb .rb-cb-t,html body .screen .rb-cb .rb-cb-a,html body .screen .rb-cb .rb-cb-n{overflow-wrap:normal !important;word-break:normal !important;hyphens:none !important}

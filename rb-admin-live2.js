@@ -18,6 +18,13 @@
   function repaint() { if (A().paint) A().paint(); }
   var names = {}, trades = {}, cache = { settings: {}, queueIds: {}, features: [], support: [] };
   function nameOf(id) { return names[id] || "A member"; }
+  /* v2.2.2 b16: DM -> the other member (name + trade); group -> the group / region name */
+  function toOf(convId, senderId) {
+    if ((cache.convKind || {})[convId] === "group") return { name: (cache.convName || {})[convId] || "Group chat", sub: "Group chat" };
+    var others = ((cache.convMem || {})[convId] || []).filter(function (x) { return x !== senderId; });
+    if (!others.length) return { name: "", sub: "" };
+    return { name: nameOf(others[0]), sub: trades[others[0]] || "" };
+  }
 
   async function audit(action, target) {
     try { await db().from("admin_audit").insert({ admin_id: RB.session.user.id, action: String(action).slice(0, 300), target: target || "" }); } catch (e) {}
@@ -30,15 +37,17 @@
     (profiles || []).forEach(function (p) { names[p.id] = p.name || ((p.first || "") + " " + (p.last || "")).trim(); trades[p.id] = p.trade || ""; });
     var res = await Promise.all([
       db().from("facebook_queue").select("id,member_id,place,status,created_at,scheduled_for").in("status", ["waiting", "scheduled"]).order("place"),
-      db().from("member_reports").select("id,reporter_id,target_member_id,about,reason,status,created_at").order("created_at", { ascending: false }).limit(100),
+      db().from("member_reports").select("id,reporter_id,target_member_id,conversation_id,about,reason,status,created_at").order("created_at", { ascending: false }).limit(100),
       db().from("admin_audit").select("admin_id,action,target,created_at").order("created_at", { ascending: false }).limit(100),
       db().from("chat_messages").select("id,conversation_id,sender_id,body,created_at,hidden").order("created_at", { ascending: false }).limit(50),
       db().from("conversations").select("id,kind,title"),
       db().from("rec_progress").select("request_id,member_id"),
       db().from("app_settings").select("key,value"),
       db().from("notifications").select("title,body,kind,created_at,member_id").order("created_at", { ascending: false }).limit(12),
-      db().from("support_messages").select("id,member_id,from_admin,topic,body,read_by_admin,created_at").order("created_at", { ascending: true })
+      db().from("support_messages").select("id,member_id,from_admin,topic,body,read_by_admin,created_at").order("created_at", { ascending: true }),
+      db().from("conversation_members").select("conversation_id,member_id")
     ]);
+    var cmembers = (res[9] && res[9].data) || []; /* v2.2.2 b16: who each message was sent TO */
     var q = res[0].data || [], reps = res[1].data || [], aud = res[2].data || [], msgs = res[3].data || [], convs = res[4].data || [], prog = res[5].data || [], sets = res[6].data || [], notes = res[7].data || [], sup = res[8].data || [];
     reqs = reqs || root.__rbRequests || [];
     /* promotion queue */
@@ -49,8 +58,13 @@
     /* audit */
     fill(A().audit, aud.map(function (a) { return { at: when(a.created_at), who: a.admin_id === RB.session.user.id ? "You" : nameOf(a.admin_id), action: a.action + (a.target ? " — " + a.target : "") }; }));
     /* chat moderation */
-    var convName = {}; convs.forEach(function (c) { convName[c.id] = c.kind === "group" ? (c.title || "Group chat") : "Direct message"; });
-    fill(A().chats, msgs.map(function (m) { return { id: m.id, room: convName[m.conversation_id] || "Chat", from: nameOf(m.sender_id), text: m.body, flag: m.hidden ? "Hidden" : "None", when: when(m.created_at) }; }));
+    var convName = {}, convKind = {}, convMem = {}; convs.forEach(function (c) { convName[c.id] = c.kind === "group" ? (c.title || "Group chat") : "Direct message"; convKind[c.id] = c.kind; });
+    cmembers.forEach(function (r) { (convMem[r.conversation_id] = convMem[r.conversation_id] || []).push(r.member_id); });
+    cache.convMem = convMem; cache.convName = convName; cache.convKind = convKind;
+    /* v2.2.2 b16 QA #2: moderation needs the ids; Flag = Reported when an open member report points at this conversation */
+    var reportedConv = {}; reps.forEach(function (r) { if (r.status === "open" && r.conversation_id) reportedConv[r.conversation_id] = true; });
+    var statusOf = {}; (profiles || []).forEach(function (p) { statusOf[p.id] = p.status; });
+    fill(A().chats, msgs.map(function (m) { var t = toOf(m.conversation_id, m.sender_id); return { id: m.id, convId: m.conversation_id, senderId: m.sender_id, hidden: !!m.hidden, senderActive: statusOf[m.sender_id] === "approved" && !(profiles || []).some(function (p) { return p.id === m.sender_id && p.role === "admin"; }), room: convName[m.conversation_id] || "Chat", from: nameOf(m.sender_id), to: t.name, toSub: t.sub, text: m.body, flag: m.hidden ? "Hidden" : (reportedConv[m.conversation_id] ? "Reported" : "None"), when: when(m.created_at) }; }));
     /* alerts + Facebook recommendations from recommendation_requests */
     var helped = {}; prog.forEach(function (p) { helped[p.request_id] = (helped[p.request_id] || 0) + 1; });
     var approved = reqs.filter(function (r) { return r.status === "approved"; });
@@ -187,15 +201,22 @@
     if (!btn) return;
     var a = btn.getAttribute("data-action"), id = btn.getAttribute("data-id");
     function stop() { e.preventDefault(); e.stopImmediatePropagation(); }
-    if (id && (a === "approve" || a === "decline")) { audit(a === "approve" ? "Approved a member" : "Declined a member", nameOf(id) !== "A member" ? nameOf(id) : ""); }
+    /* v2.2.2 b16 QA #43: Approve / Decline are audited by the database (admin_set_member_status_v2) with the member's name */
     if (id && (a === "devi-approve" || a === "devi-dismiss")) { audit(a === "devi-approve" ? "Approved a recommendation request" : "Dismissed a recommendation request", ""); }
     if (a === "suspend" && id) {
       stop();
       var m = (A().members || []).filter(function (x) { return x.id === id; })[0];
       var to = m && m.status === "active" ? "suspended" : "approved";
-      db().rpc("admin_set_member_status", { target: id, new_status: to }).then(function (r) {
+      /* v2.2.2 b16 QA #45: confirm, ask for a reason, tell the member; the database writes the audit line */
+      var reason = null;
+      if (to === "suspended") {
+        reason = root.prompt("Suspend " + nameOf(id) + "?\n\nThey are signed out and can't use Rate Buddies until you reactivate them. They will see the reason you type here.\n\nReason:", "");
+        if (reason === null) return;
+        if (!String(reason).trim()) { root.alert("Please type a short reason. The member sees it."); return; }
+      } else if (!root.confirm("Reactivate " + nameOf(id) + "? They can sign in and use Rate Buddies again.")) return;
+      db().rpc("admin_set_member_status_v2", { target: id, new_status: to, reason: reason ? String(reason).trim().slice(0, 280) : null }).then(function (r) {
         if (r.error) return root.alert(r.error.message);
-        audit(to === "suspended" ? "Suspended a member" : "Reactivated a member", nameOf(id)); refresh();
+        refresh();
       });
       return;
     }
@@ -323,5 +344,60 @@
   var mo = new MutationObserver(function () { mo.disconnect(); try { liveText(); } finally { var pg = document.getElementById("page"), nav = document.getElementById("nav"); if (pg) mo.observe(pg, { childList: true, subtree: true }); if (nav) mo.observe(nav, { childList: true }); } });
   function observe() { var pg = document.getElementById("page"), nav = document.getElementById("nav"); if (pg) mo.observe(pg, { childList: true, subtree: true }); if (nav) mo.observe(nav, { childList: true }); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", observe); else observe();
-  root.RBAdminLive2 = { afterHydrate: afterHydrate, refresh: refresh, featuresHTML: featuresHTML };
+  /* ---------- v2.2.2 b16: Chat moderation → Conversations (admin-only RPC + read-only thread, load older) ---------- */
+  var PAGE = 30;
+  function CV() { return root.__rbAdminConv || (root.__rbAdminConv = { tab: "messages", q: "", list: null, sel: null, msgs: [], more: false }); }
+  async function loadConvs() {
+    if (!live()) return;
+    var cv = CV(), q = cv.q || "";
+    var r = await db().rpc("admin_conversations", { q: q || null });
+    if (r.error) { console.warn("admin_conversations", r.error); return; }
+    if ((CV().q || "") !== q) return; /* a newer search is on its way */
+    cv.list = (r.data || []).map(function (c) {
+      var people = (c.participants || []).map(function (p) { names[p.id] = names[p.id] || p.name; trades[p.id] = trades[p.id] || p.trade; return { id: p.id, name: p.name || "A member", trade: p.trade || "" }; });
+      return { id: c.id, kind: c.kind === "group" ? "group" : "dm", title: c.title || "", people: people, last: c.last_body || "", lastWho: c.last_sender ? nameOf(c.last_sender) : "", when: when(c.last_at), n: Number(c.msg_count) || 0 };
+    });
+    repaintKeepSearch();
+  }
+  async function loadThread(id, older) {
+    var cv = CV();
+    if (!older) { cv.sel = id; cv.msgs = []; cv.more = false; cv._raw = []; }
+    var conv = (cv.list || []).filter(function (c) { return c.id === id; })[0];
+    if (!live() || !conv) { repaintKeepSearch(); return; }
+    var qy = db().from("chat_messages").select("id,sender_id,body,created_at,hidden").eq("conversation_id", id).order("created_at", { ascending: false }).limit(PAGE);
+    if (older && cv._raw.length) qy = qy.lt("created_at", cv._raw[0].created_at);
+    var r = await qy;
+    if (r.error) { console.warn("thread", r.error); return; }
+    if (CV().sel !== id) return;
+    var rows = (r.data || []).slice().reverse();
+    cv._raw = rows.concat(cv._raw || []);
+    cv.more = (r.data || []).length === PAGE;
+    cv.msgs = cv._raw.map(function (m) {
+      var to = conv.kind === "group" ? (conv.title || "Group chat") : (conv.people.filter(function (p) { return p.id !== m.sender_id; })[0] || {}).name || "";
+      return { from: nameOf(m.sender_id), to: to, text: m.body, when: when(m.created_at), hidden: !!m.hidden };
+    });
+    repaintKeepSearch();
+  }
+  function repaintKeepSearch() {
+    var inp = document.getElementById("cmSearch"), had = inp && document.activeElement === inp, pos = had ? inp.selectionStart : 0;
+    repaint();
+    if (had) { var n2 = document.getElementById("cmSearch"); if (n2) { n2.focus(); try { n2.setSelectionRange(pos, pos); } catch (e) {} } }
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest("[data-cm-tab], [data-cm-conv], [data-cm-older]"); if (!t) return;
+    e.preventDefault();
+    var cv = CV();
+    if (t.hasAttribute("data-cm-tab")) { cv.tab = t.getAttribute("data-cm-tab"); repaint(); if (cv.tab === "conversations") loadConvs(); return; }
+    if (t.hasAttribute("data-cm-conv")) { cv.sel = t.getAttribute("data-cm-conv"); if (live()) loadThread(cv.sel, false); else repaint(); return; }
+    if (t.hasAttribute("data-cm-older") && cv.sel) loadThread(cv.sel, true);
+  });
+  var cmTimer = null;
+  document.addEventListener("input", function (e) {
+    if (!e.target || e.target.id !== "cmSearch") return;
+    var cv = CV(); cv.q = e.target.value || "";
+    clearTimeout(cmTimer);
+    cmTimer = setTimeout(function () { if (live()) loadConvs(); else repaintKeepSearch(); }, 300);
+  });
+
+  root.RBAdminLive2 = { afterHydrate: afterHydrate, refresh: refresh, featuresHTML: featuresHTML, loadConvs: loadConvs, loadThread: loadThread };
 })(window);

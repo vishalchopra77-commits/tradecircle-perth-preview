@@ -141,6 +141,7 @@
     quietOn: false, quietFrom: "21:00", quietTo: "07:00"
   };
   var googleLink = load(LS.glink, "") || "https://search.google.com/local/writereview?placeid=demo-hale-pest";
+  function rbGoogleLink() { return (window.RBLive && RBLive.isLive()) ? ((RB.profile && RB.profile.googleBusinessUrl) || "") : googleLink; } /* b16 QA #8 */
 
   function persist() {
     save(LS.rel, rel); save(LS.given, given); save(LS.they, they);
@@ -153,6 +154,8 @@
     return list.find(function (m) { return m.id === id; }) || list[1] || {};
   }
   function gLink(m) {
+    if (window.RBLinks && RBLinks.reviewUrl) { var rbU = RBLinks.reviewUrl(m); if (rbU) return rbU; } /* v2.2.2 b16: the member's own Google Business Profile */
+    if (window.RBLive && RBLive.isLive()) return "https://www.google.com/search?q=" + encodeURIComponent(((m.business || ((m.first || "") + " " + (m.last || ""))) + " Perth reviews").trim()); /* b16 QA #8: no demo place id when live */
     return "https://search.google.com/local/writereview?placeid=demo-" + m.id;
   }
   function relOf(m) { return rel[m.id] || "none"; }
@@ -293,7 +296,7 @@ function facebookF(size, color) {
         : statusIcon("sb-none", "Not connected on Facebook", fbMark());
     var bits = [fb];
     if (iReviewed(m)) bits.push(statusIcon("sb-you", "You reviewed them", starMark()));
-    else if (needsMyReview(m)) bits.push(statusIcon("sb-need", "Needs your review", starMark()));
+    else if (needsMyReview(m)) bits.push(statusIcon("sb-need", "Request review swap", starMark()));
     if (theyReviewed(m)) bits.push(statusIcon("sb-they", "They reviewed you", starMark()));
     return '<div class="sb-row">' + bits.join("") + "</div>";
   }
@@ -304,7 +307,7 @@ function facebookF(size, color) {
       '<span class="il">' + statusIcon("sb-none", "Not connected on Facebook", fbMark()) + "Not connected</span>" +
       '<span class="il">' + statusIcon("sb-you", "You reviewed them", starMark()) + "You reviewed</span>" +
       '<span class="il">' + statusIcon("sb-they", "They reviewed you", starMark()) + "They reviewed you</span>" +
-      '<span class="il">' + statusIcon("sb-need", "Needs your review", starMark()) + "Needs your review</span>" +
+      '<span class="il">' + statusIcon("sb-need", "Request review swap", starMark()) + "Request review swap</span>" +
       "</div>";
   }
   function statusPills(m, compact) {
@@ -432,7 +435,12 @@ function facebookF(size, color) {
       : r === "pending"
         ? '<a class="btn btn-fb btn-lg" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer" data-action="mark-sent" data-id="' + m.id + '"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + ico("fb") + " Open Facebook profile</span><small>Friend request pending \u2014 tap Friends once they accept</small></a>"
         : '<a class="btn btn-fb btn-lg" href="' + esa(m.facebook) + '" target="_blank" rel="noopener noreferrer" data-action="mark-sent" data-id="' + m.id + '"><span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800">' + ico("fb") + " Open Facebook profile</span><small>Send a friend request</small></a>";
-    var mark = r === "pending"
+    var rbLive = window.RBLive && RBLive.isLive(), rbIn = rbLive && (S()._relIn || {})[m.id]; /* v2.2.2 b16 QA #9/#29 */
+    if (rbLive && r === "pending") fbCta = fbCta.replace("Friend request pending \u2014 tap Friends once they accept", "Friend request sent \u2014 they confirm it in their app");
+    var mark = rbIn
+      ? '<button class="btn btn-primary" data-action="rb-fr-confirm" data-id="' + m.id + '">Confirm friend request</button><button class="btn btn-ghost ink" data-action="rb-fr-notnow" data-id="' + m.id + '">Not now</button>'
+      : (rbLive && r === "pending") ? ""
+      : r === "pending"
       ? '<button class="btn btn-ghost ink" data-action="mark-friends" data-id="' + m.id + '">Mark as friends</button>'
       : r === "none"
         ? '<button class="btn btn-ghost ink" data-action="mark-sent" data-id="' + m.id + '">Mark request as sent</button>'
@@ -476,7 +484,7 @@ function facebookF(size, color) {
       '<div class="info-rows">' + phoneRow +
       '<div class="info-row"><div class="ic">' + ico("link") + '</div><div><div class="k">Facebook profile</div><div class="v">' + esc(String(m.facebook || "").replace("https://www.", "")) + "</div></div></div>" +
       pageRow +
-      (S().googleConnected ? '<div class="info-row"><div class="ic" style="background:#E8F1FD;color:#1A73E8">G</div><div><div class="k">Google review link</div><div class="v">' + esc(String(googleLink).replace("https://", "")) + "</div></div></div>" : "") +
+      (S().googleConnected ? '<div class="info-row"><div class="ic" style="background:#E8F1FD;color:#1A73E8">G</div><div><div class="k">Google review link</div><div class="v">' + esc(String(rbGoogleLink()).replace("https://", "")) + "</div></div></div>" : "") +
       "</div></div></section>";
   }
 
@@ -505,6 +513,7 @@ function facebookF(size, color) {
   }
 
   function gBlock() {
+    if (window.RBLive && RBLive.isLive()) return ""; /* v2.2.2 b16 QA #8/#27: live uses the one "Google Business Profile link" field (profile-links.js) */
     if (S().googleConnected) {
       return '<div class="g-card" data-g-block="1"><div class="gmark">G</div><div style="flex:1;min-width:0"><div class="fb-card-k">Google Business Profile connected</div>' +
         '<div class="fb-card-n">Hale Pest Control</div>' +
@@ -518,6 +527,7 @@ function facebookF(size, color) {
   }
 
   function injectGoogle() {
+    if (window.RBLive && RBLive.isLive()) return; /* b16 QA #8/#27: live uses the profile-links Google field */
     var form = document.querySelector("form[data-form='create-profile'], form[data-form='edit-profile']");
     if (!form || form.querySelector("[data-g-block]")) return;
     var anchor = null;
@@ -832,12 +842,12 @@ function facebookF(size, color) {
     var title, sub, avHtml;
     if (c.type === "group") {
       title = c.name;
-      sub = "Group \u00b7 " + rn(c.region);
+      sub = (c.live && c.members) ? ("Group \u00b7 " + c.members.length + " member" + (c.members.length === 1 ? "" : "s")) : ("Group \u00b7 " + rn(c.region)); /* v2.2.2 b16 QA #26 */
       avHtml = "";
     } else {
       var m = member(c.memberId);
       title = fn(m);
-      sub = c.online ? "Online" : "Last seen 2h ago";
+      sub = c.online ? "Online" : ((c.live || (window.RBLive && RBLive.isLive())) ? ((window.TC222i && TC222i.seen) ? TC222i.seen(m.id) : "") : "Last seen 2h ago"); /* v2.2.2 b16 QA #25: real last seen (member_presence) */
       avHtml = av(m, 32);
     }
     var headWho = (c.type !== "group" && m && m.id)
@@ -930,11 +940,16 @@ function facebookF(size, color) {
 
   function renderSubscription() {
     var trialLeft = 23; /* demo state: fictional member 7 days into the free month */
+    var rbLiveSub = !!(window.RBLive && RBLive.isLive());
+    if (rbLiveSub) { /* v2.2.2 b16 QA #38: free month counts from the day the member was approved */
+      var since = new Date(RB.profile.approvedAt || RB.profile.created_at || Date.now()).getTime();
+      trialLeft = Math.max(0, Math.ceil((since + 30 * 86400000 - Date.now()) / 86400000));
+    }
     return '<section class="screen has-tabs has-header" data-screen="subscription">' + topbar("Subscription") +
       '<div class="scroll">' +
       '<div class="auth-hero"><h2>Your plan</h2><p>One simple membership. Try everything free for a month.</p></div>' +
       '<article class="plan-card current rb-plan">' +
-        '<div class="plan-top"><h3>Rate Buddies membership</h3><span class="plan-badge trial">Free trial · ' + trialLeft + ' days left</span></div>' +
+        '<div class="plan-top"><h3>Rate Buddies membership</h3><span class="plan-badge trial">' + (trialLeft > 0 ? 'Free trial · ' + trialLeft + ' day' + (trialLeft === 1 ? '' : 's') + ' left' : 'Free month ended') + '</span></div>' +
         '<p class="plan-hero">1 month free</p>' +
         '<p class="plan-price">$50 / month after your free month</p>' +
         '<p class="plan-gst">AUD, incl. GST. Cancel any time before the free month ends and you will not be charged.</p>' +
@@ -947,9 +962,9 @@ function facebookF(size, color) {
           '<li>In-app chat, group chats and notifications</li>' +
           '<li>AI assistant and video tutorials</li>' +
         '</ul>' +
-        '<p class="plan-note">Payment goes through the App Store or Google Play, not a card form in the app.</p>' +
+        (rbLiveSub ? '' : '<p class="plan-note">Payment goes through the App Store or Google Play, not a card form in the app.</p>') +
       '</article>' +
-      '<p class="settings-foot plan-proto">Prototype placeholder. This screen does not take payment.</p>' +
+      (rbLiveSub ? '' : '<p class="settings-foot plan-proto">Prototype placeholder. This screen does not take payment.</p>') +
       "</div></section>";
   }
 
@@ -1168,6 +1183,7 @@ function facebookF(size, color) {
       return true;
     }
     if (action === "mark-friends") {
+      if (window.RBLive && RBLive.isLive()) return true; /* v2.2.2 b16 QA #29: live — only the other member can confirm (rb-live.js) */
       if (id) { rel[id] = "friends"; persist(); }
       toast("Marked as Facebook friends.");
       go(S().screen === "members" ? "members" : "member", id);

@@ -499,6 +499,7 @@
   function enhanceRecommendFeed() {
     var sc = document.querySelector('.screen[data-screen="fb-recommend"], .screen[data-screen="fb-recommend-open"]');
     if (!sc) return;
+    if ((window.RBLive && RBLive.isLive && RBLive.isLive())) return; /* v2.2.2 b16: no demo request card in the live app */
     var scroll = sc.querySelector(".scroll");
     if (scroll && !scroll.querySelector("[data-go='recommend-request']")) {
       var req = recRequest("d1");
@@ -926,6 +927,15 @@
     return recRequests().filter(function (r) { return r.id === (id || (S()._requestId || "d1")); })[0] || recRequests()[0];
   }
   function renderRecommendRequest() {
+    /* v2.2.2 b16 (owner: no demo data): the live app never shows the demo Joondalup request */
+    if (window.RBLive && RBLive.isLive && RBLive.isLive()) {
+      return '<section class="screen has-header" data-screen="recommend-request">' +
+        '<div class="app-header"><button class="icon-btn" data-action="nav-back" aria-label="Back">' + icoBack() +
+        '</button><div class="ht">Recommend request</div><span class="header-spacer"></span></div>' +
+        '<div class="scroll"><div class="empty-state" style="text-align:center;padding:32px 16px"><h3 style="margin:0 0 8px">Nothing to recommend right now</h3>' +
+        '<p class="hint">When the admin shares a Facebook group post asking for a trade, it shows in Facebook \u203a Recommend.</p>' +
+        '<button type="button" class="btn btn-primary" data-go="fb-recommend">Open Recommend</button></div></div></section>';
+    }
     var req = recRequest(S()._requestId);
     var vouched = vouches().filter(function (v) { return v.requestId === req.id; });
     var html = '<section class="screen has-header" data-screen="recommend-request">' +

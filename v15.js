@@ -56,6 +56,7 @@ function googleG(size, mono) {
   }
   I.fLogo = facebookF(18);
   function gLink(m) {
+    if (window.RBLinks && RBLinks.reviewUrl) { var rbU = RBLinks.reviewUrl(m); if (rbU) return rbU; } /* v2.2.2 b16: the member's own Google Business Profile */
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";
   }
@@ -120,6 +121,8 @@ function googleG(size, mono) {
     if (r === "friends") {
       return '<button type="button" class="friend-btn friends' + sm + '" data-action="open-fb" data-id="' + m.id + '">' + I.fb + "<span>Friends \u2713</span></button>";
     }
+    var rbIn = window.RBLive && RBLive.isLive() && (S()._relIn || {})[m.id]; /* v2.2.2 b16 QA #9 */
+    if (rbIn) return '<button type="button" class="friend-btn' + sm + '" data-action="rb-fr-confirm" data-id="' + m.id + '">' + facebookF(16) + "<span>Confirm request</span></button>";
     if (r === "pending") {
       return '<button type="button" class="friend-btn sent' + sm + '" data-action="mark-friends" data-id="' + m.id + '"><span>Request sent</span></button>';
     }
@@ -247,7 +250,8 @@ function googleG(size, mono) {
   function myQueuePlace() {
     var q = queue();
     var mine = 0;
-    q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
+    var meId = (window.RB && RB.profile && !RB.isDemo()) ? RB.profile.id : null; /* v2.2.2 b16 QA #30: live = my id, not demo "jamie" */
+    q.forEach(function (row, i) { if (meId ? (row.memberId === meId || row.mine === true && row.memberId === meId) : row.memberId === "jamie") mine = i + 1; });
     return { q: q, mine: mine, total: q.length };
   }
   /* v2.2.2: Facebook stats 2x2 (Queue place, Circle in queue, Friends, Pending Requests) + the same period filter as Google Reviews stats. Fictional counts. */
@@ -258,6 +262,11 @@ function googleG(size, mono) {
     var id = "today"; try { id = JSON.parse(localStorage.getItem("rb_fb_period") || '"today"') || "today"; } catch (e) {}
     var PER = PERIODS.filter(function (x) { return x.id === id; })[0] || PERIODS[0];
     var n = FB_PER[PER.id] || FB_PER.today;
+    if (window.RBLive && RBLive.isLive()) { /* v2.2.2 b16 QA #11: live counts from facebook_friends for the chosen period */
+      var meId = RB.profile.id, rows = RBLive.fbRows || [];
+      n = [rows.filter(function (x) { return x.status === "added" && (x.from_member_id === meId || x.to_member_id === meId) && RBLive.inPeriod(x.updated_at || x.created_at, PER.id); }).length,
+        rows.filter(function (x) { return x.status === "requested" && x.to_member_id === meId && RBLive.inPeriod(x.created_at, PER.id); }).length];
+    }
     var place = myQueuePlace();
     var open = !!S._rbFbPeriodOpen;
     function tile(label, value, color, go) {
@@ -276,10 +285,11 @@ function googleG(size, mono) {
     });
     h += "</div></div></div>" +
       '<div class="ov-stats rb-fb-stats4">' +
-      tile("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "\u2014", "fb", "promo-queue") +
-      tile("Circle in queue", String(place.total), "navy", "promo-queue") +
+      /* v2.2.2 b16 (Vishal): Facebook friends tiles on top, queue tiles underneath; each tile keeps its colour */
       tile("Friends", String(n[0]), "fb rb-fb-friends", "members") +
       tile("Pending Requests", String(n[1]), "navy rb-fb-pending", "members") +
+      tile("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "\u2014", "fb", "promo-queue") +
+      tile("Circle in queue", String(place.total), "navy", "promo-queue") +
       "</div></div>";
     return h;
   }
@@ -417,6 +427,11 @@ function googleG(size, mono) {
       if (rel[id] === "friends") friends++;
       if (rel[id] === "pending") pending.push(id);
     });
+    var rbLiveH = !!(window.RBLive && RBLive.isLive());
+    if (rbLiveH) { /* v2.2.2 b16 QA #9/#11: live friends + requests waiting for MY confirm (same numbers as Facebook › Circle) */
+      var lr = S()._rel || {}; friends = Object.keys(lr).filter(function (k) { return lr[k] === "friends"; }).length;
+      pending = Object.keys(S()._relIn || {});
+    }
     var recd = Object.keys(they || {}).filter(function (id) { return they[id]; }).length;
     var gave = Object.keys(given || {}).filter(function (id) { return given[id]; }).length;
     var place = myQueuePlace();
@@ -487,7 +502,7 @@ function googleG(size, mono) {
     } else {
       fbBody += '<div class="ov-note-line">No recommendation alerts waiting for a comment.</div>';
     }
-    fbBody += '<div class="ov-note-line faint">Last promotion: 14 comments on your business post.</div>';
+    if (!(window.RBLive && RBLive.isLive && RBLive.isLive())) fbBody += '<div class="ov-note-line faint">Last promotion: 14 comments on your business post.</div>'; /* b16: demo line, not in live */
 
     function clip(t, n) {
       t = String(t || "").replace(/\s+/g, " ").trim();
@@ -529,7 +544,7 @@ function googleG(size, mono) {
 
     var frBody = '<div class="ov-stats">' +
       ovStat("Friends", String(friends), "teal", I.user) +
-      ovStat("Pending", String(pending.length), "orange", I.user) +
+      ovStat(rbLiveH ? "Requests" : "Pending", String(pending.length), "orange", I.user) +
       "</div>";
     if (pending.length) {
       frBody += '<p class="ov-subhead">Pending requests</p>' + pending.map(function (id) {
@@ -537,10 +552,10 @@ function googleG(size, mono) {
         if (!mm) return "";
         return '<button type="button" class="ov-item" data-go="member" data-id="' + mm.id + '">' +
           av(mm, 36) +
-          '<span class="ov-item-body"><strong>' + esc(fn(mm)) + '</strong><span>Friend request pending</span></span></button>';
+          '<span class="ov-item-body"><strong>' + esc(fn(mm)) + '</strong><span>' + (rbLiveH ? "Wants to be Facebook friends \u00b7 tap to confirm" : "Friend request pending") + '</span></span></button>';
       }).join("");
     } else {
-      frBody += '<p class="ov-empty">No pending friend requests.</p>';
+      frBody += '<p class="ov-empty">' + (rbLiveH ? "No friend requests waiting for you." : "No pending friend requests.") + '</p>';
     }
 
     function card(mod, icon, title, body, goTo, cta) {
@@ -567,7 +582,8 @@ function googleG(size, mono) {
       ["admin", "Emma Brooks was approved and joined the circle.", "Yesterday 4:20 pm"],
       ["limit", "Thompson Electrical reached the daily Google review limit (3 of 3).", "Today 8:02 am"]
     ];
-    var feedHtml = feed.map(function (f) {
+    if (rbLiveH) feed = (S()._rbFeed || []).map(function (n) { return [n.type, n.text, n.when]; }); /* v2.2.2 b16 QA #10: live activity (your notifications) */
+    var feedHtml = (rbLiveH && !feed.length) ? '<p class="ov-empty">Nothing yet. Your activity will show here.</p>' : feed.map(function (f) {
       var tile = (window.notifTile ? window.notifTile(f[0], 16) : '<div class="feed-dot ' + f[0] + '"></div>');
       return '<div class="dash-feed-item">' + tile + '<div><p>' + esc(f[1]) + "</p><span>" + esc(f[2]) + "</span></div></div>";
     }).join("");
@@ -696,8 +712,7 @@ function googleG(size, mono) {
 
   function renderQueue() {
     var q = queue();
-    var mine = 0;
-    q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
+    var mine = myQueuePlace().mine; /* v2.2.2 b16 QA #30 */
     return withFbSeg('<section class="screen has-tabs has-header" data-screen="promo-queue">' + topbar("Facebook") +
       '<div class="scroll"><div class="auth-hero"><h2>Facebook promotion queue</h2><p>The circle takes turns posting in the Facebook group. The ordinary queue is free. Jumping the queue is paid later — the price has not been set.</p></div>' +
       '<div class="queue-card"><div class="areas-card-h">Your place</div>' +

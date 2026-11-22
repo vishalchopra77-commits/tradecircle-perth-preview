@@ -2,6 +2,19 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.2 (build 16) — 22 Nov 2026
+
+QA sweep fixes (55 items) and "make everything working". versionCode 16, labels in the app (More, Settings) and the web admin.
+
+- Live-only: demo controls hidden when connected to Supabase (code kept; `?demo=1` shows them). No demo posts, notifications, request cards or Home lines in the live app; proper empty states.
+- Accounts: suspended overlay + sign-out, change password, delete my account (archived), forgot password + reset landing (rb-early.js keeps the reset link before the router rewrites the hash).
+- Friends: confirm / Not now for incoming requests, named notifications; Support live replies; feature status notices; gallery upload/remove to Storage (files deleted too); presence ("Online"); group header member counts; tap-tab-to-top.
+- New group chats (create_group_chat RPC, notifications, visible in admin Chats).
+- AI assistant + Voice: answers from live data with no key; own Grok/ChatGPT/Claude key tested for real and kept on the phone; ai-assist Edge Function for an admin key ("Needs an AI key" otherwise); speech in/out.
+- Push (FCM): @capacitor/push-notifications, device_tokens, push-send Edge Function (respects toggles + quiet hours, off until the admin turns push on), google-services.json for com.ratebuddies.app. Needs the FCM_SERVICE_ACCOUNT function secret.
+- Admin: chat moderation, Google Reviews/swaps, Vouches, FB friends, member page, sign out, Devi webhook live (devi-webhook + token), AI integrations status, push switch, Fictional-data chip only in Demo.
+- Database: migrations 010–016 in supabase/migrations (20261122_v222i_*); test data cleanup archived in private.cleanup_archive.
+
 ## v2.2.2 — 22 Nov 2026 (versionCode 10)
 - Live test backend: the app and web admin now use the Rate Buddies Test Supabase project (ratebuddies@gmail.com org), set in rb-config.js and in the bundled RankBuddies.html / TradeCircle-Admin.html. Public anon key only.
 - Live sign-up → admin approval (updates live), profile + photos (other members' photos show), extra profile fields (About, Ideal partner, Service areas, Gallery, Goals, ABN).

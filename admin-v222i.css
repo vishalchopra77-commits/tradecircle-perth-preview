@@ -1,0 +1,20 @@
+/* Rate Buddies v2.2.2 build 16 — admin QA fixes */
+.rb-cm-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.rb-cm-acts .btn { width: auto; white-space: nowrap; }
+tr.rb-cm-hidden td { opacity: .6; }
+tr.rb-cm-hidden td[data-label="Actions"] { opacity: 1; }
+.rb-flag-rep { font-weight: 800; color: #B42318; }
+.rb-abn-link { margin-left: 6px; font-weight: 700; }
+.rb-gr-head { margin-bottom: 12px; }
+.rb-md-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 900px) { .rb-md-grid { grid-template-columns: 1fr; } }
+.rb-md-h { font-size: 15px; font-weight: 800; margin: 0 0 8px; }
+.rb-md-row { display: grid; grid-template-columns: 170px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line, #e6ebf1); font-size: 14px; }
+.rb-md-row .k { color: var(--muted, #5b6b7c); font-weight: 700; }
+.rb-md-row .v { min-width: 0; overflow-wrap: anywhere; }
+.rb-md-row .badge { margin: 0 4px 4px 0; display: inline-block; }
+.rb-md-thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; margin: 0 6px 6px 0; }
+.admin-chip { position: relative; display: flex; align-items: center; gap: 10px; }
+.rb-signout { border: 1px solid var(--line, #d5dde6); background: #fff; border-radius: 10px; padding: 6px 10px; font-weight: 800; font-size: 13px; color: #B42318; cursor: pointer; white-space: nowrap; }
+.rb-signout:hover { background: #FFF1F1; }
+@media (max-width: 700px) { .admin-chip .admin-meta { display: none; } }

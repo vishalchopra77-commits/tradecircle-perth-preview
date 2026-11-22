@@ -41,6 +41,7 @@
   function init() {
     if (client) return client;
     if (!root.supabase || !cfg().url || !cfg().anonKey) return null;
+    try { if (!root.__rbAuthHash) root.__rbAuthHash = String(root.location.hash || ""); } catch (eH) {} /* v2.2.2 b16 QA #17: keep a password-reset link's tokens for v222i.js */
     client = root.supabase.createClient(cfg().url, cfg().anonKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" } /* v2.2.2b: PKCE so Facebook sign-in can return to the app with a code */
     });
@@ -92,6 +93,7 @@
       extras: row.extras || {},
       archivedAt: row.archived_at || null,
       created_at: row.created_at,
+      approvedAt: row.approved_at || null, /* v2.2.2 b16 QA #38: trial end = approved_at + 30 days */
       isMe: !!(session && session.user && session.user.id === row.id)
     };
   }

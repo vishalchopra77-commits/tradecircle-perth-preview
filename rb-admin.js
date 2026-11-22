@@ -17,6 +17,7 @@
     if (el) el.textContent = msg || "";
   }
 
+  function fmtDay(iso) { if (!iso) return ""; try { return new Date(iso).toLocaleDateString("en-AU", { timeZone: "Australia/Perth", day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; } }
   function fmtWhen(iso) {
     if (!iso) return "";
     try {
@@ -44,6 +45,8 @@
           email: p.email,
           status: p.status === "rejected" ? "declined" : p.status,
           when: fmtWhen(p.created_at) || "Just now",
+          signedUp: fmtDay(p.created_at), /* v2.2.2 b16 QA #22 */
+          abn: (p.extras && p.extras.abn) || "",
           bio: p.bio
         });
       });
@@ -58,7 +61,9 @@
           trade: p.trade,
           areas: p.areas,
           status: p.status === "approved" ? "active" : p.status,
-          joined: "",
+          joined: fmtDay(p.approved_at || p.created_at), /* v2.2.2 b16 QA #21 */
+          introWatched: !!p.intro_watched, /* QA #5: from profiles.intro_watched, not this browser */
+          raw: p,
           website: (p.links && p.links.website) || "",
           facebook: p.page || p.facebook || ""
         });
@@ -190,7 +195,7 @@
     window.addEventListener("pageshow", clearDemo);
     setTimeout(clearDemo, 0);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 15)</span>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 16)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";

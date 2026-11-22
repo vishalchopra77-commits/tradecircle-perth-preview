@@ -149,6 +149,7 @@
   }
 
   function gLink(m) {
+    if (window.RBLinks && RBLinks.reviewUrl) { var rbU = RBLinks.reviewUrl(m); if (rbU) return rbU; } /* v2.2.2 b16: the member's own Google Business Profile */
     if (window.TC12 && false) {}
     var name = encodeURIComponent((m && m.business) || "Business");
     return "https://www.google.com/search?q=" + name + "+Perth+reviews";

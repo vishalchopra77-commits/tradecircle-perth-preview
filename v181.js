@@ -365,7 +365,7 @@
     html += "</div>" +
       (v.sample ? '<p class="tut-sample">Sample video — placeholder only</p>' : "") +
       '<div class="intro-progress"><div class="bar"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="lab">' + (unlocked ? "You’ve watched enough to continue." : ("Watch to continue — " + fmtLeft(left) + " left")) + "</div></div>" +
+      '<div class="lab">' + (unlocked ? "You’ve watched enough to continue." : "You must watch this video — only takes 2 mins") + "</div></div>" +
       '<button type="button" class="btn btn-primary' + (unlocked ? "" : " is-locked") + '"' + (unlocked ? ' data-action="intro-finished"' : " disabled") + ">Continue</button>" +
       '<div class="intro-proto"><strong>Prototype only.</strong> In the live app, Continue stays locked until you have actually watched about ' + need + '% (seeking to the end does not count). Use this control to preview the finished screen: ' +
       '<button type="button" class="btn btn-ghost ink" style="margin-top:8px" data-action="intro-simulate">Simulate video ended</button></div>' +

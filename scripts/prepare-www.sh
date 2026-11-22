@@ -45,4 +45,7 @@ if "rb-native-shot" not in t:
     p.write_text(t)
 PY
 
+# v2.2.2 b16 QA #14: push is only registered in builds that include Firebase config
+if [ -f "$ROOT/android/app/google-services.json" ]; then echo 'window.RB_PUSH_READY = true;' > "$WWW/push-config.js"; else echo 'window.RB_PUSH_READY = false;' > "$WWW/push-config.js"; fi
+
 echo "www ready: $(find "$WWW" -type f | wc -l) files, $(du -sh "$WWW" | cut -f1)"

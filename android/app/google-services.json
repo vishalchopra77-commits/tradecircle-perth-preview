@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "943963156690",
+    "project_id": "rate-buddies",
+    "storage_bucket": "rate-buddies.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943963156690:android:2868a3090764f2e3d8fd0b",
+        "android_client_info": {
+          "package_name": "com.ratebuddies.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEyjOgbjAdLR1h4DX5xe2nXe0Fs0Fz55U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

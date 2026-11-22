@@ -1,0 +1,24 @@
+/* Rate Buddies v2.2.2 build 16 — Chat moderation: TO column + Conversations tab */
+.rb-cm-tabs{display:inline-flex;gap:4px;background:#EEF2F7;border-radius:12px;padding:4px}
+.rb-cm-tab{border:0;background:transparent;font:inherit;font-weight:700;font-size:14px;padding:8px 14px;border-radius:9px;cursor:pointer;color:#475569}
+.rb-cm-tab.on{background:#fff;color:#0F172A;box-shadow:0 1px 3px rgba(15,23,42,.12)}
+.rb-cm-search{margin:0 0 12px}
+.rb-cm-search input{width:100%;max-width:420px;padding:10px 12px;border:1.5px solid #CBD5E1;border-radius:10px;font:inherit}
+.rb-cm-wrap{display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:16px;align-items:start}
+.rb-cm-list{display:flex;flex-direction:column;gap:8px;max-height:640px;overflow:auto}
+.rb-cm-conv{display:block;width:100%;text-align:left;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:10px 12px;cursor:pointer;font:inherit}
+.rb-cm-conv.active{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.rb-cm-conv .sup-row-m{margin:6px 0 4px;color:#334155;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rb-cm-conv .sup-row-w{font-size:12px;color:#64748B;display:flex;gap:8px;align-items:center}
+.rb-cm-thread{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:14px;min-height:320px;max-height:640px;overflow:auto}
+.rb-cm-th-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px}
+.rb-cm-th-h h3{margin:0;font-size:16px}
+.rb-cm-older{margin:0 0 10px}
+.rb-cm-msgs{display:flex;flex-direction:column;gap:8px}
+.rb-cm-msg{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:8px 10px}
+.rb-cm-msg.is-hidden{opacity:.7;border-style:dashed}
+.rb-cm-msg-h{font-size:12px;color:#64748B;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.rb-cm-msg-h b{color:#0F172A}
+.rb-cm-msg-h time{margin-left:auto}
+.rb-cm-msg-b{margin-top:4px;font-size:14px;color:#0F172A;white-space:pre-wrap;overflow-wrap:anywhere}
+@media (max-width:900px){.rb-cm-wrap{grid-template-columns:1fr}}

@@ -141,8 +141,8 @@
     { id: "a3", trade: "Electrician", by: "Hannah Lewis", status: "Open", comments: 1, when: "Fri 9:40 am", post: "Joondalup group — switchboard upgrade" }
   ];
   var chats = [
-    { id: "c1", room: "Hills group", from: "Unknown number", text: "Cheap solar deals this week, DM me", flag: "Possible spam", when: "Today 6:55 am" },
-    { id: "c2", room: "Jamie ↔ Sarah", from: "Jamie Hale", text: "Thanks for the intro to the Hills job.", flag: "None", when: "Yesterday" }
+    { id: "c1", room: "Hills group", from: "Unknown number", to: "Hills group", toSub: "Group chat", text: "Cheap solar deals this week, DM me", flag: "Possible spam", when: "Today 6:55 am" },
+    { id: "c2", room: "Jamie ↔ Sarah", from: "Jamie Hale", to: "Sarah Nguyen", toSub: "Carpenter", text: "Thanks for the intro to the Hills job.", flag: "None", when: "Yesterday" }
   ];
   var activity = [
     { type: "admin", text: "Emma Brooks was approved and can now join the circle.", at: "Yesterday 4:20 pm" },
@@ -170,12 +170,15 @@
     ["dashboard", "Dashboard", "dash", "Overview"],
     ["requests", "Profile requests", "requests", "People"],
     ["members", "Members", "members"],
+    ["fb-friends", "Facebook friends", "members"],
     ["regions", "Regions", "regions", "Lists"],
     ["trades", "Trades &amp; businesses", "trades"],
     ["alerts", "Recommendation alerts", "alerts", "Circle"],
     ["fb-posts", "Facebook recommendations", "alerts"],
     ["queue", "Promotion queue", "queue"],
     ["reports", "Reports", "reports"],
+    ["google-reviews", "Google Reviews", "alerts"],
+    ["vouches", "Vouches", "alerts"],
     ["chats", "Chat moderation", "chats"],
     ["support", "Support inbox", "chats"],
     ["devi", "Devi automation", "ai", "Automations"],
@@ -198,6 +201,9 @@
     "fb-posts-list": ["Circle", "Facebook recommendations"],
     queue: ["Circle", "Promotion queue"],
     reports: ["Circle", "Reports"],
+    "google-reviews": ["Circle", "Google Reviews and swaps"],
+    vouches: ["Circle", "Facebook vouches"],
+    "fb-friends": ["People", "Facebook friends"],
     chats: ["Circle", "Chat moderation"],
     support: ["Circle", "Support inbox"],
     devi: ["Automations", "Devi automation"],
@@ -281,6 +287,7 @@
         var dc = TC180Admin.pendingCount();
         if (dc) count = '<span class="count">' + dc + "</span>";
       }
+      if (window.TC222iAdmin && TC222iAdmin.navCount) { var c222 = TC222iAdmin.navCount(it[0]); if (c222) count = '<span class="count">' + c222 + "</span>"; } /* v2.2.2 b16 QA #23 */
       html += '<button class="nav-btn' + (page === it[0] ? " active" : "") + '" data-page="' + it[0] + '">' + I[it[2]] + "<span>" + it[1] + "</span>" + count + "</button>";
     });
     $("nav").innerHTML = html;
@@ -323,6 +330,8 @@
   }
 
   function pageHTML() {
+    /* v2.2.2 b16 (QA sweep): Google Reviews, Vouches, Facebook friends, full member page — admin-v222i.js */
+    if (window.TC222iAdmin && TC222iAdmin.pageHTML) { var x222 = TC222iAdmin.pageHTML(page, selectedMem); if (x222 != null) return x222; }
     if (page === "dashboard") {
       return kpis() +
         '<div class="dash-grid">' +
@@ -345,7 +354,8 @@
       var detail = requests.filter(function (r) { return r.status === "pending"; }).map(function (r) {
         return '<article class="panel"><div class="panel-h">' + who(r.first + " " + r.last, r.business) + badge(r.status) + "</div>" +
           "<p class=\"panel-sub\" style=\"margin-bottom:10px\">" + esc(r.bio) + "</p>" +
-          '<table><tbody><tr><td data-label="Trade">' + esc(r.trade) + '</td><td data-label="Areas">' + esc(r.areas) + '</td><td data-label="Phone">' + esc(r.phone) + '</td><td data-label="Submitted">' + esc(r.when) + "</td></tr></tbody></table>" +
+          '<table><tbody><tr><td data-label="Trade">' + esc(r.trade) + '</td><td data-label="Areas">' + esc(r.areas) + '</td><td data-label="Phone">' + esc(r.phone) + '</td><td data-label="Submitted">' + esc(r.when) + "</td></tr>" +
+          '<tr><td data-label="ABN">' + (r.abn ? esc(r.abn) + ' <a class="rb-abn-link" href="https://abr.business.gov.au/ABN/View?abn=' + encodeURIComponent(String(r.abn).replace(/\s+/g, "")) + '" target="_blank" rel="noopener">ABN Lookup</a>' : '<span class="panel-sub">No ABN given</span>') + '</td><td data-label="Email">' + esc(r.email || "") + '</td><td data-label="Signed up" colspan="2">' + esc(r.signedUp || r.when) + "</td></tr></tbody></table>" +
           '<div class="row-actions" style="margin-top:12px"><button class="btn btn-ok btn-sm" data-action="approve" data-id="' + r.id + '">' + I.check + "<span>Approve</span></button>" +
           '<button class="btn btn-danger btn-sm" data-action="decline" data-id="' + r.id + '">' + I.x + "<span>Decline</span></button></div></article>";
       }).join("");
@@ -360,7 +370,7 @@
         '<div class="search"><input id="memSearch" type="search" placeholder="Search by name, trade or area" value="' + esc(q) + '"><select id="memFilter"><option value="">All statuses</option><option>active</option><option>suspended</option></select></div>' +
         (list.length ? '<table><thead><tr><th>Member</th><th>Trade</th><th>Areas</th><th>Joined</th><th>Status</th><th>Intro</th><th></th></tr></thead><tbody>' +
           list.map(function (m) {
-            var intro = (window.TCTutorials && TCTutorials.introWatched(m.id)) ? "✓" : "✗";
+            var intro = (m.introWatched != null ? m.introWatched : (window.TCTutorials && TCTutorials.introWatched(m.id))) ? "✓" : "✗"; /* v2.2.2 b16 QA #5: profiles.intro_watched */
             return "<tr><td data-label=\"Member\">" + who(m.name, m.business) + '</td><td data-label="Trade">' + esc(m.trade) + '</td><td data-label="Areas">' + esc(m.areas) + '</td><td data-label="Joined">' + esc(m.joined) + '</td><td data-label="Status">' + badge(m.status) + '</td><td data-label="Intro">' + intro + '</td><td data-label=""><div class="row-actions">' +
               icoBtn("edit-mem", m.id, "more", I.edit, "Edit") +
               icoBtn("suspend", m.id, m.status === "active" ? "no" : "ok", m.status === "active" ? I.x : I.check, m.status === "active" ? "Suspend" : "Reactivate") +
@@ -458,10 +468,45 @@
           }).join("") + "</tbody></table>" : empty("Nothing flagged", "When a member reports a message or profile, it will show here."));
     }
     if (page === "chats") {
-      return panel("Chat moderation", "A sample of recent conversations. This is fictional.", "",
-        '<table><thead><tr><th>From</th><th>Room</th><th>Message</th><th>Flag</th><th>When</th></tr></thead><tbody>' +
+      /* v2.2.2 b16 (Vishal): a TO column, and a Conversations tab with every chat (read-only thread, load older). */
+      var cmv = window.__rbAdminConv || (window.__rbAdminConv = { tab: "messages", q: "", list: null, sel: null, msgs: [], more: false });
+      var cmTabs = '<div class="rb-cm-tabs" role="tablist">' +
+        '<button type="button" role="tab" class="rb-cm-tab' + (cmv.tab === "messages" ? " on" : "") + '" aria-selected="' + (cmv.tab === "messages") + '" data-cm-tab="messages">Messages</button>' +
+        '<button type="button" role="tab" class="rb-cm-tab' + (cmv.tab === "conversations" ? " on" : "") + '" aria-selected="' + (cmv.tab === "conversations") + '" data-cm-tab="conversations">Conversations</button></div>';
+      if (cmv.tab === "conversations") {
+        var cl = cmv.list;
+        if (!cl) { /* demo (offline): a fictional list built from the sample rows */
+          cl = chats.map(function (c) { return { id: c.id, kind: /group/i.test(c.room) ? "group" : "dm", title: c.room, people: [{ name: c.from, trade: "" }, { name: c.to || "", trade: c.toSub || "" }], last: c.text, lastWho: c.from, when: c.when, n: 1 }; });
+          if (cmv.q) cl = cl.filter(function (c) { return c.people.some(function (p) { return String(p.name).toLowerCase().indexOf(cmv.q.toLowerCase()) !== -1; }); });
+        }
+        var convRows = cl.length ? cl.map(function (c) {
+          var names2 = c.kind === "group" ? (c.title || "Group chat") : c.people.map(function (p) { return p.name; }).filter(Boolean).join(" \u2194 ");
+          var sub2 = c.kind === "group" ? c.people.length + (c.people.length === 1 ? " member" : " members") : c.people.map(function (p) { return p.trade; }).filter(Boolean).join(" \u00b7 ");
+          return '<button type="button" class="sup-row rb-cm-conv' + (cmv.sel === c.id ? " active" : "") + '" data-cm-conv="' + esc(c.id) + '">' + who(names2, (c.kind === "group" ? "Group · " : "Direct message · ") + sub2) +
+            '<div class="sup-row-m">' + (c.lastWho ? "<b>" + esc(c.lastWho) + ":</b> " : "") + esc(c.last || "No messages yet") + '</div><div class="sup-row-w">' + esc(c.when || "") + ' <span class="badge b-info">' + c.n + (c.n === 1 ? " message" : " messages") + "</span></div></button>";
+        }).join("") : empty("No conversations", cmv.q ? "No conversation includes a member matching that name." : "When members start chatting, their conversations show here.");
+        var cur = cl.filter(function (c) { return c.id === cmv.sel; })[0];
+        var thread = cur ? '<div class="rb-cm-th-h"><h3>' + esc(cur.kind === "group" ? (cur.title || "Group chat") : cur.people.map(function (p) { return p.name; }).join(" \u2194 ")) + '</h3><span class="badge b-info">Read-only</span></div>' +
+          (cmv.more ? '<button type="button" class="btn btn-sm rb-cm-older" data-cm-older="1">Load older messages</button>' : "") +
+          '<div class="rb-cm-msgs">' + (cmv.msgs.length ? cmv.msgs.map(function (m) {
+            return '<div class="rb-cm-msg' + (m.hidden ? " is-hidden" : "") + '"><div class="rb-cm-msg-h"><b>' + esc(m.from) + '</b> <span>to ' + esc(m.to) + '</span> <time>' + esc(m.when) + "</time>" + (m.hidden ? ' <span class="badge b-no">Hidden</span>' : "") + '</div><div class="rb-cm-msg-b">' + esc(m.text) + "</div></div>";
+          }).join("") : '<p class="panel-sub">' + (cmv.list ? "No messages in this conversation yet." : "Demo (offline): open the live admin to read real threads.") + "</p>") + "</div>"
+          : '<div class="rb-cm-pick"><p class="panel-sub">Pick a conversation to read the full thread. Admins can only read here; nothing can be sent or edited.</p></div>';
+        return panel("Chat moderation", "Every member conversation, newest first. Search by member name. Read-only.", cmTabs,
+          '<div class="rb-cm-search"><input type="search" id="cmSearch" placeholder="Search by member name" aria-label="Search conversations by member name" value="' + esc(cmv.q || "") + '"></div>' +
+          '<div class="sup-wrap rb-cm-wrap"><div class="sup-list rb-cm-list">' + convRows + '</div><div class="sup-thread rb-cm-thread">' + thread + "</div></div>");
+      }
+      return panel("Chat moderation", "A sample of recent conversations. This is fictional.", cmTabs,
+        '<table class="rb-cm-table"><thead><tr><th>From</th><th>To</th><th>Room</th><th>Message</th><th>Flag</th><th>When</th><th>Actions</th></tr></thead><tbody>' +
         chats.map(function (c) {
-          return "<tr><td data-label=\"From\">" + who(c.from, "") + '</td><td data-label="Room">' + esc(c.room) + '</td><td data-label="Message">' + esc(c.text) + '</td><td data-label="Flag">' + (c.flag === "None" ? badge("Handled") : badge("Open")) + " " + esc(c.flag) + '</td><td data-label="When">' + esc(c.when) + "</td></tr>";
+          /* v2.2.2 b16 QA #2: Hide / Unhide, Open conversation, Suspend sender; Flag = Reported when a member report points at the chat */
+          var flagHtml = c.flag === "Reported" ? badge("Open") + ' <span class="rb-flag-rep">Reported</span>' : c.flag === "Hidden" ? '<span class="badge b-no">Hidden</span>' : '<span class="devi-note">No flags</span>';
+          var acts = c.convId ? '<div class="row-actions rb-cm-acts">' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-rb-cm="' + (c.hidden ? "unhide" : "hide") + '" data-id="' + esc(c.id) + '">' + (c.hidden ? "Unhide" : "Hide") + "</button>" +
+            '<button type="button" class="btn btn-ghost btn-sm" data-rb-cm="open" data-conv="' + esc(c.convId) + '">Open conversation</button>' +
+            (c.senderActive ? '<button type="button" class="btn btn-danger btn-sm" data-rb-cm="suspend" data-id="' + esc(c.senderId) + '" data-name="' + esc(c.from) + '">Suspend sender</button>' : "") +
+            "</div>" : "";
+          return '<tr class="' + (c.hidden ? "rb-cm-hidden" : "") + '"><td data-label="From">' + who(c.from, "") + '</td><td data-label="To">' + (c.to ? who(c.to, c.toSub || "") : "\u2014") + '</td><td data-label="Room">' + esc(c.room) + '</td><td data-label="Message">' + esc(c.text) + '</td><td data-label="Flag">' + flagHtml + '</td><td data-label="When">' + esc(c.when) + '</td><td data-label="Actions">' + acts + "</td></tr>";
         }).join("") + "</tbody></table>");
     }
     if (page === "support") {
@@ -480,7 +525,9 @@
       var reply = '<form class="sup-reply" data-sup-reply="' + sel + '"><textarea rows="3" placeholder="Reply to ' + esc(th.member) + '…" aria-label="Reply"></textarea><div class="sup-reply-a"><span class="panel-sub">Replies appear in the member\'s Support chat in the app.</span><button class="btn btn-primary btn-sm" type="submit">Send reply</button></div></form>';
       return '<div class="dash-grid">' +
         panel("Support inbox", sup.filter(function (r) { return r.open; }).length + " open · fictional demo threads", "", '<div class="sup-list">' + list + "</div>") +
-        panel(esc(th.member) + " · " + esc(th.trade), "Topic: " + esc(th.topic), "", '<div class="sup-thread"><div class="sup-msg in">' + esc(th.last) + '<span>' + esc(th.when) + "</span></div></div>" + reply) +
+        panel(esc(th.member) + " · " + esc(th.trade), "Topic: " + esc(th.topic), "", '<div class="sup-thread">' + (th.thread && th.thread.length ? th.thread.map(function (mm) { /* v2.2.2 b16 QA #6: the whole conversation, oldest first */
+          return '<div class="sup-msg ' + (mm.from_admin ? "out" : "in") + '">' + esc(mm.body) + "<span>" + esc((mm.from_admin ? "Rate Buddies · " : "") + (window.TC222iAdmin ? TC222iAdmin.when(mm.created_at) : "")) + "</span></div>";
+        }).join("") : '<div class="sup-msg in">' + esc(th.last) + '<span>' + esc(th.when) + "</span></div>") + "</div>" + reply) +
         "</div>";
     }
     if (page === "plans") {

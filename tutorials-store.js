@@ -164,8 +164,13 @@
   }
   function markWatched(id) {
     var w = loadWatched();
+    var was = !!w[id];
     w[id] = true;
     saveWatched(w);
+    /* v2.2.2 b16 QA #41: live members keep their progress in tutorial_watched (admin can see it, survives a reinstall) */
+    try {
+      if (!was && id && root.RBLive && RBLive.isLive() && root.RB && RB.markVideoWatched) RB.markVideoWatched(String(id)).catch(function (e) { console.warn("RB tutorial watched", e); });
+    } catch (e) {}
   }
   function isWatched(id) { return !!loadWatched()[id]; }
 
