@@ -18,10 +18,16 @@
 
   function cfg() { return root.RBConfig || {}; }
   function ready() { return !!(client && cfg().url && cfg().anonKey); }
+  /* v2.2.2e: on the web admin, Demo (offline) is a per-visit choice only: it always starts unticked and is
+     never remembered (a remembered tick made the real admin login open in Demo). The phone app keeps its setting. */
+  var adminDemo = false;
+  function isAdminPage() { return !!root.RB_ADMIN_PAGE; }
   function isDemo() {
+    if (isAdminPage()) return adminDemo;
     try { return localStorage.getItem(DEMO_KEY) === "1"; } catch (e) { return false; }
   }
   function setDemo(on) {
+    if (isAdminPage()) { adminDemo = !!on; return; }
     try {
       if (on) localStorage.setItem(DEMO_KEY, "1");
       else localStorage.removeItem(DEMO_KEY);

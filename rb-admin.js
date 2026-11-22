@@ -103,24 +103,35 @@
   function hookLogin() {
     var form = $("loginForm");
     if (!form) return;
+    var demoBypass = false;
     form.addEventListener("submit", function (e) {
-      if (window.RB && RB.isDemo()) return; /* existing handler shows the dashboard */
-      e.preventDefault();
-      e.stopImmediatePropagation();
+      if (demoBypass) { demoBypass = false; return; } /* explicit Demo choice: the prototype handler shows sample data */
       var fd = new FormData(form);
       var email = String(fd.get("email") || "").trim();
       var password = String(fd.get("password") || "");
+      var wantedDemo = !!(window.RB && RB.isDemo());
+      if (wantedDemo && (!email || !password)) return; /* Demo with no login typed: sample data, as before */
+      e.preventDefault();
+      e.stopImmediatePropagation();
       showError("");
+      /* v2.2.2e: a real login always wins over the Demo tick */
       RB.login(email, password).then(function (p) {
         if (!p || !RB.isAdmin) {
           RB.logout();
+          if (wantedDemo) { demoBypass = true; form.requestSubmit ? form.requestSubmit() : form.submit(); return; }
           showError("This login is not an admin account.");
           return;
+        }
+        if (RB.isDemo()) {
+          RB.setDemo(false);
+          var box = form.querySelector('[data-action="rb-demo"]'); if (box) box.checked = false;
+          var ban = document.getElementById("rbDemoBanner"); if (ban) ban.remove();
         }
         $("loginView").classList.add("hidden");
         $("appView").classList.remove("hidden");
         return hydrate().then(startLive);
       }).catch(function (err) {
+        if (wantedDemo) { demoBypass = true; form.requestSubmit ? form.requestSubmit() : form.submit(); return; }
         showError((err && err.message) || "Could not sign in.");
       });
     }, true);
@@ -172,10 +183,14 @@
     if (!form || form.querySelector(".rb-demo-toggle")) return;
     var lab = document.createElement("label");
     lab.className = "rb-demo-toggle";
-    lab.innerHTML = '<input type="checkbox" data-action="rb-demo"' + (RB.isDemo() ? " checked" : "") + "> Demo (offline)";
+    lab.innerHTML = '<input type="checkbox" data-action="rb-demo" autocomplete="off"> Demo (offline)';
     form.appendChild(lab);
+    /* v2.2.2e: always unticked on load (also after the browser restores form fields or the back/forward cache) */
+    var clearDemo = function () { var b = lab.querySelector("input"); if (b) b.checked = false; RB.setDemo(false); };
+    window.addEventListener("pageshow", clearDemo);
+    setTimeout(clearDemo, 0);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 13)</span>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 14)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";
@@ -223,7 +238,9 @@
     });
   }
   function demoBanner() {
-    if (!RB.isDemo() || document.getElementById("rbDemoBanner")) return;
+    var old = document.getElementById("rbDemoBanner");
+    if (!RB.isDemo()) { if (old) old.remove(); return; }
+    if (old) return;
     var app = $("appView"); if (!app) return;
     var d = document.createElement("div"); d.id = "rbDemoBanner";
     d.setAttribute("style", "position:sticky;top:0;z-index:50;background:#fff4d6;color:#4a3400;border-bottom:1px solid #e9cf86;padding:10px 14px;font-weight:700;font-size:14px");
