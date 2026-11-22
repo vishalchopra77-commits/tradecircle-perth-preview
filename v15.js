@@ -250,6 +250,54 @@ function googleG(size, mono) {
     q.forEach(function (row, i) { if (row.memberId === "jamie") mine = i + 1; });
     return { q: q, mine: mine, total: q.length };
   }
+  /* v2.2.2: Facebook stats 2x2 (Queue place, Circle in queue, Friends, Pending Requests) + the same period filter as Google Reviews stats. Fictional counts. */
+  var FB_PER = { today: [1, 2], yesterday: [2, 1], week: [5, 3], fortnight: [8, 4], month: [12, 6], lastmonth: [9, 5] };
+  function fbStatsBlock() {
+    var S = (window.TradeCircle && TradeCircle.state) || {};
+    var PERIODS = (window.TC21 && TC21.PERIODS) || [{ id: "today", label: "Today" }, { id: "week", label: "This Week" }, { id: "month", label: "This Month" }];
+    var id = "today"; try { id = JSON.parse(localStorage.getItem("rb_fb_period") || '"today"') || "today"; } catch (e) {}
+    var PER = PERIODS.filter(function (x) { return x.id === id; })[0] || PERIODS[0];
+    var n = FB_PER[PER.id] || FB_PER.today;
+    var place = myQueuePlace();
+    var open = !!S._rbFbPeriodOpen;
+    function tile(label, value, color, go) {
+      return '<div class="dash-tile ov-tile ' + color + '" data-rb-go="' + go + '" role="button" tabindex="0" aria-label="' + label + '">' +
+        '<div class="dash-tile-ico">' + facebookF(16) + "</div>" +
+        '<div class="n">' + value + "</div>" +
+        '<div class="l">' + label + "</div></div>";
+    }
+    var h = '<div class="rb-fb-stats"><div class="v21-sec-row rb-sec-filter rb-stats-head rb-fb-head"><div class="sec">Facebook Stats</div>' +
+      '<div class="rb-dd' + (open ? " open" : "") + '">' +
+      '<button type="button" class="rb-dd-btn" data-action="rb-fb-period-menu" aria-haspopup="listbox" aria-expanded="' + (open ? "true" : "false") + '">' + PER.label +
+      '<svg class="rb-keep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>' +
+      '<div class="rb-dd-menu" role="listbox" aria-label="Facebook stats period">';
+    PERIODS.forEach(function (x) {
+      h += '<button type="button" role="option" aria-selected="' + (x.id === PER.id ? "true" : "false") + '" class="rb-dd-opt' + (x.id === PER.id ? " on" : "") + '" data-action="rb-fb-period" data-id="' + x.id + '"><span>' + x.label + "</span></button>";
+    });
+    h += "</div></div></div>" +
+      '<div class="ov-stats rb-fb-stats4">' +
+      tile("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "\u2014", "fb", "promo-queue") +
+      tile("Circle in queue", String(place.total), "navy", "promo-queue") +
+      tile("Friends", String(n[0]), "fb rb-fb-friends", "members") +
+      tile("Pending Requests", String(n[1]), "navy rb-fb-pending", "members") +
+      "</div></div>";
+    return h;
+  }
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest && e.target.closest('[data-action="rb-fb-period-menu"], [data-action="rb-fb-period"]');
+    if (!el) return;
+    e.preventDefault(); e.stopPropagation();
+    var S = (window.TradeCircle && TradeCircle.state) || {};
+    if (el.getAttribute("data-action") === "rb-fb-period-menu") {
+      S._rbFbPeriodOpen = !S._rbFbPeriodOpen;
+      Array.prototype.forEach.call(document.querySelectorAll(".rb-dd.open"), function (d) { if (!d.contains(el)) d.classList.remove("open"); });
+      var dd = el.closest(".rb-dd"); if (dd) { dd.classList.toggle("open", !!S._rbFbPeriodOpen); el.setAttribute("aria-expanded", S._rbFbPeriodOpen ? "true" : "false"); if (window.TC220 && TC220.fitMenu) TC220.fitMenu(); }
+      return;
+    }
+    S._rbFbPeriodOpen = false;
+    try { localStorage.setItem("rb_fb_period", JSON.stringify(el.getAttribute("data-id"))); } catch (e2) {}
+    if (window.TradeCircle && TradeCircle.go) TradeCircle.go(S.screen || "home");
+  }, true);
   function fbSegment(which) {
     var p = myQueuePlace();
     var place = p.mine ? ("Your place #" + p.mine) : "Request a turn";
@@ -426,10 +474,11 @@ function googleG(size, mono) {
     var nextTurn = place.mine
       ? ("Your turn is in " + queueWaitPhrase(place.mine) + ", at one post every couple of days.")
       : "Request a free turn when you are ready.";
-    var fbBody = '<div class="ov-stats">' +
+    var fbBody = (window.RB_FB_TILES === "old") ? ('<div class="ov-stats">' +
       ovStat("Queue place", place.mine ? "#" + place.mine + " of " + place.total : "—", "fb", facebookF(16)) +
       ovStat("Circle in queue", String(place.total), "navy", facebookF(16)) +
-      "</div>" +
+      "</div>") : fbStatsBlock();
+    fbBody +=
       '<div class="ov-note-line">' + esc(nextTurn) + "</div>";
     if (openAlert) {
       fbBody += '<button type="button" class="ov-item" data-action="open-alert" data-id="' + openAlert.id + '">' +
@@ -721,7 +770,7 @@ function googleG(size, mono) {
       '<p class="bio">' + esc(m.bio) + "</p>" +
       '<div class="action-stack">' + friendButton(m) +
       '<a class="btn btn-primary has-ico" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">' + googleG(16) + "<span>Leave a Google Review</span></a>" +
-      '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for a Google Review</span></button>" +
+      '<button class="btn btn-ghost ink has-ico" data-action="ask-review" data-id="' + m.id + '">' + I.send + "<span>Ask for review swap</span></button>" +
       '<button class="btn btn-ghost ink has-ico" data-action="open-chat" data-id="' + m.id + '">' + I.chat + "<span>Message</span></button>" +
       pageBtn + "</div>" +
       (T().selectedAreasCard ? T().selectedAreasCard(m.regions || [], { title: "Areas they work in" }) : "") +
@@ -1004,5 +1053,5 @@ function googleG(size, mono) {
   if (window.TC12) boot();
   else document.addEventListener("DOMContentLoaded", boot);
 
-  window.TC15 = { render: render, handle: handle, memberCard: memberCard };
+  window.TC15 = { render: render, handle: handle, memberCard: memberCard, fbStatsBlock: fbStatsBlock };
 })();

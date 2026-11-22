@@ -56,6 +56,12 @@
     if (!hasV5) {
       data.videos = (data.videos || []).concat([{ id: "v5", sectionId: "badges-queue", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/badges.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Badges, vouches and the Promotion queue", description: "How Google Reviews and Facebook vouches earn badges and move you up the queue.", duration: "3:40", durationSec: 220, order: 1, hidden: false, sample: true }]);
     }
+    /* v2.2.2: two "how to find your link" videos for Complete / Edit profile (admin sets the URL) */
+    if (!(data.videos || []).some(function (v) { return v.id === "v6"; })) data.videos = (data.videos || []).concat([{ id: "v6", sectionId: "your-profile", url: "", provider: "", videoId: "", thumb: "assets/tutorials/facebook.png", embed: "", title: "How to find your Facebook profile link", description: "Where to copy your personal Facebook profile link on your phone, to paste into Rate Buddies.", duration: "1:00", durationSec: 60, order: 2, hidden: false, sample: true, help: "facebook" }]);
+    if (!(data.videos || []).some(function (v) { return v.id === "v7"; })) data.videos = (data.videos || []).concat([{ id: "v7", sectionId: "your-profile", url: "", provider: "", videoId: "", thumb: "assets/tutorials/reviews.png", embed: "", title: "How to find your Google Business Profile link", description: "Where to copy your Google Business Profile share link, to paste into Rate Buddies.", duration: "1:00", durationSec: 60, order: 3, hidden: false, sample: true, help: "google" }]);
+    /* v2.2.2: AI assistant connect video (admin sets the URL) */
+    if (!(data.sections || []).some(function (s) { return s.id === "ai-assistant"; })) data.sections = (data.sections || []).concat([{ id: "ai-assistant", title: "AI assistant", order: 6, hidden: false }]);
+    if (!(data.videos || []).some(function (v) { return v.id === "v8"; })) data.videos = (data.videos || []).concat([{ id: "v8", sectionId: "ai-assistant", url: "", provider: "", videoId: "", thumb: "assets/tutorials/tour.png", embed: "", title: "Connect your AI assistant in 1 minute", description: "Get an API key from Grok, ChatGPT or Claude, paste it into Rate Buddies and tap Test connection.", duration: "1:00", durationSec: 60, order: 1, hidden: false, sample: true, help: "ai" }]);
     (data.videos || []).forEach(function (v) {
       if (v.id === "v2" && v.sample && v.isNew == null) v.isNew = true;
     });
@@ -99,14 +105,18 @@
         { id: "google-reviews", title: "Leaving Google Reviews", order: 2, hidden: false },
         { id: "facebook-recs", title: "Facebook recommendations", order: 3, hidden: false },
         { id: "your-profile", title: "Your profile", order: 4, hidden: false },
-        { id: "badges-queue", title: "Badges and the queue", order: 5, hidden: false }
+        { id: "badges-queue", title: "Badges and the queue", order: 5, hidden: false },
+        { id: "ai-assistant", title: "AI assistant", order: 6, hidden: false }
       ],
       videos: [
         { id: "v1", sectionId: "getting-started", url: "https://www.youtube.com/watch?v=eRsGyueVLvQ", provider: "youtube", videoId: "eRsGyueVLvQ", thumb: "assets/tutorials/tour.png", embed: "https://www.youtube.com/embed/eRsGyueVLvQ?rel=0&enablejsapi=1", title: "A tour of Home, Reviews and Facebook", description: "Find your way around the app after you have watched the welcome video.", duration: "2:48", durationSec: 168, order: 1, hidden: false, sample: true },
         { id: "v2", sectionId: "google-reviews", url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", provider: "youtube", videoId: "jNQXAC9IVRw", thumb: "assets/tutorials/reviews.png", embed: "https://www.youtube.com/embed/jNQXAC9IVRw?rel=0&enablejsapi=1", title: "How to leave a genuine Google Review", description: "Only after a real job, in your own words, and within the daily limit of three.", duration: "3:05", durationSec: 185, order: 1, hidden: false, sample: true, isNew: true },
         { id: "v3", sectionId: "facebook-recs", url: "https://vimeo.com/1084537", provider: "vimeo", videoId: "1084537", thumb: "assets/tutorials/facebook.png", embed: "https://player.vimeo.com/video/1084537?api=1", title: "How to recommend a buddy on Facebook", description: "Pick a starter, add a few of your own words, and only vouch for someone you genuinely know.", duration: "4:12", durationSec: 252, order: 1, hidden: false, sample: true },
         { id: "v4", sectionId: "your-profile", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/profile.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Fill in your profile and recommendation details", description: "Choose which contact details other members may include when they recommend you.", duration: "2:10", durationSec: 130, order: 1, hidden: false, sample: true },
-        { id: "v5", sectionId: "badges-queue", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/badges.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Badges, vouches and the Promotion queue", description: "How Google Reviews and Facebook vouches earn badges and move you up the queue.", duration: "3:40", durationSec: 220, order: 1, hidden: false, sample: true }
+        { id: "v5", sectionId: "badges-queue", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", provider: "youtube", videoId: "aqz-KE-bpKQ", thumb: "assets/tutorials/badges.png", embed: "https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0&enablejsapi=1", title: "Badges, vouches and the Promotion queue", description: "How Google Reviews and Facebook vouches earn badges and move you up the queue.", duration: "3:40", durationSec: 220, order: 1, hidden: false, sample: true },
+        { id: "v6", sectionId: "your-profile", url: "", provider: "", videoId: "", thumb: "assets/tutorials/facebook.png", embed: "", title: "How to find your Facebook profile link", description: "Where to copy your personal Facebook profile link on your phone, to paste into Rate Buddies.", duration: "1:00", durationSec: 60, order: 2, hidden: false, sample: true, help: "facebook" },
+        { id: "v7", sectionId: "your-profile", url: "", provider: "", videoId: "", thumb: "assets/tutorials/reviews.png", embed: "", title: "How to find your Google Business Profile link", description: "Where to copy your Google Business Profile share link, to paste into Rate Buddies.", duration: "1:00", durationSec: 60, order: 3, hidden: false, sample: true, help: "google" },
+        { id: "v8", sectionId: "ai-assistant", url: "", provider: "", videoId: "", thumb: "assets/tutorials/tour.png", embed: "", title: "Connect your AI assistant in 1 minute", description: "Get an API key from Grok, ChatGPT or Claude, paste it into Rate Buddies and tap Test connection.", duration: "1:00", durationSec: 60, order: 1, hidden: false, sample: true, help: "ai" }
       ]
     };
   }
@@ -204,7 +214,14 @@
     return { ok: true, data: d };
   }
 
+  /* v2.2.2: help video for a profile link field ("facebook" | "google"); null if missing or hidden */
+  function helpVideo(kind) {
+    var vs = load().videos || [];
+    for (var i = 0; i < vs.length; i++) if (vs[i].help === kind && !vs[i].archived) return vs[i];
+    return null;
+  }
   root.TCTutorials = {
+    helpVideo: helpVideo,
     KEY: KEY,
     parseVideoUrl: parseVideoUrl,
     seed: seed,

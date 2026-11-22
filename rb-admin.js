@@ -1,4 +1,6 @@
-/* Rate Buddies v1.9.0 — wire the web admin to Supabase. */
+/* Rate Buddies v1.9.0 — wire the web admin to Supabase.
+   v2.2.2 live: admin access is checked through the admins table (is_admin RPC),
+   not profiles.role; pending list gets phone/email from admin_member_contacts. */
 (function () {
   "use strict";
 
@@ -39,6 +41,7 @@
           trade: p.trade,
           areas: p.areas,
           phone: p.phone,
+          email: p.email,
           status: p.status === "rejected" ? "declined" : p.status,
           when: fmtWhen(p.created_at) || "Just now",
           bio: p.bio
@@ -109,7 +112,7 @@
       var password = String(fd.get("password") || "");
       showError("");
       RB.login(email, password).then(function (p) {
-        if (!p || p.role !== "admin") {
+        if (!p || !RB.isAdmin) {
           RB.logout();
           showError("This login is not an admin account.");
           return;
@@ -202,7 +205,7 @@
       var sess = await RB.getSession();
       if (sess) {
         await RB.loadProfile();
-        if (RB.profile && RB.profile.role === "admin") {
+        if (RB.profile && RB.isAdmin) {
           $("loginView").classList.add("hidden");
           $("appView").classList.remove("hidden");
           await hydrate();

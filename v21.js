@@ -89,10 +89,12 @@
   function avatar(m, size) {
     size = size || 40;
     m = m || me();
-    if (m.isMe && S().photoData) {
+    /* v2.2.2 live: other members' uploaded photo (m.photo) shows too */
+    var photo = (m.isMe && S().photoData) ? S().photoData : (m.photo || "");
+    if (photo) {
       var rad = Math.max(8, Math.round(size * 0.28));
       return '<div class="avatar av-trade" style="width:' + size + "px;height:" + size + "px;border-radius:" + rad + 'px;background:#ccc">' +
-        '<img src="' + S().photoData + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:' + rad + 'px">' +
+        '<img src="' + String(photo).replace(/"/g, "&quot;") + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:' + rad + 'px">' +
         (isAvailable(m) ? '<span class="dot" title="Available"></span>' : "") + "</div>";
     }
     var st = tradeStyle(m.trade);
@@ -323,6 +325,17 @@
     var html = "";
     var period = load("rb_gr_period", "today") || "today";
     var PER = PERIODS.filter(function (x) { return x.id === period; })[0] || PERIODS[0];
+    /* v2.2.2: Given / Swapped tiles read the same state as the member cards (a swap counts as given + swapped) */
+    try {
+      var lst = membersForList(), gN = 0, sN = 0;
+      lst.forEach(function (mm) { var s0 = statusOf(mm); if (s0 === "full") s0 = alreadyGiven(mm) ? "already" : (iReviewed(mm) ? "given" : s0); if (s0 === "already") { sN++; gN++; } else if (s0 === "given") gN++; });
+      var cum = ["today", "week", "fortnight", "month"].indexOf(PER.id) !== -1;
+      PER = { id: PER.id, label: PER.label, requested: PER.requested,
+        given: PER.id === "today" ? gN : (cum ? Math.max(PER.given, gN) : PER.given),
+        swapped: PER.id === "today" ? sN : (cum ? Math.max(PER.swapped, sN) : PER.swapped) };
+    } catch (eP) {}
+    /* v2.2.2 live: real counts from the test database (demo numbers stay in Demo mode) */
+    try { if (root.RBLive && RBLive.isLive && RBLive.isLive()) { var LV = RBLive.periodStats(PER.id); if (LV) PER = { id: PER.id, label: PER.label, requested: LV.requested, given: LV.given, swapped: LV.swapped }; } } catch (eL) {}
     var pOpen = !!S()._rbPeriodOpen;
     html += '<div class="v21-sec-row rb-sec-filter rb-stats-head"><div class="sec">Your Stats</div>' +
       '<div class="rb-dd' + (pOpen ? " open" : "") + '">' +
@@ -377,7 +390,7 @@
     }
 
     html += '<div class="v21-card v21-avail' + (available ? "" : " off") + '">' +
-      '<div style="flex:1;min-width:0"><div class="t">' + (available ? "Available for swapping Google Reviews" : "Not available for swapping Google Reviews") + "</div>" +
+      '<div style="flex:1;min-width:0"><div class="t">' + (available ? "I am available for swapping Google Reviews" : "Not available for swapping Google Reviews") + "</div>" +
       '<div class="c">' + (capped ? "Paused automatically · back on tomorrow" : "Visible to all members — they can send you a Google Review swap request") + "</div></div>" +
       '<button type="button" class="v21-toggle' + (available ? "" : " off") + '" role="switch" aria-checked="' + (available ? "true" : "false") + '" data-action="rb-toggle-avail"' + (capped ? " disabled" : "") + "><i></i></button></div>";
 
@@ -714,6 +727,7 @@
     tradeKey: tradeKey,
     renderReviews: renderReviews,
     statsBlock: statsBlock,
+    PERIODS: PERIODS,
     renderMore: renderMore,
     renderLockNotif: renderLockNotif,
     afterGo: afterGo,

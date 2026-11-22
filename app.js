@@ -1307,7 +1307,7 @@
       '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
       '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
-      '<div class="field"><label>Short bio</label><textarea name="bio" rows="3">' + escapeText(d.bio) + "</textarea></div>" +
+      '<div class="field"><label>Short bio</label><textarea name="bio" rows="4" placeholder="e.g. I’m Sam, a licensed pest controller in Joondalup. I handle termites, spiders and rodents for homes and small businesses, and I always explain what I’m doing.">' + escapeText(d.bio) + "</textarea></div>" +
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" value="' + escapeAttr(d.phone || "") + '"></div>' +
       '<div class="group-label">Facebook profile</div>' +
       fbConnectBlock("edit-profile", d.facebook || "") +
@@ -1332,7 +1332,7 @@
       '<div class="card group" style="padding:12px 14px"><p style="font-size:14px;font-weight:600;line-height:1.5;color:var(--text)">Only recommend members you have actually met or worked with, and say so in your comment. Weekly catch-ups are organised in person, not in this app.</p></div>' +
       '<p class="group-label">About</p><div class="card group">' +
       '<div class="set-row"><span class="lab"><span class="a">App name</span><span class="b">Rate Buddies</span></span></div>' +
-      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.1 · 21 Nov 2026</span></span></div></div>' +
+      '<div class="set-row"><span class="lab"><span class="a">Version</span><span class="b">Rate Buddies v2.2.2 · 22 Nov 2026</span></span></div></div>' +
       '<button class="btn btn-ghost ink" data-go="welcome" style="margin-top:14px;color:var(--danger);border-color:#F3C4C4">Sign out</button>' +
       '<p class="settings-foot" style="padding-top:12px">Fictional demo data only.</p></div></section>';
   }

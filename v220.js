@@ -3,7 +3,7 @@
    clear tier medal. Options: ?hdr=a|b|c and ?prof=a|b (saved); default A / A. Fictional demo data only. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.2.1";
+  var VERSION = "v2.2.2";
   var html = document.documentElement;
   function q(name) { var m = new RegExp("[?&]" + name + "=([a-z])").exec(location.search); return m ? m[1] : null; }
   function opt(name, def, allowed) { var v = q(name); try { if (v) localStorage.setItem("rb220-" + name, v); else v = localStorage.getItem("rb220-" + name); } catch (e) {} return allowed.indexOf(v) >= 0 ? v : def; }
@@ -178,7 +178,7 @@
       var id = sc.dataset.screen;
       if (id === "pending") pending(sc);
       friendsWording(sc); medals(sc); memBadge(sc); try { fitMenu(); actWidth(sc); tradeSpan(sc); } catch (eM) {} profileRow(sc); headerMore(sc); try { document.documentElement.classList.toggle("rb-tz-big", textZoomReal() > 1.05); fitSeg(sc); chatPad(sc); dots(sc); fitTiles(sc); iconMid(sc); } catch (eF) { if (root.console) console.warn("v220 fit", eF && eF.message); }
-      var ver = sc.querySelectorAll(".v21-ver, .set-row .b"); ver.forEach(function (e) { if (/v2\.(?:1\.\d|2\.0)\b/.test(e.textContent)) e.textContent = e.textContent.replace(/v2\.(?:1\.\d|2\.0)\b/, VERSION); });
+      var ver = sc.querySelectorAll(".v21-ver, .set-row .b"); ver.forEach(function (e) { if (/v2\.(?:1\.\d|2\.[01])\b/.test(e.textContent)) e.textContent = e.textContent.replace(/v2\.(?:1\.\d|2\.[01])\b/, VERSION); });
     } catch (e) { if (root.console) console.warn("v220", e); } finally { busy = false; /* v2.2.1 perf fix: drop the mutations this pass made itself, so it can't re-trigger itself forever */ if (mo) try { mo.takeRecords(); } catch (eT) {} }
   }
   var t = null, t2 = null, t3 = null, mo = null, extra = [];

@@ -109,28 +109,57 @@
   /* Google Reviews tab card, V3 (Vishal picked V3, buttons swapped: Message left, action right).
      o = { st: "full"|"already"|"given"|"pending"|"", av: bool, friend: bool, area: string, avHtml: string } */
   function reviewCard(m, o) {
-    o = o || {}; var id = esc(m.id), lv = level(m), td = today(m), st = o.st || "";
+    o = o || {}; var id = esc(m.id), lv = level(m), td = today(m), st = o.st || ""; if (st === "not") st = "";
     var flags = "";
     if (o.friend) flags += '<span class="rb-cb-fb">' + FBI + "<span>Facebook Friends</span></span>";
     if (lv) flags += '<span class="rb-cb-lv lv-' + esc(lv.id || String(lv.label).toLowerCase()) + '">' + MEDAL + "<span>" + esc(lv.label) + "</span></span>";
     var chip, act;
     var muted = function (ic, t, extra) { return '<span class="rb-cb-btn muted" role="note"' + (extra || "") + ">" + ic + "<span>" + t + "</span></span>"; };
+    /* v2.2.2 (Vishal): every card keeps Message (left) + Leave Review (right); done states show Reviewed; limit shows Remind Me */
+    var leave = '<button type="button" class="rb-cb-btn soft" data-action="rb-leave" data-id="' + id + '">' + G(16) + "<span>Leave Review</span></button>";
+    if (st === "already" || st === "given") td = { n: Math.max(td.n, 1), cap: td.cap }; /* a swapped/given review counts in today's meter */
     if (st === "full") { chip = '<span class="rb-cb-chip a">' + CLOCK + "<span>Daily limit reached</span></span>";
       act = '<button type="button" class="rb-cb-btn muted" data-action="rb-remind-me" data-id="' + id + '" aria-label="Daily limit reached. Remind Me">' + BELL + "<span>Remind Me</span></button>"; }
     else if (st === "already") { chip = '<span class="rb-cb-chip g">' + TICK + "<span>Review Swapped</span></span>"; act = muted(TICK, "Reviewed"); }
     else if (st === "given") { chip = '<span class="rb-cb-chip g">' + TICK + "<span>Reviewed</span></span>"; act = muted(TICK, "Reviewed"); }
-    else if (st === "pending") { chip = '<span class="rb-cb-chip a">' + CLOCK + "<span>Review Requested</span></span>"; act = muted(CLOCK, "Requested"); }
-    else if (!o.av) { chip = '<span class="rb-cb-chip n"><span>Not available</span></span>'; act = '<button type="button" class="rb-cb-btn soft" data-go="member" data-id="' + id + '"><span>View profile</span></button>'; }
-    else if (!o.friend) { chip = '<span class="rb-cb-chip n"><span>Not friends yet</span></span>';
-      act = '<a class="rb-cb-btn fb" href="' + esc(fbUrl(m) || "#") + '" target="_blank" rel="noopener noreferrer">' + FBW + "<span>Add friend</span></a>"; }
-    else { chip = '<span class="rb-cb-chip a">' + STAR + "<span>Needs your review</span></span>";
-      act = '<button type="button" class="rb-cb-btn soft" data-action="rb-leave" data-id="' + id + '">' + G(16) + "<span>Leave Review</span></button>"; }
+    else if (st === "pending") { chip = '<span class="rb-cb-chip a">' + CLOCK + "<span>Review Requested</span></span>"; act = leave; }
+    else if (!o.av) { chip = '<span class="rb-cb-chip n"><span>Not available</span></span>'; act = leave; }
+    else { chip = '<span class="rb-cb-chip a">' + STAR + "<span>Needs your review</span></span>"; act = leave; }
+    if (root.RB_REVIEW_ADDFRIEND && !o.friend && o.av && !st) { act = '<a class="rb-cb-btn fb" href="' + esc(fbUrl(m) || "#") + '" target="_blank" rel="noopener noreferrer">' + FBW + "<span>Add friend</span></a>"; }
+    /* not friends: grey "Facebook friends" chip opens their profile in the Facebook app */
+    var fbChip = o.friend ? "" : '<a class="rb-cb-chip n rb-cb-fbgrey" data-action="rb-fb-open" data-id="' + id + '" href="' + esc(fbUrl(m) || "https://www.facebook.com/") + '" target="_blank" rel="noopener noreferrer" aria-label="Not Facebook friends yet. Open ' + esc(m.first || "") + '\u2019s Facebook profile">' + FBI + "<span>Facebook friends</span></a>";
     var msg = '<button type="button" class="rb-cb-btn navy" data-action="open-chat" data-id="' + id + '">' + CHAT + "<span>Message</span></button>";
     queueFit();
     return '<div class="rb-cb rb-rv" data-member="' + id + '">' + topHtml(m, flags, o.avHtml, o.area) +
-      '<div class="rb-cb-chips">' + chip + meter(td) + "</div>" +
+      '<div class="rb-cb-chips">' + chip + fbChip + meter(td) + "</div>" +
       '<div class="rb-cb-row">' + msg + act + "</div></div>";
   }
+
+  /* v2.2.2: open a Facebook profile in the Facebook app (Android intent / iOS fb://), browser fallback */
+  function openFb(url) {
+    url = url || "https://www.facebook.com/";
+    var ua = navigator.userAgent || "";
+    var path = url.replace(/^https?:\/\/(www\.|m\.)?facebook\.com\/?/i, "");
+    try {
+      if (/Android/i.test(ua)) {
+        location.href = "intent://www.facebook.com/" + path + "#Intent;scheme=https;package=com.facebook.katana;S.browser_fallback_url=" + encodeURIComponent(url) + ";end";
+        return;
+      }
+      if (/iPhone|iPad|iPod/i.test(ua)) {
+        var t = setTimeout(function () { window.open(url, "_blank", "noopener"); }, 1200);
+        document.addEventListener("visibilitychange", function h() { if (document.hidden) { clearTimeout(t); document.removeEventListener("visibilitychange", h); } });
+        location.href = "fb://facewebmodal/f?href=" + encodeURIComponent(url);
+        return;
+      }
+    } catch (e) {}
+    window.open(url, "_blank", "noopener");
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('[data-action="rb-fb-open"]');
+    if (!a) return;
+    e.preventDefault(); e.stopPropagation();
+    openFb(a.getAttribute("href"));
+  }, true);
 
   function wrapB(prev) {
     return function (m) {

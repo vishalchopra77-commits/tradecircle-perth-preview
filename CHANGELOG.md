@@ -2,6 +2,13 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.2 — 22 Nov 2026 (versionCode 10)
+- Live test backend: the app and web admin now use the Rate Buddies Test Supabase project (ratebuddies@gmail.com org), set in rb-config.js and in the bundled RankBuddies.html / TradeCircle-Admin.html. Public anon key only.
+- Live sign-up → admin approval (updates live), profile + photos (other members' photos show), extra profile fields (About, Ideal partner, Service areas, Gallery, Goals, ABN).
+- Live Google Review swaps with the 3-per-Perth-day received cap, live chat + chat badge, notifications + bell, Facebook Friends status, recommendations (approve shows live for the member), member Feature Board, admin video manager saved to the database.
+- Tailored Services and Referral partner suggestions for all 456 business types; "Watch how (1 min)" help under link boxes; Connect your own AI screen.
+- Version shows as v2.2.2 in More/Settings and the admin header.
+
 ## v2.2.1 — 22 Nov 2026 (versionCode 9)
 - Restore the existing "Demo: simulate approval" button and its original position on Awaiting approval.
 - Fix nested search inputs: one wrapper, no inner white rounded box, consistent focus state.

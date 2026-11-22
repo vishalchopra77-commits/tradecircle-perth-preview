@@ -77,7 +77,9 @@
         var bg = p.well === "g" ? "" : ' style="background:' + p.color + '"';
         return '<div class="field link-field"><label><span class="link-field-ico' + well + '"' + bg + '>' + p.icon + "</span>" + esc(p.label) + '</label>' +
           '<input name="link-' + p.id + '" inputmode="url" type="url" placeholder="' + esc(p.placeholder) + '" value="' + esc(links[p.id] || "") + '" data-link-id="' + p.id + '" autocomplete="off">' +
-          '<p class="link-error" hidden></p></div>';
+          '<p class="link-error" hidden></p>' +
+          /* v2.2.2: help line under each link box (Vishal); video is set in the admin Tutorial sections */
+          '<p class="rb-link-help"><span>Not sure where to find it?</span> <button type="button" class="rb-link-help-btn" data-action="rb-link-help" data-help="' + p.id + '" aria-label="Watch how to find your ' + esc(p.label) + ' (1 minute)">\u25B6\u00a0Watch how (1\u00a0min)</button></p></div>';
       }).join("");
   }
   function collect(form, current) {

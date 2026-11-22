@@ -784,18 +784,22 @@
   var LS_SWAP = "rb_swap_incoming";
   var LS_SWAP_SEEN = "rb_swap_incoming_seen";
   var DEFAULT_SWAPS = [
-    { id: "jack", time: "Today, 7:12 am", status: "new" },
-    { id: "tom", time: "Today, 8:04 am", status: "new" },
-    { id: "sarah", time: "Today, 9:20 am", status: "new" },
+    { id: "jack", time: "Today, 7:12 am", status: "new", mode: "send", review: "Jamie from Hills Pest Control did a termite inspection for us. On time, explained everything clearly and the report was really detailed. Highly recommend.", note: "Please mention my name and the termite inspection." },
+    { id: "tom", time: "Today, 8:04 am", status: "new", mode: "own", note: "Don't forget to mention the job type (deck repair)." },
+    { id: "sarah", time: "Today, 9:20 am", status: "new", mode: "own" },
     { id: "priya", time: "Yesterday, 4:40 pm", status: "new" },
     { id: "mei", time: "Yesterday, 2:15 pm", status: "new" }
   ];
   function swapList() {
     var list = loadJson(LS_SWAP, null);
+    /* v2.2.2 live: an empty live list stays empty (no demo seed rows) */
+    if (Array.isArray(list) && !list.length && root.RBLive && RBLive.isLive && RBLive.isLive()) return list;
     if (!Array.isArray(list) || !list.length) {
       list = DEFAULT_SWAPS.map(function (r) { return Object.assign({}, r); });
       saveJson(LS_SWAP, list);
     }
+    /* v2.2.2: fill swap details for saved demo rows */
+    list.forEach(function (r) { var d = DEFAULT_SWAPS.filter(function (x) { return x.id === r.id; })[0]; if (d && r.mode === undefined) { if (d.mode) r.mode = d.mode; if (d.review) r.review = d.review; if (d.note) r.note = d.note; } });
     return list;
   }
   function saveSwapList(list) { saveJson(LS_SWAP, list); }
@@ -812,12 +816,42 @@
   function atCap(id) {
     return root.TCReviews && TCReviews.atLimit && TCReviews.atLimit(id);
   }
+  /* v2.2.2: swap counts + what the requester asked for (review text with Copy, or own words) + note */
+  function swapSummary() {
+    var list = swapList();
+    var total = list.length, open = list.filter(function (r) { return (r.status || "new") === "new"; }).length;
+    var given = list.filter(function (r) { return r.status === "given"; }).length;
+    return '<div class="rb-swc"><div class="rb-swc-n"><b>' + total + '</b><span>Swap requests received</span></div>' +
+      '<div class="rb-swc-n"><b>' + open + '</b><span>Waiting for you</span></div>' +
+      '<div class="rb-swc-n"><b>' + given + '</b><span>Left back</span></div></div>' +
+      '<p class="rb-swc-how">How a swap works: they leave you a Google Review, then you leave one back.</p>';
+  }
+  function swapAsk(r, st) {
+    if (!r.mode && !r.note) return "";
+    var h = '<div class="rb-swa">';
+    h += '<div class="rb-swa-mode">' + (r.mode === "send" ? "They sent the review they\u2019d like" : "Write it in your own words") + "</div>";
+    if (r.mode === "send" && r.review) {
+      h += '<div class="rb-swa-box"><p class="rb-swa-txt">' + esc(r.review) + "</p>" +
+        '<button type="button" class="btn btn-ghost ink rb-swa-copy" data-action="rb-swap-copy" data-id="' + esc(r.id) + '">Copy review</button></div>';
+    }
+    if (r.note) h += '<div class="rb-swa-note"><b>Note:</b> ' + esc(r.note) + "</div>";
+    return h + "</div>";
+  }
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest && e.target.closest('[data-action="rb-swap-copy"]');
+    if (!el) return;
+    e.preventDefault(); e.stopPropagation();
+    var r = swapList().filter(function (x) { return x.id === el.getAttribute("data-id"); })[0];
+    var t = (r && r.review) || "";
+    var done = function () { el.textContent = "Copied \u2713"; setTimeout(function () { el.textContent = "Copy review"; }, 1800); };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done); else done(); } catch (e2) { done(); }
+  }, true);
   function renderIncomingSwap() {
     markSwapsSeen();
     var html = '<section class="screen has-header" data-screen="incoming-swap">' +
       '<div class="app-header"><button class="icon-btn" data-action="nav-back" aria-label="Back">' + icoBack() +
       '</button><div class="ht">Incoming swap requests</div><span class="header-spacer"></span></div>' +
-      '<div class="scroll"><p class="hint">Members who asked you to swap a Google Review. Leave one in your own words after a real job, then tap Done.</p>';
+      '<div class="scroll">' + swapSummary() + '<p class="hint">Members who asked you to swap a Google Review. Leave one back after a real job, then tap Done.</p>';
     swapList().forEach(function (r) {
       var m = member(r.id);
       if (!m) return;
@@ -846,7 +880,7 @@
         '<div class="meta"><div class="n">' + esc(fn(m)) + "</div>" +
         '<div class="s">' + esc(m.business) + " · " + esc(m.trade) + "</div>" +
         '<div class="s">' + esc(regionNameOf(m)) + " · " + esc(r.time) + "</div></div></button>" +
-        stateHtml + acts + "</div>";
+        stateHtml + swapAsk(r, st) + acts + "</div>";
     });
     html += "</div></section>";
     return html;

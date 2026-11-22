@@ -1,4 +1,7 @@
-/* Rate Buddies v1.9.0 — wire the member app to Supabase. */
+/* Rate Buddies v1.9.0 — wire the member app to Supabase.
+   v2.2.2 live: sign-up runs after the app's own checks land on Awaiting approval;
+   the pending screen watches for approval (realtime + 20s check) and then moves on
+   exactly like "Demo: simulate approval" (which stays in place). */
 (function () {
   "use strict";
   function T() { return window.TradeCircle; }
@@ -45,8 +48,32 @@
         profileUrl: m.profileUrl || "",
         recShare: m.recShare,
         color: m.color || "navy",
-        isMe: m.id === meId
+        isMe: m.id === meId,
+        /* v2.2.2 live: fields the profile + Reviews screens read */
+        email: m.email || "",
+        tagline: m.tagline || "",
+        city: m.city || "Perth",
+        availableForSwap: m.availableForSwap !== false,
+        photo: ""
       };
+      if (m.avatarPath && RB.client) {
+        try { var pu = RB.client.storage.from("avatars").getPublicUrl(m.avatarPath); row.photo = (pu && pu.data && pu.data.publicUrl) || ""; } catch (eP) {}
+      }
+      row.links = { facebook: m.facebook || "", google: m.googleBusinessUrl || "", website: (m.links && m.links.website) || "" };
+      row.profile = {
+        years: m.years != null ? String(m.years) : "",
+        goal: m.goal || "",
+        specialties: m.services || [],
+        licences: m.licences ? String(m.licences).split("\n").filter(Boolean) : [],
+        idealTrades: m.referralPartners || [],
+        /* v2.2.2 live: rich fields kept in profiles.extras (migration 005) */
+        about: (m.extras && m.extras.about) || "",
+        idealNote: (m.extras && m.extras.idealNote) || "",
+        serviceAreas: (m.extras && m.extras.serviceAreas) || [],
+        gallery: (m.extras && m.extras.gallery) || [],
+        goals: (m.extras && m.extras.goals) || []
+      };
+      row.abn = (m.extras && m.extras.abn) || "";
       TC.MEMBERS.push(row);
     });
     if (TC.state) TC.state.meId = meId;
@@ -103,7 +130,8 @@
         id: v.id, sectionId: v.section_id, url: v.url, provider: v.provider,
         videoId: v.video_id, thumb: v.thumb, embed: v.embed, title: v.title,
         description: v.description, duration: v.duration, order: v.sort_order,
-        hidden: v.hidden, archived: v.archived, sample: v.sample
+        hidden: v.hidden, archived: v.archived, sample: v.sample,
+        help: v.help_key || undefined
       };
     });
     if (pack.intro) {
@@ -143,8 +171,12 @@
     var go = T() && T().go;
     if (!go) return;
     if (!p) { go("signin"); return; }
-    if (p.status === "pending") { go("pending"); return; }
-    if (p.status === "rejected") { go("pending"); return; }
+    if (p.status === "pending" || p.status === "rejected") {
+      fillDraftFromProfile();
+      go("pending");
+      if (p.status === "pending") watchApproval();
+      return;
+    }
     if (!p.intro_watched) {
       if (T().state) T().state._forceIntro = true;
       go("intro-video");
@@ -160,6 +192,7 @@
     if (RB.isDemo()) return false;
     try {
       await RB.login(email, password);
+      try { await applySavedSignupPatch(); } catch (e) {}
       await refresh();
       routeAfterLogin();
       toast("Signed in.");
@@ -169,9 +202,13 @@
     return true;
   }
 
+  var signingUp = false;
+  var PATCH_KEY = "rb_signup_patch";
   async function onSignUp(draft, password) {
-    if (RB.isDemo()) return false;
+    if (RB.isDemo() || signingUp) return false;
+    signingUp = true;
     try {
+      try { localStorage.setItem(PATCH_KEY, JSON.stringify({ email: draft.email, regions: draft.regions || [], phone: draft.phone || "", abn: draft.abn || "" })); } catch (e) {}
       var res = await RB.signup({
         email: draft.email,
         password: password,
@@ -183,14 +220,99 @@
         regions: draft.regions || []
       });
       if (res.needsConfirm) {
-        toast("Check your email to confirm your account. For this test, accounts are already confirmed.");
+        toast("Account created. Check your email and tap the link to confirm, then sign in.");
+      } else {
+        try { localStorage.removeItem(PATCH_KEY); } catch (e) {}
+        /* v2.2.2: ABN lives in profiles.extras */
+        if (draft.abn && RB.session && RB.client) {
+          try { await RB.client.from("profiles").update({ extras: { abn: String(draft.abn).trim() } }).eq("id", RB.session.user.id); } catch (eA) {}
+        }
+        toast("Thanks. Your profile is waiting for approval.");
+        watchApproval();
       }
-      if (T() && T().go) T().go("pending");
-      toast("Thanks. Your profile is waiting for approval.");
+      window.__rbSignupPassword = "";
     } catch (err) {
       toast((err && err.message) || "Could not create the account.");
+    } finally {
+      signingUp = false;
     }
     return true;
+  }
+
+  /* After the first real sign-in, apply sign-up details that could not be saved
+     before the email was confirmed (regions, phone). */
+  async function applySavedSignupPatch() {
+    var raw = null;
+    try { raw = JSON.parse(localStorage.getItem(PATCH_KEY) || "null"); } catch (e) {}
+    if (!raw || !RB.session || !RB.client) return;
+    if (String(raw.email || "").toLowerCase() !== String(RB.session.user.email || "").toLowerCase()) return;
+    var patch = {};
+    if (raw.regions && raw.regions.length) patch.regions = raw.regions;
+    if (raw.phone) patch.phone = raw.phone;
+    if (raw.abn) patch.extras = Object.assign({}, (RB.profile && RB.profile.extras) || {}, { abn: raw.abn });
+    if (Object.keys(patch).length) {
+      var r = await RB.client.from("profiles").update(patch).eq("id", RB.session.user.id);
+      if (r.error) return;
+    }
+    try { localStorage.removeItem(PATCH_KEY); } catch (e) {}
+  }
+
+  /* Pending members: move on as soon as an admin approves (realtime, plus a 20s check). */
+  var approvalTimer = null, approvalListening = false;
+  function onScreen(id) { return !!(T() && T().state && T().state.screen === id); }
+  function fillDraftFromProfile() {
+    var p = RB.profile, TC = T();
+    if (!p || !TC || !TC.state) return;
+    var d = TC.state.draft || {};
+    if (!d.first) d.first = p.first; if (!d.last) d.last = p.last;
+    if (!d.business) d.business = p.business; if (!d.trade) d.trade = p.trade;
+    TC.state.draft = d;
+  }
+  function moveOnApproved() {
+    var TC = T();
+    if (!TC || !TC.state) return;
+    var st = TC.state;
+    st.onboarding = st.onboarding || {};
+    st.onboarding.forceComplete = true;
+    st.onboarding.skipped = false;
+    st.onboarding.done = false;
+    if (window.TC158 && TC158.onApproved) TC158.onApproved();
+    if (TC.go) TC.go("complete-profile");
+    toast("You're approved. Next, finish a few profile details, or skip for now.");
+  }
+  async function checkApproval() {
+    if (RB.isDemo() || !RB.session) return;
+    var before = RB.profile && RB.profile.status;
+    try { await RB.loadProfile(); } catch (e) { return; }
+    var now = RB.profile && RB.profile.status;
+    if (now === "approved") {
+      if (approvalTimer) { clearInterval(approvalTimer); approvalTimer = null; }
+      if (before !== "approved" || onScreen("pending")) {
+        try { await refresh(); } catch (e) {}
+        if (onScreen("pending")) moveOnApproved();
+      }
+    }
+  }
+  function watchApproval() {
+    if (RB.isDemo() || !RB.session) return;
+    if (!approvalListening && RB.profile) {
+      approvalListening = true;
+      RB.listen("profiles", function () { checkApproval(); }, "id=eq." + RB.profile.id);
+      RB.listen("notifications", function () { checkApproval(); }, "member_id=eq." + RB.profile.id);
+    }
+    if (!approvalTimer) approvalTimer = setInterval(checkApproval, 20000);
+  }
+  window.RBApp = { checkApproval: checkApproval, watchApproval: watchApproval, refresh: function () { return refresh(); } };
+
+  /* Run sign-up only once the app's own checks have passed and it shows Awaiting approval. */
+  function afterCreateStep() {
+    setTimeout(function () {
+      if (RB.isDemo() || RB.session || !onScreen("pending")) return;
+      var TC = T();
+      var draft = TC && TC.state && TC.state.draft;
+      var pw = window.__rbSignupPassword || "";
+      if (draft && draft.email && pw) onSignUp(draft, pw);
+    }, 0);
   }
 
   function hookForms() {
@@ -204,18 +326,8 @@
         onSignIn(form);
       }
       if ((type === "create-profile" || type === "signup-business") && !RB.isDemo()) {
-        var pw = (form.querySelector('[name="password"]') && form.querySelector('[name="password"]').value) ||
-          (window.__rbSignupPassword || "");
-        if (!pw) {
-          /* password was collected on the email step and stored */
-        }
-        var TC = T();
-        var draft = TC && TC.state && TC.state.draft;
-        if (draft && draft.email && pw) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          onSignUp(draft, pw);
-        }
+        /* let the app validate + navigate first; sign up only if it reached Awaiting approval */
+        afterCreateStep();
       }
       if (type === "signup" || type === "signup-email") {
         var p = form.querySelector('[name="password"]');
@@ -232,6 +344,10 @@
 
     document.addEventListener("click", function (e) {
       var btn = e.target.closest && e.target.closest("[data-action]");
+      if (btn && btn.getAttribute("data-action") === "finish-create" && !RB.isDemo() && !RB.session) {
+        afterCreateStep();
+        return;
+      }
       if (!btn || RB.isDemo() || !RB.session) return;
       var act = btn.getAttribute("data-action");
       var id = btn.getAttribute("data-id");

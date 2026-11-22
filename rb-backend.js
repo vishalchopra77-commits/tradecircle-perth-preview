@@ -1,4 +1,7 @@
-/* Rate Buddies v1.9.0 — Supabase client wrapper (anon key only). */
+/* Rate Buddies v1.9.0 — Supabase client wrapper (anon key only).
+   v2.2.2 live: profiles columns listed explicitly (email/phone are private since
+   migration rb_live_002); contact details come from the member_contact RPCs;
+   admin check uses the admins table via is_admin(). */
 (function (root) {
   "use strict";
   var DEMO_KEY = "rb_demo_offline";
@@ -6,6 +9,12 @@
   var session = null;
   var profile = null;
   var subs = [];
+  var adminFlag = false;
+  /* Every profiles column members may read. email + phone are NOT here on purpose. */
+  var PROFILE_COLS = "id,first_name,last_name,business,trade,state,city,regions,status,role,intro_watched," +
+    "rec_share,facebook,page,website,profile_url,bio,color,created_at,updated_at,approved_at,approved_by," +
+    "trade_slug,suburb,tagline,goal,services,referral_partners,google_business_url,years_in_business,licences," +
+    "avatar_path,cover_path,available_for_swap,swap_paused_on,reviews_received_count,reviews_given_count,archived_at,extras";
 
   function cfg() { return root.RBConfig || {}; }
   function ready() { return !!(client && cfg().url && cfg().anonKey); }
@@ -61,7 +70,21 @@
       profileUrl: row.profile_url || "",
       bio: row.bio || "",
       color: row.color || "navy",
-      email: row.email,
+      email: row.email || "",
+      suburb: row.suburb || "",
+      tagline: row.tagline || "",
+      goal: row.goal || "",
+      services: row.services || [],
+      referralPartners: row.referral_partners || [],
+      googleBusinessUrl: row.google_business_url || "",
+      availableForSwap: row.available_for_swap !== false,
+      reviewsReceived: row.reviews_received_count || 0,
+      reviewsGiven: row.reviews_given_count || 0,
+      years: row.years_in_business,
+      licences: row.licences || "",
+      avatarPath: row.avatar_path || "",
+      extras: row.extras || {},
+      archivedAt: row.archived_at || null,
       created_at: row.created_at,
       isMe: !!(session && session.user && session.user.id === row.id)
     };
@@ -76,10 +99,29 @@
 
   async function loadProfile() {
     if (!init() || !session) { profile = null; return null; }
-    var res = await client.from("profiles").select("*").eq("id", session.user.id).maybeSingle();
+    var res = await client.from("profiles").select(PROFILE_COLS).eq("id", session.user.id).maybeSingle();
     if (res.error) throw res.error;
-    profile = profileFromRow(res.data);
+    var row = res.data;
+    if (row) {
+      /* own email + phone through the owner/admin-only RPC */
+      try {
+        var c = await client.rpc("member_contact", { target: session.user.id });
+        var cr = c.data && c.data[0];
+        if (cr) { row.email = cr.email; row.phone = cr.phone; }
+      } catch (e) {}
+      if (!row.email && session.user.email) row.email = session.user.email;
+    }
+    profile = profileFromRow(row);
+    try { adminFlag = await checkAdmin(); } catch (e) { adminFlag = false; }
+    if (profile) profile.isAdmin = adminFlag;
     return profile;
+  }
+
+  async function checkAdmin() {
+    if (!init() || !session) return false;
+    var res = await client.rpc("is_admin");
+    if (res.error) throw res.error;
+    return res.data === true;
   }
 
   async function login(email, password) {
@@ -132,14 +174,25 @@
     await client.auth.signOut();
     session = null;
     profile = null;
+    adminFlag = false;
     subs.forEach(function (s) { try { s.unsubscribe(); } catch (e) {} });
     subs = [];
   }
 
   async function listProfiles() {
-    var res = await client.from("profiles").select("*").order("first_name");
+    var res = await client.from("profiles").select(PROFILE_COLS).order("first_name");
     if (res.error) throw res.error;
-    return (res.data || []).map(profileFromRow);
+    var rows = res.data || [];
+    if (adminFlag) {
+      /* admins also get every member's email + phone (admin-only RPC) */
+      var c = await client.rpc("admin_member_contacts");
+      if (!c.error && c.data) {
+        var byId = {};
+        c.data.forEach(function (x) { byId[x.member_id] = x; });
+        rows.forEach(function (r) { var x = byId[r.id]; if (x) { r.email = x.email; r.phone = x.phone; } });
+      }
+    }
+    return rows.map(profileFromRow);
   }
 
   async function listRequests() {
@@ -224,10 +277,12 @@
     if (res.error && res.error.code !== "23505") throw res.error;
   }
 
-  function listen(table, cb) {
+  function listen(table, cb, filter) {
     if (!init()) return;
-    var ch = client.channel("rb-" + table)
-      .on("postgres_changes", { event: "*", schema: "public", table: table }, cb)
+    var opts = { event: "*", schema: "public", table: table };
+    if (filter) opts.filter = filter;
+    var ch = client.channel("rb-" + table + (filter ? "-" + filter : ""))
+      .on("postgres_changes", opts, cb)
       .subscribe();
     subs.push(ch);
   }
@@ -253,7 +308,8 @@
   root.RB = {
     init: init, isDemo: isDemo, setDemo: setDemo, ready: ready,
     getSession: getSession, loadProfile: loadProfile,
-    login: login, signup: signup, logout: logout,
+    login: login, signup: signup, logout: logout, checkAdmin: checkAdmin,
+    get isAdmin() { return adminFlag; },
     listProfiles: listProfiles, listRequests: listRequests, listProgress: listProgress,
     listNotifications: listNotifications, listTutorials: listTutorials,
     approveMember: approveMember, rejectMember: rejectMember,

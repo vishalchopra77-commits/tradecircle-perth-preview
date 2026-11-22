@@ -403,7 +403,7 @@ function facebookF(size, color) {
     var mineIds = (T().me() && T().me().regions) ? T().me().regions : [];
     var allMine = T().isAllMetro && T().isAllMetro(mineIds);
     return '<section class="screen has-tabs has-header" data-screen="members">' + topbar("Members") +
-      '<div class="scroll"><p class="count-line">' + countLabel + "</p>" +
+      '<div class="scroll">' + ((window.TC15 && TC15.fbStatsBlock && window.RB_FB_TILES !== "old") ? TC15.fbStatsBlock() : "") + '<p class="count-line">' + countLabel + "</p>" +
       '<div class="search-wrap"><div class="search">' + ico("search") + '<input id="memberSearch" type="search" placeholder="Search name or trade" value="' + esa(st.query || "") + '" autocomplete="off"></div><div id="searchAc" class="ac-drop" hidden></div></div>' +
       '<div style="height:10px"></div><div class="seg">' +
       '<button class="' + (st.areaFilter === "mine" ? "active" : "") + '" data-area="mine">My areas</button>' +
@@ -450,7 +450,7 @@ function facebookF(size, color) {
       "</div><p class=\"bio\">" + esc(m.bio) + "</p>" +
       '<div class="action-stack">' + fbCta +
       '<a class="btn btn-primary" href="' + esa(gLink(m)) + '" target="_blank" rel="noopener noreferrer" data-action="open-ideas" data-id="' + m.id + '">Leave a Google review</a>' +
-      '<button class="btn btn-ghost ink" data-action="ask-review" data-id="' + m.id + '">Ask for a Google review</button>' +
+      '<button class="btn btn-ghost ink" data-action="ask-review" data-id="' + m.id + '">Ask for review swap</button>' +
       '<button class="btn btn-ghost ink" data-action="open-chat" data-id="' + m.id + '">Message</button>' +
       mark + pageBtn + "</div>" +
       '<p class="hint" style="text-align:center;margin-top:10px">Only review businesses you have actually used. Friend requests are sent on Facebook, not inside this app.</p>' +
@@ -851,7 +851,7 @@ function facebookF(size, color) {
       '<div class="chat-thread" id="chatThread">' + c.messages.map(function (msg) { return bubble(msg, c); }).join("") + "</div>" +
       /* v2.2.0: quick-action chips removed from the chat (Vishal, 22 Nov). Handlers stay; set window.RB_CHAT_QUICK = true to bring them back. */
       (window.RB_CHAT_QUICK ? '<div class="quick-row">' +
-      '<button type="button" data-action="ask-review-chat">Send review request</button>' +
+      '<button type="button" data-action="ask-review-chat">Send review swap request</button>' +
       '<button type="button" data-action="share-my-profile">Share my profile</button>' +
       '<button type="button" data-action="share-location">Share location</button>' +
       "</div>" : "") +
@@ -1340,14 +1340,42 @@ function facebookF(size, color) {
 
   function openShareSheet(mid) {
     var m = member(mid);
-    openOverlay('<div class="sheet-handle"></div><h3>Ask for a Google review</h3>' +
-      '<p style="font-size:14px;font-weight:600;color:var(--muted);margin:0 0 12px">Send a request to ' + esc(fn(m)) + '. Ask only after a real job, and do not tell them what to write.</p>' +
-      '<button class="btn btn-primary" data-action="close-sheet">Send in-app request</button>' +
+    /* v2.2.2: "Ask for review swap". Two options + optional note. Share buttons kept. */
+    var mode = S()._swapMode || "send";
+    openOverlay('<div class="sheet-handle"></div><h3>Ask for a Google Review swap</h3>' +
+      '<p class="rb-swq-intro">Send a swap request to ' + esc(fn(m)) + '. They leave you a Google Review, then you leave one back.</p>' +
+      '<div class="rb-swq" role="radiogroup" aria-label="How should they write it?" data-mid="' + esc(mid) + '">' +
+      '<button type="button" role="radio" class="rb-swq-opt' + (mode === "send" ? " on" : "") + '" aria-checked="' + (mode === "send") + '" data-action="rb-swq-mode" data-mode="send"><span class="rb-swq-dot"></span><span><b>I\u2019m sending you the review</b><small>Type the review you\u2019d like. They can copy it.</small></span></button>' +
+      '<button type="button" role="radio" class="rb-swq-opt' + (mode === "own" ? " on" : "") + '" aria-checked="' + (mode === "own") + '" data-action="rb-swq-mode" data-mode="own"><span class="rb-swq-dot"></span><span><b>Write it in your own words</b><small>They write the review themselves.</small></span></button>' +
+      "</div>" +
+      '<label class="rb-swq-field" data-swq-review' + (mode === "send" ? "" : " hidden") + '><span class="rb-swq-lab">What review would you like? <em>Optional</em></span>' +
+      '<textarea rows="5" maxlength="500" name="swapReview" placeholder="e.g. Sam from Joondalup Pest Control sorted our termite problem fast. On time, explained everything and left the place spotless. Highly recommend."></textarea></label>' +
+      '<label class="rb-swq-field"><span class="rb-swq-lab">Short note <em>Optional</em></span>' +
+      '<textarea rows="2" maxlength="140" name="swapNote" placeholder="e.g. Please mention my name and the job type"></textarea></label>' +
+      '<button class="btn btn-primary" data-action="rb-swq-send" data-id="' + esc(mid) + '">Send swap request</button>' +
       '<div class="action-stack" style="margin-top:10px">' +
       '<button class="btn btn-ghost ink" data-action="share-invite" data-via="sms">Share via SMS</button>' +
       '<button class="btn btn-ghost ink" data-action="share-invite" data-via="whatsapp">Share via WhatsApp</button>' +
       '<button class="btn btn-ghost ink" data-action="share-invite" data-via="messenger">Share via Messenger</button></div>');
   }
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest && e.target.closest('[data-action="rb-swq-mode"], [data-action="rb-swq-send"]');
+    if (!el) return;
+    e.preventDefault(); e.stopPropagation();
+    var ov = el.closest("#tc12Overlay") || document;
+    if (el.getAttribute("data-action") === "rb-swq-mode") {
+      var md = el.getAttribute("data-mode"); S()._swapMode = md;
+      Array.prototype.forEach.call(ov.querySelectorAll(".rb-swq-opt"), function (b) { var on = b === el; b.classList.toggle("on", on); b.setAttribute("aria-checked", on ? "true" : "false"); });
+      var f = ov.querySelector("[data-swq-review]"); if (f) f.hidden = md !== "send";
+      return;
+    }
+    var rv = ov.querySelector("[name=swapReview]"), nt = ov.querySelector("[name=swapNote]");
+    var modeNow = S()._swapMode || "send";
+    var last = reqs[0];
+    if (last && last.dir === "out") { last.kind = "swap"; last.mode = modeNow; last.review = modeNow === "send" && rv ? rv.value.trim() : ""; last.note = nt ? nt.value.trim() : ""; persist(); }
+    closeMine();
+    toast("Google Review swap request sent to " + fn(member(el.getAttribute("data-id"))) + ".");
+  }, true);
   function openAttach() {
     openOverlay('<div class="sheet-handle"></div><h3>Attach</h3><div class="overflow-menu">' +
       '<button data-action="share-location">Location</button>' +
@@ -1463,7 +1491,14 @@ function facebookF(size, color) {
     chatCount: chatCount,
     recentChats: recentChats,
     notifUnread: notifUnread,
-    notifTile: notifTile
+    notifTile: notifTile,
+    /* v2.2.2 live: let rb-live.js fill chats + notifications from the test database */
+    liveChats: function () { return chats; },
+    setLiveChats: function (list) { chats.splice.apply(chats, [0, chats.length].concat(list || [])); save(LS.chats, chats); },
+    setLiveNotifs: function (list) { NOTIFS.splice.apply(NOTIFS, [0, NOTIFS.length].concat(list || [])); },
+    liveNotifs: function () { return NOTIFS; },
+    setLiveRel: function (map) { Object.keys(rel).forEach(function (k) { delete rel[k]; }); Object.assign(rel, map || {}); persist(); },
+    updateBadges: updateBadges
   };
 
   if (T().go && S().screen) {

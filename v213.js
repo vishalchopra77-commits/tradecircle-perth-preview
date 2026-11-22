@@ -3,7 +3,7 @@
    normalisation, wording, scroll preservation and dead-tap fixes. Nothing is deleted; old layers stay. */
 (function (root) {
   "use strict";
-  var VERSION = "v2.2.1";
+  var VERSION = "v2.2.2";
   function T() { return root.TradeCircle || {}; }
   function S() { return T().state || {}; }
   function me() { try { return T().me ? T().me() : {}; } catch (e) { return {}; } }
@@ -339,7 +339,7 @@
       var row = document.createElement("div"); row.className = "rb-act-row";
       ask.parentElement.insertBefore(row, ask);
       [msg, fr, ask].forEach(function (b) { row.appendChild(b); });
-      var s = ask.querySelector("span"); if (s) s.textContent = "Ask review";
+      var s = ask.querySelector("span"); if (s) s.textContent = "Ask review swap";
       var fs = fr.querySelector("span"); if (fs) fs.textContent = fs.textContent.replace(/\s*✓\s*$/, "");
     }
     $all(".scroll .btn", sc).forEach(function (b) { if (txt(b) === "View Facebook profile") b.classList.add("rb-hide"); });
@@ -773,6 +773,8 @@
       var st = sp.classList.contains("rb-head-trade") && sp.nextElementSibling && sp.nextElementSibling.tagName === "DIV" ? sp.nextElementSibling : null;
       if (st) { if (st.dataset.rbOrig == null) st.dataset.rbOrig = st.textContent; st.textContent = st.dataset.rbOrig; sp.style.display = ""; }
       if (st) { sp.style.display = "none"; st.textContent = sp.dataset.rbFull.replace(/^\s*·\s*/, "") + " · " + st.dataset.rbOrig; return; }
+      /* v2.2.2 (Vishal): on the Chats list the trade always sits on its own line under the name */
+      if (sp.closest(".chat-row")) { sp.textContent = sp.dataset.rbFull.replace(/^\s*·\s*/, ""); sp.classList.add("rb-trade-own"); return; }
       if (first && nr && first.top >= nr.bottom - 2) {
         var tr = sp.dataset.rbFull.replace(/^\s*·\s*/, "");
         if (st) { sp.style.display = "none"; st.textContent = tr + " · " + st.dataset.rbOrig; }

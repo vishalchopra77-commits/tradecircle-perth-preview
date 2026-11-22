@@ -82,12 +82,13 @@
       }).join("");
   }
 
-  function counted(label, name, value, max, rows, hint) {
+  function counted(label, name, value, max, rows, hint, ph) {
     value = value || "";
+    var phA = ph ? ' placeholder="' + esc(ph) + '"' : ""; /* v2.2.2: example text, disappears as they type */
     return '<div class="field"><label>' + esc(label) + ' <span class="cp-count" data-count-for="' + name + '">' + String(value).length + " / " + max + "</span></label>" +
       (rows && rows > 1
-        ? '<textarea name="' + name + '" rows="' + rows + '" maxlength="' + (max + 40) + '" data-max="' + max + '">' + esc(value) + "</textarea>"
-        : '<input name="' + name + '" value="' + esc(value) + '" maxlength="' + (max + 20) + '" data-max="' + max + '">') +
+        ? '<textarea name="' + name + '" rows="' + rows + '" maxlength="' + (max + 40) + '" data-max="' + max + '"' + phA + ">" + esc(value) + "</textarea>"
+        : '<input name="' + name + '" value="' + esc(value) + '" maxlength="' + (max + 20) + '" data-max="' + max + '"' + phA + ">") +
       (hint ? '<p class="hint">' + hint + "</p>" : "") +
       "</div>";
   }
@@ -166,9 +167,27 @@
     generic: ["Plumber", "Electrician", "Carpenter", "Builder"]
   };
 
+  /* v2.2.2: tailored lists for all 456 business types (trade-suggest.js); the 16 maps above stay as they were */
+  function tsInfo(trade) {
+    return (root.RBTradeSuggest && root.RBTradeSuggest.forTrade) ? root.RBTradeSuggest.forTrade(trade) : null;
+  }
+  function keyFits(key, info) {
+    if (key === "generic") return false;
+    if (!info) return true;
+    if (key === "realestate") return info.group === "property";
+    if (key === "barber") return info.group === "beauty";
+    return ["building", "home", "outdoor", "cleaning"].indexOf(info.group) !== -1;
+  }
+
   function servicesForTrade(trade) {
     var key = tradeKey(trade);
-    var listA = (SERVICE_MAP[key] || SERVICE_MAP.generic).slice();
+    var info = tsInfo(trade);
+    var listA;
+    if (info && root.RBTradeSuggest.overrides[info.name] && root.RBTradeSuggest.overrides[info.name].s) listA = info.services.slice();
+    else if (keyFits(key, info)) listA = (SERVICE_MAP[key] || SERVICE_MAP.generic).slice();
+    else if (info) listA = info.services.slice();
+    else listA = SERVICE_MAP.generic.slice();
+    if (info && !keyFits(key, info)) return listA;
     if (key !== "generic") {
       SERVICE_MAP.generic.forEach(function (s) { if (listA.indexOf(s) === -1) listA.push(s); });
     }
@@ -182,10 +201,14 @@
   }
 
   function popularPartners(trade) {
-    var pref = (PARTNER_MAP[tradeKey(trade)] || PARTNER_MAP.generic).slice();
-    var all = allTrades();
-    pref = pref.filter(function (n) { return all.indexOf(n) !== -1 || true; });
-    return pref.slice(0, 4);
+    /* v2.2.2: full 8-12 partner list; the picker shows 4 at a time and refills as partners are added (like Services) */
+    var key = tradeKey(trade);
+    var info = tsInfo(trade);
+    var pref = [];
+    if (keyFits(key, info) && PARTNER_MAP[key]) pref = PARTNER_MAP[key].map(function (n) { return n === "Gutter Installer" ? "Guttering" : n; });
+    if (info) info.partners.forEach(function (n) { if (pref.indexOf(n) === -1 && n !== info.name) pref.push(n); });
+    if (!pref.length) pref = PARTNER_MAP.generic.slice();
+    return pref.slice(0, 12);
   }
 
   function searchIco() {
@@ -385,9 +408,9 @@
       '<div class="lab">' + c.pct + "% complete · " + c.n + " of " + c.total + " sections</div></div>" +
       '<form data-form="complete-profile">' +
       linkFields(fill.links) +
-      counted("A short sentence", "tagline", fill.tagline, 80, 1, "A one-line headline that sits at the top of your profile.") +
-      counted("Short bio", "bio", fill.bio, 280, 3, "A few sentences about who you are.") +
-      counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.") +
+      counted("A short sentence", "tagline", fill.tagline, 80, 2, "A one-line headline that sits at the top of your profile.", "e.g. Family-run pest control keeping Perth homes safe since 2012") +
+      counted("Short bio", "bio", fill.bio, 280, 4, "A few sentences about who you are.", "e.g. I\u2019m Sam, a licensed pest controller in Joondalup. I handle termites, spiders and rodents for homes and small businesses, and I always explain what I\u2019m doing.") +
+      counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.", "e.g. Get 20 genuine Google Reviews and meet tradies I can refer work to.") +
       counted("About my business", "profileAbout", fill.about, 400, 4, "") +
       '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
       pickerHTML("specialties", "profileSpecialties", specs, "Search services") +
@@ -647,7 +670,37 @@
     shouldShowFinish: shouldShowFinish,
     fillOf: fillOf,
     pickerHTML: pickerHTML,
-    bindSearchPickers: bindSearchPickers
+    bindSearchPickers: bindSearchPickers,
+    servicesForTrade: servicesForTrade,
+    popularPartners: popularPartners,
+    tradeKey: tradeKey
   };
+  /* v2.2.2: grow example-text boxes so the whole placeholder shows at any text size (gone once typing starts) */
+  function fitPlaceholders() {
+    var els = document.querySelectorAll(".screen.active textarea[placeholder]");
+    Array.prototype.forEach.call(els, function (e) {
+      if (e.value) return;
+      e.style.removeProperty("min-height");
+      e.value = e.placeholder;
+      var need = e.scrollHeight;
+      e.value = "";
+      if (need > e.clientHeight + 1) {
+        var cs = getComputedStyle(e);
+        var extra = cs.boxSizing === "border-box" ? (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0) : -((parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0));
+        e.style.setProperty("min-height", Math.ceil(need + extra + 2) + "px", "important");
+      }
+    });
+  }
+  var fpT = null;
+  function queueFitPh() { clearTimeout(fpT); fpT = setTimeout(fitPlaceholders, 60); }
+  root.TC158.fitPlaceholders = fitPlaceholders;
+  if (T().go && !T().go.__rbFitPh) {
+    var go0 = T().go;
+    T().go = function () { var r = go0.apply(this, arguments); queueFitPh(); setTimeout(fitPlaceholders, 700); return r; };
+    T().go.__rbFitPh = true;
+  }
+  root.addEventListener("resize", queueFitPh);
+  document.addEventListener("input", function (e) { if (e.target && e.target.matches && e.target.matches("textarea[placeholder]") && !e.target.value) queueFitPh(); }, true);
+  document.addEventListener("DOMContentLoaded", function () { setTimeout(fitPlaceholders, 400); setTimeout(fitPlaceholders, 1500); });
   if (T().state && T().state.screen && T().go) T().go(T().state.screen);
 })(window);
