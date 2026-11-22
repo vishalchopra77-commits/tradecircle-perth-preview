@@ -2,6 +2,25 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.2 (build 18) — 22 Nov 2026
+
+Services picker, typing kept, bottom menu everywhere, Google/Facebook links, admin Delete member (Vishal). versionCode 18.
+
+- Edit profile for a brand-new member (opened from "Complete your profile") now shows their saved name and business instead of blank fields, so Save can no longer store blanks.
+- Every selected and suggested service chip has a visible ✕ (32px tap target, wraps at 130 % text). ✕ on a selected chip removes it; ✕ on a suggestion hides that suggestion (tap the chip to add it). All suggestions are kept.
+- "Add your own services": a text box with an Add button; Enter adds; commas (typed or pasted) make separate chips; trimmed, duplicates ignored whatever the case. Custom chips get ✕ too.
+- Same picker on Complete your profile and Edit profile. Saved to profiles.services; shows on My profile and in the admin member page.
+- Removing every service and saving now saves an empty list.
+- Example text follows the member's trade (Vishal: pest-control examples showed with another trade chosen): business name, tagline, bio, About and the suggested services use the trade in the trade box, else the saved trade, and update as soon as it changes. No trade = neutral examples. The old "Pest Control" fallback for suggestions is gone.
+- Typed text is never wiped (Vishal: "I fill the profile, it keeps getting cleared"; "when I am chatting it keeps deleting the typed text"). form-keep.js: any redraw of the screen you are on (live sync every 60 s, realtime changes, presence, older layers) keeps typed values, picked chips, focus, caret and scroll. Complete/Edit profile, sign-up steps and Support also keep a draft on the phone (per member, 12 h) that comes back after an app restart (Android can restart the app view after the photo picker; the profile screen used to start empty then); cleared on Save / Skip / Send. Passwords and codes are never stored.
+- Chat: a new or realtime message is added to the conversation in place; the text box is never rebuilt, so typing, focus and the keyboard stay put. Each chat keeps its unsent draft. Send clears the box and keeps the keyboard open.
+- Bottom menu on every screen once a member is approved (Vishal: "no bottom menu on the profile page, dead end"), including My profile after saving Edit profile, member profiles, chats, settings pages, AI, tutorials, Support and Alerts. Hidden only before approval (welcome, sign-in, sign-up, waiting, intro). Chat and Support composers sit above it. Any sub-screen without a Back arrow gets one.
+- Phone back button: goes back one screen; on Home it asks "Press back again to close Rate Buddies" instead of closing; never steps back into Sign-in. Fixed a double listener that could skip two screens per press. The phone button and the on-screen Back arrow now share one history. A screen name that does not exist sends an approved member Home instead of the Welcome screen.
+- Leave Google Review (Incoming swap requests, Review back, Copy and open Google) opens the member's own Google Business Profile link exactly like the Google Business Profile button on their profile (Google Maps app), never a Google sign-in page. Cause: Incoming swap requests fell back to a demo write-review link. No link saved = a clear message.
+- Facebook profile links (Facebook Profile button, Add friend, grey "Facebook friends" chip, any facebook.com profile link) open in the Facebook app (App Launcher + fb://facewebmodal), falling back to the browser if the app isn't installed. Handles profile.php?id=, vanity names and m./web./fb.com links. Adds @capacitor/app-launcher.
+- The prototype "Connect Google Business Profile" sheet no longer opens for live members.
+- Web admin: "Delete member" is back on every member page (top right, and under Save links), as a red trash button on every Members row (active, suspended, waiting) and on pending requests. One simple confirm: "Delete <name>? A copy is kept in the archive." Cancel / Delete. No reason asked. Never shown for admins or yourself. Archive first, then the login is removed so the email can sign up again (admin-delete-member). Typed admin fields survive the 20-second refresh.
+
 ## v2.2.2 (build 17) — 22 Nov 2026
 
 Welcome intro video fix (Vishal: video stopped after a few seconds, Continue never unlocked). versionCode 17.

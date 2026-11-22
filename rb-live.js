@@ -185,7 +185,7 @@
     if (links.google !== undefined) put("google_business_url", links.google || "");
     if (m.page !== undefined) put("page", m.page);
     var goal = p.goal != null ? p.goal : m.goal; if (goal != null) put("goal", goal);
-    var spec = p.specialties || m.specialties; if (spec) put("services", lines(spec));
+    var spec = p.specialties != null ? p.specialties : m.specialties; if (spec != null) put("services", lines(spec)); /* b18: removing every service saves an empty list */
     var ideal = p.idealTrades || m.idealTrades; if (ideal) put("referral_partners", lines(ideal));
     if (p.licences) put("licences", lines(p.licences).join("\n"));
     if (p.years !== undefined && p.years !== "") { var y = parseInt(p.years, 10); if (!isNaN(y)) put("years_in_business", y); }

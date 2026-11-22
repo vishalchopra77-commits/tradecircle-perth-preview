@@ -98,6 +98,7 @@
     var cap = root.Capacitor;
     if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
       e.preventDefault();
+      if (root.RBOpen && RBOpen.open) { RBOpen.open(a.href); return; } /* b18: Facebook group in the Facebook app */
       /* Capacitor's Android bridge sends navigations to other hosts to the system (ACTION_VIEW: Facebook app or browser) */
       if (cap.Plugins && cap.Plugins.AppLauncher) { cap.Plugins.AppLauncher.openUrl({ url: a.href }).catch(function () { root.location.href = a.href; }); }
       else root.location.href = a.href;

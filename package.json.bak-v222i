@@ -1,0 +1,23 @@
+{
+  "name": "rate-buddies",
+  "version": "2.2.2",
+  "private": true,
+  "description": "Rate Buddies Android test build",
+  "scripts": {
+    "prepare-www": "bash scripts/prepare-www.sh",
+    "cap:sync": "npm run prepare-www && npx cap sync android",
+    "apk:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor-community/facebook-login": "^6.1.2",
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/app": "^6.0.3",
+    "@capacitor/browser": "^6.0.6",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/local-notifications": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.2.1"
+  }
+}

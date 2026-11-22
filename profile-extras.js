@@ -272,7 +272,7 @@
       '<p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
       (root.TC158 && TC158.pickerHTML
         ? TC158.pickerHTML("specialties", "profileSpecialties", p.specialties, "Search services")
-        : '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Termite inspections, Decks" value="' + esa(csv(p.specialties)) + '"></div>') +
+        : '<div class="field"><label>Specialties</label><input name="profileSpecialties" placeholder="e.g. Repairs, New installs" value="' + esa(csv(p.specialties)) + '"></div>') +
       '<div class="field"><label>Licences</label><textarea name="profileLicences" rows="2" placeholder="One licence per line">' + esc(p.licences.join("\n")) + "</textarea></div>" +
       '<p class="group-label">My ideal referral partner <span class="opt">(optional)</span></p>' +
       '<p class="hint" style="margin-top:0">Search from 456 business types, or type your own.</p>' +

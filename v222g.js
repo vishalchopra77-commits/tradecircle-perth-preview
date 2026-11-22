@@ -1,46 +1,89 @@
-/* Rate Buddies v2.2.2 build 16 — fill in missing placeholder (example) text on sign-up / Complete your profile / My profile edit.
-   Only sets a placeholder where a field has none; never touches values. "About my business" adapts to the member's trade. */
+/* Rate Buddies v2.2.2 build 18 — example (placeholder) text on sign-up / Complete your profile / Edit profile.
+   Vishal (22 Nov): pest-control examples showed even with a different trade chosen. Examples now follow the trade
+   picked on screen (the trade box), else the signed-in member's saved trade, else the sign-up draft, and update
+   as soon as the trade changes. No trade yet = neutral examples. Never touches what the member typed. */
 (function () {
   "use strict";
   var SCREENS = { signup: 1, "signup-email": 1, "signup-phone": 1, "signup-name": 1, "create-profile": 1, "create-profile-connected": 1, "signup-business": 1, "complete-profile": 1, "edit-profile": 1 };
+  function cap(w) { return w ? w.charAt(0).toUpperCase() + w.slice(1) : w; }
+  /* the member's trade right now: what is in the trade box on this screen, then the saved live profile */
+  function trade() {
+    try {
+      var sc = document.querySelector(".screen.active"), box = sc && sc.querySelector("#tradeType");
+      var v = box && String(box.value || "").trim();
+      if (v) return v;
+      if (box && sc && /create-profile|signup/.test(sc.getAttribute("data-screen") || "")) return ""; /* new member, nothing chosen yet */
+      if (window.RB && RB.profile && RB.profile.trade) return String(RB.profile.trade).trim();
+      var TC = window.TradeCircle, st = TC && TC.state;
+      var d = st && st.signup && st.signup.draft; if (d && d.trade) return String(d.trade).trim();
+      if (!(window.RB && RB.session) && TC && TC.me) { var m = TC.me(); if (m && m.trade && m.id !== "jamie") return String(m.trade).trim(); }
+    } catch (e) {}
+    return "";
+  }
+  /* "Electrician" -> "Electrical", "Plumber" -> "Plumbing" … for a sample business name */
+  var NOUN = [[/plumb/, "Plumbing"], [/electr/, "Electrical"], [/paint/, "Painting"], [/carpent|joiner/, "Carpentry"], [/landscap|garden/, "Landscaping"],
+    [/roof/, "Roofing"], [/fenc/, "Fencing"], [/til(e|er|ing)/, "Tiling"], [/hair|salon/, "Hair Studio"], [/barber/, "Barbers"], [/clean/, "Cleaning"],
+    [/build/, "Building"], [/pest/, "Pest Control"], [/air ?con|hvac/, "Air Conditioning"], [/lock/, "Locksmiths"], [/mechanic|auto/, "Auto Care"],
+    [/account|bookkeep/, "Accounting"], [/photo/, "Photography"], [/real ?estate/, "Realty"], [/beaut|nail|lash|brow/, "Beauty"], [/fitness|personal train/, "Fitness"]];
+  function noun(t) { var k = t.toLowerCase(); for (var i = 0; i < NOUN.length; i++) if (NOUN[i][0].test(k)) return NOUN[i][1]; return t.split(/\s+/).map(cap).join(" "); }
   var ABOUT = {
-    "pest control": "e.g. Family-run pest control serving Perth\u2019s northern suburbs since 2012. Fully licensed, eco-friendly treatments, and we always explain what we find.",
+    "pest control": "e.g. Family-run pest control serving Perth\u2019s northern suburbs since 2012. Fully licensed, safe treatments, and we always explain what we find.",
     "plumber": "e.g. Family-run plumbing serving Perth\u2019s northern suburbs since 2012. Fully licensed, upfront pricing, and we always leave the job clean.",
     "electrician": "e.g. Family-run electrical business serving Perth\u2019s northern suburbs since 2012. Fully licensed, safety-first, and we always explain the work before we start.",
     "painter": "e.g. Family-run painting business serving Perth\u2019s northern suburbs since 2012. Quality paints, tidy work, and we always protect your home while we paint.",
-    "landscaper": "e.g. Family-run landscaping business serving Perth\u2019s northern suburbs since 2012. Waterwise gardens, reliable crews, and we always stick to the plan we agree."
+    "landscaper": "e.g. Family-run landscaping business serving Perth\u2019s northern suburbs since 2012. Waterwise gardens, reliable crews, and we always stick to the plan we agree.",
+    "hairdresser": "e.g. Friendly local hair studio in Perth\u2019s northern suburbs since 2012. Cuts, colour and styling for the whole family, and we always listen to what you want."
   };
-  function trade() {
-    try { var TC = window.TradeCircle, m = TC && TC.me && TC.me(); return String((m && m.trade) || "").trim(); } catch (e) { return ""; }
+  var NEUTRAL = {
+    business: "e.g. Northside Home Services",
+    tagline: "e.g. Trusted local business serving Perth since 2012",
+    bio: "e.g. I\u2019m Sam, based in Joondalup. I\u2019m on time, I explain everything clearly and I treat every customer like a neighbour.",
+    profileAbout: "e.g. Family-run local business serving Perth\u2019s northern suburbs since 2012. Reliable, upfront pricing, and we always explain things before we start."
+  };
+  function ex(name, t) {
+    t = t == null ? trade() : t; var k = t.toLowerCase();
+    if (name === "business") return t ? "e.g. Northside " + noun(t) : NEUTRAL.business;
+    if (name === "tagline") return t ? "e.g. Trusted local " + k + " serving Perth since 2012" : NEUTRAL.tagline;
+    if (name === "bio") return t ? "e.g. I\u2019m Sam, a local " + k + " based in Joondalup. I\u2019m on time, I explain everything clearly and I treat every customer like a neighbour." : NEUTRAL.bio;
+    if (name === "profileAbout") {
+      if (!t) return NEUTRAL.profileAbout;
+      for (var key in ABOUT) if (k.indexOf(key) !== -1) return ABOUT[key];
+      return "e.g. Family-run " + k + " business serving Perth\u2019s northern suburbs since 2012. Reliable, upfront pricing, and we always explain things before we start.";
+    }
+    if (name === "profileSpecialties") {
+      var svc = (window.TC158 && TC158.servicesForTrade) ? TC158.servicesForTrade(t) : [];
+      return svc.length >= 2 ? "e.g. " + svc[0] + ", " + svc[1] : "e.g. Repairs, New installs";
+    }
+    return null;
   }
-  function aboutPh() {
-    var t = trade(), k = t.toLowerCase();
-    for (var key in ABOUT) if (k.indexOf(key) !== -1) return ABOUT[key];
-    if (!t) return ABOUT["pest control"];
-    return "e.g. Family-run " + k + " business serving Perth\u2019s northern suburbs since 2012. Fully licensed, reliable, and we always explain the work before we start.";
-  }
+  function aboutPh() { return ex("profileAbout"); }
+  /* trade-led examples are always kept current; the rest are only filled in where a field has none */
+  var TRADE_LED = { business: 1, tagline: 1, bio: 1, profileAbout: 1, profileSpecialties: 1 };
   var BY_NAME = {
-    profileAbout: aboutPh,
     profileIdealNote: function () { return "e.g. Builders and property managers who need a reliable trade they can trust with their clients."; },
     first: function () { return "e.g. Sam"; },
     last: function () { return "e.g. Nguyen"; },
-    business: function () { return "e.g. Northside Pest Control"; },
     phone: function () { return "e.g. 0412 345 678"; },
     abn: function () { return "11-digit ABN"; },
-    email: function () { return "you@example.com"; },
-    tagline: function () { return "e.g. Family-run pest control keeping Perth homes safe since 2012"; }
+    email: function () { return "you@example.com"; }
   };
   var SKIP = { hidden: 1, checkbox: 1, radio: 1, file: 1, submit: 1, button: 1, range: 1, color: 1, password: 1 };
   function fill() {
     var sc = document.querySelector(".screen.active"); if (!sc || !SCREENS[sc.getAttribute("data-screen")]) return;
+    var t = trade();
     sc.querySelectorAll("input, textarea").forEach(function (el) {
-      if (SKIP[el.type] || el.getAttribute("placeholder")) return;
-      var f = BY_NAME[el.name || el.id]; if (f) el.setAttribute("placeholder", f());
+      if (SKIP[el.type]) return;
+      var n = el.name || el.id;
+      if (TRADE_LED[n]) { var want = ex(n, t); if (want && el.getAttribute("placeholder") !== want) el.setAttribute("placeholder", want); return; }
+      if (el.getAttribute("placeholder")) return;
+      var f = BY_NAME[n]; if (f) el.setAttribute("placeholder", f());
     });
   }
   setInterval(fill, 400);
+  document.addEventListener("input", function (e) { if (e.target && e.target.id === "tradeType") setTimeout(fill, 0); }, true);
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-ac-trade], [data-trade-pick]")) setTimeout(fill, 50); }, true);
   document.addEventListener("DOMContentLoaded", fill);
-  window.RBPlaceholders = { fill: fill, aboutPh: aboutPh };
+  window.RBPlaceholders = { fill: fill, aboutPh: aboutPh, ex: ex, trade: trade, neutral: NEUTRAL };
 })();
 
 /* v2.2.2 b16 (Vishal, 22 Nov): a new screen always opens at the TOP.
@@ -127,8 +170,9 @@
   }
   function native() { var c = window.Capacitor; return !!(c && c.isNativePlatform && c.isNativePlatform()); }
   /* Capacitor's Android bridge hands any non-app URL to the system (ACTION_VIEW): Facebook / Maps app or the browser */
-  function openExternal(u) { if (native()) window.location.href = u; else window.open(u, "_blank", "noopener"); }
+  function openExternal(u) { if (window.RBOpen && RBOpen.open) { RBOpen.open(u); return; } /* b18: Maps / Facebook app, never the WebView */ if (native()) window.location.href = u; else window.open(u, "_blank", "noopener"); }
   function openFacebook(u) {
+    if (window.RBFb && RBFb.open) { RBFb.open(u); return; } /* b18: Facebook app first (links-b18.js) */
     if (!native()) { window.open(u, "_blank", "noopener"); return; }
     var left = false;
     function vis() { if (document.visibilityState === "hidden") left = true; }

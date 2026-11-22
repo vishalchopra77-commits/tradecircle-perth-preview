@@ -654,7 +654,12 @@
     lastId = id; lastSnap = snap();
   }
   function rbBack() {
+    /* b18: Home is the root (back there = "press back again to close", handled by nav-back.js), and once approved the
+       sign-in / sign-up / waiting / intro screens are never stepped back into */
+    if (S().screen === "home") hstack = [];
+    var PRE18 = root.RBNav18 && RBNav18.PRE, ap18 = !!(PRE18 && RBNav18.approved && RBNav18.approved());
     var prev = hstack.pop();
+    while (prev && ap18 && PRE18.test(prev.id || "")) prev = hstack.pop();
     if (!prev) {
       var cur = S().screen, FB = { tutorials: "more", "tutorial-play": "tutorials", support: "more", "support-empty": "more", settings: "more", subscription: "more", invite: "more", help: "more", "my-regions": "more", "notif-settings": "settings", "edit-profile": "me", "my-vouches": "me", "vouch-received": "me", "chat-dm": "chats", "chat-group": "chats", "incoming-swap": "reviews", "recommend-request": "fb-recommend" };
       prev = { id: FB[cur] || (ROOTS[cur] && cur !== "home" ? "home" : "home"), scroll: 0 };
@@ -817,7 +822,7 @@
       var id = (S().screen) || (sc && sc.dataset.screen);
       if (!sc) return;
       track(id);
-      var tb = document.getElementById("tabbar"); if (tb) tb.classList.toggle("show", !!ROOTS[id]);
+      var tb = document.getElementById("tabbar"); if (tb) tb.classList.toggle("show", (window.RBNav18 && RBNav18.showTabs) ? RBNav18.showTabs(id) : !!ROOTS[id]); /* b18 */
       fixText(sc); fixText(document.getElementById("tabbar"));
       fixHeader(sc, id);
       fixButtons(sc);

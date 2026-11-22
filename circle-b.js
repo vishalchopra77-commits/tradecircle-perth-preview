@@ -140,6 +140,7 @@
 
   /* v2.2.2: open a Facebook profile in the Facebook app (Android intent / iOS fb://), browser fallback */
   function openFb(url) {
+    if (window.RBFb && RBFb.open && url) { RBFb.open(url); return; } /* b18: Facebook app via App Launcher (intent:// did nothing in the app) */
     url = url || "https://www.facebook.com/";
     var ua = navigator.userAgent || "";
     var path = url.replace(/^https?:\/\/(www\.|m\.)?facebook\.com\/?/i, "");

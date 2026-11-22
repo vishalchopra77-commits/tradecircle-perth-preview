@@ -1,0 +1,297 @@
+/* Rate Buddies v2.2.2 build 16 — web admin fixes from the QA sweep (live test project only; Demo (offline) shows empty states).
+   #2 chat moderation actions (Hide/Unhide, Open conversation, Suspend sender), #3 Google Reviews + swaps page,
+   #4 full member page, #19 Sign out, #20 Facebook friends page, #23 sidebar unread/new counts, #24 Vouches page
+   (Accept / Not found override), #41 tutorials watched per member, #46 placeholders on Add video. */
+(function (root) {
+  "use strict";
+  function A() { return root.TCAdmin || {}; }
+  function live() { return !!(root.RB && !RB.isDemo() && RB.session && RB.isAdmin && RB.client); }
+  function db() { return RB.client; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+  function when(iso) { if (!iso) return ""; try { return new Date(iso).toLocaleString("en-AU", { timeZone: "Australia/Perth", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }); } catch (e) { return ""; } }
+  function day(iso) { if (!iso) return ""; try { return new Date(iso).toLocaleDateString("en-AU", { timeZone: "Australia/Perth", day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; } }
+  function perthDay(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: "Australia/Perth", year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
+  function ago(iso) {
+    if (!iso) return "Never";
+    var s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 120) return "Online now"; if (s < 3600) return Math.round(s / 60) + " min ago";
+    if (s < 86400) return Math.round(s / 3600) + " h ago"; return day(iso);
+  }
+  var D = { loaded: false, profiles: [], byId: {}, reviews: [], swaps: [], friends: [], vouches: [], presence: {}, watched: [], queue: [], audit: [], counts: {}, filter: "all", loading: false };
+  function nm(id) { var p = D.byId[id]; return p ? (((p.first_name || "") + " " + (p.last_name || "")).trim() || p.email || "A member") : "A member"; }
+  function tr(id) { var p = D.byId[id]; return (p && p.trade) || ""; }
+  function who(id, sub) { return A().who ? A().who(nm(id), sub != null ? sub : tr(id)) : esc(nm(id)); }
+
+  async function load() {
+    if (!live() || D.loading) return;
+    D.loading = true;
+    try {
+      var r = await Promise.all([
+        db().from("profiles").select("id,first_name,last_name,trade,business,status,role,created_at,approved_at"),
+        db().from("google_reviews").select("id,from_member_id,to_member_id,status,swap_id,created_at,done_at").order("created_at", { ascending: false }).limit(500),
+        db().from("review_swaps").select("id,requester_id,recipient_id,mode,note,status,created_at,updated_at").order("created_at", { ascending: false }).limit(500),
+        db().from("facebook_friends").select("id,from_member_id,to_member_id,status,created_at,updated_at").order("updated_at", { ascending: false }).limit(500),
+        db().from("facebook_vouches").select("id,from_member_id,to_member_id,request_id,post_url,trade,status,created_at,updated_at").order("created_at", { ascending: false }).limit(500),
+        db().from("member_presence").select("member_id,last_seen_at"),
+        db().from("tutorial_watched").select("member_id,video_id,watched_at"),
+        db().from("facebook_queue").select("member_id,place,status").in("status", ["waiting", "scheduled"]).order("place"),
+        db().from("admin_audit").select("action,target,created_at").order("created_at", { ascending: false }).limit(300),
+        db().from("support_messages").select("id", { count: "exact", head: true }).eq("from_admin", false).eq("read_by_admin", false),
+        db().from("member_reports").select("id", { count: "exact", head: true }).eq("status", "open"),
+        db().from("feature_requests").select("id", { count: "exact", head: true }).eq("status", "under_review"),
+        db().from("facebook_vouches").select("id", { count: "exact", head: true }).eq("status", "pending")
+      ]);
+      D.profiles = r[0].data || []; D.byId = {}; D.profiles.forEach(function (p) { D.byId[p.id] = p; });
+      D.reviews = r[1].data || []; D.swaps = r[2].data || []; D.friends = r[3].data || []; D.vouches = r[4].data || [];
+      D.presence = {}; (r[5].data || []).forEach(function (x) { D.presence[x.member_id] = x.last_seen_at; });
+      D.watched = r[6].data || []; D.queue = r[7].data || []; D.audit = r[8].data || [];
+      D.counts = { support: r[9].count || 0, reports: r[10].count || 0, features: r[11].count || 0, vouches: r[12].count || 0 };
+      D.loaded = true;
+    } catch (e) { console.warn("admin v222i load", e); }
+    finally { D.loading = false; }
+    var pg = A().page ? A().page() : "";
+    if (["google-reviews", "vouches", "fb-friends", "member-detail"].indexOf(pg) >= 0 || true) repaintKeep();
+  }
+  function repaintKeep() {
+    var ae = document.activeElement, id = ae && ae.id, pos = ae && ae.selectionStart;
+    if (A().paint) A().paint();
+    if (id) { var el = document.getElementById(id); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (e) {} } }
+  }
+
+  /* ---------- #23 sidebar counts ---------- */
+  function navCount(id) {
+    if (!live() || !D.loaded) return 0;
+    if (id === "support") return D.counts.support;
+    if (id === "reports") return D.counts.reports;
+    if (id === "features") return D.counts.features;
+    if (id === "vouches") return D.counts.vouches;
+    if (id === "fb-friends") return D.friends.filter(function (f) { return f.status === "requested"; }).length;
+    return 0;
+  }
+
+  function table(head, rows, emptyT, emptyS) {
+    if (!rows.length) return A().empty ? A().empty(emptyT, emptyS) : "<p>" + esc(emptyT) + "</p>";
+    return '<table><thead><tr>' + head.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.join("") + "</tbody></table>";
+  }
+  function td(label, html) { return '<td data-label="' + label + '">' + html + "</td>"; }
+  function pill(t, cls) { return '<span class="badge ' + (cls || "b-info") + '">' + esc(t) + "</span>"; }
+  var SW = { pending: ["Pending", "b-wait"], accepted: ["Accepted", "b-info"], recipient_done: ["One side done", "b-info"], swapped: ["Swapped", "b-ok"], not_now: ["Not now", "b-no"], cancelled: ["Cancelled", "b-no"] };
+  var VO = { pending: ["Pending", "b-wait"], confirmed: ["Accepted", "b-ok"], "not-found": ["Not found", "b-no"] };
+  var FR = { requested: ["Requested", "b-wait"], added: ["Friends", "b-ok"], dismissed: ["Not now", "b-no"] };
+  function needLive(title) {
+    var panel = A().panel || function (t, s, e, b) { return b; };
+    return panel(title, "Sign in to the live admin to see this page.", "", A().empty ? A().empty("Live data only", "This page reads the test database. Demo (offline) has no sample rows for it.") : "");
+  }
+
+  /* ---------- #3 Google Reviews + swaps ---------- */
+  function reviewsPage() {
+    var panel = A().panel;
+    if (!live()) return needLive("Google Reviews and swaps");
+    if (!D.loaded) { load(); return panel("Google Reviews and swaps", "Loading…", "", ""); }
+    var f = D.filter, today = perthDay(new Date());
+    var tabs = '<div class="rb-cm-tabs" role="tablist">' + [["all", "Everything"], ["reviews", "Reviews"], ["pending", "Pending swaps"], ["swapped", "Swapped"], ["notnow", "Not now"]].map(function (t) {
+      return '<button type="button" role="tab" class="rb-cm-tab' + (f === t[0] ? " on" : "") + '" aria-selected="' + (f === t[0]) + '" data-rb-grf="' + t[0] + '">' + t[1] + "</button>";
+    }).join("") + "</div>";
+    var cap = 3; try { cap = JSON.parse(localStorage.getItem("tc_review_daily_limit") || "3") || 3; } catch (e) {}
+    var tot = {};
+    function T(id) { return tot[id] || (tot[id] = { given: 0, rec: 0, today: 0, swaps: 0 }); }
+    D.reviews.forEach(function (r) { if (r.status !== "done") return; T(r.from_member_id).given++; T(r.to_member_id).rec++; if (r.done_at && perthDay(new Date(r.done_at)) === today) T(r.to_member_id).today++; });
+    D.swaps.forEach(function (s) { T(s.requester_id).swaps++; });
+    var parts = [];
+    if (f === "all" || f === "reviews") {
+      parts.push(panel("Google Reviews", D.reviews.length + " marked by members (live)", "", table(["From", "To", "Status", "When", "Swap"], D.reviews.map(function (r) {
+        return "<tr>" + td("From", who(r.from_member_id)) + td("To", who(r.to_member_id)) + td("Status", pill(r.status === "done" ? "Left" : r.status, r.status === "done" ? "b-ok" : "b-wait")) + td("When", esc(when(r.done_at || r.created_at))) + td("Swap", r.swap_id ? pill("Part of a swap") : "\u2014") + "</tr>";
+      }), "No Google Reviews yet", "When a member taps 'Done, I left this review', it shows here.")));
+    }
+    if (f !== "reviews") {
+      var list = D.swaps.filter(function (s) { return f === "all" || (f === "pending" && (s.status === "pending" || s.status === "accepted" || s.status === "recipient_done")) || (f === "swapped" && s.status === "swapped") || (f === "notnow" && s.status === "not_now"); });
+      parts.push(panel("Review swap requests", list.length + " shown", "", table(["From", "To", "How", "Status", "Note", "When"], list.map(function (s) {
+        var st = SW[s.status] || [s.status, "b-info"];
+        return "<tr>" + td("From", who(s.requester_id)) + td("To", who(s.recipient_id)) + td("How", esc(s.mode === "send" ? "Sent a review idea" : "Own words")) + td("Status", pill(st[0], st[1])) + td("Note", esc(s.note || "")) + td("When", esc(when(s.created_at))) + "</tr>";
+      }), "No swap requests", "Swap requests between members show here.")));
+    }
+    var mem = D.profiles.filter(function (p) { return p.role !== "admin" && p.status === "approved"; });
+    mem.sort(function (a, b) { return (T(b.id).rec - T(a.id).rec) || nm(a.id).localeCompare(nm(b.id)); });
+    parts.push(panel("Per member", "Totals from the database. Today = Perth calendar day; the daily cap is " + cap + ".", "", table(["Member", "Given", "Received", "Received today", "Swap requests sent"], mem.map(function (p) {
+      var t = T(p.id);
+      return "<tr>" + td("Member", who(p.id)) + td("Given", String(t.given)) + td("Received", String(t.rec)) + td("Received today", t.today + " of " + cap + (t.today >= cap ? " " + pill("At the cap", "b-no") : "")) + td("Swap requests sent", String(t.swaps)) + "</tr>";
+    }), "No members", "")));
+    return '<div class="rb-gr-head">' + tabs + "</div>" + parts.join("");
+  }
+
+  /* ---------- #24 vouches ---------- */
+  function vouchesPage() {
+    var panel = A().panel;
+    if (!live()) return needLive("Facebook vouches");
+    if (!D.loaded) { load(); return panel("Facebook vouches", "Loading…", "", ""); }
+    return panel("Facebook vouches", "Vouches count towards badges and the promotion queue. Accept or mark Not found to override the member's answer.", "",
+      table(["From", "For", "Trade", "Post", "Status", "When", ""], D.vouches.map(function (v) {
+        var st = VO[v.status] || [v.status, "b-info"];
+        return "<tr>" + td("From", who(v.from_member_id)) + td("For", who(v.to_member_id)) + td("Trade", esc(v.trade || "")) +
+          td("Post", v.post_url ? '<a href="' + esc(v.post_url) + '" target="_blank" rel="noopener">Open post</a>' : "\u2014") + td("Status", pill(st[0], st[1])) + td("When", esc(when(v.created_at))) +
+          td("", '<div class="row-actions">' + (v.status !== "confirmed" ? '<button type="button" class="btn btn-ok btn-sm" data-rb-vouch="confirmed" data-id="' + v.id + '">Accept</button>' : "") +
+            (v.status !== "not-found" ? '<button type="button" class="btn btn-danger btn-sm" data-rb-vouch="not-found" data-id="' + v.id + '">Not found</button>' : "") + "</div>") + "</tr>";
+      }), "No vouches yet", "When a member vouches for another on a Facebook post, it shows here."));
+  }
+
+  /* ---------- #20 Facebook friends ---------- */
+  function friendsPage() {
+    var panel = A().panel;
+    if (!live()) return needLive("Facebook friends");
+    if (!D.loaded) { load(); return panel("Facebook friends", "Loading…", "", ""); }
+    var waiting = D.friends.filter(function (f) { return f.status === "requested"; }).length;
+    return panel("Facebook friend requests", D.friends.length + " rows · " + waiting + " waiting for the other member to confirm", "",
+      table(["Sent by", "To", "Status", "Requested", "Updated"], D.friends.map(function (f) {
+        var st = FR[f.status] || [f.status, "b-info"];
+        return "<tr>" + td("Sent by", who(f.from_member_id)) + td("To", who(f.to_member_id)) + td("Status", pill(st[0], st[1])) + td("Requested", esc(when(f.created_at))) + td("Updated", esc(when(f.updated_at))) + "</tr>";
+      }), "No friend requests yet", "When a member taps Add friend, the request shows here."));
+  }
+
+  /* ---------- #4 full member page ---------- */
+  function memberPage(sel) {
+    var panel = A().panel, mems = A().members || [];
+    var m = mems.filter(function (x) { return x.id === sel; })[0] || mems[0];
+    if (!m || !m.raw) return null; /* demo: the original page */
+    if (!D.loaded) load();
+    var p = m.raw, ex = p.extras || {};
+    function row(k, v) { return '<div class="rb-md-row"><div class="k">' + esc(k) + '</div><div class="v">' + (v || '<span class="panel-sub">\u2014</span>') + "</div></div>"; }
+    function list(a) { return (a || []).length ? a.map(function (x) { return '<span class="badge b-info">' + esc(x) + "</span>"; }).join(" ") : ""; }
+    function link(u) { return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u) + "</a>" : ""; }
+    var given = D.reviews.filter(function (r) { return r.from_member_id === m.id && r.status === "done"; }).length;
+    var rec = D.reviews.filter(function (r) { return r.to_member_id === m.id && r.status === "done"; }).length;
+    var swS = D.swaps.filter(function (s) { return s.requester_id === m.id; }).length, swR = D.swaps.filter(function (s) { return s.recipient_id === m.id; }).length;
+    var vG = D.vouches.filter(function (v) { return v.from_member_id === m.id; }).length, vR = D.vouches.filter(function (v) { return v.to_member_id === m.id && v.status === "confirmed"; }).length;
+    var fr = D.friends.filter(function (f) { return (f.from_member_id === m.id || f.to_member_id === m.id) && f.status === "added"; }).length;
+    var q = D.queue.map(function (x) { return x.member_id; }).indexOf(m.id);
+    var tut = D.watched.filter(function (w) { return w.member_id === m.id; }).length;
+    var hist = D.audit.filter(function (a) { return a.target && a.target.indexOf(p.name) === 0 && /member/i.test(a.action); });
+    var stat = { approved: "Active", pending: "Waiting for approval", rejected: "Declined", suspended: "Suspended" }[p.status] || p.status;
+    var linkField = function (key, label, val) { return '<div class="field"><label>' + label + '</label><input data-link="' + key + '" value="' + esc(val || "") + '" inputmode="url" placeholder="https://"></div>'; };
+    var profileHtml =
+      row("Name", esc(p.name)) + row("Business", esc(p.business)) + row("Trade", esc(p.trade)) +
+      row("Email", p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + "</a>" : "") + row("Phone", esc(p.phone)) +
+      row("ABN", ex.abn ? esc(ex.abn) + ' <a href="https://abr.business.gov.au/ABN/View?abn=' + encodeURIComponent(String(ex.abn).replace(/\s+/g, "")) + '" target="_blank" rel="noopener">ABN Lookup</a>' : "") +
+      row("Areas", list(p.regions)) + row("State / city", esc([String(p.state || "").toUpperCase(), p.city].filter(Boolean).join(" · "))) +
+      row("Tagline", esc(p.tagline)) + row("Bio", esc(p.bio)) + row("About the business", esc(ex.about || "")) + row("Goal", esc(p.goal)) +
+      row("Services", list(p.services)) + row("Ideal referral partners", list(p.referralPartners)) + row("Years in business", p.years != null ? esc(p.years) : "") + row("Licences", esc(p.licences)) +
+      row("Facebook", link(p.facebook)) + row("Google Business Profile", link(p.googleBusinessUrl)) +
+      row("Job photos", (ex.gallery || []).filter(function (g) { return g && g.url; }).map(function (g) { return '<a href="' + esc(g.url) + '" target="_blank" rel="noopener"><img class="rb-md-thumb" src="' + esc(g.url) + '" alt="Job photo"></a>'; }).join("") || "");
+    var actHtml =
+      row("Status", pill(stat, p.status === "approved" ? "b-ok" : p.status === "suspended" ? "b-no" : "b-wait") + (ex.suspension && ex.suspension.reason ? ' <span class="panel-sub">Reason: ' + esc(ex.suspension.reason) + "</span>" : "")) +
+      row("Signed up", esc(day(p.created_at))) + row("Approved", esc(day(p.approved_at))) + row("Last active", esc(ago(D.presence[m.id]))) +
+      row("Intro video watched", p.intro_watched ? "Yes" : "No") + row("Tutorials watched", String(tut)) +
+      row("Google Reviews", given + " given · " + rec + " received") + row("Review swaps", swS + " sent · " + swR + " received") +
+      row("Facebook vouches", vG + " given · " + vR + " accepted for them") + row("Facebook friends", String(fr)) +
+      row("Promotion queue", q >= 0 ? "#" + (q + 1) + " of " + D.queue.length : "Not in the queue") +
+      row("Status history", hist.length ? hist.map(function (a) { return esc(when(a.created_at) + " · " + a.action + (a.target.indexOf("reason:") > -1 ? " (" + a.target.split("reason:")[1].trim() + ")" : "")); }).join("<br>") : "");
+    return panel(esc(p.name), esc(p.business || "") + " · read-only profile (live)", '<button class="btn btn-ghost btn-sm" data-page="members">Back to members</button>',
+      '<div class="rb-md-grid"><div><h3 class="rb-md-h">Profile</h3>' + profileHtml + '</div><div><h3 class="rb-md-h">Activity</h3>' + actHtml +
+      '<h3 class="rb-md-h" style="margin-top:16px">Links (editable)</h3>' + linkField("facebook", "Facebook personal profile link", p.facebook) + linkField("google", "Google Business Profile link", p.googleBusinessUrl) +
+      '<button class="btn btn-primary" data-action="save-mem" data-id="' + esc(m.id) + '" style="margin-top:12px">Save links</button></div></div>');
+  }
+
+  function pageHTML(page, sel) {
+    if (page === "google-reviews") return reviewsPage();
+    if (page === "vouches") return vouchesPage();
+    if (page === "fb-friends") return friendsPage();
+    if (page === "member-detail" && live()) return memberPage(sel);
+    return null;
+  }
+
+  /* ---------- actions ---------- */
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest("[data-rb-grf], [data-rb-vouch], [data-rb-cm], [data-rb-signout]");
+    if (!t) return;
+    e.preventDefault(); e.stopPropagation();
+    if (t.hasAttribute("data-rb-signout")) { signOut(); return; }
+    if (t.hasAttribute("data-rb-grf")) { D.filter = t.getAttribute("data-rb-grf"); repaintKeep(); return; }
+    if (!live()) return;
+    var rowTxt = (function () { var tr = t.closest("tr"); if (!tr) return ""; var c = tr.querySelectorAll("td"); var f = function (i) { return c[i] ? String(c[i].innerText || "").split("\n").filter(function (x) { return x.trim() && x.trim().length > 2; })[0] || "" : ""; }; return (f(0) + (f(1) ? " \u2192 " + f(1) : "")).trim(); })();
+    if (t.hasAttribute("data-rb-vouch")) {
+      var st = t.getAttribute("data-rb-vouch"), id = t.getAttribute("data-id");
+      db().from("facebook_vouches").update({ status: st, updated_at: new Date().toISOString() }).eq("id", id).then(function (r) {
+        if (r.error) return root.alert(r.error.message);
+        db().from("admin_audit").insert({ admin_id: RB.session.user.id, action: st === "confirmed" ? "Accepted a vouch (override)" : "Marked a vouch Not found (override)", target: rowTxt }).then(function () {});
+        load();
+      });
+      return;
+    }
+    var act = t.getAttribute("data-rb-cm");
+    if (act === "hide" || act === "unhide") {
+      db().from("chat_messages").update({ hidden: act === "hide" }).eq("id", t.getAttribute("data-id")).then(function (r) {
+        if (r.error) return root.alert(r.error.message);
+        db().from("admin_audit").insert({ admin_id: RB.session.user.id, action: act === "hide" ? "Hid a chat message" : "Unhid a chat message", target: rowTxt }).then(function () {});
+        if (root.RBAdminLive2 && RBAdminLive2.refresh) RBAdminLive2.refresh(); else if (root.RBAdmin && RBAdmin.hydrate) RBAdmin.hydrate();
+      });
+    }
+    if (act === "open") {
+      var conv = t.getAttribute("data-conv"), cmv = root.__rbAdminConv || (root.__rbAdminConv = { tab: "messages", q: "", list: null, sel: null, msgs: [], more: false });
+      cmv.tab = "conversations"; cmv.sel = conv;
+      var opener = root.RBAdminLive2 && (RBAdminLive2.loadThread || RBAdminLive2.openConv);
+      if (root.RBAdminLive2 && RBAdminLive2.loadConvs) RBAdminLive2.loadConvs().then(function () { if (RBAdminLive2.loadThread) RBAdminLive2.loadThread(conv); });
+      else if (opener) opener(conv);
+      repaintKeep();
+    }
+    if (act === "suspend") {
+      var mid = t.getAttribute("data-id"), name = t.getAttribute("data-name") || "this member";
+      var reason = root.prompt("Suspend " + name + "?\n\nThey are signed out and can't use Rate Buddies until you reactivate them. They will see the reason you type here.\n\nReason:", "Inappropriate chat message");
+      if (reason === null) return;
+      if (!String(reason).trim()) { root.alert("Please type a short reason. The member sees it."); return; }
+      db().rpc("admin_set_member_status_v2", { target: mid, new_status: "suspended", reason: String(reason).trim().slice(0, 280) }).then(function (r) {
+        if (r.error) return root.alert(r.error.message);
+        root.alert(name + " is suspended.");
+        if (root.RBAdminLive2 && RBAdminLive2.refresh) RBAdminLive2.refresh(); else if (root.RBAdmin && RBAdmin.hydrate) RBAdmin.hydrate();
+      });
+    }
+  }, true);
+
+  /* ---------- #19 sign out ---------- */
+  async function signOut() {
+    try { if (root.RB && RB.logout) await RB.logout(); } catch (e) {}
+    var lv = document.getElementById("loginView"), av = document.getElementById("appView");
+    if (av) av.classList.add("hidden"); if (lv) lv.classList.remove("hidden");
+    var pw = document.querySelector("#loginForm [name='password']"); if (pw) pw.value = "";
+    D.loaded = false;
+  }
+  function chipMenu() {
+    var chip = document.querySelector(".admin-chip");
+    if (!chip || chip.querySelector(".rb-signout")) return;
+    chip.insertAdjacentHTML("beforeend", '<button type="button" class="rb-signout" data-rb-signout="1" aria-label="Sign out of the admin">Sign out</button>');
+  }
+
+  /* ---------- #46 placeholders on the tutorials Add video form ---------- */
+  function placeholders() {
+    document.querySelectorAll("#page input, #page textarea").forEach(function (el) {
+      if (el.placeholder) return;
+      var lab = el.closest(".field") && el.closest(".field").querySelector("label");
+      var l = (lab ? lab.textContent : el.name || el.id || "").toLowerCase();
+      if (/^title|video title/.test(l)) el.placeholder = "e.g. How to ask for a review swap";
+      else if (/description/.test(l)) el.placeholder = "One line about what it shows";
+    });
+  }
+
+  setInterval(function () { chipMenu(); placeholders(); }, 700);
+  /* data: first load after sign-in, realtime kicks, and every 30 s */
+  var subscribed = false, last = 0;
+  setInterval(function () {
+    if (!live()) return;
+    if (!subscribed) {
+      subscribed = true;
+      ["google_reviews", "review_swaps", "facebook_friends", "facebook_vouches", "support_messages", "member_reports", "feature_requests"].forEach(function (tbl) {
+        RB.client.channel("rb-admin-v222i-" + tbl + "-" + Date.now()).on("postgres_changes", { event: "*", schema: "public", table: tbl }, function () { setTimeout(load, 300); }).subscribe();
+      });
+    }
+    if (!D.loaded || Date.now() - last > 30000) { last = Date.now(); load(); }
+  }, 1500);
+
+  root.TC222iAdmin = { pageHTML: pageHTML, navCount: navCount, when: when, load: load, data: D };
+})(window);
+
+/* v2.2.2 b16 (Vishal approved 22 Nov) QA #42: the "Fictional data" chip only shows in Demo (offline) mode. */
+(function () {
+  "use strict";
+  setInterval(function () {
+    var live = !!(window.RB && RB.session && !RB.isDemo());
+    document.querySelectorAll(".mock").forEach(function (c) { if (/fictional data/i.test(c.textContent)) c.style.display = live ? "none" : ""; });
+  }, 500);
+})();

@@ -687,8 +687,9 @@
     }
     if (action === "swap-leave") {
       var mLeave = member(id);
-      var url = gLinkOf(mLeave);
-      if (url) try { window.open(url, "_blank", "noopener"); } catch (eL) {}
+      /* b18: same link + same opening as the profile's Google Business Profile button (Google Maps app, no sign-in page) */
+      if (window.RBReviewLink) { if (!RBReviewLink.leave(id)) return true; }
+      else { var url = gLinkOf(mLeave); if (url) try { window.open(url, "_blank", "noopener"); } catch (eL) {} }
       openSwapDoneSheet(id);
       return true;
     }
@@ -774,7 +775,9 @@
         if (L && L.google) return L.google;
       } catch (e) {}
     }
+    if (window.RBLinks && RBLinks.reviewUrl) { var b18u = RBLinks.reviewUrl(m); if (b18u) return b18u; }
     if (m.googleLink || m.google) return m.googleLink || m.google;
+    if (window.RBLive && RBLive.isLive()) return ""; /* b18: never a demo place id for a real member */
     return "https://search.google.com/local/writereview?placeid=demo-" + m.id;
   }
   function regionNameOf(m) {

@@ -108,6 +108,11 @@
     if (closeOverlays()) return true;
     var st = S();
     var cur = st && st.screen;
+    /* b18: Home is the root. Back on Home never walks into old history (it used to reach the Sign-in screen);
+       sign-in / sign-up / waiting / intro screens are skipped once you are in. */
+    if (cur === "home") stack.length = 0;
+    var PRE = root.RBNav18 && RBNav18.PRE;
+    if (PRE && root.RBNav18.approved && RBNav18.approved()) { while (stack.length && PRE.test(stack[stack.length - 1].id || "")) stack.pop(); }
     if (stack.length) {
       var prev = stack.pop();
       restoring = true;
@@ -127,7 +132,12 @@
       return true;
     }
     if (cur === "home" || cur === "welcome" || cur === "lockscreen") {
-      return exitApp();
+      /* b18: never close the app on a single press; a second press within 2 s closes it */
+      var now = Date.now();
+      if (now - (goBack._lastExit || 0) < 2000) return exitApp();
+      goBack._lastExit = now;
+      if (T().toast) { try { T().toast("Press back again to close Rate Buddies"); } catch (eT) {} }
+      return true;
     }
     /* Known sub-screens with an empty stack: Video tutorials returns to More. */
     var FALLBACK = { tutorials: "more", "tutorial-play": "tutorials" };
@@ -144,7 +154,8 @@
       finally { restoring = false; }
       return true;
     }
-    return exitApp();
+    if (T().go && cur !== "home") { restoring = true; try { T().go("home", { back: true, replace: true }); } finally { restoring = false; } return true; }
+    return true;
   }
 
   function isBackControl(el) {
@@ -180,8 +191,10 @@
       if (!Cap) return;
       var App = (Cap.Plugins && (Cap.Plugins.App || Cap.Plugins.app)) || null;
       if (!App && Cap.registerPlugin) App = Cap.registerPlugin("App");
-      if (App && App.addListener) {
-        App.addListener("backButton", function () { goBack(); });
+      if (App && App.addListener && !bindHardware._done) {
+        bindHardware._done = true; /* b18: one listener only (this ran twice: two screens back per press) */
+        /* b18: the phone's back button uses the same history as the on-screen Back arrow (v213 replaces TCNav.goBack) */
+        App.addListener("backButton", function () { if (root.TCNav && typeof TCNav.goBack === "function") TCNav.goBack(); else goBack(); });
       }
     } catch (e) {}
   }

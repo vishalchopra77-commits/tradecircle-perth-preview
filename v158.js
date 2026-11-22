@@ -103,11 +103,25 @@
   }
 
 
+  function exPh(name, fallback) { try { return (root.RBPlaceholders && RBPlaceholders.ex(name)) || fallback; } catch (e) { return fallback; } }
+  /* repaint the suggestion chips as soon as the trade changes (trade box or saved profile) */
+  var lastTradeSeen = null;
+  setInterval(function () {
+    var t = meTrade(); if (t === lastTradeSeen) return; lastTradeSeen = t;
+    document.querySelectorAll('[data-cp-pick-bound="1"]').forEach(function (f) {
+      ["specialties", "idealTrades"].forEach(function (k) { if (f.querySelector('[data-cp-search="' + k + '"]')) { paintQuick(f, k); } });
+    });
+  }, 400);
   function meTrade() {
     var s = state();
     var me = (T().MEMBERS || []).filter(function (m) { return m.id === (s.meId || T().meId); })[0];
     var draft = (s.signup && s.signup.draft) || {};
-    return (me && me.trade) || draft.trade || "Pest Control";
+    /* v2.2.2 b18: follow the trade box on screen first, then the live profile; no trade = general suggestions (never Pest Control) */
+    var sc = document.querySelector(".screen.active"), box = sc && sc.querySelector("#tradeType");
+    var typed = box && String(box.value || "").trim();
+    if (typed) return typed;
+    if (root.RB && RB.profile && RB.profile.trade) return RB.profile.trade;
+    return (me && me.trade) || draft.trade || "";
   }
 
   function tradeKey(trade) {
@@ -243,6 +257,11 @@
       '<div class="ac-drop" data-cp-ac="' + kind + '" hidden></div></div>' +
       '<div class="cp-picked" data-cp-picked="' + kind + '"></div>' +
       '<div class="cp-quick" data-cp-quick="' + kind + '"></div>' +
+      /* v2.2.2 build 18 (Vishal): add several of your own services: Add button, Enter, or commas */
+      (kind === "specialties" ? '<div class="cp-custom" data-cp-custom-row="' + kind + '"><label class="cp-custom-lab" for="cpCustom-' + kind + '">Add your own services</label>' +
+        '<div class="cp-custom-in"><input type="text" id="cpCustom-' + kind + '" data-cp-custom="' + kind + '" placeholder="e.g. After-hours work, Free quotes" autocomplete="off" enterkeyhint="done">' +
+        '<button type="button" class="btn cp-custom-add" data-cp-custom-add="' + kind + '">Add</button></div>' +
+        '<p class="hint cp-custom-hint">Add as many as you like. Separate several with commas.</p></div>' : "") +
       '<input type="hidden" name="' + hiddenName + '" value="' + esc(selected.join(", ")) + '">' +
       "</div>";
   }
@@ -277,7 +296,7 @@
     var selected = list(hid.value);
     wrap.innerHTML = selected.map(function (s) {
       return '<span class="chip cp-sel">' + esc(s) +
-        '<button type="button" class="cp-x" data-cp-remove="' + kind + '" data-value="' + esc(s) + '" aria-label="Remove ' + esc(s) + '">×</button></span>';
+        '<button type="button" class="cp-x" data-cp-remove="' + kind + '" data-value="' + esc(s) + '" aria-label="Remove ' + esc(s) + '">✕</button></span>';
     }).join("");
   }
 
@@ -288,6 +307,17 @@
     var q = inp ? String(inp.value || "").trim() : "";
     var selected = readSelected(form, kind);
     if (q) { wrap.innerHTML = ""; return; }
+    var gone = (form._cpDismiss && form._cpDismiss[kind]) || [];
+    if (kind === "specialties") {
+      var src = servicesForTrade(meTrade());
+      var lowSel = selected.map(function (x) { return x.toLowerCase(); });
+      var pops = src.filter(function (s) { return lowSel.indexOf(s.toLowerCase()) === -1 && gone.indexOf(s) === -1; }).slice(0, 4);
+      wrap.innerHTML = pops.map(function (s) {
+        return '<span class="chip cp-pop cp-sug"><button type="button" class="cp-sug-add" data-cp-add="' + kind + '" data-value="' + esc(s) + '">+ ' + esc(s) + "</button>" +
+          '<button type="button" class="cp-x" data-cp-dismiss="' + kind + '" data-value="' + esc(s) + '" aria-label="Hide suggestion ' + esc(s) + '">✕</button></span>';
+      }).join("");
+      return;
+    }
     var pops = popularFor(kind, selected);
     wrap.innerHTML = pops.map(function (s) {
       return '<button type="button" class="chip cp-pop" data-cp-add="' + kind + '" data-value="' + esc(s) + '">+ ' + esc(s) + "</button>";
@@ -324,16 +354,30 @@
   }
 
   function addValue(form, kind, value) {
-    value = String(value || "").trim();
-    if (!value) return;
-    var selected = readSelected(form, kind);
-    if (selected.indexOf(value) !== -1) return;
-    selected.push(value);
+    var parts = String(value || "").split(",").map(function (x) { return x.replace(/\s+/g, " ").trim().slice(0, 60); }).filter(Boolean);
+    if (!parts.length) return 0;
+    var selected = readSelected(form, kind), added = 0;
+    parts.forEach(function (v) {
+      var low = selected.map(function (x) { return x.toLowerCase(); });
+      if (low.indexOf(v.toLowerCase()) === -1) { selected.push(v); added++; }
+    });
     var inp = form.querySelector('[data-cp-q="' + kind + '"]');
     if (inp) inp.value = "";
     setSelected(form, kind, selected);
     var box = form.querySelector('[data-cp-ac="' + kind + '"]');
     if (box) { box.hidden = true; box.innerHTML = ""; }
+    return added;
+  }
+  function addCustom(form, kind) {
+    var inp = form.querySelector('[data-cp-custom="' + kind + '"]');
+    if (!inp) return;
+    var raw = String(inp.value || "");
+    if (!raw.trim()) { inp.focus(); return; }
+    var before = readSelected(form, kind).length;
+    addValue(form, kind, raw);
+    var n = readSelected(form, kind).length - before;
+    inp.value = "";
+    if (!n) toast("Already in your services.");
   }
 
   function removeValue(form, kind, value) {
@@ -363,6 +407,11 @@
       paintAc(form, inp.getAttribute("data-cp-q"), true);
     });
     form.addEventListener("keydown", function (e) {
+      var ci = e.target.closest && e.target.closest("[data-cp-custom]");
+      if (ci) {
+        if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addCustom(form, ci.getAttribute("data-cp-custom")); }
+        return;
+      }
       var inp = e.target.closest("[data-cp-q]");
       if (!inp) return;
       var kind = inp.getAttribute("data-cp-q");
@@ -376,7 +425,23 @@
         if (box) box.hidden = true;
       }
     });
+    form.addEventListener("paste", function (e) {
+      var ci = e.target.closest && e.target.closest("[data-cp-custom]");
+      if (!ci) return;
+      var t = (e.clipboardData || root.clipboardData) && (e.clipboardData || root.clipboardData).getData("text");
+      if (t && /[,\n]/.test(t)) { e.preventDefault(); ci.value = (ci.value ? ci.value + "," : "") + t.replace(/\n+/g, ","); addCustom(form, ci.getAttribute("data-cp-custom")); }
+    });
     form.addEventListener("click", function (e) {
+      var ca = e.target.closest("[data-cp-custom-add]");
+      if (ca && form.contains(ca)) { e.preventDefault(); addCustom(form, ca.getAttribute("data-cp-custom-add")); return; }
+      var dm = e.target.closest("[data-cp-dismiss]");
+      if (dm && form.contains(dm)) {
+        e.preventDefault();
+        var k = dm.getAttribute("data-cp-dismiss");
+        form._cpDismiss = form._cpDismiss || {}; (form._cpDismiss[k] = form._cpDismiss[k] || []).push(dm.getAttribute("data-value"));
+        paintQuick(form, k);
+        return;
+      }
       var add = e.target.closest("[data-cp-add]");
       if (add && form.contains(add)) {
         e.preventDefault();
@@ -408,8 +473,8 @@
       '<div class="lab">' + c.pct + "% complete · " + c.n + " of " + c.total + " sections</div></div>" +
       '<form data-form="complete-profile">' +
       linkFields(fill.links) +
-      counted("A short sentence", "tagline", fill.tagline, 80, 2, "A one-line headline that sits at the top of your profile.", "e.g. Family-run pest control keeping Perth homes safe since 2012") +
-      counted("Short bio", "bio", fill.bio, 280, 4, "A few sentences about who you are.", "e.g. I\u2019m Sam, a licensed pest controller in Joondalup. I handle termites, spiders and rodents for homes and small businesses, and I always explain what I\u2019m doing.") +
+      counted("A short sentence", "tagline", fill.tagline, 80, 2, "A one-line headline that sits at the top of your profile.", exPh("tagline", "e.g. Trusted local business serving Perth since 2012")) +
+      counted("Short bio", "bio", fill.bio, 280, 4, "A few sentences about who you are.", exPh("bio", "e.g. I\u2019m Sam, based in Joondalup. I\u2019m on time, I explain everything clearly and I treat every customer like a neighbour.")) +
       counted("My goal", "profileGoal", fill.goal, 140, 2, "What you hope to get from the circle.", "e.g. Get 20 genuine Google Reviews and meet tradies I can refer work to.") +
       counted("About my business", "profileAbout", fill.about, 400, 4, "") +
       '<p class="group-label">Expertise</p><p class="hint" style="margin-top:0">Search and add the work you are known for. You can also type your own.</p>' +
@@ -672,6 +737,7 @@
     pickerHTML: pickerHTML,
     bindSearchPickers: bindSearchPickers,
     servicesForTrade: servicesForTrade,
+    repaintPickers: function (form) { if (!form) return; ["specialties", "idealTrades"].forEach(function (k) { if (form.querySelector('[data-cp-search="' + k + '"]')) { paintPicked(form, k); paintQuick(form, k); } }); },
     popularPartners: popularPartners,
     tradeKey: tradeKey
   };

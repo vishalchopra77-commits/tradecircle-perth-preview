@@ -1,6 +1,10 @@
 package com.ratebuddies.app;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -53,6 +57,7 @@ public class MainActivity extends BridgeActivity {
             } catch (Exception ignoredZoom) {
             }
             webView.addJavascriptInterface(new StatusBarBridge(), "RBStatusBar");
+            webView.addJavascriptInterface(new OpenBridge(), "RBOpenNative"); // v2.2.2 b18: Facebook / Google Maps links open in those apps
             ViewCompat.setOnApplyWindowInsetsListener(content, (View v, WindowInsetsCompat insets) -> {
                 Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
                 Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
@@ -84,6 +89,50 @@ public class MainActivity extends BridgeActivity {
         Window window = getWindow();
         WindowInsetsControllerCompat c = WindowCompat.getInsetsController(window, window.getDecorView());
         c.setAppearanceLightStatusBars(dark);
+    }
+
+    /**
+     * v2.2.2 b18 (Vishal: "make sure all links open in Facebook and Google Maps itself").
+     * open(url, pkg): opens an http(s) or fb:// link in the named app (only Facebook, Facebook Lite or Google Maps),
+     * never inside the WebView. If that app is not installed, the link opens in the phone's browser instead.
+     * Returns "app", "browser" or "error".
+     */
+    public class OpenBridge {
+        private boolean allowedPkg(String pkg) {
+            return "com.facebook.katana".equals(pkg) || "com.facebook.lite".equals(pkg) || "com.google.android.apps.maps".equals(pkg);
+        }
+        private boolean installed(String pkg) {
+            try { getPackageManager().getPackageInfo(pkg, 0); return true; } catch (PackageManager.NameNotFoundException e) { return false; }
+        }
+        @JavascriptInterface
+        public boolean has(String pkg) { return pkg != null && allowedPkg(pkg) && installed(pkg); }
+
+        @JavascriptInterface
+        public String open(String url, String pkg) {
+            try {
+                Uri u = Uri.parse(url);
+                String scheme = u.getScheme() == null ? "" : u.getScheme().toLowerCase();
+                boolean web = scheme.equals("https") || scheme.equals("http");
+                if (!web && !scheme.equals("fb")) return "error";
+                if (pkg != null && allowedPkg(pkg) && installed(pkg)) {
+                    try {
+                        Intent i = new Intent(Intent.ACTION_VIEW, u);
+                        i.setPackage(pkg);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        return "app";
+                    } catch (ActivityNotFoundException e) { /* fall through to the browser */ }
+                }
+                if (!web) return "error";
+                Intent b = new Intent(Intent.ACTION_VIEW, u);
+                b.addCategory(Intent.CATEGORY_BROWSABLE);
+                b.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(b);
+                return "browser";
+            } catch (Exception e) {
+                return "error";
+            }
+        }
     }
 
     public class StatusBarBridge {

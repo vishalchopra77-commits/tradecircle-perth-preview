@@ -1365,7 +1365,7 @@ function facebookF(size, color) {
       '<button type="button" role="radio" class="rb-swq-opt' + (mode === "own" ? " on" : "") + '" aria-checked="' + (mode === "own") + '" data-action="rb-swq-mode" data-mode="own"><span class="rb-swq-dot"></span><span><b>Write it in your own words</b><small>They write the review themselves.</small></span></button>' +
       "</div>" +
       '<label class="rb-swq-field" data-swq-review' + (mode === "send" ? "" : " hidden") + '><span class="rb-swq-lab">What review would you like? <em>Optional</em></span>' +
-      '<textarea rows="5" maxlength="500" name="swapReview" placeholder="e.g. Sam from Joondalup Pest Control sorted our termite problem fast. On time, explained everything and left the place spotless. Highly recommend."></textarea></label>' +
+      '<textarea rows="5" maxlength="500" name="swapReview" placeholder="e.g. Sam was on time, explained everything clearly and left the place spotless. Great work at a fair price. Highly recommend."></textarea></label>' +
       '<label class="rb-swq-field"><span class="rb-swq-lab">Short note <em>Optional</em></span>' +
       '<textarea rows="2" maxlength="140" name="swapNote" placeholder="e.g. Please mention my name and the job type"></textarea></label>' +
       '<button class="btn btn-primary" data-action="rb-swq-send" data-id="' + esc(mid) + '">Send swap request</button>' +
@@ -1441,7 +1441,7 @@ function facebookF(size, color) {
     if (id !== "drawer") closeDrawer();
     updateBadges();
     if (id === "drawer") openDrawer();
-    if (id === "google-consent") {
+    if (id === "google-consent" && !(window.RBLive && RBLive.isLive())) { /* b18: the prototype "Connect Google" sheet never opens for live members */
       S().googleConnected = false;
       openGoogleSheet();
     }

@@ -990,6 +990,9 @@
   function draftFromMe() {
     var m = me();
     if (!state.draft && NEW_MEMBER_FLOW[state.screen]) state.draft = emptyDraft();
+    /* b18: a new member who opens Edit profile from "Complete your profile" still had the empty sign-up draft,
+       so name/business/trade showed blank (and Save could store blanks). Use the saved profile instead. */
+    if (state.draft && !NEW_MEMBER_FLOW[state.screen] && !state.draft.first && !state.draft.business && m && (m.first || m.business)) state.draft = null;
     return state.draft || {
       first: m.first, last: m.last, business: m.business, trade: m.trade,
       bio: m.bio, phone: m.phone, facebook: m.facebook, page: m.page,
@@ -1316,7 +1319,7 @@
       '<div class="field"><label>Last name</label><input name="last" value="' + escapeAttr(d.last || "") + '" autocomplete="family-name"></div></div>' +
       '<div class="field"><label>Business name</label><input name="business" value="' + escapeAttr(d.business) + '"></div>' +
       '<div class="field"><label>Trade or business type</label><div class="search-wrap"><div class="search">' + icon("search") + '<input id="tradeType" type="text" placeholder="Choose your profession" value="' + escapeAttr(d.trade || "") + '" autocomplete="off"></div><div id="tradeAc" class="ac-drop" hidden></div></div><p class="hint">Suggestions appear as you type from the full list of Australian businesses. <button type="button" class="link" data-open-trades="1">See all</button></p></div>' +
-      '<div class="field"><label>Short bio</label><textarea name="bio" rows="4" placeholder="e.g. I’m Sam, a licensed pest controller in Joondalup. I handle termites, spiders and rodents for homes and small businesses, and I always explain what I’m doing.">' + escapeText(d.bio) + "</textarea></div>" +
+      '<div class="field"><label>Short bio</label><textarea name="bio" rows="4" placeholder="e.g. I’m Sam, based in Joondalup. I’m on time, I explain everything clearly and I treat every customer like a neighbour.">' + escapeText(d.bio) + "</textarea></div>" +
       '<div class="field"><label>Phone <span class="opt">(optional)</span></label><input name="phone" inputmode="tel" placeholder="e.g. 0400 123 456" value="' + escapeAttr(d.phone || "") + '"></div>' + /* b16 QA #50 */
       (window.RBLive && RBLive.isLive() ? "" : '<div class="group-label">Facebook profile</div>' + fbConnectBlock("edit-profile", d.facebook || "")) + /* b16 QA #28: one Facebook field (below) */
       '<div class="group-label">My areas</div>' + selectedAreasCard(d.regions || [], { title: "My areas", openAreas: true, prefix: "edit", returnTo: "edit-profile", changeLabel: (d.regions && d.regions.length) ? "Change" : "Choose areas", sub: "Choose a state, then the metro or regional areas you work in." }) +
@@ -1475,7 +1478,7 @@
       if (nextScroll) nextScroll.scrollTop = savedScroll;
     }
 
-    var showTabs = TABBED.has(id);
+    var showTabs = (window.RBNav18 && RBNav18.showTabs) ? RBNav18.showTabs(id) : TABBED.has(id); /* b18: bottom menu on every screen once approved */
     tabbar.classList.toggle("show", showTabs);
     updateTabs(id);
     statusBar.classList.toggle("light", DARK.has(id) || id === "welcome");

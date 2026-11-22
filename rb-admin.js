@@ -195,7 +195,7 @@
     window.addEventListener("pageshow", clearDemo);
     setTimeout(clearDemo, 0);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 17)</span>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 18)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";
@@ -258,16 +258,66 @@
      Edge Function admin-delete-member; admins and your own account can never be deleted. */
   var UUIDRE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   var DEL_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
-  function delBtn(id) {
-    return '<button type="button" class="btn btn-sm rb-del-member" data-action="rb-del-member" data-id="' + id + '" style="background:#b91c1c;color:#fff;border-color:#b91c1c">' + DEL_ICON + "<span>Delete member</span></button>";
+  function delBtn(id, small) {
+    if (small) /* b18: row action in the same style as the row's other icon buttons (a wide button was pushed out of the cell) */
+      return '<button type="button" class="ico-btn rb-del-member rb-del-sm" data-action="rb-del-member" data-id="' + id + '" title="Delete member" aria-label="Delete member" style="background:#b91c1c;color:#fff;border-color:#b91c1c">' + DEL_ICON + "</button>";
+    return '<button type="button" class="btn btn-sm rb-del-member' + (small ? " rb-del-sm" : "") + '" data-action="rb-del-member" data-id="' + id + '" title="Delete member" aria-label="Delete member" style="background:#b91c1c;color:#fff;border-color:#b91c1c;width:auto;display:inline-flex;align-items:center;gap:6px;white-space:nowrap' + (small ? ";padding:6px 10px;min-height:36px" : "") + '">' + DEL_ICON + "<span>" + (small ? "Delete" : "Delete member") + "</span></button>";
   }
+  /* b18: never offer Delete for an admin or for yourself (the server refuses too). */
+  function deletable(id) {
+    if (!UUIDRE.test(id || "")) return false;
+    var me = RB.session && RB.session.user && RB.session.user.id;
+    if (me && id === me) return false;
+    var p = (window.__rbProfiles || []).filter(function (x) { return x.id === id; })[0];
+    if (p && p.role === "admin") return false;
+    var m = ((window.TCAdmin && TCAdmin.members) || []).filter(function (x) { return x.id === id; })[0];
+    if (m && m.raw && m.raw.role === "admin") return false;
+    return true;
+  }
+  function has(box, id) { return box && box.querySelector('[data-action="rb-del-member"][data-id="' + id + '"]'); }
   function addDeleteButtons() {
     if (!RB.session || RB.isDemo()) return;
-    document.querySelectorAll('[data-action="decline"][data-id], [data-action="save-mem"][data-id]').forEach(function (b) {
-      var id = b.getAttribute("data-id");
-      if (!UUIDRE.test(id || "")) return;
-      var box = b.parentNode; if (!box || box.querySelector('[data-action="rb-del-member"][data-id="' + id + '"]')) return;
-      b.insertAdjacentHTML("afterend", (b.getAttribute("data-action") === "save-mem" ? '<div style="margin-top:12px">' + delBtn(id) + "</div>" : delBtn(id)));
+    /* b18: member detail page: a clear button in the page header, plus one under Save links */
+    document.querySelectorAll('[data-action="save-mem"][data-id]').forEach(function (b) {
+      var id = b.getAttribute("data-id"); if (!deletable(id)) return;
+      var panel = b.closest(".panel") || b.parentNode;
+      var head = panel && panel.querySelector(".panel-h");
+      var tools = head && (head.querySelector('[data-page="members"]') || {}).parentNode;
+      if (tools && !has(tools, id)) { tools.insertAdjacentHTML("beforeend", delBtn(id)); var nb = tools.lastElementChild; nb.style.marginLeft = "8px"; nb.classList.add("rb-del-head"); }
+      var nx = b.nextElementSibling;
+      if (!(nx && nx.querySelector && nx.querySelector('[data-action="rb-del-member"]')))
+        b.insertAdjacentHTML("afterend", '<div style="margin-top:12px">' + delBtn(id) + "</div>");
+    });
+    /* b18: Members list rows (approved, suspended, pending) and request rows / pending request cards */
+    document.querySelectorAll('[data-action="edit-mem"][data-id], [data-action="decline"][data-id]').forEach(function (b) {
+      var id = b.getAttribute("data-id"); if (!deletable(id)) return;
+      var box = b.parentNode; if (!box || has(box, id)) return;
+      var small = b.classList.contains("ico-btn");
+      box.insertAdjacentHTML("beforeend", delBtn(id, small));
+    });
+  }
+  /* b18: one simple confirm, no reason: "Delete Neetu Chopra? A copy is kept in the archive."  Cancel / Delete */
+  function confirmDelete(name) {
+    return new Promise(function (resolve) {
+      var old = document.getElementById("rbDelConfirm"); if (old) old.remove();
+      var w = document.createElement("div"); w.id = "rbDelConfirm";
+      w.setAttribute("style", "position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px");
+      w.innerHTML = '<div role="alertdialog" aria-modal="true" aria-labelledby="rbDelQ" style="background:#fff;color:#0f172a;border-radius:16px;max-width:420px;width:100%;padding:22px 20px 18px;box-shadow:0 20px 50px rgba(0,0,0,.3)">' +
+        '<p id="rbDelQ" style="margin:0 0 18px;font-size:18px;font-weight:700;line-height:1.35"></p>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">' +
+        '<button type="button" data-rbdel="no" class="btn btn-ghost" style="width:auto;min-width:96px">Cancel</button>' +
+        '<button type="button" data-rbdel="yes" class="btn" style="width:auto;min-width:96px;background:#b91c1c;color:#fff;border-color:#b91c1c">Delete</button></div></div>';
+      w.querySelector("#rbDelQ").textContent = "Delete " + name + "? A copy is kept in the archive.";
+      function done(v) { document.removeEventListener("keydown", key, true); w.remove(); resolve(v); }
+      function key(e) { if (e.key === "Escape") { e.preventDefault(); done(false); } }
+      w.addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest("[data-rbdel]");
+        if (b) { e.preventDefault(); e.stopPropagation(); done(b.getAttribute("data-rbdel") === "yes"); }
+        else if (e.target === w) done(false);
+      });
+      document.addEventListener("keydown", key, true);
+      document.body.appendChild(w);
+      w.querySelector('[data-rbdel="no"]').focus();
     });
   }
   function adminToast(msg, bad) {
@@ -286,8 +336,7 @@
   }
   async function deleteMember(id) {
     var info = memberInfo(id);
-    var ok = window.confirm("Delete member?\n\n" + info.name + (info.business ? " · " + info.business : "") + "\n" + (info.email || "(no email on file)") +
-      "\n\nThis can't be undone in the app. Their login is removed so the email can sign up again. A copy is kept in the archive.");
+    var ok = await confirmDelete(info.name);
     if (!ok) return;
     try {
       var tok = RB.session && RB.session.access_token;
@@ -295,7 +344,7 @@
       var res = await fetch(cfg.url + "/functions/v1/admin-delete-member", {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: cfg.anonKey, Authorization: "Bearer " + tok },
-        body: JSON.stringify({ member_id: id })
+        body: JSON.stringify({ member_id: id, note: "Deleted by admin" })
       });
       var j = await res.json().catch(function () { return {}; });
       if (!res.ok || !j.ok) throw new Error(j.error || ("error " + res.status));
