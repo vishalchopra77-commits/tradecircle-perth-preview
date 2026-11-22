@@ -119,7 +119,7 @@
         }
         $("loginView").classList.add("hidden");
         $("appView").classList.remove("hidden");
-        return hydrate();
+        return hydrate().then(startLive);
       }).catch(function (err) {
         showError((err && err.message) || "Could not sign in.");
       });
@@ -175,7 +175,7 @@
     lab.innerHTML = '<input type="checkbox" data-action="rb-demo"' + (RB.isDemo() ? " checked" : "") + "> Demo (offline)";
     form.appendChild(lab);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 13)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";
@@ -193,12 +193,53 @@
     /* admin.js keeps requests/members in closure; patch via a hook if exposed */
   }
 
+  /* v2.2.2d: live updates after BOTH a fresh sign-in and a page refresh (before, a fresh sign-in never
+     subscribed, so new phone sign-ups only appeared after a reload). Plus a 20 s safety refresh. */
+  var liveOn = false, hydrating = false, hydrateAgain = false;
+  function softHydrate() {
+    if (hydrating) { hydrateAgain = true; return; }
+    hydrating = true;
+    Promise.resolve(hydrate()).catch(function (e) { console.warn("RB admin refresh", e); }).then(function () {
+      hydrating = false; if (hydrateAgain) { hydrateAgain = false; softHydrate(); }
+    });
+  }
+  function startLive() {
+    if (liveOn || !RB.session || RB.isDemo()) return;
+    liveOn = true;
+    var t = null, kick = function () { clearTimeout(t); t = setTimeout(softHydrate, 300); };
+    ["profiles", "recommendation_requests", "rec_progress"].forEach(function (tbl) {
+      try {
+        RB.client.channel("rb-admin-" + tbl + "-" + Date.now()).on("postgres_changes", { event: "*", schema: "public", table: tbl }, kick).subscribe();
+      } catch (e) { console.warn("RB admin listen", tbl, e); }
+    });
+    setInterval(function () { if (RB.session && !RB.isDemo() && document.visibilityState === "visible") softHydrate(); }, 20000);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && RB.session) softHydrate(); });
+  }
+  function watchAuth() {
+    if (watchAuth.done || !RB.client) return; watchAuth.done = true;
+    RB.client.auth.onAuthStateChange(function (event, s) {
+      if (event === "SIGNED_OUT" && !RB.isDemo()) { liveOn = false; }
+      if ((event === "TOKEN_REFRESHED" || event === "SIGNED_IN") && s && !RB.isDemo() && liveOn) softHydrate();
+    });
+  }
+  function demoBanner() {
+    if (!RB.isDemo() || document.getElementById("rbDemoBanner")) return;
+    var app = $("appView"); if (!app) return;
+    var d = document.createElement("div"); d.id = "rbDemoBanner";
+    d.setAttribute("style", "position:sticky;top:0;z-index:50;background:#fff4d6;color:#4a3400;border-bottom:1px solid #e9cf86;padding:10px 14px;font-weight:700;font-size:14px");
+    d.textContent = "Demo (offline): sample members only. Real phone sign-ups are not shown. To see them, sign out, untick Demo (offline) and sign in with your admin email.";
+    app.insertBefore(d, app.firstChild);
+  }
+
   async function boot() {
-    if (!window.RB) return;
+    if (!window.RB || boot.done) return;
+    boot.done = true;
     RB.init();
     addDemoToggle();
     hookLogin();
     hookActions();
+    watchAuth();
+    setInterval(demoBanner, 1000);
     /* If the prototype already jumped the login (shot=), leave it. */
     if (location.search.match(/shot=/)) return;
     try {
@@ -209,9 +250,7 @@
           $("loginView").classList.add("hidden");
           $("appView").classList.remove("hidden");
           await hydrate();
-          RB.listen("profiles", function () { hydrate(); });
-          RB.listen("recommendation_requests", function () { hydrate(); });
-          RB.listen("rec_progress", function () { hydrate(); });
+          startLive();
         }
       }
     } catch (err) {

@@ -171,7 +171,8 @@
 
   async function logout() {
     if (!init()) return;
-    await client.auth.signOut();
+    /* v2.2.2d: sign out this device only (a global sign-out also logged the same person out on their phone) */
+    await client.auth.signOut({ scope: "local" });
     session = null;
     profile = null;
     adminFlag = false;
