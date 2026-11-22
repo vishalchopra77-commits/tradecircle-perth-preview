@@ -3,7 +3,7 @@
 // Called by the database trigger private.push_hook() (only while app_settings.push_enabled is true).
 // The body only names a row ({table, id}); everything else is re-read here with the service role, so a caller
 // cannot choose the text or the recipients. A row is pushed once (notifications.pushed_at) and only while fresh.
-// Needs the secret FCM_SERVICE_ACCOUNT (the Firebase service-account JSON). Without it nothing is sent and
+// Needs FCM_SERVICE_ACCOUNT (the Firebase service-account JSON) as a function secret or in Vault. Without it nothing is sent and
 // notifications.push_status is set to 'needs_fcm_key'.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -61,6 +61,20 @@ function allowed(extras: Record<string, unknown> | null, pref: string | null) {
   return "ok";
 }
 
+// FCM key: the FCM_SERVICE_ACCOUNT function secret if set, otherwise Supabase Vault (secret name
+// FCM_SERVICE_ACCOUNT) via public.push_fcm_service_account(), executable by service_role only.
+let saCache: string | null = null;
+async function fcmKey(): Promise<{ raw: string | null; src: string }> {
+  const env = Deno.env.get("FCM_SERVICE_ACCOUNT");
+  if (env) return { raw: env, src: "env" };
+  if (saCache) return { raw: saCache, src: "vault" };
+  const adm = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const r = await adm.rpc("push_fcm_service_account");
+  if (r.error || !r.data) return { raw: null, src: "none" };
+  saCache = String(r.data);
+  return { raw: saCache, src: "vault" };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
@@ -68,7 +82,7 @@ Deno.serve(async (req) => {
   try { body = await req.json(); } catch { return json({ error: "bad json" }, 400); }
   // health check: mint a Google token and do an FCM V1 dry run (validate_only) to a topic. Returns no secrets.
   if (body.ping) {
-    const raw = Deno.env.get("FCM_SERVICE_ACCOUNT");
+    const { raw, src } = await fcmKey();
     if (!raw) return json({ fcm: "needs FCM_SERVICE_ACCOUNT secret" });
     try {
       const sa = JSON.parse(raw);
@@ -77,7 +91,7 @@ Deno.serve(async (req) => {
         method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" },
         body: JSON.stringify({ validate_only: true, message: { topic: "rb-dryrun", notification: { title: "Rate Buddies", body: "Dry run" } } }),
       });
-      return json({ fcm: r.ok ? "ok" : "fcm_error_" + r.status, token: true, project: sa.project_id });
+      return json({ fcm: r.ok ? "ok" : "fcm_error_" + r.status, token: true, project: sa.project_id, source: src, validate_only: true });
     } catch (e) { return json({ fcm: "error", detail: String((e as Error).message || e).slice(0, 120) }); }
   }
   if (!body.id || !UUID.test(body.id) || (body.table !== "notifications" && body.table !== "chat_messages")) return json({ error: "bad row" }, 400);
@@ -115,7 +129,7 @@ Deno.serve(async (req) => {
     db.from("device_tokens").select("token,member_id").in("member_id", ids),
   ]);
   const prof = new Map((profs.data || []).map((p) => [p.id, p]));
-  const saRaw = Deno.env.get("FCM_SERVICE_ACCOUNT");
+  const saRaw = (await fcmKey()).raw;
   const mark = (status: string) => body.table === "notifications"
     ? db.from("notifications").update({ push_status: status, pushed_at: new Date().toISOString() }).eq("id", body.id) : Promise.resolve();
   if (!saRaw) { await mark("needs_fcm_key"); return json({ sent: 0, needs: "FCM_SERVICE_ACCOUNT secret" }); }

@@ -195,7 +195,7 @@
     window.addEventListener("pageshow", clearDemo);
     setTimeout(clearDemo, 0);
     var p = form.querySelector(".login-foot");
-    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 16)</span>';
+    if (p) p.innerHTML = 'Sign in with the admin test account. <a href="index.html">Back to the app</a><br><span style="color:#334155;font-size:12px">Web admin v2.2.2 (build 17)</span>';
     var email = form.querySelector('input[name="email"]');
     var pw = form.querySelector('input[name="password"]');
     if (email && !RB.isDemo()) email.value = "";

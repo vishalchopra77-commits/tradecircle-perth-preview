@@ -13,7 +13,7 @@
    #53 group chat welcome, #54 tapping Home again goes to the top, version label build 16 */
 (function () {
   "use strict";
-  var BUILD = "v2.2.2 (build 16)";
+  var BUILD = "v2.2.2 (build 17)";
   var SITE_URL = "https://vishalchopra77-commits.github.io/tradecircle-perth-preview/";
   var SUPPORT_EMAIL = "ratebuddies@gmail.com";
   function T() { return window.TradeCircle || {}; }
@@ -564,10 +564,10 @@
 
   /* ================= paint loop ================= */
   function versionLabels(sc) {
-    sc.querySelectorAll(".v21-ver").forEach(function (v) { if (v.textContent.indexOf("build 16") < 0) v.textContent = "Rate Buddies " + BUILD; });
+    sc.querySelectorAll(".v21-ver").forEach(function (v) { if (v.textContent.indexOf("build 17") < 0) v.textContent = "Rate Buddies " + BUILD; });
     sc.querySelectorAll(".set-row").forEach(function (r) {
       var a = r.querySelector(".a"), b = r.querySelector(".b");
-      if (a && b && a.textContent.trim() === "Version" && b.textContent.indexOf("build 16") < 0) b.textContent = BUILD.replace(/^v/, "Version ");
+      if (a && b && a.textContent.trim() === "Version" && b.textContent.indexOf("build 17") < 0) b.textContent = BUILD.replace(/^v/, "Version ");
     });
   }
   function paint() {

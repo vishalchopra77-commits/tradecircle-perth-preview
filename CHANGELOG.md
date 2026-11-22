@@ -2,6 +2,15 @@
 
 All data in the app and admin is fictional demo data.
 
+## v2.2.2 (build 17) — 22 Nov 2026
+
+Welcome intro video fix (Vishal: video stopped after a few seconds, Continue never unlocked). versionCode 17.
+
+- Real watch tracking (intro-live.js): the YouTube IFrame API counts only time actually played (seeking ahead does not count), against the video's real length from the player, so a wrong duration in the admin can no longer lock members out. Continue unlocks at min_watched_pct.
+- Fallback: if the player API can't report in the WebView, Continue unlocks after duration_sec of elapsed play time.
+- Live syncs no longer rebuild the intro player (a repeat go("intro-video") only refreshes the progress bar), so the video keeps playing.
+- Server (already live, no APK change): migration 017 lets push-send read the FCM key from Vault (service_role only).
+
 ## v2.2.2 (build 16) — 22 Nov 2026
 
 QA sweep fixes (55 items) and "make everything working". versionCode 16, labels in the app (More, Settings) and the web admin.
@@ -13,7 +22,7 @@ QA sweep fixes (55 items) and "make everything working". versionCode 16, labels 
 - AI assistant + Voice: answers from live data with no key; own Grok/ChatGPT/Claude key tested for real and kept on the phone; ai-assist Edge Function for an admin key ("Needs an AI key" otherwise); speech in/out.
 - Push (FCM): @capacitor/push-notifications, device_tokens, push-send Edge Function (respects toggles + quiet hours, off until the admin turns push on), google-services.json for com.ratebuddies.app. Needs the FCM_SERVICE_ACCOUNT function secret.
 - Admin: chat moderation, Google Reviews/swaps, Vouches, FB friends, member page, sign out, Devi webhook live (devi-webhook + token), AI integrations status, push switch, Fictional-data chip only in Demo.
-- Database: migrations 010–016 in supabase/migrations (20261122_v222i_*); test data cleanup archived in private.cleanup_archive.
+- Database: migrations 010–017 in supabase/migrations (20261122_v222i_*); 017 lets push-send read the FCM key from Vault (service_role only); test data cleanup archived in private.cleanup_archive.
 
 ## v2.2.2 — 22 Nov 2026 (versionCode 10)
 - Live test backend: the app and web admin now use the Rate Buddies Test Supabase project (ratebuddies@gmail.com org), set in rb-config.js and in the bundled RankBuddies.html / TradeCircle-Admin.html. Public anon key only.
